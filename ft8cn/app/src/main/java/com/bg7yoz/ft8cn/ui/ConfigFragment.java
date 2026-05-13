@@ -6,7 +6,10 @@ package com.bg7yoz.ft8cn.ui;
  */
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
+import android.media.AudioDeviceCallback;
+import android.media.AudioDeviceInfo;
 import android.media.AudioManager;
 import android.os.Bundle;
 import android.os.Handler;
@@ -60,6 +63,8 @@ public class ConfigFragment extends Fragment {
     private NoReplyLimitSpinnerAdapter noReplyLimitSpinnerAdapter;
     private AudioDeviceSpinnerAdapter audioInputDeviceAdapter;
     private AudioDeviceSpinnerAdapter audioOutputDeviceAdapter;
+    private AudioManager audioManager;
+    private AudioDeviceCallback audioDeviceCallback;
     //private SerialPortSpinnerAdapter serialPortSpinnerAdapter;
 
     public ConfigFragment() {
@@ -382,6 +387,9 @@ public class ConfigFragment extends Fragment {
 
         //设置音频输出设备
         setAudioOutputDeviceSpinner();
+
+        //监听音频设备热插拔
+        registerAudioDeviceCallback();
 
         //设置显示消息模式
         setMessageMode();
@@ -1056,6 +1064,52 @@ public class ConfigFragment extends Fragment {
                         audioOutputDeviceAdapter.getPositionByDeviceId(GeneralVariables.audioOutputDeviceId));
             }
         });
+    }
+
+    /**
+     * 注册音频设备热插拔回调，设备变化时刷新Spinner列表
+     */
+    private void registerAudioDeviceCallback() {
+        audioManager = (AudioManager) requireContext().getSystemService(Context.AUDIO_SERVICE);
+        if (audioManager == null) return;
+        audioDeviceCallback = new AudioDeviceCallback() {
+            @Override
+            public void onAudioDevicesAdded(AudioDeviceInfo[] addedDevices) {
+                refreshAudioDeviceSpinners();
+            }
+
+            @Override
+            public void onAudioDevicesRemoved(AudioDeviceInfo[] removedDevices) {
+                refreshAudioDeviceSpinners();
+            }
+        };
+        audioManager.registerAudioDeviceCallback(audioDeviceCallback, new Handler(Looper.getMainLooper()));
+    }
+
+    /**
+     * 刷新音频设备Spinner列表，保留当前选中项
+     */
+    private void refreshAudioDeviceSpinners() {
+        if (audioInputDeviceAdapter != null) {
+            audioInputDeviceAdapter.refreshDevices();
+            audioInputDeviceAdapter.notifyDataSetChanged();
+            binding.audioInputDeviceSpinner.setSelection(
+                    audioInputDeviceAdapter.getPositionByDeviceId(GeneralVariables.audioInputDeviceId));
+        }
+        if (audioOutputDeviceAdapter != null) {
+            audioOutputDeviceAdapter.refreshDevices();
+            audioOutputDeviceAdapter.notifyDataSetChanged();
+            binding.audioOutputDeviceSpinner.setSelection(
+                    audioOutputDeviceAdapter.getPositionByDeviceId(GeneralVariables.audioOutputDeviceId));
+        }
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        if (audioManager != null && audioDeviceCallback != null) {
+            audioManager.unregisterAudioDeviceCallback(audioDeviceCallback);
+        }
     }
 
     /**
