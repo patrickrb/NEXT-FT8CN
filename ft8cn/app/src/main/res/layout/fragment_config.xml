@@ -347,7 +347,7 @@
 
 
                     <androidx.constraintlayout.widget.ConstraintLayout
-                        android:id="@+id/audioOutputLayout"
+                        android:id="@+id/audioDeviceLayout"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="2dp"
@@ -355,6 +355,95 @@
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/swlOprLayout">
+
+                        <TextView
+                            android:id="@+id/audioInputDeviceText"
+                            android:layout_width="75dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
+                            android:text="@string/audio_input_device"
+                            android:textAlignment="textEnd"
+                            android:textColor="@color/text_view_color"
+                            android:textSize="14sp"
+                            app:layout_constraintBottom_toTopOf="@+id/audioOutputDeviceText"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <Spinner
+                            android:id="@+id/audioInputDeviceSpinner"
+                            android:layout_width="0dp"
+                            android:layout_height="32dp"
+                            android:layout_marginStart="8dp"
+                            android:layout_marginTop="6dp"
+                            android:layout_marginEnd="8dp"
+                            android:layout_marginBottom="6dp"
+                            android:background="@drawable/editor_style"
+                            android:dropDownWidth="match_parent"
+                            android:popupBackground="@drawable/spinner_style"
+                            android:spinnerMode="dropdown"
+                            app:layout_constraintBottom_toTopOf="@+id/audioOutputDeviceSpinner"
+                            app:layout_constraintEnd_toStartOf="@+id/audioDeviceHelpImageButton"
+                            app:layout_constraintStart_toEndOf="@+id/audioInputDeviceText"
+                            app:layout_constraintTop_toTopOf="parent"
+                            tools:ignore="TouchTargetSizeCheck,SpeakableTextPresentCheck,DuplicateSpeakableTextCheck"
+                            tools:listitem="@layout/bau_rate_spinner_item" />
+
+                        <TextView
+                            android:id="@+id/audioOutputDeviceText"
+                            android:layout_width="75dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
+                            android:text="@string/audio_output_device"
+                            android:textAlignment="textEnd"
+                            android:textColor="@color/text_view_color"
+                            android:textSize="14sp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/audioInputDeviceText" />
+
+                        <Spinner
+                            android:id="@+id/audioOutputDeviceSpinner"
+                            android:layout_width="0dp"
+                            android:layout_height="32dp"
+                            android:layout_marginStart="8dp"
+                            android:layout_marginTop="6dp"
+                            android:layout_marginEnd="8dp"
+                            android:layout_marginBottom="6dp"
+                            android:background="@drawable/editor_style"
+                            android:dropDownWidth="match_parent"
+                            android:popupBackground="@drawable/spinner_style"
+                            android:spinnerMode="dropdown"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toStartOf="@+id/audioDeviceHelpImageButton"
+                            app:layout_constraintStart_toEndOf="@+id/audioOutputDeviceText"
+                            app:layout_constraintTop_toBottomOf="@+id/audioInputDeviceSpinner"
+                            tools:ignore="TouchTargetSizeCheck,SpeakableTextPresentCheck,DuplicateSpeakableTextCheck"
+                            tools:listitem="@layout/bau_rate_spinner_item" />
+
+                        <ImageButton
+                            android:id="@+id/audioDeviceHelpImageButton"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="8dp"
+                            android:background="@drawable/imagebutton_transparent_style"
+                            android:contentDescription="@string/help"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:srcCompat="@drawable/ic_baseline_info_32"
+                            tools:ignore="TouchTargetSizeCheck" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/audioOutputLayout"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:background="@drawable/editor_layout_style"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/audioDeviceLayout">
 
                         <TextView
                             android:id="@+id/audioOutputText"

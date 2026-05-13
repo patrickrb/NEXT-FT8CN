@@ -1,0 +1,58 @@
+name: Build & Release APK
+
+on:
+  push:
+    branches: [release, Dev]
+    tags:
+      - 'v*'
+  pull_request:
+    branches: [release]
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Cache Gradle dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: gradle-${{ runner.os }}-${{ hashFiles('ft8cn/**/*.gradle*', 'ft8cn/gradle-wrapper.properties') }}
+          restore-keys: |
+            gradle-${{ runner.os }}--
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x ft8cn/gradlew
+
+      - name: Build APK
+        working-directory: ft8cn
+        run: ./gradlew assembleDebug
+
+      - name: Upload APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ft8cn-debug
+          path: ft8cn/app/build/outputs/apk/debug/*.apk
+
+      - name: Create GitHub Release
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: ft8cn/app/build/outputs/apk/debug/*.apk
+          generate_release_notes: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

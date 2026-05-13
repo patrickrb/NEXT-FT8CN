@@ -7,6 +7,7 @@ package com.bg7yoz.ft8cn.ui;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.media.AudioManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -57,6 +58,8 @@ public class ConfigFragment extends Fragment {
     private LaunchSupervisionSpinnerAdapter launchSupervisionSpinnerAdapter;
     private PttDelaySpinnerAdapter pttDelaySpinnerAdapter;
     private NoReplyLimitSpinnerAdapter noReplyLimitSpinnerAdapter;
+    private AudioDeviceSpinnerAdapter audioInputDeviceAdapter;
+    private AudioDeviceSpinnerAdapter audioOutputDeviceAdapter;
     //private SerialPortSpinnerAdapter serialPortSpinnerAdapter;
 
     public ConfigFragment() {
@@ -373,6 +376,12 @@ public class ConfigFragment extends Fragment {
 
         //设置音频输出采样率
         setAudioOutputRateMode();
+
+        //设置音频输入设备
+        setAudioInputDeviceSpinner();
+
+        //设置音频输出设备
+        setAudioOutputDeviceSpinner();
 
         //设置显示消息模式
         setMessageMode();
@@ -838,6 +847,34 @@ public class ConfigFragment extends Fragment {
                     }
                 });
 
+                //音频输入设备
+                binding.audioInputDeviceSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                        GeneralVariables.audioInputDeviceId = audioInputDeviceAdapter.getDeviceId(i);
+                        writeConfig("audioInputDevice", String.valueOf(GeneralVariables.audioInputDeviceId));
+                    }
+
+                    @Override
+                    public void onNothingSelected(AdapterView<?> adapterView) {
+
+                    }
+                });
+
+                //音频输出设备
+                binding.audioOutputDeviceSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                        GeneralVariables.audioOutputDeviceId = audioOutputDeviceAdapter.getDeviceId(i);
+                        writeConfig("audioOutputDevice", String.valueOf(GeneralVariables.audioOutputDeviceId));
+                    }
+
+                    @Override
+                    public void onNothingSelected(AdapterView<?> adapterView) {
+
+                    }
+                });
+
             }
         }, 1000);
     }
@@ -983,6 +1020,40 @@ public class ConfigFragment extends Fragment {
             @Override
             public void run() {
                 bauRateSpinnerAdapter.notifyDataSetChanged();
+            }
+        });
+    }
+
+    /**
+     * 设置音频输入设备列表
+     */
+    private void setAudioInputDeviceSpinner() {
+        audioInputDeviceAdapter = new AudioDeviceSpinnerAdapter(requireContext(),
+                AudioManager.GET_DEVICES_INPUTS);
+        binding.audioInputDeviceSpinner.setAdapter(audioInputDeviceAdapter);
+        requireActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                audioInputDeviceAdapter.notifyDataSetChanged();
+                binding.audioInputDeviceSpinner.setSelection(
+                        audioInputDeviceAdapter.getPositionByDeviceId(GeneralVariables.audioInputDeviceId));
+            }
+        });
+    }
+
+    /**
+     * 设置音频输出设备列表
+     */
+    private void setAudioOutputDeviceSpinner() {
+        audioOutputDeviceAdapter = new AudioDeviceSpinnerAdapter(requireContext(),
+                AudioManager.GET_DEVICES_OUTPUTS);
+        binding.audioOutputDeviceSpinner.setAdapter(audioOutputDeviceAdapter);
+        requireActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                audioOutputDeviceAdapter.notifyDataSetChanged();
+                binding.audioOutputDeviceSpinner.setSelection(
+                        audioOutputDeviceAdapter.getPositionByDeviceId(GeneralVariables.audioOutputDeviceId));
             }
         });
     }
@@ -1534,6 +1605,16 @@ public class ConfigFragment extends Fragment {
                 new HelpDialog(requireContext(),requireActivity()
                         ,GeneralVariables.getStringFromResource(R.string.deep_mode_help)
                         ,true).show();
+            }
+        });
+
+        //音频设备帮助
+        binding.audioDeviceHelpImageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                    new HelpDialog(requireContext(), requireActivity()
+                            , GeneralVariables.getStringFromResource(R.string.audio_device_help)
+                            , true).show();
             }
         });
 

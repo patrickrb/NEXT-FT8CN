@@ -430,6 +430,10 @@
     <string name="log_statistics_swl_qso">收聽到的QSO數</string>
     <string name="config_clear_swl_qso">SWL記錄</string>
     <string name="audioOutput">音頻輸出</string>
+    <string name="audio_input_device">音頻輸入</string>
+    <string name="audio_output_device">音頻輸出設備</string>
+    <string name="audio_device_default">預設</string>
+    <string name="audio_device_help">audio_device_help.txt</string>
     <string name="audio16_bit">16位整型</string>
     <string name="audio32_bit">32位浮點</string>
     <string name="html_audio_bits">音頻輸出位數</string>

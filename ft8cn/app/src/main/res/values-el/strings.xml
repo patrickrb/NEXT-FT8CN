@@ -430,6 +430,10 @@
     <string name="log_statistics_swl_qso">Total number of QSO decoded</string>
     <string name="config_clear_swl_qso">QSOs decoded</string>
     <string name="audioOutput">Audio output</string>
+    <string name="audio_input_device">Audio input</string>
+    <string name="audio_output_device">Audio output device</string>
+    <string name="audio_device_default">Default</string>
+    <string name="audio_device_help">audio_device_help_en.txt</string>
     <string name="audio16_bit">16-bit int</string>
     <string name="audio32_bit">32-bit float</string>
     <string name="html_audio_bits">The number of bits in audio output</string>

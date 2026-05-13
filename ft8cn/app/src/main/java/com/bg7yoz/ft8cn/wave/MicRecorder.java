@@ -6,7 +6,10 @@ package com.bg7yoz.ft8cn.wave;
  */
 
 import android.annotation.SuppressLint;
+import android.content.Context;
+import android.media.AudioDeviceInfo;
 import android.media.AudioFormat;
+import android.media.AudioManager;
 import android.media.AudioRecord;
 import android.media.MediaRecorder;
 import android.util.Log;
@@ -38,6 +41,30 @@ public class MicRecorder {
 //        audioRecord = new AudioRecord(MediaRecorder.AudioSource.MIC, sampleRateInHz
         audioRecord = new AudioRecord(MediaRecorder.AudioSource.DEFAULT, sampleRateInHz
                 , channelConfig, audioFormat, bufferSize);//创建AudioRecorder对象
+
+        //设置首选输入设备
+        if (GeneralVariables.audioInputDeviceId != 0) {
+            AudioDeviceInfo deviceInfo = findAudioDeviceById(
+                    GeneralVariables.audioInputDeviceId, AudioManager.GET_DEVICES_INPUTS);
+            audioRecord.setPreferredDevice(deviceInfo); // null resets to default
+        }
+    }
+
+    /**
+     * 根据设备ID查找AudioDeviceInfo
+     */
+    private AudioDeviceInfo findAudioDeviceById(int deviceId, int deviceType) {
+        Context context = GeneralVariables.getMainContext();
+        if (context == null) return null;
+        AudioManager audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
+        if (audioManager == null) return null;
+        AudioDeviceInfo[] devices = audioManager.getDevices(deviceType);
+        for (AudioDeviceInfo device : devices) {
+            if (device.getId() == deviceId) {
+                return device;
+            }
+        }
+        return null;
     }
 
     public void start(){
