@@ -30,63 +30,26 @@ jobs:
             ~/.gradle/wrapper
           key: gradle-${{ runner.os }}-${{ hashFiles('ft8cn/**/*.gradle*', 'ft8cn/gradle-wrapper.properties') }}
           restore-keys: |
-            gradle-${{ runner.os }--
+            gradle-${{ runner.os }}--
 
       - name: Grant execute permission for gradlew
         run: chmod +x ft8cn/gradlew
 
-      - name: Build debug APK
+      - name: Build APK
         working-directory: ft8cn
         run: ./gradlew assembleDebug
 
-      - name: Upload debug APK artifact
-        if: github.event_name == 'pull_request'
+      - name: Upload APK artifact
         uses: actions/upload-artifact@v4
         with:
           name: ft8cn-debug
           path: ft8cn/app/build/outputs/apk/debug/*.apk
 
-      # --- Release signing & publishing (only on version tags) ---
-
-      - name: Decode keystore
-        if: startsWith(github.ref, 'refs/tags/v')
-        run: echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > ft8cn/app/release.jks
-
-      - name: Build release APK
-        if: startsWith(github.ref, 'refs/tags/v')
-        working-directory: ft8cn
-        env:
-          KEYSTORE_FILE: release.jks
-          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
-          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
-          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
-        run: |
-          cat >> app/build.gradle <<'SIGNING_EOF'
-
-          android.signingConfigs {
-              release {
-                  storeFile file(System.getenv("KEYSTORE_FILE"))
-                  storePassword System.getenv("KEYSTORE_PASSWORD")
-                  keyAlias System.getenv("KEY_ALIAS")
-                  keyPassword System.getenv("KEY_PASSWORD")
-              }
-          }
-          android.buildTypes.release.signingConfig android.signingConfigs.release
-          SIGNING_EOF
-          ./gradlew assembleRelease
-
-      - name: Upload release APK artifact
-        if: startsWith(github.ref, 'refs/tags/v')
-        uses: actions/upload-artifact@v4
-        with:
-          name: ft8cn-release
-          path: ft8cn/app/build/outputs/apk/release/*.apk
-
       - name: Create GitHub Release
         if: startsWith(github.ref, 'refs/tags/v')
         uses: softprops/action-gh-release@v2
         with:
-          files: ft8cn/app/build/outputs/apk/release/*.apk
+          files: ft8cn/app/build/outputs/apk/debug/*.apk
           generate_release_notes: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
