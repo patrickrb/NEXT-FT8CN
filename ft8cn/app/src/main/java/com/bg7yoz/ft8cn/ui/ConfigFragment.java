@@ -6,16 +6,23 @@ package com.bg7yoz.ft8cn.ui;
  */
 
 import android.annotation.SuppressLint;
+import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.hardware.usb.UsbDevice;
+import android.hardware.usb.UsbManager;
 import android.media.AudioDeviceCallback;
 import android.media.AudioDeviceInfo;
 import android.media.AudioManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,6 +32,8 @@ import android.widget.CompoundButton;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
+
+import com.bg7yoz.ft8cn.wave.UsbAudioDevice;
 
 import com.bg7yoz.ft8cn.FAQActivity;
 import com.bg7yoz.ft8cn.Ft8Message;
@@ -859,13 +868,32 @@ public class ConfigFragment extends Fragment {
                 binding.audioInputDeviceSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                     @Override
                     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                        GeneralVariables.audioInputDeviceId = audioInputDeviceAdapter.getDeviceId(i);
-                        writeConfig("audioInputDevice", String.valueOf(GeneralVariables.audioInputDeviceId));
+                        int deviceId = audioInputDeviceAdapter.getDeviceId(i);
+                        GeneralVariables.audioInputDeviceId = deviceId;
+                        writeConfig("audioInputDevice", String.valueOf(deviceId));
+
+                        // Handle USB audio device selection
+                        UsbAudioDevice.UsbAudioDeviceInfo usbInfo =
+                                audioInputDeviceAdapter.getUsbAudioDeviceInfo(i);
+                        if (usbInfo != null) {
+                            GeneralVariables.usbAudioInputVendorId = usbInfo.device.getVendorId();
+                            GeneralVariables.usbAudioInputProductId = usbInfo.device.getProductId();
+                            writeConfig("usbAudioInputVid",
+                                    String.valueOf(GeneralVariables.usbAudioInputVendorId));
+                            writeConfig("usbAudioInputPid",
+                                    String.valueOf(GeneralVariables.usbAudioInputProductId));
+                            requestUsbPermissionIfNeeded(usbInfo.device);
+                        } else if (deviceId != -1) {
+                            // Clear USB audio settings if non-USB device selected
+                            GeneralVariables.usbAudioInputVendorId = 0;
+                            GeneralVariables.usbAudioInputProductId = 0;
+                            writeConfig("usbAudioInputVid", "0");
+                            writeConfig("usbAudioInputPid", "0");
+                        }
                     }
 
                     @Override
                     public void onNothingSelected(AdapterView<?> adapterView) {
-
                     }
                 });
 
@@ -873,13 +901,31 @@ public class ConfigFragment extends Fragment {
                 binding.audioOutputDeviceSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                     @Override
                     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                        GeneralVariables.audioOutputDeviceId = audioOutputDeviceAdapter.getDeviceId(i);
-                        writeConfig("audioOutputDevice", String.valueOf(GeneralVariables.audioOutputDeviceId));
+                        int deviceId = audioOutputDeviceAdapter.getDeviceId(i);
+                        GeneralVariables.audioOutputDeviceId = deviceId;
+                        writeConfig("audioOutputDevice", String.valueOf(deviceId));
+
+                        // Handle USB audio device selection
+                        UsbAudioDevice.UsbAudioDeviceInfo usbInfo =
+                                audioOutputDeviceAdapter.getUsbAudioDeviceInfo(i);
+                        if (usbInfo != null) {
+                            GeneralVariables.usbAudioOutputVendorId = usbInfo.device.getVendorId();
+                            GeneralVariables.usbAudioOutputProductId = usbInfo.device.getProductId();
+                            writeConfig("usbAudioOutputVid",
+                                    String.valueOf(GeneralVariables.usbAudioOutputVendorId));
+                            writeConfig("usbAudioOutputPid",
+                                    String.valueOf(GeneralVariables.usbAudioOutputProductId));
+                            requestUsbPermissionIfNeeded(usbInfo.device);
+                        } else if (deviceId != -1) {
+                            GeneralVariables.usbAudioOutputVendorId = 0;
+                            GeneralVariables.usbAudioOutputProductId = 0;
+                            writeConfig("usbAudioOutputVid", "0");
+                            writeConfig("usbAudioOutputPid", "0");
+                        }
                     }
 
                     @Override
                     public void onNothingSelected(AdapterView<?> adapterView) {
-
                     }
                 });
 
@@ -1102,6 +1148,55 @@ public class ConfigFragment extends Fragment {
             binding.audioOutputDeviceSpinner.setSelection(
                     audioOutputDeviceAdapter.getPositionByDeviceId(GeneralVariables.audioOutputDeviceId));
         }
+    }
+
+    private static final String ACTION_USB_AUDIO_PERMISSION =
+            "com.bg7yoz.ft8cn.USB_AUDIO_PERMISSION";
+
+    /**
+     * 请求USB音频设备权限
+     */
+    private void requestUsbPermissionIfNeeded(UsbDevice device) {
+        if (device == null) return;
+        UsbManager usbManager = (UsbManager) requireContext().getSystemService(Context.USB_SERVICE);
+        if (usbManager == null) return;
+
+        if (usbManager.hasPermission(device)) {
+            Log.d(TAG, "USB audio device already has permission");
+            return;
+        }
+
+        Log.d(TAG, "Requesting USB permission for audio device: " + device.getProductName());
+        PendingIntent permissionIntent;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            permissionIntent = PendingIntent.getBroadcast(requireContext(), 0,
+                    new Intent(ACTION_USB_AUDIO_PERMISSION), PendingIntent.FLAG_MUTABLE);
+        } else {
+            permissionIntent = PendingIntent.getBroadcast(requireContext(), 0,
+                    new Intent(ACTION_USB_AUDIO_PERMISSION), 0);
+        }
+
+        BroadcastReceiver permReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                if (ACTION_USB_AUDIO_PERMISSION.equals(intent.getAction())) {
+                    boolean granted = intent.getBooleanExtra(
+                            UsbManager.EXTRA_PERMISSION_GRANTED, false);
+                    Log.d(TAG, "USB audio permission " + (granted ? "granted" : "denied"));
+                    try { context.unregisterReceiver(this); } catch (Exception ignored) {}
+                }
+            }
+        };
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            requireContext().registerReceiver(permReceiver,
+                    new IntentFilter(ACTION_USB_AUDIO_PERMISSION),
+                    Context.RECEIVER_NOT_EXPORTED);
+        } else {
+            requireContext().registerReceiver(permReceiver,
+                    new IntentFilter(ACTION_USB_AUDIO_PERMISSION));
+        }
+        usbManager.requestPermission(device, permissionIntent);
     }
 
     @Override

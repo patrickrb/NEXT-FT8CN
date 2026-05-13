@@ -40,4 +40,14 @@
     <usb-device vendor-id="0x0c26"  /> <!-- icom  -->
     <usb-device vendor-id="6790" product-id="21970" /> <!-- 0x7523: CH343CDC  xiegu-->
     <usb-device vendor-id="1155" product-id="61441" /> <!-- 0x0483 / 0xF001: WOLF ST CDC-->
+
+    <!-- USB Audio devices — common USB sound card chips -->
+    <!-- App scans for ANY USB Audio Class device regardless of VID, but the filter      -->
+    <!-- enables auto-discovery and permission prompts when these devices are connected.  -->
+    <usb-device vendor-id="3468" />  <!-- 0x0D8C: C-Media (CM108, CM119, CM6206, etc.) -->
+    <usb-device vendor-id="2235" />  <!-- 0x08BB: Texas Instruments (PCM2900, PCM2704, PCM2706) -->
+    <usb-device vendor-id="3034" />  <!-- 0x0BDA: Realtek USB audio -->
+    <usb-device vendor-id="1037" />  <!-- 0x040D: VIA Technologies USB audio -->
+    <usb-device vendor-id="2578" />  <!-- 0x0A12: Cambridge Silicon Radio (USB audio) -->
+    <usb-device vendor-id="4292" product-id="60032" /> <!-- 0x10C4/0xEA80: Silicon Labs CP2114 (USB audio bridge) -->
 </resources>

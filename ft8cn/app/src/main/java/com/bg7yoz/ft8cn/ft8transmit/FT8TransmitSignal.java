@@ -8,12 +8,16 @@ package com.bg7yoz.ft8cn.ft8transmit;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.hardware.usb.UsbDevice;
+import android.hardware.usb.UsbManager;
 import android.media.AudioAttributes;
 import android.media.AudioDeviceInfo;
 import android.media.AudioFormat;
 import android.media.AudioManager;
 import android.media.AudioTrack;
 import android.util.Log;
+
+import com.bg7yoz.ft8cn.wave.UsbAudioDevice;
 
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
@@ -396,6 +400,13 @@ public class FT8TransmitSignal {
             return;
         }
 
+        // USB音频输出路径
+        if (GeneralVariables.audioOutputDeviceId == -1
+                && GeneralVariables.usbAudioOutputVendorId != 0) {
+            playViaUsbAudio(buffer);
+            return;
+        }
+
         Log.d(TAG, String.format("playFT8Signal: 准备声卡播放....位数：%s,采样率：%d"
                 , GeneralVariables.audioOutput32Bit ? "Float32" : "Int16"
                 , GeneralVariables.audioSampleRate));
@@ -417,7 +428,7 @@ public class FT8TransmitSignal {
                 , mySession);
 
         //设置首选输出设备
-        if (GeneralVariables.audioOutputDeviceId != 0) {
+        if (GeneralVariables.audioOutputDeviceId > 0) {
             AudioDeviceInfo deviceInfo = findAudioDeviceById(
                     GeneralVariables.audioOutputDeviceId, AudioManager.GET_DEVICES_OUTPUTS);
             audioTrack.setPreferredDevice(deviceInfo); // null resets to default
@@ -464,6 +475,74 @@ public class FT8TransmitSignal {
             audioTrack.play();
             audioTrack.setVolume(GeneralVariables.volumePercent);//设置播放的音量
         }
+    }
+
+    /**
+     * 通过USB音频设备播放FT8信号
+     */
+    private void playViaUsbAudio(float[] buffer) {
+        Log.d(TAG, String.format("playFT8Signal: USB audio output, VID=%04X PID=%04X, samples=%d, rate=%d",
+                GeneralVariables.usbAudioOutputVendorId,
+                GeneralVariables.usbAudioOutputProductId,
+                buffer.length, GeneralVariables.audioSampleRate));
+
+        Context context = GeneralVariables.getMainContext();
+        if (context == null) {
+            Log.e(TAG, "No context for USB audio");
+            afterPlayAudio();
+            return;
+        }
+
+        UsbDevice device = UsbAudioDevice.findDeviceByVidPid(context,
+                GeneralVariables.usbAudioOutputVendorId,
+                GeneralVariables.usbAudioOutputProductId);
+        if (device == null) {
+            Log.e(TAG, "USB audio output device not found");
+            afterPlayAudio();
+            return;
+        }
+
+        UsbManager usbManager = (UsbManager) context.getSystemService(Context.USB_SERVICE);
+        if (usbManager == null || !usbManager.hasPermission(device)) {
+            Log.e(TAG, "No USB permission for audio output device");
+            afterPlayAudio();
+            return;
+        }
+
+        UsbAudioDevice usbDev = new UsbAudioDevice();
+        if (!usbDev.open(context, device)) {
+            Log.e(TAG, "Failed to open USB audio output device");
+            afterPlayAudio();
+            return;
+        }
+
+        if (!usbDev.hasOutput()) {
+            Log.e(TAG, "USB audio device has no output endpoint");
+            usbDev.close();
+            afterPlayAudio();
+            return;
+        }
+
+        if (!usbDev.activateOutput(48000)) {
+            Log.e(TAG, "Failed to activate USB audio output");
+            usbDev.close();
+            afterPlayAudio();
+            return;
+        }
+
+        // Apply volume
+        float[] volumeAdjusted = new float[buffer.length];
+        for (int i = 0; i < buffer.length; i++) {
+            volumeAdjusted[i] = buffer[i] * GeneralVariables.volumePercent;
+        }
+
+        boolean success = usbDev.writeAudio(volumeAdjusted, GeneralVariables.audioSampleRate);
+        if (!success) {
+            Log.e(TAG, "USB audio write failed");
+        }
+
+        usbDev.close();
+        afterPlayAudio();
     }
 
     /**
