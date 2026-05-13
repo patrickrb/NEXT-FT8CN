@@ -40,19 +40,28 @@ jobs:
 
       - name: Build APK
         working-directory: ft8cn
-        run: ./gradlew assembleDebug
+        run: ./gradlew assembleRelease
+
+      - name: Rename APK
+        run: mv ft8cn/app/build/outputs/apk/release/app-release.apk ft8cn/app/build/outputs/apk/release/FT8CN-${{ github.ref_name }}.apk
+        if: startsWith(github.ref, 'refs/tags/v')
 
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4
         with:
-          name: ft8cn-debug
-          path: ft8cn/app/build/outputs/apk/debug/*.apk
+          name: ft8cn-release
+          path: ft8cn/app/build/outputs/apk/release/*.apk
 
       - name: Create GitHub Release
         if: startsWith(github.ref, 'refs/tags/v')
         uses: softprops/action-gh-release@v2
         with:
-          files: ft8cn/app/build/outputs/apk/debug/*.apk
+          files: ft8cn/app/build/outputs/apk/release/FT8CN-*.apk
           generate_release_notes: true
+          append_body: true
+          body: |
+
+            ---
+            Vibecoded with spite on I-70 enroute to Dayton Hamvention.
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
