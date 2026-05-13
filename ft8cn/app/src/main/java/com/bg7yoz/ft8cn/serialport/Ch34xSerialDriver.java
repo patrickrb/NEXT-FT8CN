@@ -83,8 +83,14 @@ public class Ch34xSerialDriver implements UsbSerialDriver {
 		protected void openInt(UsbDeviceConnection connection) throws IOException {
 			for (int i = 0; i < mDevice.getInterfaceCount(); i++) {
 				UsbInterface usbIface = mDevice.getInterface(i);
-				if (!mConnection.claimInterface(usbIface, true)) {
-					throw new IOException("Could not claim data interface");
+				if (usbIface.getInterfaceClass() == UsbConstants.USB_CLASS_AUDIO
+						|| usbIface.getInterfaceClass() == 0x01) {
+					continue; // skip audio interfaces on composite devices
+				}
+				if (!mConnection.claimInterface(usbIface, false)) {
+					if (!mConnection.claimInterface(usbIface, true)) {
+						throw new IOException("Could not claim data interface");
+					}
 				}
 			}
 

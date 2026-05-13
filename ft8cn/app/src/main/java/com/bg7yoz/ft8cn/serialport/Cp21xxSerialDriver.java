@@ -132,8 +132,11 @@ public class Cp21xxSerialDriver implements UsbSerialDriver {
                 throw new IOException("Unknown port number");
             }
             UsbInterface dataIface = mDevice.getInterface(mPortNumber);
-            if (!mConnection.claimInterface(dataIface, true)) {
-                throw new IOException("Could not claim interface " + mPortNumber);
+            if (!mConnection.claimInterface(dataIface, false)) {
+                // retry with force if non-forced claim fails (kernel driver bound)
+                if (!mConnection.claimInterface(dataIface, true)) {
+                    throw new IOException("Could not claim interface " + mPortNumber);
+                }
             }
             for (int i = 0; i < dataIface.getEndpointCount(); i++) {
                 UsbEndpoint ep = dataIface.getEndpoint(i);

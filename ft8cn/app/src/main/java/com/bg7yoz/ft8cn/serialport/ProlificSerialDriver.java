@@ -268,8 +268,10 @@ public class ProlificSerialDriver implements UsbSerialDriver {
         public void openInt(UsbDeviceConnection connection) throws IOException {
             UsbInterface usbInterface = mDevice.getInterface(0);
 
-            if (!connection.claimInterface(usbInterface, true)) {
-                throw new IOException("Error claiming Prolific interface 0");
+            if (!connection.claimInterface(usbInterface, false)) {
+                if (!connection.claimInterface(usbInterface, true)) {
+                    throw new IOException("Error claiming Prolific interface 0");
+                }
             }
 
             for (int i = 0; i < usbInterface.getEndpointCount(); ++i) {

@@ -111,8 +111,10 @@ public class CdcAcmSerialDriver implements UsbSerialDriver {
             mControlIndex = 0;
             mControlInterface = mDevice.getInterface(0);
             mDataInterface = mDevice.getInterface(0);
-            if (!mConnection.claimInterface(mControlInterface, true)) {
-                throw new IOException("Could not claim shared control/data interface");
+            if (!mConnection.claimInterface(mControlInterface, false)) {
+                if (!mConnection.claimInterface(mControlInterface, true)) {
+                    throw new IOException("Could not claim shared control/data interface");
+                }
             }
 
             for (int i = 0; i < mControlInterface.getEndpointCount(); ++i) {
@@ -159,8 +161,10 @@ public class CdcAcmSerialDriver implements UsbSerialDriver {
             }
             Log.d(TAG, "Control iface=" + mControlInterface);
 
-            if (!mConnection.claimInterface(mControlInterface, true)) {
-                throw new IOException("Could not claim control interface");
+            if (!mConnection.claimInterface(mControlInterface, false)) {
+                if (!mConnection.claimInterface(mControlInterface, true)) {
+                    throw new IOException("Could not claim control interface");
+                }
             }
 
             mControlEndpoint = mControlInterface.getEndpoint(0);
@@ -173,8 +177,10 @@ public class CdcAcmSerialDriver implements UsbSerialDriver {
             }
             Log.d(TAG, "data iface=" + mDataInterface);
 
-            if (!mConnection.claimInterface(mDataInterface, true)) {
-                throw new IOException("Could not claim data interface");
+            if (!mConnection.claimInterface(mDataInterface, false)) {
+                if (!mConnection.claimInterface(mDataInterface, true)) {
+                    throw new IOException("Could not claim data interface");
+                }
             }
 
             for (int i = 0; i < mDataInterface.getEndpointCount(); i++) {

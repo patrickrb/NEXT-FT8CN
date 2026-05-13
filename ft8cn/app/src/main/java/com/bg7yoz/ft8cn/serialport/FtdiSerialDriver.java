@@ -100,8 +100,10 @@ public class FtdiSerialDriver implements UsbSerialDriver {
 
         @Override
         protected void openInt(UsbDeviceConnection connection) throws IOException {
-            if (!connection.claimInterface(mDevice.getInterface(mPortNumber), true)) {
-                throw new IOException("Could not claim interface " + mPortNumber);
+            if (!connection.claimInterface(mDevice.getInterface(mPortNumber), false)) {
+                if (!connection.claimInterface(mDevice.getInterface(mPortNumber), true)) {
+                    throw new IOException("Could not claim interface " + mPortNumber);
+                }
             }
             if (mDevice.getInterface(mPortNumber).getEndpointCount() < 2) {
                 throw new IOException("Not enough endpoints");
