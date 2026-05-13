@@ -7,8 +7,11 @@ package com.bg7yoz.ft8cn.ft8transmit;
  */
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.media.AudioAttributes;
+import android.media.AudioDeviceInfo;
 import android.media.AudioFormat;
+import android.media.AudioManager;
 import android.media.AudioTrack;
 import android.util.Log;
 
@@ -412,6 +415,13 @@ public class FT8TransmitSignal {
                 : GeneralVariables.audioSampleRate * 15 * 2//浮点与整型
                 , AudioTrack.MODE_STATIC
                 , mySession);
+
+        //设置首选输出设备
+        if (GeneralVariables.audioOutputDeviceId != 0) {
+            AudioDeviceInfo deviceInfo = findAudioDeviceById(
+                    GeneralVariables.audioOutputDeviceId, AudioManager.GET_DEVICES_OUTPUTS);
+            audioTrack.setPreferredDevice(deviceInfo); // null resets to default
+        }
 
         //区分32浮点和整型
         int writeResult;
@@ -1043,6 +1053,23 @@ public class FT8TransmitSignal {
         }
     }
 
+
+    /**
+     * 根据设备ID查找AudioDeviceInfo
+     */
+    private static AudioDeviceInfo findAudioDeviceById(int deviceId, int deviceType) {
+        Context context = GeneralVariables.getMainContext();
+        if (context == null) return null;
+        AudioManager audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
+        if (audioManager == null) return null;
+        AudioDeviceInfo[] devices = audioManager.getDevices(deviceType);
+        for (AudioDeviceInfo device : devices) {
+            if (device.getId() == deviceId) {
+                return device;
+            }
+        }
+        return null;
+    }
 
     private static class DoTransmitRunnable implements Runnable {
         FT8TransmitSignal transmitSignal;

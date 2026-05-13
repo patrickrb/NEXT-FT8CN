@@ -713,6 +713,10 @@
     <string name="log_statistics_swl_qso">デコードされたQSO総件数</string>
     <string name="config_clear_swl_qso">デコードされたQSO</string>
     <string name="audioOutput">音声出力</string>
+    <string name="audio_input_device">音声入力</string>
+    <string name="audio_output_device">音声出力デバイス</string>
+    <string name="audio_device_default">デフォルト</string>
+    <string name="audio_device_help">audio_device_help_en.txt</string>
     <string name="audio16_bit">16-bit int</string>
     <string name="audio32_bit">32-bit float</string>
     <string name="html_audio_bits">音声出力中のビット数</string>

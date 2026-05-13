@@ -2182,6 +2182,12 @@ public class DatabaseOpr extends SQLiteOpenHelper {
                 if (name.equalsIgnoreCase("audioRate")) {//输出音频是否32位浮点
                     GeneralVariables.audioSampleRate =Integer.parseInt( result);
                 }
+                if (name.equalsIgnoreCase("audioInputDevice")) {//音频输入设备ID
+                    GeneralVariables.audioInputDeviceId = result.equals("") ? 0 : Integer.parseInt(result);
+                }
+                if (name.equalsIgnoreCase("audioOutputDevice")) {//音频输出设备ID
+                    GeneralVariables.audioOutputDeviceId = result.equals("") ? 0 : Integer.parseInt(result);
+                }
                 if (name.equalsIgnoreCase("deepMode")) {//是不是深度解码模式
                     GeneralVariables.deepDecodeMode =result.equals("1");
                 }

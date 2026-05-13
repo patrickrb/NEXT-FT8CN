@@ -44,6 +44,9 @@ public class GeneralVariables {
     public static boolean audioOutput32Bit = true;//音频输出类型true=float,false=int16
     public static int audioSampleRate = 12000;//发射音频的采样率
 
+    public static int audioInputDeviceId = 0;//音频输入设备ID，0=系统默认
+    public static int audioOutputDeviceId = 0;//音频输出设备ID，0=系统默认
+
     public static MutableLiveData<Float> mutableVolumePercent = new MutableLiveData<>();
     public static float volumePercent = 0.5f;//播放音频的音量,是百分比
 
