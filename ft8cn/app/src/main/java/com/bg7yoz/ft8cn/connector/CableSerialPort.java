@@ -153,7 +153,7 @@ public class CableSerialPort {
                         , new Intent(INTENT_ACTION_GRANT_USB), PendingIntent.FLAG_MUTABLE);
             } else {
                 usbPermissionIntent = PendingIntent.getBroadcast(context, 0
-                        , new Intent(INTENT_ACTION_GRANT_USB), 0);
+                        , new Intent(INTENT_ACTION_GRANT_USB), PendingIntent.FLAG_IMMUTABLE);
             }
 
 

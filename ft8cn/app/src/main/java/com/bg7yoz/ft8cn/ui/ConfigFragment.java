@@ -1173,7 +1173,7 @@ public class ConfigFragment extends Fragment {
                     new Intent(ACTION_USB_AUDIO_PERMISSION), PendingIntent.FLAG_MUTABLE);
         } else {
             permissionIntent = PendingIntent.getBroadcast(requireContext(), 0,
-                    new Intent(ACTION_USB_AUDIO_PERMISSION), 0);
+                    new Intent(ACTION_USB_AUDIO_PERMISSION), PendingIntent.FLAG_IMMUTABLE);
         }
 
         BroadcastReceiver permReceiver = new BroadcastReceiver() {

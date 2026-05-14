@@ -3,6 +3,7 @@ import java.text.SimpleDateFormat
 
 plugins {
     id 'com.android.application'
+    id 'org.jetbrains.kotlin.android'
 }
 
 def currentTime = getCurrentTime()
@@ -15,14 +16,14 @@ static def getCurrentTime() {
 
 android {
 
-    compileSdk 33
+    compileSdk 34
 
     defaultConfig {
         applicationId "com.bg7yoz.ft8cn"
         minSdk 23
-        targetSdk 33
+        targetSdk 34
         versionCode 1
-        versionName '0.93'
+        versionName '1.0'
 
 
         dataBinding{
@@ -52,8 +53,19 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+    kotlinOptions {
+        jvmTarget = '17'
+    }
+    buildFeatures {
+        compose true
+        dataBinding true
+        buildConfig true
+    }
+    composeOptions {
+        kotlinCompilerExtensionVersion '1.5.8'
     }
 //    externalNativeBuild {
 //        cmake {
@@ -64,6 +76,8 @@ android {
 
     sourceSets {
         main {
+            java.srcDirs = ['src/main/java']
+            kotlin.srcDirs = ['src/main/kotlin']
             jniLibs.srcDirs = ['libs']
         }
     }
@@ -84,11 +98,23 @@ dependencies {
 
     implementation 'com.google.guava:guava:31.1-jre'//Used for HashTable (multi-key HashMap)
 
-
-
     implementation files('src/libs/MPAndroidChartv_3.1.0.jar')
     implementation files('src/libs/commons-net-3.6.jar')////Used for time synchronization
     implementation files('src/libs/nanohttpd-2.2.0.jar')
     implementation files('src/libs/osmdroid-android-6.1.14.aar')//Map widget
 
+    // Compose BOM
+    def composeBom = platform('androidx.compose:compose-bom:2024.02.00')
+    implementation composeBom
+    implementation 'androidx.compose.ui:ui'
+    implementation 'androidx.compose.ui:ui-graphics'
+    implementation 'androidx.compose.ui:ui-tooling-preview'
+    implementation 'androidx.compose.material3:material3'
+    implementation 'androidx.compose.material:material-icons-extended'
+    implementation 'androidx.activity:activity-compose:1.8.2'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0'
+    implementation 'androidx.lifecycle:lifecycle-runtime-compose:2.7.0'
+    implementation 'androidx.navigation:navigation-compose:2.7.7'
+    implementation 'androidx.compose.runtime:runtime-livedata'
+    debugImplementation 'androidx.compose.ui:ui-tooling'
 }
