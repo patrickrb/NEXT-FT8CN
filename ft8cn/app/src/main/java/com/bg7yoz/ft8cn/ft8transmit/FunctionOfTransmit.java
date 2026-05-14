@@ -1,6 +1,6 @@
 package com.bg7yoz.ft8cn.ft8transmit;
 /**
- * FT8通联的6步
+ * The 6 steps of an FT8 QSO.
  * @author BGY70Z
  * @date 2023-03-20
  */
@@ -8,17 +8,17 @@ package com.bg7yoz.ft8cn.ft8transmit;
 import com.bg7yoz.ft8cn.Ft8Message;
 
 public class FunctionOfTransmit {
-    private int functionOrder;//消息的序号
-    private String functionMessage;//消息内容
-    private boolean completed;//是否完成
-    private boolean isCurrentOrder;//是不是当前要发射的消息
+    private int functionOrder;// message sequence number
+    private String functionMessage;// message content
+    private boolean completed;// whether completed
+    private boolean isCurrentOrder;// whether this is the message currently being transmitted
     private Ft8Message ft8Message;
 
 //    /**
-//     * 老的发送消息方法
-//     * @param functionOrder 消息序号
-//     * @param functionMessage 消息内容
-//     * @param completed 是否结束
+//     * Old send message method
+//     * @param functionOrder message sequence number
+//     * @param functionMessage message content
+//     * @param completed whether completed
 //     */
 //    @Deprecated
 //    public FunctionOfTransmit(int functionOrder, String functionMessage, boolean completed) {
@@ -28,10 +28,10 @@ public class FunctionOfTransmit {
 //    }
 
     /**
-     * 新版发送消息方法
-     * @param functionOrder 消息序号
-     * @param message FT8消息
-     * @param completed 是否结束
+     * New version of the send message method.
+     * @param functionOrder message sequence number
+     * @param message FT8 message
+     * @param completed whether completed
      */
     public FunctionOfTransmit(int functionOrder, Ft8Message message, boolean completed) {
         this.functionOrder = functionOrder;

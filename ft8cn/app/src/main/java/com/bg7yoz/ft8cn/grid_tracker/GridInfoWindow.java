@@ -1,6 +1,7 @@
 package com.bg7yoz.ft8cn.grid_tracker;
 /**
- * 网格追踪中每个连线的窗口界面。包含各类型分区图标。与我有关的通联，文字是红色的。
+ * Info window for each connection line in grid tracker. Contains various zone type icons.
+ * QSOs involving my callsign are displayed in red text.
  * @author BGY70Z
  * @date 2023-03-20
  */
@@ -54,23 +55,23 @@ public class GridInfoWindow extends InfoWindow {
         if (!msg.toCq) toCqImage.setVisibility(View.GONE);
 
 
-        //查是不是在本波段内通联成功过的呼号
-        if (GeneralVariables.checkQSLCallsign(msg.getCallsignFrom())) {//如果在数据库中，划线
+        //Check if this callsign has been successfully contacted on the current band
+        if (GeneralVariables.checkQSLCallsign(msg.getCallsignFrom())) {//If found in the database, apply strikethrough
             titleView.setPaintFlags(
                     titleView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-        } else {//如果不在数据库中，去掉划线
+        } else {//If not in the database, remove strikethrough
             titleView.setPaintFlags(
                     titleView.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
         }
         boolean otherBandIsQso = GeneralVariables.checkQSLCallsign_OtherBand(msg.getCallsignFrom());
 
-        //是否有与我呼号有关的消息
+        //Check if the message involves my callsign
         if (msg.inMyCall()) {
             layout.setBackground(mView.getResources().getDrawable(R.drawable.tracker_new_cq_info_win_style));
             titleView.setTextColor(mapView.getResources().getColor(
                     R.color.message_in_my_call_text_color));
         } else if (otherBandIsQso) {
-            //设置在别的波段通联过的消息颜色
+            //Set text color for callsigns contacted on other bands
             titleView.setTextColor(mapView.getResources().getColor(
                     R.color.fromcall_is_qso_text_color));
         } else {

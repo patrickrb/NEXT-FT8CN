@@ -55,7 +55,7 @@
     <color name="message_text_color">#FAF6D2</color>
     <color name="message_in_my_call_text_color">#FA9E9E</color>
     <color name="textview_cq_color">#AB975A01</color>
-    <!--   欢迎界面的背景色 -->
+    <!--   Welcome screen background color -->
     <color name="welcome_layout_ground_color">#000000</color>
     <color name="welcome_layout_text_color">#B6B6B6</color>
     <color name="welcome_logo_text_color">#DBC1FF</color>

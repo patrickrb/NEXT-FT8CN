@@ -1,6 +1,6 @@
 package com.bg7yoz.ft8cn.icom;
 /**
- * WIFI模式下协谷电台操作。
+ * WiFi mode Xiegu radio operations.
  * @author BGY70Z
  * @date 2023-08-27
  */
@@ -23,10 +23,10 @@ public class XieGuWifiRig extends WifiRig{
     @Override
     public void start(){
         opened=true;
-        openAudio();//打开音频
+        openAudio();//Open audio
         controlUdp=new XieGuControlUdp(userName,password,ip,port);
 
-        //设置事件，这里可以处理电台状态，和接收电台送来的音频数据
+        //Set events; handle radio status and receive audio data from radio
         controlUdp.setOnStreamEvents(new IcomUdpBase.OnStreamEvents() {
             @Override
             public void OnReceivedIAmHere(byte[] data) {
@@ -69,12 +69,12 @@ public class XieGuWifiRig extends WifiRig{
             }
 
         });
-        controlUdp.openStream();//打开端口
-        controlUdp.startAreYouThereTimer();//开始连接电台
+        controlUdp.openStream();//Open port
+        controlUdp.startAreYouThereTimer();//Start connecting to radio
     }
 
     @Override
-    public void setPttOn(boolean on){//打开PTT
+    public void setPttOn(boolean on){//Set PTT on/off
         isPttOn=on;
         controlUdp.civUdp.sendPttAction(on);
         controlUdp.audioUdp.isPttOn=on;
@@ -86,12 +86,12 @@ public class XieGuWifiRig extends WifiRig{
     }
 
     @Override
-    public void sendWaveData(float[] data){//发送音频数据到电台
+    public void sendWaveData(float[] data){//Send audio data to radio
         controlUdp.sendWaveData(data);
     }
 
     /**
-     * 关闭各种连接，以及音频
+     * Close all connections and audio
      */
     @Override
     public void close(){

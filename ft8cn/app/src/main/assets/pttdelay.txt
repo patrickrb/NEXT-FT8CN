@@ -1,2 +1,2 @@
-PTT延迟，是指本电台接收到PTT按下的指令后的响应时间。
-当FT8CN发送PTT按下的指令后，往往电台会稍有滞后的响应，设定此时间，是为了电台真正处于发射状态后，FT8CN才发送声音，防止因PTT滞后造成声音无法完全发送。
+PTT delay refers to the response time of the radio after receiving the PTT key-down command.
+After FT8CN sends the PTT key-down command, the radio typically responds with a slight delay. Setting this time ensures that FT8CN only sends audio after the radio is actually in transmit mode, preventing incomplete audio transmission due to PTT lag.

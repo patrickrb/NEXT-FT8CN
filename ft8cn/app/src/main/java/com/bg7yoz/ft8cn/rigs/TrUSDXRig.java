@@ -1,7 +1,7 @@
 
 /**
  * (tr)uSDX, fork from KENWOOD TS590.
- * 基于0.9版，增加TrSDXRig的支持。
+ * Based on v0.9, adding TrSDXRig support.
  *
  * @author Sunguk Lee
  * 2023-08-16
@@ -31,7 +31,7 @@ import java.util.TimerTask;
 
 /**
  * (tr)uSDX, fork from KENWOOD TS590.
- * 2023-08-16 由DS1UFX提交修改（基于0.9版），用于对(tr)uSDX audio over cat的支持。
+ * 2023-08-16 Modification submitted by DS1UFX (based on v0.9), adding (tr)uSDX audio over CAT support.
  */
 public class TrUSDXRig extends BaseRig {
     private static final String TAG = "TrUSDXRig";
@@ -61,7 +61,7 @@ public class TrUSDXRig extends BaseRig {
                     if (isPttOn()) {
                         clearBufferData();
                     } else {
-                        readFreqFromRig();//读频率
+                        readFreqFromRig();//read frequency
                     }
 
                 } catch (Exception e) {
@@ -72,7 +72,7 @@ public class TrUSDXRig extends BaseRig {
     }
 
     /**
-     * 清空缓存数据
+     * Clear buffer data
      */
     private void clearBufferData() {
         buffer.setLength(0);
@@ -135,17 +135,17 @@ public class TrUSDXRig extends BaseRig {
                 rxStreaming = false;
             } else {
                 buffer.append(new String(cutted));
-                //开始分析数据
+                //begin parsing data
                 Yaesu3Command yaesu3Command = Yaesu3Command.getCommand(buffer.toString());
-                clearBufferData();//清一下缓存
+                clearBufferData();//clear buffer
 
                 if (yaesu3Command == null) {
                     continue;
                 }
                 String cmd = yaesu3Command.getCommandID();
-                if (cmd.equalsIgnoreCase("FA")) {//频率
+                if (cmd.equalsIgnoreCase("FA")) {//frequency
                     long tempFreq = Yaesu3Command.getFrequency(yaesu3Command);
-                    if (tempFreq != 0) {//如果tempFreq==0，说明频率不正常
+                    if (tempFreq != 0) {//if tempFreq==0, frequency is invalid
                         setFreq(Yaesu3Command.getFrequency(yaesu3Command));
                     }
                 } else if (cmd.equalsIgnoreCase("US")) {
@@ -181,7 +181,7 @@ public class TrUSDXRig extends BaseRig {
             swrAlert = false;
         }
         if ((alc > KenwoodTK90RigConstant.ts_590_alc_alert_max)
-                && GeneralVariables.alc_switch_on) {//网络模式下不警告ALC
+                && GeneralVariables.alc_switch_on) {//ALC alert
             if (!alcMaxAlert) {
                 alcMaxAlert = true;
                 ToastMessage.show(GeneralVariables.getStringFromResource(R.string.alc_high_alert));
@@ -195,7 +195,7 @@ public class TrUSDXRig extends BaseRig {
     @Override
     public void readFreqFromRig() {
         if (getConnector() != null) {
-            clearBufferData();//清空一下缓存
+            clearBufferData();//clear buffer
             // force reset
             getConnector().sendData(KenwoodTK90RigConstant.setTrUSDXPTTState(false));
             getConnector().sendData(KenwoodTK90RigConstant.setTS590ReadOperationFreq());
@@ -222,9 +222,9 @@ public class TrUSDXRig extends BaseRig {
 
 
     /**
-     * 当接收到音频数据后，把音频数据的采样率7812Hz转换为12000Hz，发送给Connector。
+     * After receiving audio data, convert the sample rate from 7812Hz to 12000Hz and send to Connector.
      *
-     * @param data 接收到的音频（7812Hz）
+     * @param data received audio data (7812Hz)
      */
     public void onReceivedWaveData(byte[] data) {
         onReceivedWaveData(data, false);
@@ -232,10 +232,10 @@ public class TrUSDXRig extends BaseRig {
 
 
     /**
-     * 当接收到音频数据后，把音频数据的采样率7812Hz转换为12000Hz，发送给Connector。
+     * After receiving audio data, convert the sample rate from 7812Hz to 12000Hz and send to Connector.
      *
-     * @param data  接收到的音频（7812Hz）
-     * @param force 是否强制转换
+     * @param data  received audio data (7812Hz)
+     * @param force whether to force conversion
      */
     public void onReceivedWaveData(byte[] data, boolean force) {
         if (data.length == 0) {
@@ -248,7 +248,7 @@ public class TrUSDXRig extends BaseRig {
         //        , rxSampling, 12000);
 
         rxStreamBuffer.write(data, 0, data.length);
-        if (rxStreamBuffer.size() >= 256 || force) {//8位转16位，7812Hz转12000Hz
+        if (rxStreamBuffer.size() >= 256 || force) {//8-bit to 16-bit, 7812Hz to 12000Hz
             //byte[] resampled = rxResample.processCopy(toWaveSamples8To16(rxStreamBuffer.toByteArray()));
             float[] resampled = FT8Resample.get32Resample16(
                     toWaveSamples8To16Int(rxStreamBuffer.toByteArray()), rxSampling, 12000, 1);
@@ -270,7 +270,7 @@ public class TrUSDXRig extends BaseRig {
             setPTT(false);
             return;
         }
-        //调整信号强度
+        //adjust signal strength
         for (int i = 0; i < wave.length; i++) {
             wave[i] = wave[i] * GeneralVariables.volumePercent;
         }
@@ -301,10 +301,10 @@ public class TrUSDXRig extends BaseRig {
     }
 
     /**
-     * 音频8bit采样转换为16bit采样位深
+     * Convert 8-bit audio samples to 16-bit sample depth
      *
-     * @param in 8 bit 数据
-     * @return 16 bit数据（byte类型）
+     * @param in 8-bit data
+     * @return 16-bit data (byte type)
      */
     private static byte[] toWaveSamples8To16(byte[] in) {
         ByteBuffer buf = ByteBuffer.allocate(in.length * 2);
@@ -316,10 +316,10 @@ public class TrUSDXRig extends BaseRig {
     }
 
     /**
-     * 音频8bitcaiyang转换为16bit采样位深
+     * Convert 8-bit audio samples to 16-bit sample depth
      *
-     * @param in 8 bit 数据
-     * @return 16 bit 数据（short类型）
+     * @param in 8-bit data
+     * @return 16-bit data (short type)
      */
     private static short[] toWaveSamples8To16Int(byte[] in) {
         short[] buf = new short[in.length];
@@ -351,10 +351,10 @@ public class TrUSDXRig extends BaseRig {
     }
 
     /**
-     * 把16 bit 数据转成8 bit
+     * Convert 16-bit data to 8-bit
      *
-     * @param in 16 bit 数据（字节）
-     * @return 8 bit 字节
+     * @param in 16-bit data (bytes)
+     * @return 8-bit bytes
      */
     private static byte[] toWaveSamples16To8(byte[] in) {
         byte[] out = new byte[in.length / 2];
@@ -379,7 +379,7 @@ public class TrUSDXRig extends BaseRig {
             public void run() {
                 if (getConnector() != null) {
                     getConnector().sendData(KenwoodTK90RigConstant.setTS590VFOMode());
-                    //改成设置usb模式
+                    //changed to set USB mode
                     getConnector().sendData(KenwoodTK90RigConstant.setTS590OperationUSBMode());
                     getConnector().sendData(KenwoodTK90RigConstant.setTrUSDXStreaming(true));
                 }
@@ -389,10 +389,10 @@ public class TrUSDXRig extends BaseRig {
     }
 
     /**
-     * 从流数据中读取小端模式的Short
+     * Read little-endian Short from stream data
      *
-     * @param data  流数据
-     * @param start 起始点
+     * @param data  stream data
+     * @param start start position
      * @return Int16
      */
     public static short readShortBigEndianData(byte[] data, int start) {

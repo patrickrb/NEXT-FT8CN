@@ -8,7 +8,7 @@ import com.bg7yoz.ft8cn.Ft8Message;
 import java.io.Serializable;
 
 /**
- * 用于在ADAPTER中显示内容，此数据在数据库的查询中生成
+ * Used for displaying content in the ADAPTER; this data is generated from database queries
  * @author BGY70Z
  * @date 2023-03-20
  */
@@ -19,17 +19,17 @@ public class QSLRecordStr implements Serializable {
     private String mode="";
     private String rst_sent="";
     private String rst_rcvd="";
-    private String time_on="";//此时间包括日期（QSO_DATE+TIME_ON组成）
-    private String time_off="";//此时间包括日期（QSO_DATE_OFF+TIME_OFF组成）
-    private String band="";//波长
+    private String time_on="";//This time includes the date (composed of QSO_DATE+TIME_ON)
+    private String time_off="";//This time includes the date (composed of QSO_DATE_OFF+TIME_OFF)
+    private String band="";//Band wavelength
     private String freq="";
     private String station_callsign="";
     private String my_gridsquare="";
     private String comment;
     public String where = null;
-    public boolean isQSL = false;//手工确认
-    public boolean isLotW_import = false;//是否是lotw导入的
-    public boolean isLotW_QSL = false;//是否是lotw确认的
+    public boolean isQSL = false;//Manual confirmation
+    public boolean isLotW_import = false;//Whether imported from LoTW
+    public boolean isLotW_QSL = false;//Whether confirmed via LoTW
 
 
     public String getCall() {

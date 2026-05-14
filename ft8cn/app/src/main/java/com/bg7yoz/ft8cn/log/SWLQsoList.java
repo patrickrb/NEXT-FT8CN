@@ -7,60 +7,60 @@ import com.bg7yoz.ft8cn.timer.UtcTimer;
 import java.util.ArrayList;
 
 /**
- * 用于计算和处理SWL消息中的QSO记录。
- * QSO的计算方法：把FT8通联的6个阶段分成3部分：
+ * Used for calculating and processing QSO records from SWL messages.
+ * QSO calculation method: The 6 stages of an FT8 QSO are divided into 3 parts:
  * 1.CQ C1 grid
  * 2.C1 C2 grid
- * ---------第一部分---
+ * ---------Part 1---
  * 3.C2 C1 report
  * 4.C1 C2 r-report
- * --------第二部分----
+ * --------Part 2----
  * 5.C2 C1 RR73(RRR)
  * 6.C1 C2 73
- * --------第三部分----
+ * --------Part 3----
  * <p>
- * 一个基本的QSO，必须有自己的结束点（第三部分），双方的信号报告（在第二部分判断），网格报告可有可无（第一部分）
- * 以RR73、RRR、73为检查点，符合以上第一、二部分
- * swlQsoList是个双key的HashMap,用于防止重复记录QSO。
- * C1与C2顺序不同，代表不同的呼叫方。体现在station_callsign和call字段上
+ * A basic QSO must have its own end point (Part 3), signal reports from both parties (determined in Part 2), and grid reports are optional (Part 1).
+ * RR73, RRR, and 73 are used as checkpoints, matching Parts 1 and 2 above.
+ * swlQsoList is a dual-key HashMap used to prevent duplicate QSO records.
+ * The order of C1 and C2 differs, representing different calling parties, reflected in the station_callsign and call fields.
  *
  * @author BG7YOZ
  * @date 2023-03-07
  */
 public class SWLQsoList {
     private static final String TAG = "SWLQsoList";
-    //通联成功的列表，防止重复，两个KEY顺序分别是：station_callsign和call，Boolean=true,已经QSO
+    //Successful QSO list to prevent duplicates; the two KEYs are station_callsign and call in order; Boolean=true means already QSO'd
     private final HashTable qsoList =new HashTable();
 
     public SWLQsoList() {
     }
 
     /**
-     * 检查有没有QSO消息
+     * Check for QSO messages
      *
-     * @param newMessages   新的FT8消息
-     * @param allMessages   全部的FT8消息
-     * @param onFoundSwlQso 当有发现的回调
+     * @param newMessages   new FT8 messages
+     * @param allMessages   all FT8 messages
+     * @param onFoundSwlQso callback when a QSO is found
      */
     public void findSwlQso(ArrayList<Ft8Message> newMessages, ArrayList<Ft8Message> allMessages
             , OnFoundSwlQso onFoundSwlQso) {
 
         for (int i = 0; i < newMessages.size(); i++) {
             Ft8Message msg = newMessages.get(i);
-            if (msg.inMyCall()) continue;//对包含我自己的消息不处理
+            if (msg.inMyCall()) continue;//Skip messages that contain my own callsign
 
-            if (GeneralVariables.checkFun4_5(msg.extraInfo)//结束标识RRR、RR73、73
-                    && !qsoList.contains(msg.callsignFrom, msg.callsignTo)) {//没有QSO记录
+            if (GeneralVariables.checkFun4_5(msg.extraInfo)//End markers RRR, RR73, 73
+                    && !qsoList.contains(msg.callsignFrom, msg.callsignTo)) {//No existing QSO record
 
                 QSLRecord qslRecord = new QSLRecord(msg);
 
-                if (checkPart2(allMessages, qslRecord)) {//找双方的信号报告，一个基本的QSO，必须有双方的信号报告
+                if (checkPart2(allMessages, qslRecord)) {//Find signal reports from both parties; a basic QSO requires signal reports from both sides
 
-                    checkPart1(allMessages, qslRecord);//找双方的网格报告，顺便更新time_on的时间
+                    checkPart1(allMessages, qslRecord);//Find grid reports from both parties; also update time_on
 
-                    if (onFoundSwlQso != null) {//触发回调，用于记录到数据库
-                        qsoList.put(msg.callsignFrom, msg.callsignTo, true);//把QSO记录保存下来
-                        onFoundSwlQso.doFound(qslRecord);//触发找到QSO的动作
+                    if (onFoundSwlQso != null) {//Trigger callback for recording to the database
+                        qsoList.put(msg.callsignFrom, msg.callsignTo, true);//Save the QSO record
+                        onFoundSwlQso.doFound(qslRecord);//Trigger the QSO found action
                     }
                 }
             }
@@ -68,25 +68,25 @@ public class SWLQsoList {
     }
 
     /**
-     * 查第2部分是否存在，顺便把信号报告保存到QSLRecord中
+     * Check if Part 2 exists and save signal reports to QSLRecord
      *
-     * @param allMessages 消息列表
+     * @param allMessages message list
      * @param record      QSLRecord
-     * @return 返回值 没有发现：0，存在：2
+     * @return return value: not found = false, exists = true
      */
     private boolean checkPart2(ArrayList<Ft8Message> allMessages, QSLRecord record) {
         boolean foundFromReport = false;
         boolean foundToReport = false;
-        long time_on = System.currentTimeMillis();//先把当前的时间作为最早时间
+        long time_on = System.currentTimeMillis();//Use current time as the earliest time initially
         for (int i = allMessages.size() - 1; i >= 0; i--) {
             Ft8Message msg = allMessages.get(i);
             //if (msg.callsignFrom.equals(record.getMyCallsign())
             if (GeneralVariables.checkIsMyCallsign(msg.callsignFrom)
                     && msg.callsignTo.equals(record.getToCallsign())
-                    && !foundFromReport) {//callsignFrom发出的信号报告
+                    && !foundFromReport) {//Signal report sent by callsignFrom
                 int report = GeneralVariables.checkFun2_3(msg.extraInfo);
 
-                if (time_on > msg.utcTime) time_on = msg.utcTime;//取最早的时间
+                if (time_on > msg.utcTime) time_on = msg.utcTime;//Take the earliest time
                 if (report != -100) {
                     record.setSendReport(report);
                     foundFromReport = true;
@@ -96,64 +96,64 @@ public class SWLQsoList {
             if (msg.callsignFrom.equals(record.getToCallsign())
                     //&& msg.callsignTo.equals(record.getMyCallsign())
                     && GeneralVariables.checkIsMyCallsign(msg.callsignTo)
-                    && !foundToReport) {//callsignTo发出的信号报告
+                    && !foundToReport) {//Signal report sent by callsignTo
                 int report = GeneralVariables.checkFun2_3(msg.extraInfo);
-                if (time_on > msg.utcTime) time_on = msg.utcTime;//取最早的时间
+                if (time_on > msg.utcTime) time_on = msg.utcTime;//Take the earliest time
                 if (report != -100) {
                     record.setReceivedReport(report);
                     foundToReport = true;
                 }
             }
-            if (foundToReport && foundFromReport) {//如果双方的信号报告都找到了，就退出循环
+            if (foundToReport && foundFromReport) {//If signal reports from both parties are found, exit the loop
                 record.setQso_date(UtcTimer.getYYYYMMDD(time_on));
                 record.setTime_on(UtcTimer.getTimeHHMMSS(time_on));
                 break;
             }
         }
-        return foundToReport && foundFromReport;//双方的信号报告都有，才算一个QSO
+        return foundToReport && foundFromReport;//Both parties' signal reports must exist for it to count as a QSO
     }
 
     /**
-     * 查第2部分是否存在，顺便把网格报告保存到QSLRecord中
+     * Check if Part 1 exists and save grid reports to QSLRecord
      *
-     * @param allMessages 消息列表
+     * @param allMessages message list
      * @param record      QSLRecord
      */
     private void checkPart1(ArrayList<Ft8Message> allMessages, QSLRecord record) {
         boolean foundFromGrid = false;
         boolean foundToGrid = false;
-        long time_on = System.currentTimeMillis();//先把当前的时间作为最早时间
+        long time_on = System.currentTimeMillis();//Use current time as the earliest time initially
         for (int i = allMessages.size() - 1; i >= 0; i--) {
             Ft8Message msg = allMessages.get(i);
             if (!foundFromGrid
                     //&& msg.callsignFrom.equals(record.getMyCallsign())
                     && GeneralVariables.checkIsMyCallsign(msg.callsignFrom)
-                    && (msg.callsignTo.equals(record.getToCallsign()) || msg.checkIsCQ())) {//callsignFrom的网格报告
+                    && (msg.callsignTo.equals(record.getToCallsign()) || msg.checkIsCQ())) {//Grid report from callsignFrom
 
                 if (GeneralVariables.checkFun1_6(msg.extraInfo)) {
                     record.setMyMaidenGrid(msg.extraInfo.trim());
                     foundFromGrid = true;
                 }
-                if (time_on > msg.utcTime) time_on = msg.utcTime;//取最早的时间
+                if (time_on > msg.utcTime) time_on = msg.utcTime;//Take the earliest time
             }
 
             if (!foundToGrid
                     && msg.callsignFrom.equals(record.getToCallsign())
                     //&& (msg.callsignTo.equals(record.getMyCallsign())
                     && (GeneralVariables.checkIsMyCallsign(msg.callsignTo)
-                    || msg.checkIsCQ())) {//callsignTo发出的信号报告
+                    || msg.checkIsCQ())) {//Grid report sent by callsignTo
                 if (GeneralVariables.checkFun1_6(msg.extraInfo)) {
                     record.setToMaidenGrid(msg.extraInfo.trim());
                     foundToGrid = true;
                 }
-                if (time_on > msg.utcTime) time_on = msg.utcTime;//取最早的时间
+                if (time_on > msg.utcTime) time_on = msg.utcTime;//Take the earliest time
             }
-            if (foundToGrid && foundFromGrid) {//如果双方的信号报告都找到了，就退出循环
+            if (foundToGrid && foundFromGrid) {//If grid reports from both parties are found, exit the loop
                 break;
             }
         }
 
-        if (foundFromGrid || foundToGrid) {//发现网格报告，至少一个方向的
+        if (foundFromGrid || foundToGrid) {//Grid report found from at least one direction
             record.setQso_date(UtcTimer.getYYYYMMDD(time_on));
             record.setTime_on(UtcTimer.getTimeHHMMSS(time_on));
         }

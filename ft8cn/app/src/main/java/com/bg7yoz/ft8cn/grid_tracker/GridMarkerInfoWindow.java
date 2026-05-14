@@ -1,6 +1,6 @@
 package com.bg7yoz.ft8cn.grid_tracker;
 /**
- * 网格追踪中Marker(网格)的消息窗口。包括各分区的图标，点击呼叫的按钮。
+ * Info window for grid markers in the grid tracker. Includes zone icons and a call button.
  * @author BGY70Z
  * @date 2023-03-20
  */
@@ -53,7 +53,7 @@ public class GridMarkerInfoWindow extends InfoWindow {
         if (!msg.fromCq) fromCqImage.setVisibility(View.GONE);
 
         ConstraintLayout layout=(ConstraintLayout) mView.findViewById(R.id.trackerMarkerConstraintLayout);
-        if (msg.fromCq||msg.fromItu||msg.fromDxcc){//如果是没有通联过的区域，把颜色改成红色
+        if (msg.fromCq||msg.fromItu||msg.fromDxcc){//If this is a zone not yet contacted, change the color to red
             layout.setBackground(mView.getResources().getDrawable(R.drawable.tracker_new_cq_info_win_style));
             ToastMessage.show(String.format(GeneralVariables.getStringFromResource(
                     (R.string.tracker_new_zone_found)),msg.getMessageText()));
@@ -61,23 +61,23 @@ public class GridMarkerInfoWindow extends InfoWindow {
 
 
 
-        //查是不是在本波段内通联成功过的呼号
-        if (GeneralVariables.checkQSLCallsign(msg.getCallsignFrom())) {//如果在数据库中，划线
+        //Check if this callsign has been successfully contacted on the current band
+        if (GeneralVariables.checkQSLCallsign(msg.getCallsignFrom())) {//If found in the database, apply strikethrough
             titleView.setPaintFlags(
                     titleView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-        } else {//如果不在数据库中，去掉划线
+        } else {//If not in the database, remove strikethrough
             titleView.setPaintFlags(
                     titleView.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
         }
         boolean otherBandIsQso = GeneralVariables.checkQSLCallsign_OtherBand(msg.getCallsignFrom());
 
-        //是否有与我呼号有关的消息
+        //Check if the message involves my callsign
         if (msg.inMyCall()) {
             layout.setBackground(mView.getResources().getDrawable(R.drawable.tracker_new_cq_info_win_style));
             titleView.setTextColor(mapView.getResources().getColor(
                     R.color.message_in_my_call_text_color));
         } else if (otherBandIsQso) {
-            //设置在别的波段通联过的消息颜色
+            //Set text color for callsigns contacted on other bands
             titleView.setTextColor(mapView.getResources().getColor(
                     R.color.fromcall_is_qso_text_color));
         } else {
@@ -112,7 +112,7 @@ public class GridMarkerInfoWindow extends InfoWindow {
         });
     }
     /**
-     * 马上对发起者呼叫
+     * Immediately call the originator
      *
      */
     //@RequiresApi(api = Build.VERSION_CODES.N)
@@ -120,14 +120,14 @@ public class GridMarkerInfoWindow extends InfoWindow {
         mainViewModel.addFollowCallsign(msg.getCallsignFrom());
         if (!mainViewModel.ft8TransmitSignal.isActivated()) {
             mainViewModel.ft8TransmitSignal.setActivated(true);
-            GeneralVariables.transmitMessages.add(msg);//把消息添加到关注列表中
+            GeneralVariables.transmitMessages.add(msg);//Add the message to the follow list
         }
-        //呼叫发启者
+        //Call the originator
         mainViewModel.ft8TransmitSignal.setTransmit(msg.getFromCallTransmitCallsign()
                 , 1, msg.extraInfo);
         mainViewModel.ft8TransmitSignal.transmitNow();
 
-        GeneralVariables.resetLaunchSupervision();//复位自动监管
+        GeneralVariables.resetLaunchSupervision();//Reset auto supervision
     }
 
 

@@ -1,6 +1,6 @@
 package com.bg7yoz.ft8cn.flex;
 /**
- * Meter的哈希表。Meter是2个32位的数，ID+VALUE。
+ * Hash table of Meters. A Meter consists of two 32-bit numbers: ID + VALUE.
  * @author BGY70Z
  * @date 2023-03-20
  */
@@ -33,10 +33,10 @@ public class FlexMeterList extends HashMap<Integer, FlexMeterList.FlexMeter> {
                 case dBm:
                 case swr:
                     meter.value = readShortData(data, i * 4 + 2) / 128f;
-                    if (meter.name.contains("PWR")){//把dBm转换成功率值
+                    if (meter.name.contains("PWR")){//Convert dBm to power value
                         meter.value=(float) Math.pow(10,meter.value/10f)/1000f;
                     }
-                    //节省资源，提前赋值
+                    //Save resources by pre-assigning values
                     if (meter.id==infos.sMeterId) sMeterVal=meter.value;
                     if (meter.id==infos.swrId) swrVal=meter.value;
                     if (meter.id==infos.pwrId) pwrVal=meter.value;
@@ -47,7 +47,7 @@ public class FlexMeterList extends HashMap<Integer, FlexMeterList.FlexMeter> {
                     break;
                 case Temperature:
                     meter.value = readShortData(data, i * 4 + 2) / 64f;
-                    //节省资源，提前赋值
+                    //Save resources by pre-assigning values
                     if (meter.id==infos.tempCId) tempCVal=meter.value;
                     break;
                 case other:

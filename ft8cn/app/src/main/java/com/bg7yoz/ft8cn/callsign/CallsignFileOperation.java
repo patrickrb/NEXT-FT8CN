@@ -1,14 +1,12 @@
 package com.bg7yoz.ft8cn.callsign;
 /**
- * 预处理呼号数据库的文件操作，呼号的来源是CTY.DAT
+ * File operations for preprocessing the callsign database. Callsign data source is CTY.DAT.
  * @author BG7YOZ
  * @date 2023-03-20
  */
 
 import android.content.Context;
 import android.content.res.AssetManager;
-
-import com.bg7yoz.ft8cn.GeneralVariables;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -18,18 +16,14 @@ import java.util.Set;
 
 public class CallsignFileOperation {
     public static String TAG="CallsignFileOperation";
-    public static String[][] countries;
-
     /**
-     * 从assets目录中的cty.dat中读出呼号分配国家和地区的列表。呼号字符串中包括多个字符串，以逗号分割，
-     * @param context 用于调用getAssets()方法。
-     * @return ArrayList<CallsignInfo> 返回CallsignInfo数组列表
+     * Reads the callsign-to-country/region assignment list from cty.dat in the assets directory.
+     * The callsign string contains multiple entries separated by commas.
+     * @param context used to call the getAssets() method.
+     * @return ArrayList<CallsignInfo> a list of CallsignInfo objects
      */
     public static ArrayList<CallsignInfo> getCallSingInfoFromFile(Context context){
         ArrayList<CallsignInfo> callsignInfos=new ArrayList<>();
-
-        //读出国家和地区的中英文对应翻译表。保存到countries二维数组中。
-        countries=getCountryNameToCN(context);
 
         AssetManager assetManager = context.getAssets();
         try {
@@ -40,72 +34,22 @@ public class CallsignFileOperation {
                     continue;
                 }
                 CallsignInfo callsignInfo=new CallsignInfo(st[i]);
-                //查找对用的中文名字
-                callsignInfo.CountryNameCN=searchForCountryName(callsignInfo.CountryNameEn);
                 callsignInfos.add(callsignInfo);
             }
 
             inputStream.close();
-            //Log.d(TAG,String.format("size:%d",st.length));
         } catch (IOException e) {
             e.printStackTrace();
         }
         return callsignInfos;
     }
 
-    /**
-     * 查找对应的国家和地区的中文名字，对应关系在countries二维数组中，一维的0列是英文，1列是中文。
-     * @param country 国际和地区的英文名
-     * @return String 返回对应的中文，没有就返回null。
-     */
-    public static String searchForCountryName(String country){
-        for (int i = 0; i < countries[0].length; i++) {
-            if (countries[0][i].equals(country)){
-                return countries[1][i];
-            }
-        }
-        return null;
-    }
 
     /**
-     * 从assets目录中的country_en2cn.dat文件中读出国家和地区的英文与中文对应翻译，以冒号分割。
-     * @param context 用于调用getAssets。
-     * @return 返回一个对应关系的二维数组，一维的0列是英文，1列是中文。
-     */
-    public static String[][] getCountryNameToCN(Context context){
-        AssetManager assetManager = context.getAssets();
-        try {
-            InputStream inputStream;
-            if (GeneralVariables.isTraditionalChinese) {
-                inputStream = assetManager.open("country_en2hk.dat");//繁体中文
-            }else {
-                inputStream = assetManager.open("country_en2cn.dat");//简体中文
-            }
-
-            String[] st=getLinesFromInputStream(inputStream,"\n");
-            String[][] countries=new String[2][st.length];
-            for (int i = 0; i <st.length ; i++) {
-                if (!st[i].contains(":")){
-                    continue;
-                }
-                String[] cc=st[i].split(":");
-                countries[0][i]=cc[0];
-                countries[1][i]=cc[1];
-            }
-            inputStream.close();
-            return countries;
-        } catch (IOException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-
-    /**
-     * 从InputStream中读出字符串
-     * @param inputStream 输入流
-     * @param deLimited 每行数据的分隔符。
-     * @return String 返回字符串,如果失败，返回null
+     * Reads strings from an InputStream.
+     * @param inputStream the input stream
+     * @param deLimited the delimiter for each line of data.
+     * @return String array of lines, or null on failure
      */
     public static String[] getLinesFromInputStream(InputStream inputStream, String deLimited) {
         try {

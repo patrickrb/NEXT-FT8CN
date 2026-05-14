@@ -1,21 +1,22 @@
 package com.bg7yoz.ft8cn;
 /**
  * -----2022.5.6-----
- * MainViewModel类，用于解码FT8信号以及保存与解码有关的变量数据。生存于APP的整个生命周期。
- * 1.解码的总条数。decoded_counter和mutable_Decoded_Counter。
- * 2.解码消息的列表。消息以Ft8Message展示，列表用ArrayList泛型实现。ft8Messages，mutableFt8MessageList。
- * 3.解码和录音都需要时间同步，也就是以UTC时间的每15秒为一个周期。同步事件的触发由UtcTimer类来实现。
- * 4.当前的UTC时间。timerSec，更新频率（心跳频率）由UtcTimer确定，暂定100毫秒。
- * 5.通过类方法getInstance获取当前的MainViewModel的实例，确保有唯一的实例。
- * 6.用HamAudioRecorder类实现录音，目前只实现录音成文件，然后读取文件的数据给解码模块，后面要改成直接给数组的方式----TO DO---
- * 7.解码采用JNI接口调用原生C语言。调用接口名时ft8cn，由cpp文件夹下的CMakeLists.txt维护。各函数的调用接口在decode_ft8.cpp中。
+ * MainViewModel class for decoding FT8 signals and storing decode-related variable data. Lives for the entire app lifecycle.
+ * 1. Total decoded count: decoded_counter and mutable_Decoded_Counter.
+ * 2. Decoded message list: Messages displayed as Ft8Message, list implemented with ArrayList generic. ft8Messages, mutableFt8MessageList.
+ * 3. Both decoding and recording require time synchronization, with UTC time in 15-second cycles. Sync events are triggered by the UtcTimer class.
+ * 4. Current UTC time: timerSec, update frequency (heartbeat) determined by UtcTimer, tentatively 100 milliseconds.
+ * 5. Get the current MainViewModel instance via the getInstance class method, ensuring a unique instance.
+ * 6. Recording implemented with HamAudioRecorder class; currently records to file then reads file data for the decode module. Needs to be changed to direct array method ----TO DO---
+ * 7. Decoding uses JNI interface to call native C code. Interface name is ft8cn, maintained by CMakeLists.txt in the cpp folder. Function call interfaces are in decode_ft8.cpp.
  * -----2022.5.9-----
- * 如果系统没有发射信号，触发器会在每一个周期触发录音动作，因录音开始和结束要浪费一些时间，如果不干预上一个录音的动作，将出现
- * 连续的周期内录音动作重叠，造成第二个录音动作失败。所以，第二个周期的录音开始前，要停止前一个周期的录音，造成的结果就是每一次录音
- * 的开始时间要晚于周期开始300毫秒（模拟器的结果），实际录音的长度一般在14.77秒左右
+ * If the system is not transmitting, the trigger will initiate recording each cycle. Since starting and stopping recording wastes some time,
+ * if the previous recording action is not interrupted, consecutive cycles will have overlapping recording actions, causing the second recording to fail.
+ * Therefore, before starting the second cycle's recording, the previous cycle's recording must be stopped, resulting in each recording
+ * starting ~300ms after the cycle begins (emulator result). Actual recording length is typically around 14.77 seconds.
  * <p>
  *
- * 2023-08-16 由DS1UFX提交修改（基于0.9版），增加(tr)uSDX audio over cat的支持。
+ * 2023-08-16 Modified by DS1UFX (based on v0.9), added (tr)uSDX audio over CAT support.
  *
  * @author BG7YOZ
  * @date 2022.8.22
@@ -108,31 +109,31 @@ public class MainViewModel extends ViewModel {
     String TAG = "ft8cn MainViewModel";
     public boolean configIsLoaded = false;
 
-    private static MainViewModel viewModel = null;//当前存在的实例。
+    private static MainViewModel viewModel = null;//current existing instance.
     //public static Application application;
 
 
-    //public int decoded_counter = 0;//解码的总条数
-    public final ArrayList<Ft8Message> ft8Messages = new ArrayList<>();//消息列表
-    public UtcTimer utcTimer;//同步触发动作的计时器。
+    //public int decoded_counter = 0;//total decoded count
+    public final ArrayList<Ft8Message> ft8Messages = new ArrayList<>();//message list
+    public UtcTimer utcTimer;//timer for sync-triggered actions.
 
 
-    //public CallsignDatabase callsignDatabase = null;//呼号信息的数据库
-    public DatabaseOpr databaseOpr;//配置信息，和相关数据的数据库
+    //public CallsignDatabase callsignDatabase = null;//callsign information database
+    public DatabaseOpr databaseOpr;//configuration info and related data database
 
 
-    public MutableLiveData<Integer> mutable_Decoded_Counter = new MutableLiveData<>();//解码的总条数
-    public int currentDecodeCount = 0;//本次解码的条数
-    public MutableLiveData<ArrayList<Ft8Message>> mutableFt8MessageList = new MutableLiveData<>();//消息列表
-    public MutableLiveData<Long> timerSec = new MutableLiveData<>();//当前UTC时间。更新频率由UtcTimer确定，未触发时约100毫秒。
-    public MutableLiveData<Boolean> mutableIsRecording = new MutableLiveData<>();//是否处于录音状态
-    public MutableLiveData<Boolean> mutableHamRecordIsRunning = new MutableLiveData<>();//HamRecord是否运转
-    public MutableLiveData<Float> mutableTimerOffset = new MutableLiveData<>();//本周期的时间延迟
-    public MutableLiveData<Boolean> mutableIsDecoding = new MutableLiveData<>();//会触发频谱图中的标记动作
-    public ArrayList<Ft8Message> currentMessages = null;//本周期解码的消息（用于画到频谱上）
+    public MutableLiveData<Integer> mutable_Decoded_Counter = new MutableLiveData<>();//total decoded count
+    public int currentDecodeCount = 0;//number of decoded items in this cycle
+    public MutableLiveData<ArrayList<Ft8Message>> mutableFt8MessageList = new MutableLiveData<>();//message list
+    public MutableLiveData<Long> timerSec = new MutableLiveData<>();//current UTC time. Update frequency determined by UtcTimer, ~100ms when not triggered.
+    public MutableLiveData<Boolean> mutableIsRecording = new MutableLiveData<>();//whether currently recording
+    public MutableLiveData<Boolean> mutableHamRecordIsRunning = new MutableLiveData<>();//whether HamRecord is running
+    public MutableLiveData<Float> mutableTimerOffset = new MutableLiveData<>();//time delay of this cycle
+    public MutableLiveData<Boolean> mutableIsDecoding = new MutableLiveData<>();//triggers marker action in spectrum display
+    public ArrayList<Ft8Message> currentMessages = null;//decoded messages in this cycle (used for drawing on spectrum)
 
-    public MutableLiveData<Boolean> mutableIsFlexRadio = new MutableLiveData<>();//是不是flex电台
-    public MutableLiveData<Boolean> mutableIsXieguRadio = new MutableLiveData<>();//是不是flex电台
+    public MutableLiveData<Boolean> mutableIsFlexRadio = new MutableLiveData<>();//whether it's a Flex radio
+    public MutableLiveData<Boolean> mutableIsXieguRadio = new MutableLiveData<>();//whether it's a XieGu radio
 
     private final ExecutorService getQTHThreadPool = Executors.newCachedThreadPool();
     private final ExecutorService sendWaveDataThreadPool = Executors.newCachedThreadPool();
@@ -140,40 +141,40 @@ public class MainViewModel extends ViewModel {
     private final SendWaveDataRunnable sendWaveDataRunnable = new SendWaveDataRunnable();
 
 
-    //用于显示生成共享日志过程的变量
-    public MutableLiveData<String> mutableShareInfo=new MutableLiveData<>("");//分享数据的状态
-    public MutableLiveData<Integer> mutableSharePosition=new MutableLiveData<>(0);//分享数据当前的位置
-    public MutableLiveData<Boolean> mutableShareRunning=new MutableLiveData<>(false);//是否正在生成分享数据
-    public MutableLiveData<Integer> mutableShareCount=new MutableLiveData<>(0);//共享的总数
-    public MutableLiveData<Boolean> mutableImportShareRunning=new MutableLiveData<>(false);//是否正在导入分享数据
+    //variables for displaying shared log generation progress
+    public MutableLiveData<String> mutableShareInfo=new MutableLiveData<>("");//shared data status
+    public MutableLiveData<Integer> mutableSharePosition=new MutableLiveData<>(0);//current position of shared data
+    public MutableLiveData<Boolean> mutableShareRunning=new MutableLiveData<>(false);//whether generating shared data
+    public MutableLiveData<Integer> mutableShareCount=new MutableLiveData<>(0);//total shared count
+    public MutableLiveData<Boolean> mutableImportShareRunning=new MutableLiveData<>(false);//whether importing shared data
 
 
 
-    public HamRecorder hamRecorder;//用于录音的对象
-    public FT8SignalListener ft8SignalListener;//用于监听FT8信号并解码的对象
-    public FT8TransmitSignal ft8TransmitSignal;//用于发射信号用的对象
-    public SpectrumListener spectrumListener;//用于画频谱的对象
-    public boolean markMessage = true;//是否标记消息开关
+    public HamRecorder hamRecorder;//recording object
+    public FT8SignalListener ft8SignalListener;//object for listening to and decoding FT8 signals
+    public FT8TransmitSignal ft8TransmitSignal;//object for transmitting signals
+    public SpectrumListener spectrumListener;//object for drawing the spectrum
+    public boolean markMessage = true;//whether to mark messages toggle
 
-    //控制电台的方式
+    //rig control mode
     public OperationBand operationBand = null;
 
-    private SWLQsoList swlQsoList = new SWLQsoList();//用于记录SWL的QSO对象，对SWL QSO做判断，防止重复。
+    private SWLQsoList swlQsoList = new SWLQsoList();//records SWL QSO objects, checks SWL QSOs to prevent duplicates.
 
 
     public MutableLiveData<ArrayList<CableSerialPort.SerialPort>> mutableSerialPorts = new MutableLiveData<>();
-    private ArrayList<CableSerialPort.SerialPort> serialPorts;//串口列表
-    public BaseRig baseRig;//电台
+    private ArrayList<CableSerialPort.SerialPort> serialPorts;//serial port list
+    public BaseRig baseRig;//rig
     private final OnRigStateChanged onRigStateChanged = new OnRigStateChanged() {
         @Override
         public void onDisconnected() {
-            //与电台连接中断
+            //disconnected from rig
             ToastMessage.show(getStringFromResource(R.string.disconnect_rig));
         }
 
         @Override
         public void onConnected() {
-            //与电台建立连接
+            //connected to rig
             ToastMessage.show(getStringFromResource(R.string.connected_rig));
         }
 
@@ -184,54 +185,54 @@ public class MainViewModel extends ViewModel {
 
         @Override
         public void onFreqChanged(long freq) {
-            //当前频率:%s
+            //current frequency: %s
             ToastMessage.show(String.format(getStringFromResource(R.string.current_frequency)
                     , BaseRigOperation.getFrequencyAllInfo(freq)));
-            //把频率的变化写回到全局变量中
+            //write frequency changes back to global variables
             GeneralVariables.band = freq;
             GeneralVariables.bandListIndex = OperationBand.getIndexByFreq(freq);
             GeneralVariables.mutableBandChange.postValue(GeneralVariables.bandListIndex);
 
-            databaseOpr.getAllQSLCallsigns();//通联成功的呼号读出来
+            databaseOpr.getAllQSLCallsigns();//read out successfully contacted callsigns
 
         }
 
         @Override
         public void onRunError(String message) {
-            //与电台通讯出现错误，
+            //rig communication error
             ToastMessage.show(String.format(getStringFromResource(R.string.radio_communication_error)
                     , message));
         }
     };
 
-    //发射信号用的消息列表
+    //message list for signal transmission
     //public ArrayList<Ft8Message> transmitMessages = new ArrayList<>();
     //public MutableLiveData<ArrayList<Ft8Message>> mutableTransmitMessages = new MutableLiveData<>();
     public MutableLiveData<Integer> mutableTransmitMessagesCount = new MutableLiveData<>();
 
 
-    public boolean deNoise = false;//在频谱中抑制噪声
+    public boolean deNoise = false;//suppress noise in the spectrum
 
-    //*********日志查询需要的变量********************
-    public boolean logListShowCallsign = false;//在日志查询列表的表现形式
-    public String queryKey = "";//查询的关键字
-    public int queryFilter = 0;//过滤，0全部，1，确认，2，未确认
+    //*********variables needed for log query********************
+    public boolean logListShowCallsign = false;//display format in the log query list
+    public String queryKey = "";//query keyword
+    public int queryFilter = 0;//filter: 0=all, 1=confirmed, 2=unconfirmed
     public MutableLiveData<Integer> mutableQueryFilter = new MutableLiveData<>();
     public ArrayList<QSLCallsignRecord> callsignRecords = new ArrayList<>();
     //public ArrayList<QSLRecordStr> qslRecords=new ArrayList<>();
     //********************************************
-    //关注呼号的列表
+    //followed callsign list
     //public ArrayList<String> followCallsign = new ArrayList<>();
 
 
-    //日志管理HTTP SERVER
+    //log management HTTP SERVER
     private final LogHttpServer httpServer;
 
     /**
-     * 获取MainViewModel的实例，确保存在唯一的MainViewModel实例，该实例在APP的全部生存周期中。
+     * Get the MainViewModel instance, ensuring a unique instance exists throughout the entire app lifecycle.
      *
-     * @param owner ViewModelStoreOwner 所有者，一般为Activity或Fragment。
-     * @return MainViewModel 返回一个MainViewModel实例
+     * @param owner ViewModelStoreOwner owner, typically an Activity or Fragment.
+     * @return MainViewModel Returns a MainViewModel instance.
      */
     public static MainViewModel getInstance(ViewModelStoreOwner owner) {
         if (viewModel == null) {
@@ -241,56 +242,56 @@ public class MainViewModel extends ViewModel {
     }
 
     /**
-     * 获取消息列表中指定的消息
+     * Get the specified message from the message list.
      *
-     * @param position 在Mutable类型的列表中的位置
-     * @return 返回一个Ft8Message类型的解码后的信息
+     * @param position Position in the Mutable type list.
+     * @return Returns a decoded Ft8Message object.
      */
     public Ft8Message getFt8Message(int position) {
         return Objects.requireNonNull(ft8Messages.get(position));
     }
 
     /**
-     * MainViewModel的构造函数主要完成一下事情：
-     * 1.创建与UTC同步的时钟，时钟是UtcTimer类，内核是用Timer和TimerTask实现的。回调函数是多线程的，要考虑线程安全的问题。
-     * 2.创建Mutable型的解码消息列表。
+     * MainViewModel constructor accomplishes the following:
+     * 1. Create a UTC-synchronized clock. The clock is UtcTimer class, internally implemented with Timer and TimerTask. Callbacks are multi-threaded; thread safety must be considered.
+     * 2. Create Mutable-type decoded message list.
      */
     //@RequiresApi(api = Build.VERSION_CODES.N)
     public MainViewModel() {
 
-        //获取配置信息。
+        //get configuration info.
         databaseOpr = DatabaseOpr.getInstance(GeneralVariables.getMainContext()
                 , "data.db");
-        mutableIsDecoding.postValue(false);//解码状态
-        //创录音对象
+        mutableIsDecoding.postValue(false);//decode state
+        //create recording object
         hamRecorder = new HamRecorder(null);
         hamRecorder.startRecord();
 
         mutableIsFlexRadio.setValue(false);
         mutableIsXieguRadio.setValue(false);
 
-        //创建用于显示时间的计时器
+        //create timer for displaying time
         utcTimer = new UtcTimer(10, false, new OnUtcTimer() {
             @Override
-            public void doHeartBeatTimer(long utc) {//不触发时的时钟信息
+            public void doHeartBeatTimer(long utc) {//clock info when not triggered
 
             }
 
             @Override
-            public void doOnSecTimer(long utc) {//当指定间隔时触发时
-                timerSec.postValue(utc);//发送当前UTC时间
+            public void doOnSecTimer(long utc) {//triggered at specified interval
+                timerSec.postValue(utc);//send current UTC time
                 mutableIsRecording.postValue(hamRecorder.isRunning());
-                mutableHamRecordIsRunning.postValue(hamRecorder.isRunning());//发送当前计时器状态
+                mutableHamRecordIsRunning.postValue(hamRecorder.isRunning());//send current timer state
             }
         });
-        utcTimer.start();//启动计时器
+        utcTimer.start();//start timer
 
-        //同步一下时间。microsoft的NTP服务器
+        //synchronize time. Microsoft's NTP server
         UtcTimer.syncTime(null);
 
         mutableFt8MessageList.setValue(ft8Messages);
 
-        //创建监听对象，回调中的动作用于处理解码、发射、关注的呼号列表添加等操作
+        //create listener object; callback actions handle decoding, transmitting, adding to followed callsign list, etc.
         ft8SignalListener = new FT8SignalListener(databaseOpr, new OnFt8Listen() {
             @Override
             public void beforeListen(long utc) {
@@ -300,28 +301,28 @@ public class MainViewModel extends ViewModel {
             @Override
             public void afterDecode(long utc, float time_sec, int sequential
                     , ArrayList<Ft8Message> messages, boolean isDeep) {
-                if (messages.size() == 0) return;//没有解码出消息，不触发动作
+                if (messages.size() == 0) return;//no messages decoded, don't trigger action
 
                 synchronized (ft8Messages) {
-                    ft8Messages.addAll(messages);//添加消息到列表
+                    ft8Messages.addAll(messages);//add messages to list
                 }
-                GeneralVariables.deleteArrayListMore(ft8Messages);//删除多余的消息,FT8CN限定的可展示消息的总数量
+                GeneralVariables.deleteArrayListMore(ft8Messages);//remove excess messages; FT8CN limits the total displayable messages
 
-                mutableFt8MessageList.postValue(ft8Messages);//触发添加消息的动作，让界面能观察到
-                mutableTimerOffset.postValue(time_sec);//本次时间偏移量
+                mutableFt8MessageList.postValue(ft8Messages);//trigger message addition action so the UI can observe
+                mutableTimerOffset.postValue(time_sec);//this cycle's time offset
 
 
-                findIncludedCallsigns(messages);//查找符合条件的消息，放到呼叫列表中
+                findIncludedCallsigns(messages);//find matching messages and add to the call list
 
-                //检查发射程序。从消息列表中解析发射的程序
-                //超出周期2秒钟，就不应该解析了
+                //check transmit procedure. Parse transmit procedure from message list
+                //if exceeded cycle by 2 seconds, should not parse
                 if (!ft8TransmitSignal.isTransmitting()
-                        && !isDeep//屏蔽掉深度解码激活自动程序
-                        //深度解码的列表应该加到没有深度解码的新消息列表中
+                        && !isDeep//block deep decode from activating auto procedure
+                        //deep decode list should be added to the new message list without deep decode
                         && (ft8SignalListener.timeSec
                         + GeneralVariables.pttDelay
-                        + GeneralVariables.transmitDelay <= 2000)) {//考虑网络模式，发射时长是13秒
-                    ft8TransmitSignal.parseMessageToFunction(messages);//解析消息，并处理
+                        + GeneralVariables.transmitDelay <= 2000)) {//considering network mode, transmit duration is 13 seconds
+                    ft8TransmitSignal.parseMessageToFunction(messages);//parse messages and process
                 }
 
                 currentMessages = messages;
@@ -332,30 +333,30 @@ public class MainViewModel extends ViewModel {
                     currentDecodeCount = messages.size();
                 }
 
-                mutableIsDecoding.postValue(false);//解码的状态，会触发频谱图中的标记动作
+                mutableIsDecoding.postValue(false);//decode state, triggers marker action in spectrum display
 
 
                 getQTHRunnable.messages = messages;
-                getQTHThreadPool.execute(getQTHRunnable);//用线程池的方式查询归属地
+                getQTHThreadPool.execute(getQTHRunnable);//query location via thread pool
 
-                //此变量也是告诉消息列表变化的
+                //this variable also notifies message list changes
                 mutable_Decoded_Counter.postValue(
-                        currentDecodeCount);//告知界面消息的总数量
+                        currentDecodeCount);//notify the UI of the total message count
 
                 if (GeneralVariables.saveSWLMessage) {
-                    databaseOpr.writeMessage(messages);//把SWL消息写到数据库
+                    databaseOpr.writeMessage(messages);//write SWL messages to database
                 }
-                //检查QSO of SWL,并保存到SWLQSOTable中的通联列表qsoList中
+                //check QSO of SWL, and save to the QSO list in SWLQSOTable
                 if (GeneralVariables.saveSWL_QSO) {
                     swlQsoList.findSwlQso(messages, ft8Messages, new SWLQsoList.OnFoundSwlQso() {
                         @Override
                         public void doFound(QSLRecord record) {
-                            databaseOpr.addSWL_QSO(record);//把SWL QSO保存到数据库
+                            databaseOpr.addSWL_QSO(record);//save SWL QSO to database
                             ToastMessage.show(record.swlQSOInfo());
                         }
                     });
                 }
-                //从列表中查找呼号和网格对应关系，并添加到表中
+                //find callsign-to-grid mapping from the list and add to the table
                 getCallsignAndGrid(messages);
             }
         });
@@ -370,13 +371,13 @@ public class MainViewModel extends ViewModel {
 
         ft8SignalListener.startListen();
 
-        //频谱监听对象
+        //spectrum listener object
         spectrumListener = new SpectrumListener(hamRecorder);
 
 
-        //创建发射对象，回调：发射前，发射后、QSL成功后。
+        //create transmit object; callbacks: before transmit, after transmit, after QSL success.
         ft8TransmitSignal = new FT8TransmitSignal(databaseOpr, new OnDoTransmitted() {
-            private boolean needControlSco() {//根据控制模式，确定是不是需要开启SCO
+            private boolean needControlSco() {//determine whether SCO needs to be enabled based on control mode
                 if (GeneralVariables.connectMode == ConnectMode.NETWORK) {
                     return false;
                 }
@@ -424,14 +425,14 @@ public class MainViewModel extends ViewModel {
                         if (baseRig.isConnected()) {
                             sendWaveDataRunnable.baseRig = baseRig;
                             sendWaveDataRunnable.message = msg;
-                            //以线程池的方式执行网络数据包发送
+                            //send network data packets via thread pool
                             sendWaveDataThreadPool.execute(sendWaveDataRunnable);
                         }
                     }
                 }
             }
 
-            //2023-08-16 由DS1UFX提交修改（基于0.9版），用于(tr)uSDX audio over cat的支持。
+            //2023-08-16 Modified by DS1UFX (based on v0.9), for (tr)uSDX audio over CAT support.
             @Override
             public boolean supportTransmitOverCAT() {
                 if (GeneralVariables.controlMode != ControlMode.CAT) {
@@ -447,7 +448,7 @@ public class MainViewModel extends ViewModel {
             }
 
             @Override
-            public void onTransmitOverCAT(Ft8Message msg) {//通过CAT发送音频消息
+            public void onTransmitOverCAT(Ft8Message msg) {//send audio message via CAT
                 if (!supportTransmitOverCAT()) {
                     return;
                 }
@@ -456,12 +457,12 @@ public class MainViewModel extends ViewModel {
                 sendWaveDataThreadPool.execute(sendWaveDataRunnable);
             }
 
-        }, new OnTransmitSuccess() {//当通联成功时
+        }, new OnTransmitSuccess() {//when QSO is successful
             @Override
             public void doAfterTransmit(QSLRecord qslRecord) {
-                databaseOpr.addQSL_Callsign(qslRecord);//两个操作，把呼号和QSL记录下来
+                databaseOpr.addQSL_Callsign(qslRecord);//two operations: record callsign and QSL
 
-                // 记录到第三方服务，耗时可能较长
+                // record to third-party service; may take some time
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
@@ -474,7 +475,7 @@ public class MainViewModel extends ViewModel {
                     }
                 }).start();
 
-                if (qslRecord.getToCallsign() != null) {//把通联成功的分区加入到分区列表
+                if (qslRecord.getToCallsign() != null) {//add successfully contacted zone to zone list
                     GeneralVariables.callsignDatabase.getCallsignInformation(qslRecord.getToCallsign()
                             , new OnAfterQueryCallsignLocation() {
                                 @Override
@@ -489,7 +490,7 @@ public class MainViewModel extends ViewModel {
         });
 
 
-        //打开HTTP SERVER
+        //open HTTP SERVER
         httpServer = new LogHttpServer(this, LogHttpServer.DEFAULT_PORT);
         try {
             httpServer.start();
@@ -513,40 +514,40 @@ public class MainViewModel extends ViewModel {
 
 
     /**
-     * 查找符合条件的消息，放到呼叫列表中
+     * Find matching messages and add to the call list.
      *
-     * @param messages 消息
+     * @param messages Messages
      */
     private synchronized void findIncludedCallsigns(ArrayList<Ft8Message> messages) {
-        Log.d(TAG, "findIncludedCallsigns: 查找关注的呼号");
+        Log.d(TAG, "findIncludedCallsigns: searching for followed callsigns");
         if (ft8TransmitSignal.isActivated() && ft8TransmitSignal.sequential != UtcTimer.getNowSequential()) {
             return;
         }
         int count = 0;
         for (Ft8Message msg : messages) {
-            //与我的呼号有关，与关注的呼号有关
+            //related to my callsign, related to followed callsigns
             //if (msg.getCallsignFrom().equals(GeneralVariables.myCallsign)
             if (GeneralVariables.checkIsMyCallsign(msg.getCallsignFrom())
                     //|| msg.getCallsignTo().equals(GeneralVariables.myCallsign)
                     || GeneralVariables.checkIsMyCallsign(msg.getCallsignTo())
                     || GeneralVariables.callsignInFollow(msg.getCallsignFrom())
                     || (GeneralVariables.callsignInFollow(msg.getCallsignTo()) && (msg.getCallsignTo() != null))
-                    || (GeneralVariables.autoFollowCQ && msg.checkIsCQ())) {//是CQ，并且允许关注CQ
-                //看不是通联成功的呼号的消息
+                    || (GeneralVariables.autoFollowCQ && msg.checkIsCQ())) {//is CQ and auto-follow CQ is enabled
+                //check if the callsign has not been previously contacted
                 msg.isQSL_Callsign = GeneralVariables.checkQSLCallsign(msg.getCallsignFrom());
-                if (!GeneralVariables.checkIsExcludeCallsign(msg.callsignFrom)) {//不在排除呼号前缀的，才加入列表
+                if (!GeneralVariables.checkIsExcludeCallsign(msg.callsignFrom)) {//only add to list if not in excluded callsign prefix list
                     count++;
                     GeneralVariables.transmitMessages.add(msg);
                 }
             }
         }
-        GeneralVariables.deleteArrayListMore(GeneralVariables.transmitMessages);//删除多余的消息
+        GeneralVariables.deleteArrayListMore(GeneralVariables.transmitMessages);//remove excess messages
         //mutableTransmitMessages.postValue(GeneralVariables.transmitMessages);
         mutableTransmitMessagesCount.postValue(count);
     }
 
     /**
-     * 清除传输消息列表
+     * Clear the transmit message list.
      */
     public void clearTransmittingMessage() {
         GeneralVariables.transmitMessages.clear();
@@ -555,16 +556,16 @@ public class MainViewModel extends ViewModel {
 
 
     /**
-     * 从消息列表中查找呼号和网格的对应关系
+     * Find the callsign-to-grid mapping from the message list.
      *
-     * @param messages 消息列表
+     * @param messages Message list
      */
     private void getCallsignAndGrid(ArrayList<Ft8Message> messages) {
         for (Ft8Message msg : messages) {
-            if (GeneralVariables.checkFun1(msg.extraInfo)) {//检查是不是网格
-                //如果内存表中没有，或不一致，就写入数据库中
+            if (GeneralVariables.checkFun1(msg.extraInfo)) {//check if it's a grid
+                //if not in the memory table, or inconsistent, write to database
                 if (!GeneralVariables.getCallsignHasGrid(msg.getCallsignFrom(), msg.maidenGrid)) {
-                    databaseOpr.addCallsignQTH(msg.getCallsignFrom(), msg.maidenGrid);//写数据库
+                    databaseOpr.addCallsignQTH(msg.getCallsignFrom(), msg.maidenGrid);//write to database
                 }
                 GeneralVariables.addCallsignAndGrid(msg.getCallsignFrom(), msg.maidenGrid);
             }
@@ -572,7 +573,7 @@ public class MainViewModel extends ViewModel {
     }
 
     /**
-     * 清除消息列表
+     * Clear the message list.
      */
     public void clearFt8MessageList() {
         ft8Messages.clear();
@@ -582,22 +583,22 @@ public class MainViewModel extends ViewModel {
 
 
     /**
-     * 删除单个文件
+     * Delete a single file
      *
-     * @param fileName 要删除的文件的文件名
+     * @param fileName the filename of the file to delete
      */
     public static void deleteFile(String fileName) {
         File file = new File(fileName);
-        // 如果文件路径所对应的文件存在，并且是一个文件，则直接删除
+        // If the file at the given path exists and is a file, delete it directly
         if (file.exists() && file.isFile()) {
             file.delete();
         }
     }
 
     /**
-     * 向关注的呼号列表添加呼号
+     * Add a callsign to the followed callsign list
      *
-     * @param callsign 呼号
+     * @param callsign the callsign
      */
     public void addFollowCallsign(String callsign) {
         if (!GeneralVariables.followCallsign.contains(callsign)) {
@@ -608,7 +609,7 @@ public class MainViewModel extends ViewModel {
 
 
     /**
-     * 从数据库中获取关注的呼号列表
+     * Get the followed callsign list from the database
      */
     public void getFollowCallsignsFromDataBase() {
         databaseOpr.getFollowCallsigns(new OnAfterQueryFollowCallsigns() {
@@ -625,21 +626,21 @@ public class MainViewModel extends ViewModel {
 
 
     /**
-     * 设置操作载波频率。如果电台没有连接，就有操作
+     * Set the operating carrier frequency. Only operates if the rig is connected.
      */
     public void setOperationBand() {
         if (!isRigConnected()) {
             return;
         }
 
-        //先设置上边带，再设置频率
-        baseRig.setUsbModeToRig();//设置上边带
+        //set USB mode first, then set frequency
+        baseRig.setUsbModeToRig();//set USB mode
 
-        //此处延迟1秒发送第二个指令，是防止协谷X6100断开连接的问题
+        //delay 1 second before sending the second command to prevent XieGu X6100 disconnection issues
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                baseRig.setFreq(GeneralVariables.band);//设置频率
+                baseRig.setFreq(GeneralVariables.band);//set frequency
                 baseRig.setFreqToRig();
             }
         }, 800);
@@ -659,13 +660,13 @@ public class MainViewModel extends ViewModel {
 
 
     /**
-     * 通过USB连接电台
+     * Connect to rig via USB
      *
      * @param context context
-     * @param port    串口
+     * @param port    serial port
      */
     public void connectCableRig(Context context, CableSerialPort.SerialPort port) {
-        if (GeneralVariables.controlMode == ControlMode.VOX) {//如果当前是VOX，就改成CAT模式
+        if (GeneralVariables.controlMode == ControlMode.VOX) {//if currently VOX, switch to CAT mode
             GeneralVariables.controlMode = ControlMode.CAT;
         }
         connectRig();
@@ -678,7 +679,7 @@ public class MainViewModel extends ViewModel {
                 //, GeneralVariables.controlMode);
                 , GeneralVariables.controlMode,baseRig);
 
-        //2023-08-16 由DS1UFX提交修改（基于0.9版），用于(tr)uSDX audio over cat的支持。
+        //2023-08-16 Modified by DS1UFX (based on v0.9), for (tr)uSDX audio over CAT support.
         connector.setOnCableDataReceived(new CableConnector.OnCableDataReceived() {
             @Override
             public void OnWaveReceived(int bufferLen, float[] buffer) {
@@ -691,18 +692,18 @@ public class MainViewModel extends ViewModel {
         baseRig.setConnector(connector);
         connector.connect();
 
-        //晚1秒钟设置模式，防止有的电台反应不过来
+        //delay 1 second before setting mode, to prevent some rigs from not responding in time
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                setOperationBand();//设置载波频率
+                setOperationBand();//set carrier frequency
             }
         }, 1000);
 
     }
 
     public void connectBluetoothRig(Context context, BluetoothDevice device) {
-        GeneralVariables.controlMode = ControlMode.CAT;//蓝牙控制模式，只能是CAT控制
+        GeneralVariables.controlMode = ControlMode.CAT;//Bluetooth control mode, only CAT control is supported
         connectRig();
         if (baseRig == null) {
             return;
@@ -713,17 +714,17 @@ public class MainViewModel extends ViewModel {
         baseRig.setOnRigStateChanged(onRigStateChanged);
         baseRig.setConnector(connector);
 
-        new Handler().postDelayed(new Runnable() {//蓝牙连接是需要时间的，等2秒再设置频率
+        new Handler().postDelayed(new Runnable() {//connection takes time, wait before setting frequency
             @Override
             public void run() {
-                setOperationBand();//设置载波频率
+                setOperationBand();//set carrier frequency
             }
         }, 5000);
     }
 
     /**
-     * 以网络方式连接到ICOM、协谷X6100系列电台
-     * @param wifiRig ICom,XieGu Wifi模式的电台
+     * Connect to ICOM or XieGu X6100 series rig via network
+     * @param wifiRig ICom or XieGu WiFi mode rig
      */
     public void connectWifiRig(WifiRig wifiRig) {
         if (GeneralVariables.connectMode == ConnectMode.NETWORK) {
@@ -734,8 +735,8 @@ public class MainViewModel extends ViewModel {
             }
         }
 
-        GeneralVariables.controlMode = ControlMode.CAT;//网络控制模式
-        //目前Icom与协谷x6100共用同一种连接器
+        GeneralVariables.controlMode = ControlMode.CAT;//network control mode
+        //currently Icom and XieGu X6100 share the same connector
         IComWifiConnector iComWifiConnector = new IComWifiConnector(GeneralVariables.controlMode
                 ,wifiRig);
         iComWifiConnector.setOnWifiDataReceived(new IComWifiConnector.OnWifiDataReceived() {
@@ -751,25 +752,25 @@ public class MainViewModel extends ViewModel {
         });
 
         iComWifiConnector.connect();
-        connectRig();//给baseRig赋值
+        connectRig();//assign baseRig
 
         baseRig.setControlMode(GeneralVariables.controlMode);
         baseRig.setOnRigStateChanged(onRigStateChanged);
         baseRig.setConnector(iComWifiConnector);
 
-        new Handler().postDelayed(new Runnable() {//蓝牙连接是需要时间的，等2秒再设置频率
+        new Handler().postDelayed(new Runnable() {//connection takes time, wait before setting frequency
             @Override
             public void run() {
-                setOperationBand();//设置载波频率
+                setOperationBand();//set carrier frequency
             }
         }, 1000);
     }
 
     /**
-     * 连接到flexRadio
+     * Connect to FlexRadio
      *
      * @param context   context
-     * @param flexRadio flexRadio对象
+     * @param flexRadio FlexRadio object
      */
     public void connectFlexRadioRig(Context context, FlexRadio flexRadio) {
         if (GeneralVariables.connectMode == ConnectMode.NETWORK) {
@@ -779,7 +780,7 @@ public class MainViewModel extends ViewModel {
                 }
             }
         }
-        GeneralVariables.controlMode = ControlMode.CAT;//网络控制模式
+        GeneralVariables.controlMode = ControlMode.CAT;//network control mode
         FlexConnector flexConnector = new FlexConnector(context, flexRadio, GeneralVariables.controlMode);
         flexConnector.setOnWaveDataReceived(new FlexConnector.OnWaveDataReceived() {
             @Override
@@ -793,19 +794,19 @@ public class MainViewModel extends ViewModel {
         baseRig.setOnRigStateChanged(onRigStateChanged);
         baseRig.setConnector(flexConnector);
 //
-        new Handler().postDelayed(new Runnable() {//连接是需要时间的，等2秒再设置频率
+        new Handler().postDelayed(new Runnable() {//connection takes time, wait before setting frequency
             @Override
             public void run() {
-                setOperationBand();//设置载波频率
+                setOperationBand();//set carrier frequency
             }
         }, 3000);
     }
 
     /**
-     * 连接到协谷Radio
+     * Connect to XieGu Radio
      *
      * @param context   context
-     * @param xieguRadio X6100Radio对象
+     * @param xieguRadio X6100Radio object
      */
     public void connectXieguRadioRig(Context context, X6100Radio xieguRadio) {
         if (GeneralVariables.connectMode == ConnectMode.NETWORK) {
@@ -815,7 +816,7 @@ public class MainViewModel extends ViewModel {
                 }
             }
         }
-        GeneralVariables.controlMode = ControlMode.CAT;//网络控制模式
+        GeneralVariables.controlMode = ControlMode.CAT;//network control mode
         X6100Connector xieguConnector = new X6100Connector(context, xieguRadio, GeneralVariables.controlMode);
         xieguConnector.setOnWaveDataReceived(new X6100Connector.OnWaveDataReceived() {
             @Override
@@ -829,7 +830,7 @@ public class MainViewModel extends ViewModel {
         xieguConnector.connect();
         connectRig();
         xieguConnector.setBaseRig(baseRig);
-        //接收电台发回的数据
+        //receive data sent back from the rig
         xieguRadio.setOnReceiveDataListener(new X6100Radio.OnReceiveDataListener() {
             @Override
             public void onDataReceive(byte[] data) {
@@ -841,22 +842,22 @@ public class MainViewModel extends ViewModel {
         baseRig.setOnRigStateChanged(onRigStateChanged);
         baseRig.setConnector(xieguConnector);
 
-        new Handler().postDelayed(new Runnable() {//连接是需要时间的，等2秒再设置频率
+        new Handler().postDelayed(new Runnable() {//connection takes time, wait before setting frequency
             @Override
             public void run() {
-                setOperationBand();//设置载波频率
+                setOperationBand();//set carrier frequency
             }
         }, 3000);
     }
 
 
     /**
-     * 根据指令集创建不同型号的电台
+     * Create different rig models based on the instruction set
      */
     private void connectRig() {
 
         baseRig = null;
-        //此处判断是用什么类型的电台，ICOM,YAESU 2,YAESU 3
+        //determine the rig type: ICOM, YAESU 2, YAESU 3
         switch (GeneralVariables.instructionSet) {
             case InstructionSet.ICOM:
                 baseRig = new IcomRig(GeneralVariables.civAddress,true);
@@ -871,19 +872,19 @@ public class MainViewModel extends ViewModel {
                 baseRig = new Yaesu2_847Rig();
                 break;
             case InstructionSet.YAESU_3_9:
-                baseRig = new Yaesu39Rig(false);//yaesu3代指令，9位频率,usb模式
+                baseRig = new Yaesu39Rig(false);//Yaesu 3rd-gen commands, 9-digit frequency, USB mode
                 break;
             case InstructionSet.YAESU_3_9_U_DIG:
-                baseRig = new Yaesu39Rig(true);//yaesu3代指令，9位频率,data-usb模式
+                baseRig = new Yaesu39Rig(true);//Yaesu 3rd-gen commands, 9-digit frequency, DATA-USB mode
                 break;
             case InstructionSet.YAESU_3_8:
-                baseRig = new Yaesu38Rig();//yaesu3代指令，8位频率
+                baseRig = new Yaesu38Rig();//Yaesu 3rd-gen commands, 8-digit frequency
                 break;
             case InstructionSet.YAESU_3_450:
-                baseRig = new Yaesu38_450Rig();//yaesu3代指令，8位频率
+                baseRig = new Yaesu38_450Rig();//Yaesu 3rd-gen commands, 8-digit frequency
                 break;
             case InstructionSet.KENWOOD_TK90:
-                baseRig = new KenwoodKT90Rig();//建伍TK90
+                baseRig = new KenwoodKT90Rig();//Kenwood TK90
                 break;
             case InstructionSet.YAESU_DX10:
                 baseRig = new YaesuDX10Rig();//YAESU DX10 DX101
@@ -892,10 +893,10 @@ public class MainViewModel extends ViewModel {
                 baseRig = new KenwoodTS590Rig();//KENWOOD TS590
                 break;
             case InstructionSet.GUOHE_Q900:
-                baseRig = new GuoHeQ900Rig();//国赫Q900
+                baseRig = new GuoHeQ900Rig();//GuoHe Q900
                 break;
-            case InstructionSet.XIEGUG90S://协谷，USB模式
-                baseRig = new XieGuRig(GeneralVariables.civAddress);//协谷G90S
+            case InstructionSet.XIEGUG90S://XieGu, USB mode
+                baseRig = new XieGuRig(GeneralVariables.civAddress);//XieGu G90S
                 break;
             case InstructionSet.ELECRAFT:
                 baseRig = new ElecraftRig();//ELECRAFT
@@ -907,17 +908,17 @@ public class MainViewModel extends ViewModel {
                 baseRig = new FlexNetworkRig();
                 break;
             case InstructionSet.XIEGU_6100_FT8CNS:
-                if (GeneralVariables.connectMode == ConnectMode.NETWORK) {//只在网络模式下工作
-                    baseRig = new XieGu6100NetRig(GeneralVariables.civAddress);//协谷6100ft8cns模式
-                }else{//否则使用传统的模式
-                    baseRig = new XieGu6100Rig(GeneralVariables.civAddress);//协谷6100
+                if (GeneralVariables.connectMode == ConnectMode.NETWORK) {//only works in network mode
+                    baseRig = new XieGu6100NetRig(GeneralVariables.civAddress);//XieGu 6100 FT8CNS mode
+                }else{//otherwise use legacy mode
+                    baseRig = new XieGu6100Rig(GeneralVariables.civAddress);//XieGu 6100
                 }
                 break;
             case InstructionSet.XIEGU_6100:
-                baseRig = new XieGu6100Rig(GeneralVariables.civAddress);//协谷6100
+                baseRig = new XieGu6100Rig(GeneralVariables.civAddress);//XieGu 6100
                 break;
             case InstructionSet.KENWOOD_TS2000:
-                baseRig = new KenwoodTS2000Rig();//建伍TS2000
+                baseRig = new KenwoodTS2000Rig();//Kenwood TS2000
                 break;
             case InstructionSet.WOLF_SDR_DIGU:
                 baseRig = new Wolf_sdr_450Rig(false);
@@ -955,9 +956,9 @@ public class MainViewModel extends ViewModel {
 
 
     /**
-     * 检察电台是否处于连接状态,两种情况：rigBaseClass没建立，串口没连接成功
+     * Check whether the rig is connected. Two cases: rigBaseClass not created, or serial port connection failed.
      *
-     * @return 是否连接
+     * @return whether connected
      */
     public boolean isRigConnected() {
         if (baseRig == null) {
@@ -968,7 +969,7 @@ public class MainViewModel extends ViewModel {
     }
 
     /**
-     * 获取串口设备列表
+     * Get the serial port device list
      */
     public void getUsbDevice() {
         serialPorts =
@@ -982,13 +983,13 @@ public class MainViewModel extends ViewModel {
                 .getSystemService(Context.AUDIO_SERVICE);
         if (audioManager == null) return;
         if (!audioManager.isBluetoothScoAvailableOffCall()) {
-            //蓝牙设备不支持录音
+            //Bluetooth device does not support recording
             ToastMessage.show(getStringFromResource(R.string.does_not_support_recording));
             return;
         }
         audioManager.setBluetoothScoOn(true);
-        audioManager.startBluetoothSco();//71毫秒
-        audioManager.setSpeakerphoneOn(false);//进入耳机模式
+        audioManager.startBluetoothSco();//71ms
+        audioManager.setSpeakerphoneOn(false);//enter headset mode
     }
 
     public void stopSco() {
@@ -998,7 +999,7 @@ public class MainViewModel extends ViewModel {
         if (audioManager.isBluetoothScoOn()) {
             audioManager.setBluetoothScoOn(false);
             audioManager.stopBluetoothSco();
-            audioManager.setSpeakerphoneOn(true);//退出耳机模式
+            audioManager.setSpeakerphoneOn(true);//exit headset mode
         }
 
     }
@@ -1009,21 +1010,21 @@ public class MainViewModel extends ViewModel {
                 .getSystemService(Context.AUDIO_SERVICE);
         if (audioManager == null) return;
         if (!audioManager.isBluetoothScoAvailableOffCall()) {
-            //蓝牙设备不支持录音
+            //Bluetooth device does not support recording
             ToastMessage.show(getStringFromResource(R.string.does_not_support_recording));
         }
 
         /*
-        播放音乐的对应的就是MODE_NORMAL, 如果使用外放播则调用audioManager.setSpeakerphoneOn(true)即可.
-        若使用耳机和听筒,则需要先设置模式为MODE_IN_CALL(3.0以前)或MODE_IN_COMMUNICATION(3.0以后).
+        MODE_NORMAL corresponds to music playback. For speaker output, call audioManager.setSpeakerphoneOn(true).
+        For headset or earpiece, set mode to MODE_IN_CALL (pre-3.0) or MODE_IN_COMMUNICATION (3.0+).
          */
-        audioManager.setMode(AudioManager.MODE_NORMAL);//178毫秒
+        audioManager.setMode(AudioManager.MODE_NORMAL);//178ms
         audioManager.setBluetoothScoOn(true);
         audioManager.stopBluetoothSco();
-        audioManager.startBluetoothSco();//71毫秒
-        audioManager.setSpeakerphoneOn(false);//进入耳机模式
+        audioManager.startBluetoothSco();//71ms
+        audioManager.setSpeakerphoneOn(false);//enter headset mode
 
-        //进入到蓝牙耳机模式
+        //entering Bluetooth headset mode
         ToastMessage.show(getStringFromResource(R.string.bluetooth_headset_mode));
 
     }
@@ -1037,25 +1038,25 @@ public class MainViewModel extends ViewModel {
             audioManager.setMode(AudioManager.MODE_NORMAL);
             audioManager.setBluetoothScoOn(false);
             audioManager.stopBluetoothSco();
-            audioManager.setSpeakerphoneOn(true);//退出耳机模式
+            audioManager.setSpeakerphoneOn(true);//exit headset mode
         }
-        //离开蓝牙耳机模式
+        //leaving Bluetooth headset mode
         ToastMessage.show(getStringFromResource(R.string.bluetooth_Headset_mode_cancelled));
 
     }
 
 
     /**
-     * 查询蓝牙是否连接
+     * Check whether Bluetooth is connected
      *
-     * @return 是否
+     * @return whether connected
      */
     @SuppressLint("MissingPermission")
     public boolean isBTConnected() {
         BluetoothAdapter blueAdapter = BluetoothAdapter.getDefaultAdapter();
         if (blueAdapter == null) return false;
 
-        //蓝牙头戴式耳机，支持语音输入输出
+        //Bluetooth headset, supports voice input and output
         int headset = blueAdapter.getProfileConnectionState(BluetoothProfile.HEADSET);
         int a2dp = blueAdapter.getProfileConnectionState(BluetoothProfile.A2DP);
         return headset == BluetoothAdapter.STATE_CONNECTED || a2dp == BluetoothAdapter.STATE_CONNECTED;
@@ -1086,7 +1087,7 @@ public class MainViewModel extends ViewModel {
         @Override
         public void run() {
             if (baseRig != null && message != null) {
-                baseRig.sendWaveData(message);//实际生成的数据是12.64+0.04,0.04是生成的0数据
+                baseRig.sendWaveData(message);//actual generated data is 12.64+0.04 seconds; 0.04 is zero-padded data
             }
         }
     }

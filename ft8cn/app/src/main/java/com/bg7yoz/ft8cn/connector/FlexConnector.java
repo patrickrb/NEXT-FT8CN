@@ -21,7 +21,7 @@ import java.io.DataInputStream;
 import java.io.IOException;
 
 /**
- * flex网络连接方式的Connector
+ * Connector for Flex network connections
  * @author BGY70Z
  * @date 2023-03-20
  */
@@ -66,7 +66,7 @@ public class FlexConnector extends BaseRigConnector {
             @Override
             public void onReceiveAudio(byte[] data) {
                 if (onWaveDataReceived!=null){
-                    float[] buffer=getMonoFloatFromBytes(data);//把24000转成12000，立体声转成单声道
+                    float[] buffer=getMonoFloatFromBytes(data);//Convert 24000 to 12000 sample rate, stereo to mono
                     onWaveDataReceived.OnDataReceived(buffer.length,buffer);
                 }
             }
@@ -99,11 +99,11 @@ public class FlexConnector extends BaseRigConnector {
         });
 
 
-        //当有命令返回值时的事件
+        //Event when a command response is received
         flexRadio.setOnCommandListener(new FlexRadio.OnCommandListener() {
             @Override
             public void onResponse(FlexRadio.FlexResponse response) {
-                if (response.resultValue!=0) {//只显示失败的命令
+                if (response.resultValue!=0) {//Only show failed commands
                     //ToastMessage.show(response.resultStatus());
                     //Log.e(TAG, "onResponse: "+response.resultStatus());
                 }
@@ -115,7 +115,7 @@ public class FlexConnector extends BaseRigConnector {
                 if (response.flexCommand== FlexCommand.METER_LIST){
                     //FlexMeters flexMeters=new FlexMeters(response.exContent);
                     flexMeterInfos.setMeterInfos(response.exContent);
-                    flexRadio.commandSubMeterAll();//订阅全部仪表消息
+                    flexRadio.commandSubMeterAll();//Subscribe to all meter messages
                     //flexMeters.getAllMeters();
                     //Log.e(TAG, "onResponse: ----->>>"+flexMeters.getAllMeters() );
                 }
@@ -129,11 +129,11 @@ public class FlexConnector extends BaseRigConnector {
             }
         });
 
-        //当有状态信息接收到时
+        //Event when status information is received
         flexRadio.setOnStatusListener(new FlexRadio.OnStatusListener() {
             @Override
             public void onStatus(FlexRadio.FlexResponse response) {
-                //显示状态消息
+                //Display status messages
                 //ToastMessage.show(response.content);
                 Log.e(TAG, "onStatus: "+response.rawData );
             }
@@ -148,46 +148,46 @@ public class FlexConnector extends BaseRigConnector {
                 ToastMessage.show(String.format(GeneralVariables.getStringFromResource(R.string.init_flex_operation)
                         ,flexRadio.getModel()));
 
-                flexRadio.commandClientDisconnect();//断开之前的全部连接
-                flexRadio.commandClientGui();//创建GUI
+                flexRadio.commandClientDisconnect();//Disconnect all previous connections
+                flexRadio.commandClientGui();//Create GUI
 
-                flexRadio.commandSubDaxAll();//注册全部DAX流
-
-
-
-                flexRadio.commandClientSetEnforceNetWorkGui();//对网络MTU做设置
-
-                //flexRadio.commandSliceList();//列slice
-                flexRadio.commandSliceCreate();//创建slice
+                flexRadio.commandSubDaxAll();//Register all DAX streams
 
 
 
+                flexRadio.commandClientSetEnforceNetWorkGui();//Configure network MTU settings
+
+                //flexRadio.commandSliceList();//List slices
+                flexRadio.commandSliceCreate();//Create slice
 
 
-                //todo 防止流的端口没有释放，把端口变换一下？
+
+
+
+                //todo To prevent stream ports from not being released, change the port?
                 //FlexRadio.streamPort++;
 
-                flexRadio.commandUdpPort();//设置UDP端口
+                flexRadio.commandUdpPort();//Set UDP port
 
 
-                flexRadio.commandStreamCreateDaxRx(1);//创建流数据到DAX通道1
-                flexRadio.commandStreamCreateDaxTx(1);//创建流数据到DAX通道1
+                flexRadio.commandStreamCreateDaxRx(1);//Create stream data to DAX channel 1
+                flexRadio.commandStreamCreateDaxTx(1);//Create stream data to DAX channel 1
 
-                flexRadio.commandSetDaxAudio(1, 0, true);//打开DAX
+                flexRadio.commandSetDaxAudio(1, 0, true);//Enable DAX
 
-                //TODO 是否设置？？？ dax tx T 或者 dax tx 1
+                //TODO Should we set this??? dax tx T or dax tx 1
                 flexRadio.commandSliceTune(0,String.format("%.3f",GeneralVariables.band/1000000f));
-                flexRadio.commandSliceSetMode(0, FlexRadio.FlexMode.DIGU);//设置操作模式
-                flexRadio.commandSetFilter(0, 0, 3000);//设置滤波为3000HZ
+                flexRadio.commandSliceSetMode(0, FlexRadio.FlexMode.DIGU);//Set operating mode
+                flexRadio.commandSetFilter(0, 0, 3000);//Set filter to 3000 Hz
 
 
-                flexRadio.commandMeterList();//列一下仪表
-                //flexRadio.commandSubMeterAll();//此处订阅指令放到了接收响应部分
+                flexRadio.commandMeterList();//List the meters
+                //flexRadio.commandSubMeterAll();//Subscription command moved to the response handling section
 
-                setMaxRfPower(maxRfPower);//设置发射功率
-                setMaxTunePower(maxTunePower);//设置调谐功率
+                setMaxRfPower(maxRfPower);//set transmit power
+                setMaxTunePower(maxTunePower);//Set tune power
 
-                //flexRadio.commandSubMeterById(5);//列指定的仪表
+                //flexRadio.commandSubMeterById(5);//List a specific meter
 
                 //flexRadio.commandSliceSetNR(0, true);
                 //flexRadio.commandSliceSetNB(0, true);
@@ -223,13 +223,13 @@ public class FlexConnector extends BaseRigConnector {
     public void setMaxRfPower(int power){
         maxRfPower=power;
         GeneralVariables.flexMaxRfPower=power;
-        flexRadio.commandSetRfPower(maxRfPower);//设置发射功率
+        flexRadio.commandSetRfPower(maxRfPower);//set transmit power
 
     }
     public void setMaxTunePower(int power){
         maxTunePower=power;
         GeneralVariables.flexMaxTunePower=power;
-        flexRadio.commandSetTunePower(maxTunePower);//设置调谐功率
+        flexRadio.commandSetTunePower(maxTunePower);//Set tune power
 
     }
     public void startATU(){
@@ -240,9 +240,9 @@ public class FlexConnector extends BaseRigConnector {
     }
     public void subAllMeters(){
         if (flexMeterInfos.size()==0) {
-            //todo commandMeterList()是否可以不使用？
-            flexRadio.commandMeterList();//列一下仪表
-            flexRadio.commandSubMeterAll();//显示全部仪表消息
+            //todo Can we avoid using commandMeterList()?
+            flexRadio.commandMeterList();//List the meters
+            flexRadio.commandSubMeterAll();//Display all meter messages
         }
     }
 
@@ -260,7 +260,7 @@ public class FlexConnector extends BaseRigConnector {
 
     @Override
     public void setPttOn(byte[] command) {
-        //cableSerialPort.sendData(command);//以CAT指令发送PTT
+        //cableSerialPort.sendData(command);//send PTT via CAT command
     }
 
     @Override
@@ -294,9 +294,9 @@ public class FlexConnector extends BaseRigConnector {
     }
 
     /**
-     * 获取单声道的数据,24000hz采样率改为12000采样率，把立体声改为单声道
-     * @param bytes 原始声音数据
-     * @return 单声道数据
+     * Get mono data; convert 24000Hz sample rate to 12000Hz, convert stereo to mono.
+     * @param bytes Raw audio data
+     * @return Mono data
      */
     public static float[] getMonoFloatFromBytes(byte[] bytes) {
         float[] floats = new float[bytes.length / 16];
@@ -305,10 +305,10 @@ public class FlexConnector extends BaseRigConnector {
             try {
                 float f1,f2;
                 f1=dis.readFloat();
-                dis.readFloat();//放弃一个声道
+                dis.readFloat();//discard one channel
                 f2=dis.readFloat();
-                floats[i] = Math.max(f1,f2);//取最大值
-                dis.readFloat();//放弃1个声道
+                floats[i] = Math.max(f1,f2);//take maximum value
+                dis.readFloat();//discard 1 channel
             } catch (IOException e) {
                 e.printStackTrace();
                 break;

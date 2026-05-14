@@ -14,9 +14,9 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 /**
- * wolf 的cat指令集兼容yaesu 450d,但是有的ham在实际测试中发现，450d默认是dig-u,此模式在wolf上测试无法满功率发射，
- * 而采用usb模式就可以满功率发射，故增加一个usb模式的选项
- * 在创建rig时，用布尔参数是否时USB模式
+ * Wolf SDR CAT command set is compatible with YAESU 450D, but some hams found in testing that 450D defaults to DIG-U mode, which cannot transmit at full power on Wolf SDR.
+ * Using USB mode allows full power transmission, so a USB mode option has been added.
+ * When creating the rig, use a boolean parameter to specify USB mode.
  */
 public class Wolf_sdr_450Rig extends BaseRig {
     private static final String TAG = "Wolf_sdr_450Rig";
@@ -53,11 +53,11 @@ public class Wolf_sdr_450Rig extends BaseRig {
     }
 
     /**
-     * 读取Meter RM;
+     * Read Meter RM;
      */
     private void readMeters() {
         if (getConnector() != null) {
-            clearBufferData();//清空一下缓存
+            clearBufferData();//clear buffer
             getConnector().sendData(Yaesu3RigConstant.setRead39Meters_ALC());
             getConnector().sendData(Yaesu3RigConstant.setRead39Meters_SWR());
         }
@@ -74,7 +74,7 @@ public class Wolf_sdr_450Rig extends BaseRig {
             swrAlert = false;
         }
         if ((alc > Yaesu3RigConstant.alc_39_alert_max)
-                && GeneralVariables.alc_switch_on) {//网络模式下不警告ALC
+                && GeneralVariables.alc_switch_on) {//ALC alert
             if (!alcMaxAlert) {
                 alcMaxAlert = true;
                 ToastMessage.show(GeneralVariables.getStringFromResource(R.string.alc_high_alert));
@@ -86,7 +86,7 @@ public class Wolf_sdr_450Rig extends BaseRig {
     }
 
     /**
-     * 清空缓存数据
+     * Clear buffer data
      */
     private void clearBufferData() {
         buffer.setLength(0);
@@ -97,8 +97,8 @@ public class Wolf_sdr_450Rig extends BaseRig {
         super.setPTT(on);
         if (getConnector() != null) {
             switch (getControlMode()) {
-                case ControlMode.CAT://以CIV指令
-                    getConnector().setPttOn(Yaesu3RigConstant.setPTT_TX_On(on));//针对YAESU 450指令
+                case ControlMode.CAT://via CAT command
+                    getConnector().setPttOn(Yaesu3RigConstant.setPTT_TX_On(on));//for YAESU 450 command
                     break;
                 case ControlMode.RTS:
                 case ControlMode.DTR:
@@ -121,9 +121,9 @@ public class Wolf_sdr_450Rig extends BaseRig {
         if (getConnector() != null) {
             //getConnector().sendData(Yaesu3RigConstant.setOperationDATA_U_Mode());
             //getConnector().sendData(Yaesu3RigConstant.setOperationUSB_Data_Mode());
-            if (isUsbMode) {//usb模式
+            if (isUsbMode) {//USB mode
                 getConnector().sendData(Yaesu3RigConstant.setOperationUSBMode());
-            } else {//dig-u模式
+            } else {//DIG-U mode
                 getConnector().sendData(Yaesu3RigConstant.setOperationDATA_U_Mode());
             }
         }
@@ -139,35 +139,35 @@ public class Wolf_sdr_450Rig extends BaseRig {
     @Override
     public void onReceiveData(byte[] data) {
         String s = new String(data);
-        //ToastMessage.showDebug("39 YAESU 读数据:"+new String(Yaesu3RigConstant.setReadOperationFreq()));
+        //ToastMessage.showDebug("39 YAESU read data:"+new String(Yaesu3RigConstant.setReadOperationFreq()));
 
         if (!s.contains(";")) {
             buffer.append(s);
             if (buffer.length() > 1000) clearBufferData();
-            //return;//说明数据还没接收完。
+            //return;//data reception not yet complete.
         } else {
-            if (s.indexOf(";") > 0) {//说明接到结束的数据了，并且不是第一个字符是;
+            if (s.indexOf(";") > 0) {//received end-of-data, and delimiter is not the first character
                 buffer.append(s.substring(0, s.indexOf(";")));
             }
 
-            //开始分析数据
+            //begin parsing data
             Yaesu3Command yaesu3Command = Yaesu3Command.getCommand(buffer.toString());
-            clearBufferData();//清一下缓存
-            //要把剩下的数据放到缓存里
+            clearBufferData();//clear buffer
+            //put remaining data into buffer
             buffer.append(s.substring(s.indexOf(";") + 1));
 
             if (yaesu3Command == null) {
                 return;
             }
             //long tempFreq = Yaesu3Command.getFrequency(yaesu3Command);
-            //if (tempFreq != 0) {//如果tempFreq==0，说明频率不正常
+            //if (tempFreq != 0) {//if tempFreq==0, frequency is invalid
             //    setFreq(Yaesu3Command.getFrequency(yaesu3Command));
             //}
 
             if (yaesu3Command.getCommandID().equalsIgnoreCase("FA")
                     || yaesu3Command.getCommandID().equalsIgnoreCase("FB")) {
                 long tempFreq = Yaesu3Command.getFrequency(yaesu3Command);
-                if (tempFreq != 0) {//如果tempFreq==0，说明频率不正常
+                if (tempFreq != 0) {//if tempFreq==0, frequency is invalid
                     setFreq(Yaesu3Command.getFrequency(yaesu3Command));
                 }
             } else if (yaesu3Command.getCommandID().equalsIgnoreCase("RM")) {//METER
@@ -187,7 +187,7 @@ public class Wolf_sdr_450Rig extends BaseRig {
     @Override
     public void readFreqFromRig() {
         if (getConnector() != null) {
-            clearBufferData();//清空一下缓存
+            clearBufferData();//clear buffer
             getConnector().sendData(Yaesu3RigConstant.setReadOperationFreq());
         }
     }

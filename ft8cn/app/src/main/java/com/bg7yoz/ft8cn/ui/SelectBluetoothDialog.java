@@ -1,6 +1,6 @@
 package com.bg7yoz.ft8cn.ui;
 /**
- * 蓝牙设备选择对话框。
+ * Bluetooth device selection dialog.
  * @author BGY70Z
  * @date 2023-03-20
  */
@@ -69,11 +69,11 @@ public class SelectBluetoothDialog extends Dialog {
             return;
         }
         for (BluetoothDevice device : bluetoothAdapter.getBondedDevices()) {
-            if (BluetoothConstants.checkIsSpp(device)){//spp设备放前面
+            if (BluetoothConstants.checkIsSpp(device)){//SPP devices go first
                 devices.add(0,new BluetoothDeviceInfo(device,true,BluetoothConstants.checkIsHeadSet(device)));
                 continue;
             }
-            if (BluetoothConstants.checkIsHeadSet(device)){//headset设备放后面
+            if (BluetoothConstants.checkIsHeadSet(device)){//Headset devices go last
                 devices.add(new BluetoothDeviceInfo(device, false,BluetoothConstants.checkIsHeadSet(device)));
                 continue;
             }
@@ -95,7 +95,7 @@ public class SelectBluetoothDialog extends Dialog {
         downImage=(ImageView)findViewById(R.id.bluetoothScrollDownImageView);
         getBluetoothDevice();
 
-        //显示滚动箭头
+        //Show scroll arrows
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -116,7 +116,7 @@ public class SelectBluetoothDialog extends Dialog {
     public void show() {
         super.show();
         WindowManager.LayoutParams params = getWindow().getAttributes();
-        //设置对话框的大小，以百分比0.6
+        //Set dialog size as a percentage
         int height = getWindow().getWindowManager().getDefaultDisplay().getHeight();
         int width = getWindow().getWindowManager().getDefaultDisplay().getWidth();
 //        params.height = (int) (height * 0.6);
@@ -131,7 +131,7 @@ public class SelectBluetoothDialog extends Dialog {
 
     }
     /**
-     * 设置界面的上下滚动的图标
+     * Set the up/down scroll icons on the interface
      */
     private void setScrollImageVisible() {
 

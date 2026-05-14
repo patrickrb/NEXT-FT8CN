@@ -8,7 +8,7 @@ import android.os.ParcelUuid;
 import com.bg7yoz.ft8cn.BuildConfig;
 
 /**
- * 与蓝牙有关的常量
+ * Bluetooth-related constants
  */
 
 public class BluetoothConstants {
@@ -35,7 +35,7 @@ public class BluetoothConstants {
         @SuppressLint("MissingPermission") ParcelUuid[] parcelUuids = device.getUuids();
 
         if (parcelUuids != null) {
-            for (int i = 0; i < parcelUuids.length; i++) {//只保留UUID是串口的
+            for (int i = 0; i < parcelUuids.length; i++) {// Only keep UUIDs that are serial port
                 if (parcelUuids[i].getUuid().toString().toUpperCase().equals("00001101-0000-1000-8000-00805F9B34FB")) {
                     return true;
                 }
@@ -49,7 +49,7 @@ public class BluetoothConstants {
         boolean audioSinkService=false;
         boolean handsFreeService=false;
         if (parcelUuids != null) {
-            for (int i = 0; i < parcelUuids.length; i++) {//只保留UUID是串口的
+            for (int i = 0; i < parcelUuids.length; i++) {// Only keep UUIDs that are serial port
                 if (parcelUuids[i].getUuid().toString().toLowerCase().equals("0000111e-0000-1000-8000-00805f9b34fb")) {
                     handsFreeService=true;
                 }

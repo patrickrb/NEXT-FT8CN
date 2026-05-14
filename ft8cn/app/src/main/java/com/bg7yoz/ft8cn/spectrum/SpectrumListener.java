@@ -1,6 +1,6 @@
 package com.bg7yoz.ft8cn.spectrum;
 /**
- * 用于瀑布图的音频接收。以一个FT8符号为颗粒度。
+ * Audio receiver for the waterfall display. Granularity is one FT8 symbol.
  * @author BGY70Z
  * @date 2023-03-20
  */

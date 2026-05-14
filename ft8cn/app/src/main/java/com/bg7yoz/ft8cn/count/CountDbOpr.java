@@ -1,7 +1,7 @@
 package com.bg7yoz.ft8cn.count;
 /**
- * 用于通联日志统计的的数据库操作。
- * 注：目前归属地的统计，是基于网格的，如果基于呼号的前缀统计，虽然准确，但统计速度太慢，用户的交互效果不好。
+ * Database operations for QSO log statistics.
+ * Note: Currently location statistics are grid-based. Callsign prefix-based statistics are more accurate but too slow, resulting in poor user experience.
  *
  * @author BGY70Z
  * @date 2023-03-20
@@ -28,7 +28,7 @@ public class CountDbOpr {
     public static final int ChartLine=2;
     public static final int ChartNone=3;
     public static void getQSLTotal(SQLiteDatabase db,AfterCount afterCount){
-        //通联的呼号数量
+        //number of contacted callsigns
         //SELECT count(DISTINCT callsign)  FROM QslCallsigns qc
         new GetTotal(db,afterCount).execute();
     }
@@ -151,7 +151,7 @@ public class CountDbOpr {
                  //String time_on=cursor.getString(cursor.getColumnIndex("time_on"));
                  String gridsquare=cursor.getString(cursor.getColumnIndex("gridsquare"));
 
-                 //获取呼号的位置
+                 //get the callsign location
                 CallsignInfo callsignInfo= GeneralVariables.callsignDatabase.getCallInfo(call);
 
                  if (breakLine>0) result.append("\n");
@@ -167,7 +167,7 @@ public class CountDbOpr {
 
 
     /**
-     * 统计各波段比例
+     * Count band distribution.
      */
     static class GetBandCount extends AsyncTask<Void, Void, Void> {
         private final SQLiteDatabase db;
@@ -211,7 +211,7 @@ public class CountDbOpr {
         }
     }
     /**
-     * 统计通联数量
+     * Count QSO totals.
      */
     static class GetTotal extends AsyncTask<Void, Void, Void>{
         private final SQLiteDatabase db;
@@ -226,12 +226,12 @@ public class CountDbOpr {
         @Override
         protected Void doInBackground(Void... voids) {
 
-            int logCount=0;//日志的数量
-            int callsignCount=0;//呼号的数量
-            int isQslCount=0;//确认的数量
-            int isLotwQslCount=0;//三方平台确认的数量
+            int logCount=0;//log count
+            int callsignCount=0;//callsign count
+            int isQslCount=0;//confirmed count
+            int isLotwQslCount=0;//third-party platform confirmed count
 
-            //通联的呼号数量
+            //number of contacted callsigns
             String querySQL;
             Cursor cursor;
             querySQL="SELECT count(*) AS C FROM QSLTable q";
@@ -262,7 +262,7 @@ public class CountDbOpr {
             if (logCount>0){
                 qslPercent=100f*(float) isQslCount/(float) logCount;
             }
-            //result.append(String.format("通联的呼号数量:%d",cursor.getInt(cursor.getColumnIndex("C"))));
+            //result.append(String.format("Contacted callsign count:%d",cursor.getInt(cursor.getColumnIndex("C"))));
 
             if (afterCount!=null){
                 ArrayList<CountValue> values=new ArrayList<>();
@@ -276,8 +276,8 @@ public class CountDbOpr {
                 stringBuilder.append("\n"+GeneralVariables.getStringFromResource(R.string.count_confirmed_proportion));
                 stringBuilder.append("\n"+GeneralVariables.getStringFromResource(R.string.count_tota_callsigns));
                 afterCount.countInformation(new CountInfo(
-                        //String.format("日志数:%d\n确认的日志数:%d\n平台确认的日志数:%d" +
-                        //        "\n手动确认的日志数:%d\n日志确认比例:%.1f%%\n呼号数量:%d"
+                        //String.format("Log count:%d\nConfirmed logs:%d\nPlatform confirmed logs:%d" +
+                        //        "\nManually confirmed logs:%d\nConfirmation ratio:%.1f%%\nCallsign count:%d"
                         String.format(stringBuilder.toString()
                         ,logCount,isQslCount,isLotwQslCount,isQslCount-isLotwQslCount,qslPercent,callsignCount)
                         ,ChartType.Pie,GeneralVariables.getStringFromResource(R.string.confirmation_statistics)
@@ -289,7 +289,7 @@ public class CountDbOpr {
     }
 
     /**
-     * 统计ITU分区数量
+     * Count ITU zone totals.
      */
     static class GetItuZoneCount extends AsyncTask<Void, Void, Void> {
         private static final String TAG = "GetItuZoneCount";
@@ -357,7 +357,7 @@ public class CountDbOpr {
 
 
     /**
-     * 统计CQ分区
+     * Count CQ zones.
      */
     static class GetCqZoneCount extends AsyncTask<Void, Void, Void> {
         private static final String TAG = "GetCqZoneCount";
@@ -424,7 +424,7 @@ public class CountDbOpr {
         }
     }
     /**
-     * 统计DXCC分区的数据
+     * Count DXCC entity data.
      */
     static class GetDxccCount extends AsyncTask<Void, Void, Void>{
         private static final String TAG="GetDxccCount";
@@ -451,7 +451,7 @@ public class CountDbOpr {
         @SuppressLint({"Range", "DefaultLocale"})
         @Override
         protected Void doInBackground(Void... voids) {
-            //DXCC的数量
+            //DXCC count
             ArrayList<CountValue> dxccValues=new ArrayList<>();
             int dxccCount=0;
             Cursor cursor;
@@ -462,29 +462,10 @@ public class CountDbOpr {
             dxccCount=cursor.getInt(cursor.getColumnIndex("c"));
             cursor.close();
 
-            if (GeneralVariables.isChina) {
-                querySQL = "SELECT dg.dxcc,count(*) as c ,dl.name as dxccName FROM   dxcc_grid dg\n" +
-                        "inner join  QSLTable q \n" +
-                        "on  dg.grid =UPPER(SUBSTR(q.gridsquare,1,4))  LEFT JOIN dxccList dl on dg.dxcc =dl.dxcc \n" +
-                        "GROUP BY dg.dxcc ,dl.name  ORDER BY count(*) DESC";
-//                querySQL="SELECT dg.dxcc,count(*) as c ,dl.name as dxccName FROM   dxcc_prefix dg\n" +
-//                        "inner join  QSLTable q\n" +
-//                        //"on  (q.call like (dg.prefix||'%'))\n" +
-//                        "on  ((SUBSTR( q.call,1,LENGTH( dg.prefix))  = (dg.prefix))) \n"+
-//                        "LEFT JOIN dxccList dl on dg.dxcc =dl.dxcc \n" +
-//                        "GROUP BY dg.dxcc ,dl.name  ORDER BY count(*) DESC";
-            }else {
-//                querySQL="SELECT dg.dxcc,count(*) as c ,dl.aname as dxccName FROM   dxcc_prefix dg\n" +
-//                        "inner join  QSLTable q\n" +
-//                        "on  (q.call like (dg.prefix||'%'))\n" +
-//                        "LEFT JOIN dxccList dl on dg.dxcc =dl.dxcc \n" +
-//                        "GROUP BY dg.dxcc ,dl.name  ORDER BY count(*) DESC";
-                querySQL = "SELECT dg.dxcc,count(*) as c ,dl.aname as dxccName FROM   dxcc_grid dg\n" +
-                        "inner join  QSLTable q \n" +
-                        "on  dg.grid =UPPER(SUBSTR(q.gridsquare,1,4))  LEFT JOIN dxccList dl on dg.dxcc =dl.dxcc \n" +
-                        "GROUP BY dg.dxcc ,dl.aname ORDER BY count(*) DESC";
-
-            }
+            querySQL = "SELECT dg.dxcc,count(*) as c ,dl.aname as dxccName FROM   dxcc_grid dg\n" +
+                    "inner join  QSLTable q \n" +
+                    "on  dg.grid =UPPER(SUBSTR(q.gridsquare,1,4))  LEFT JOIN dxccList dl on dg.dxcc =dl.dxcc \n" +
+                    "GROUP BY dg.dxcc ,dl.aname ORDER BY count(*) DESC";
             cursor = db.rawQuery(querySQL,null);
             int successCount=0;
             while (cursor.moveToNext()){

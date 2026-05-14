@@ -4,10 +4,22 @@
     "dxcc": "1",
     "cc": "CA",
     "ccc": "CAN",
-    "name": "加拿大",
+    "name": "Canada",
     "continent": "NA",
-    "ituzone": ["2", "3", "4", "9", "75"],
-    "cqzone": ["1", "2", "3", "4", "5"],
+    "ituzone": [
+      "2",
+      "3",
+      "4",
+      "9",
+      "75"
+    ],
+    "cqzone": [
+      "1",
+      "2",
+      "3",
+      "4",
+      "5"
+    ],
     "timezone": "-5",
     "ccode": "124",
     "aname": "Canada",
@@ -1513,14 +1525,20 @@
     "dxcc": "2",
     "cc": "SA",
     "ccc": "SAU",
-    "name": "阿布阿里是群岛",
+    "name": "Abu Ali Is.",
     "continent": "AS",
-    "ituzone": ["39"],
-    "cqzone": ["21"],
+    "ituzone": [
+      "39"
+    ],
+    "cqzone": [
+      "21"
+    ],
     "timezone": "0",
     "ccode": "682",
     "aname": "Abu Ali Is.",
-    "mh": ["LL47"],
+    "mh": [
+      "LL47"
+    ],
     "prefix": [],
     "worked": false,
     "confirmed": false,
@@ -1538,10 +1556,14 @@
     "dxcc": "3",
     "cc": "AF",
     "ccc": "AFG",
-    "name": "阿富汗",
+    "name": "Afghanistan",
     "continent": "AS",
-    "ituzone": ["40"],
-    "cqzone": ["21"],
+    "ituzone": [
+      "40"
+    ],
+    "cqzone": [
+      "21"
+    ],
     "timezone": "5",
     "ccode": "4",
     "aname": "Afghanistan",
@@ -1597,7 +1619,10 @@
       "MM76",
       "MM77"
     ],
-    "prefix": ["T6", "YA"],
+    "prefix": [
+      "T6",
+      "YA"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "af.png",
@@ -1614,15 +1639,24 @@
     "dxcc": "4",
     "cc": "MP",
     "ccc": "MNP",
-    "name": "阿加莱加群岛及圣布兰登群岛",
+    "name": "Agalega & St. Brandon Is.",
     "continent": "AF",
-    "ituzone": ["53"],
-    "cqzone": ["39"],
+    "ituzone": [
+      "53"
+    ],
+    "cqzone": [
+      "39"
+    ],
     "timezone": "4",
     "ccode": "580",
     "aname": "Agalega & St. Brandon Is.",
-    "mh": ["LH89"],
-    "prefix": ["3B6", "3B7"],
+    "mh": [
+      "LH89"
+    ],
+    "prefix": [
+      "3B6",
+      "3B7"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "mp.png",
@@ -1639,14 +1673,22 @@
     "dxcc": "5",
     "cc": "AX",
     "ccc": "ALA",
-    "name": "奥兰群岛",
+    "name": "Aland Is.",
     "continent": "EU",
-    "ituzone": ["18"],
-    "cqzone": ["15"],
+    "ituzone": [
+      "18"
+    ],
+    "cqzone": [
+      "15"
+    ],
     "timezone": "2",
     "ccode": "248",
     "aname": "Aland Is.",
-    "mh": ["JP90", "KO09", "KP00"],
+    "mh": [
+      "JP90",
+      "KO09",
+      "KP00"
+    ],
     "prefix": [
       "OF0",
       "=OF100FI/0",
@@ -1677,10 +1719,15 @@
     "dxcc": "6",
     "cc": "US",
     "ccc": "USA",
-    "name": "阿拉斯加",
+    "name": "Alaska",
     "continent": "NA",
-    "ituzone": ["1", "2"],
-    "cqzone": ["1"],
+    "ituzone": [
+      "1",
+      "2"
+    ],
+    "cqzone": [
+      "1"
+    ],
     "timezone": "-8",
     "ccode": "840",
     "aname": "Alaska",
@@ -2510,15 +2557,30 @@
     "dxcc": "7",
     "cc": "AL",
     "ccc": "ALB",
-    "name": "阿尔巴尼亚",
+    "name": "Albania",
     "continent": "EU",
-    "ituzone": ["28"],
-    "cqzone": ["15"],
+    "ituzone": [
+      "28"
+    ],
+    "cqzone": [
+      "15"
+    ],
     "timezone": "1",
     "ccode": "8",
     "aname": "Albania",
-    "mh": ["JM99", "JN90", "JN91", "JN92", "KM09", "KN00", "KN01", "KN02"],
-    "prefix": ["ZA"],
+    "mh": [
+      "JM99",
+      "JN90",
+      "JN91",
+      "JN92",
+      "KM09",
+      "KN00",
+      "KN01",
+      "KN02"
+    ],
+    "prefix": [
+      "ZA"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "al.png",
@@ -2535,14 +2597,21 @@
     "dxcc": "9",
     "cc": "AS",
     "ccc": "ASM",
-    "name": "美属萨摩亚",
+    "name": "American Samoa",
     "continent": "OC",
-    "ituzone": ["62"],
-    "cqzone": ["32"],
+    "ituzone": [
+      "62"
+    ],
+    "cqzone": [
+      "32"
+    ],
     "timezone": "-11",
     "ccode": "16",
     "aname": "American Samoa",
-    "mh": ["AH45", "AH55"],
+    "mh": [
+      "AH45",
+      "AH55"
+    ],
     "prefix": [
       "=AB9OH",
       "=AF7MN",
@@ -2575,14 +2644,21 @@
     "dxcc": "10",
     "cc": "FR",
     "ccc": "FRA",
-    "name": "阿姆斯特丹岛和圣保罗岛",
+    "name": "Amsterdam & St. Paul Is.",
     "continent": "AF",
-    "ituzone": ["68"],
-    "cqzone": ["39"],
+    "ituzone": [
+      "68"
+    ],
+    "cqzone": [
+      "39"
+    ],
     "timezone": "5",
     "ccode": "250",
     "aname": "Amsterdam & St. Paul Is.",
-    "mh": ["MF81", "MF82"],
+    "mh": [
+      "MF81",
+      "MF82"
+    ],
     "prefix": [
       "FT0Z",
       "FT1Z",
@@ -2610,10 +2686,14 @@
     "dxcc": "11",
     "cc": "IN",
     "ccc": "IND",
-    "name": "安达曼群岛和尼科巴群岛",
+    "name": "Andaman & Nicobar Is.",
     "continent": "AS",
-    "ituzone": ["49"],
-    "cqzone": ["26"],
+    "ituzone": [
+      "49"
+    ],
+    "cqzone": [
+      "26"
+    ],
     "timezone": "6",
     "ccode": "356",
     "aname": "Andaman & Nicobar Is.",
@@ -2652,15 +2732,23 @@
     "dxcc": "12",
     "cc": "AI",
     "ccc": "AIA",
-    "name": "安圭拉岛",
+    "name": "Anguilla",
     "continent": "NA",
-    "ituzone": ["11"],
-    "cqzone": ["8"],
+    "ituzone": [
+      "11"
+    ],
+    "cqzone": [
+      "8"
+    ],
     "timezone": "-4",
     "ccode": "660",
     "aname": "Anguilla",
-    "mh": ["FK88"],
-    "prefix": ["VP2E"],
+    "mh": [
+      "FK88"
+    ],
+    "prefix": [
+      "VP2E"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "ai.png",
@@ -2677,10 +2765,26 @@
     "dxcc": "13",
     "cc": "AQ",
     "ccc": "ATA",
-    "name": "南极洲",
+    "name": "Antarctica",
     "continent": "OC",
-    "ituzone": ["67", "69", "70", "71", "72", "73", "74"],
-    "cqzone": ["12", "13", "29", "30", "32", "38", "39"],
+    "ituzone": [
+      "67",
+      "69",
+      "70",
+      "71",
+      "72",
+      "73",
+      "74"
+    ],
+    "cqzone": [
+      "12",
+      "13",
+      "29",
+      "30",
+      "32",
+      "38",
+      "39"
+    ],
     "timezone": "0",
     "ccode": "10",
     "aname": "Antarctica",
@@ -6216,15 +6320,29 @@
     "dxcc": "14",
     "cc": "AM",
     "ccc": "ARM",
-    "name": "亚美尼亚",
+    "name": "Armenia",
     "continent": "AS",
-    "ituzone": ["29"],
-    "cqzone": ["21"],
+    "ituzone": [
+      "29"
+    ],
+    "cqzone": [
+      "21"
+    ],
     "timezone": "4",
     "ccode": "51",
     "aname": "Armenia",
-    "mh": ["LM29", "LM38", "LM39", "LN10", "LN11", "LN20", "LN21"],
-    "prefix": ["EK"],
+    "mh": [
+      "LM29",
+      "LM38",
+      "LM39",
+      "LN10",
+      "LN11",
+      "LN20",
+      "LN21"
+    ],
+    "prefix": [
+      "EK"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "am.png",
@@ -6241,7 +6359,7 @@
     "dxcc": "15",
     "cc": "RX",
     "ccc": "RUS",
-    "name": "俄罗斯亚洲",
+    "name": "Asiatic Russia",
     "continent": "AS",
     "ituzone": [
       "20",
@@ -6259,7 +6377,13 @@
       "35",
       "75"
     ],
-    "cqzone": ["16", "17", "18", "19", "23"],
+    "cqzone": [
+      "16",
+      "17",
+      "18",
+      "19",
+      "23"
+    ],
     "timezone": "7",
     "ccode": "643",
     "aname": "Asiatic Russia",
@@ -10615,15 +10739,23 @@
     "dxcc": "16",
     "cc": "NZ",
     "ccc": "NZL",
-    "name": "坎贝尔群岛",
+    "name": "Swains Island",
     "continent": "OC",
-    "ituzone": ["60"],
-    "cqzone": ["32"],
+    "ituzone": [
+      "60"
+    ],
+    "cqzone": [
+      "32"
+    ],
     "timezone": "12",
     "ccode": "554",
-    "aname": "亚南塔群岛",
-    "mh": ["RD47"],
-    "prefix": ["ZL9"],
+    "aname": "Swains Island",
+    "mh": [
+      "RD47"
+    ],
+    "prefix": [
+      "ZL9"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "nz.png",
@@ -10640,15 +10772,27 @@
     "dxcc": "17",
     "cc": "VE",
     "ccc": "VEN",
-    "name": "阿维斯岛",
+    "name": "Aves I.",
     "continent": "NA",
-    "ituzone": ["11"],
-    "cqzone": ["8"],
+    "ituzone": [
+      "11"
+    ],
+    "cqzone": [
+      "8"
+    ],
     "timezone": "-4",
     "ccode": "862",
     "aname": "Aves I.",
-    "mh": ["FK85"],
-    "prefix": ["4M0", "YV0", "YW0", "YX0", "YY0"],
+    "mh": [
+      "FK85"
+    ],
+    "prefix": [
+      "4M0",
+      "YV0",
+      "YW0",
+      "YX0",
+      "YY0"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "ve.png",
@@ -10665,10 +10809,14 @@
     "dxcc": "18",
     "cc": "AZ",
     "ccc": "AZE",
-    "name": "阿塞拜疆",
+    "name": "Azerbaijan",
     "continent": "AS",
-    "ituzone": ["29"],
-    "cqzone": ["21"],
+    "ituzone": [
+      "29"
+    ],
+    "cqzone": [
+      "21"
+    ],
     "timezone": "4",
     "ccode": "31",
     "aname": "Azerbaijan",
@@ -10687,7 +10835,14 @@
       "LN41",
       "LN50"
     ],
-    "prefix": ["4J", "=4J5T/FF", "=4J7WMF/FF", "4K", "=4K4K/FF", "=4K6AE/FF"],
+    "prefix": [
+      "4J",
+      "=4J5T/FF",
+      "=4J7WMF/FF",
+      "4K",
+      "=4K4K/FF",
+      "=4K6AE/FF"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "az.png",
@@ -10706,12 +10861,18 @@
     "ccc": "COL",
     "name": "Bajo Neuvo",
     "continent": "NA",
-    "ituzone": ["11"],
-    "cqzone": ["8"],
+    "ituzone": [
+      "11"
+    ],
+    "cqzone": [
+      "8"
+    ],
     "timezone": "0",
     "ccode": "170",
     "aname": "Bajo Neuvo",
-    "mh": ["FK05"],
+    "mh": [
+      "FK05"
+    ],
     "prefix": [],
     "worked": false,
     "confirmed": false,
@@ -10729,15 +10890,26 @@
     "dxcc": "20",
     "cc": "US",
     "ccc": "USA",
-    "name": "贝克岛和豪兰岛",
+    "name": "Baker & Howland Is.",
     "continent": "OC",
-    "ituzone": ["61"],
-    "cqzone": ["31"],
+    "ituzone": [
+      "61"
+    ],
+    "cqzone": [
+      "31"
+    ],
     "timezone": "-12",
     "ccode": "840",
     "aname": "Baker & Howland Is.",
-    "mh": ["AJ10"],
-    "prefix": ["AH1", "KH1", "NH1", "WH1"],
+    "mh": [
+      "AJ10"
+    ],
+    "prefix": [
+      "AH1",
+      "KH1",
+      "NH1",
+      "WH1"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "us.png",
@@ -10754,14 +10926,25 @@
     "dxcc": "21",
     "cc": "ES",
     "ccc": "ESP",
-    "name": "巴里亚利群岛",
+    "name": "Balearic Is.",
     "continent": "EU",
-    "ituzone": ["37"],
-    "cqzone": ["14"],
+    "ituzone": [
+      "37"
+    ],
+    "cqzone": [
+      "14"
+    ],
     "timezone": "1",
     "ccode": "724",
     "aname": "Balearic Is.",
-    "mh": ["JM08", "JM09", "JM19", "JM29", "JN10", "JN20"],
+    "mh": [
+      "JM08",
+      "JM09",
+      "JM19",
+      "JM29",
+      "JN10",
+      "JN20"
+    ],
     "prefix": [
       "AM6",
       "=AM70URE/6",
@@ -10842,15 +11025,25 @@
     "dxcc": "22",
     "cc": "PW",
     "ccc": "PLW",
-    "name": "帛琉",
+    "name": "Palau",
     "continent": "OC",
-    "ituzone": ["64"],
-    "cqzone": ["27"],
+    "ituzone": [
+      "64"
+    ],
+    "cqzone": [
+      "27"
+    ],
     "timezone": "10",
     "ccode": "585",
     "aname": "Palau",
-    "mh": ["PJ65", "PJ76", "PJ77"],
-    "prefix": ["T8"],
+    "mh": [
+      "PJ65",
+      "PJ76",
+      "PJ77"
+    ],
+    "prefix": [
+      "T8"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "pw.png",
@@ -10867,15 +11060,25 @@
     "dxcc": "24",
     "cc": "BV",
     "ccc": "BVT",
-    "name": "布韦岛",
+    "name": "Bouvet",
     "continent": "AF",
-    "ituzone": ["67"],
-    "cqzone": ["38"],
+    "ituzone": [
+      "67"
+    ],
+    "cqzone": [
+      "38"
+    ],
     "timezone": "0",
     "ccode": "74",
     "aname": "Bouvet",
-    "mh": ["JD15"],
-    "prefix": ["=3Y/ZS6GCM", "=3Y0C", "=3Y0E"],
+    "mh": [
+      "JD15"
+    ],
+    "prefix": [
+      "=3Y/ZS6GCM",
+      "=3Y0C",
+      "=3Y0E"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "no.png",
@@ -10892,10 +11095,14 @@
     "dxcc": "27",
     "cc": "BY",
     "ccc": "BLR",
-    "name": "白俄罗斯",
+    "name": "Belarus",
     "continent": "EU",
-    "ituzone": ["29"],
-    "cqzone": ["16"],
+    "ituzone": [
+      "29"
+    ],
+    "cqzone": [
+      "16"
+    ],
     "timezone": "2",
     "ccode": "112",
     "aname": "Belarus",
@@ -10926,7 +11133,11 @@
       "KO55",
       "KO63"
     ],
-    "prefix": ["EU", "EV", "EW"],
+    "prefix": [
+      "EU",
+      "EV",
+      "EW"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "by.png",
@@ -10943,14 +11154,27 @@
     "dxcc": "29",
     "cc": "ES",
     "ccc": "ESP",
-    "name": "加那利群岛",
+    "name": "Canary Is.",
     "continent": "AF",
-    "ituzone": ["36"],
-    "cqzone": ["33"],
+    "ituzone": [
+      "36"
+    ],
+    "cqzone": [
+      "33"
+    ],
     "timezone": "0",
     "ccode": "724",
     "aname": "Canary Is.",
-    "mh": ["IL07", "IL08", "IL17", "IL18", "IL27", "IL28", "IL38", "IL39"],
+    "mh": [
+      "IL07",
+      "IL08",
+      "IL17",
+      "IL18",
+      "IL27",
+      "IL28",
+      "IL38",
+      "IL39"
+    ],
     "prefix": [
       "=AM70URE/8",
       "AM8",
@@ -11067,15 +11291,26 @@
     "dxcc": "31",
     "cc": "KI",
     "ccc": "KIR",
-    "name": "中吉里巴斯岛",
+    "name": "C. Kiribati (British Phoenix Is.)",
     "continent": "OC",
-    "ituzone": ["62"],
-    "cqzone": ["31"],
+    "ituzone": [
+      "62"
+    ],
+    "cqzone": [
+      "31"
+    ],
     "timezone": "12",
     "ccode": "296",
     "aname": "C. Kiribati (British Phoenix Is.)",
-    "mh": ["AI35", "AI45", "AI46", "AI47"],
-    "prefix": ["T31"],
+    "mh": [
+      "AI35",
+      "AI45",
+      "AI46",
+      "AI47"
+    ],
+    "prefix": [
+      "T31"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "ki.png",
@@ -11092,14 +11327,21 @@
     "dxcc": "32",
     "cc": "ES",
     "ccc": "ESP",
-    "name": "休达和梅利利亚",
+    "name": "Ceuta & Melilla",
     "continent": "AF",
-    "ituzone": ["37"],
-    "cqzone": ["33"],
+    "ituzone": [
+      "37"
+    ],
+    "cqzone": [
+      "33"
+    ],
     "timezone": "1",
     "ccode": "724",
     "aname": "Ceuta & Melilla",
-    "mh": ["IM75", "IM85"],
+    "mh": [
+      "IM75",
+      "IM85"
+    ],
     "prefix": [
       "=AM70URE/9",
       "AM9",
@@ -11157,15 +11399,24 @@
     "dxcc": "33",
     "cc": "GB",
     "ccc": "GBR",
-    "name": "查戈斯群岛",
+    "name": "Chagos Is.",
     "continent": "AF",
-    "ituzone": ["41"],
-    "cqzone": ["39"],
+    "ituzone": [
+      "41"
+    ],
+    "cqzone": [
+      "39"
+    ],
     "timezone": "5",
     "ccode": "826",
     "aname": "Chagos Is.",
-    "mh": ["MI53", "MI62"],
-    "prefix": ["VQ9"],
+    "mh": [
+      "MI53",
+      "MI62"
+    ],
+    "prefix": [
+      "VQ9"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "gb.png",
@@ -11182,15 +11433,25 @@
     "dxcc": "34",
     "cc": "NZ",
     "ccc": "NZL",
-    "name": "查塔姆岛",
+    "name": "Chatham Is.",
     "continent": "OC",
-    "ituzone": ["60"],
-    "cqzone": ["32"],
+    "ituzone": [
+      "60"
+    ],
+    "cqzone": [
+      "32"
+    ],
     "timezone": "13",
     "ccode": "554",
     "aname": "Chatham Is.",
-    "mh": ["AE15", "AE16"],
-    "prefix": ["ZL7", "ZM7"],
+    "mh": [
+      "AE15",
+      "AE16"
+    ],
+    "prefix": [
+      "ZL7",
+      "ZM7"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "nz.png",
@@ -11207,14 +11468,20 @@
     "dxcc": "35",
     "cc": "CX",
     "ccc": "CXR",
-    "name": "圣诞节岛",
+    "name": "Christmas I.",
     "continent": "OC",
-    "ituzone": ["54"],
-    "cqzone": ["29"],
+    "ituzone": [
+      "54"
+    ],
+    "cqzone": [
+      "29"
+    ],
     "timezone": "7",
     "ccode": "162",
     "aname": "Christmas I.",
-    "mh": ["OH29"],
+    "mh": [
+      "OH29"
+    ],
     "prefix": [
       "AX9X",
       "VH9X",
@@ -11254,15 +11521,27 @@
     "dxcc": "36",
     "cc": "FR",
     "ccc": "FRA",
-    "name": "克利珀顿岛",
+    "name": "Clipperton I.",
     "continent": "NA",
-    "ituzone": ["10"],
-    "cqzone": ["7"],
+    "ituzone": [
+      "10"
+    ],
+    "cqzone": [
+      "7"
+    ],
     "timezone": "-7",
     "ccode": "250",
     "aname": "Clipperton I.",
-    "mh": ["DK50"],
-    "prefix": ["=FO0/F8UFT", "=FO0AAA", "=TX5C", "=TX5K", "=TX5P"],
+    "mh": [
+      "DK50"
+    ],
+    "prefix": [
+      "=FO0/F8UFT",
+      "=FO0AAA",
+      "=TX5C",
+      "=TX5K",
+      "=TX5P"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "fr.png",
@@ -11279,15 +11558,24 @@
     "dxcc": "37",
     "cc": "CR",
     "ccc": "CRI",
-    "name": "科科斯岛",
+    "name": "Cocos I.",
     "continent": "NA",
-    "ituzone": ["11"],
-    "cqzone": ["7"],
+    "ituzone": [
+      "11"
+    ],
+    "cqzone": [
+      "7"
+    ],
     "timezone": "-6",
     "ccode": "188",
     "aname": "Cocos I.",
-    "mh": ["EJ65"],
-    "prefix": ["TE9", "TI9"],
+    "mh": [
+      "EJ65"
+    ],
+    "prefix": [
+      "TE9",
+      "TI9"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "cr.png",
@@ -11304,14 +11592,21 @@
     "dxcc": "38",
     "cc": "CC",
     "ccc": "CCK",
-    "name": "科科斯(基林)群岛",
+    "name": "Cocos (Keeling) Is.",
     "continent": "OC",
-    "ituzone": ["54"],
-    "cqzone": ["29"],
+    "ituzone": [
+      "54"
+    ],
+    "cqzone": [
+      "29"
+    ],
     "timezone": "7",
     "ccode": "166",
     "aname": "Cocos (Keeling) Is.",
-    "mh": ["NH87", "NH88"],
+    "mh": [
+      "NH87",
+      "NH88"
+    ],
     "prefix": [
       "AX9C",
       "AX9Y",
@@ -11357,14 +11652,25 @@
     "dxcc": "40",
     "cc": "GR",
     "ccc": "GRC",
-    "name": "克里特岛",
+    "name": "Crete",
     "continent": "EU",
-    "ituzone": ["28"],
-    "cqzone": ["20"],
+    "ituzone": [
+      "28"
+    ],
+    "cqzone": [
+      "20"
+    ],
     "timezone": "2",
     "ccode": "300",
     "aname": "Crete",
-    "mh": ["KM14", "KM15", "KM24", "KM25", "KM34", "KM35"],
+    "mh": [
+      "KM14",
+      "KM15",
+      "KM24",
+      "KM25",
+      "KM34",
+      "KM35"
+    ],
     "prefix": [
       "=J42004/HB9IQB",
       "=J42004/M0WTD",
@@ -11418,15 +11724,27 @@
     "dxcc": "41",
     "cc": "FR",
     "ccc": "FRA",
-    "name": "克罗泽特岛",
+    "name": "Crozet I.",
     "continent": "AF",
-    "ituzone": ["68"],
-    "cqzone": ["39"],
+    "ituzone": [
+      "68"
+    ],
+    "cqzone": [
+      "39"
+    ],
     "timezone": "3",
     "ccode": "250",
     "aname": "Crozet I.",
-    "mh": ["LE53", "LE54"],
-    "prefix": ["FT0W", "FT4W", "FT5W", "FT8W"],
+    "mh": [
+      "LE53",
+      "LE54"
+    ],
+    "prefix": [
+      "FT0W",
+      "FT4W",
+      "FT5W",
+      "FT8W"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "fr.png",
@@ -11443,15 +11761,25 @@
     "dxcc": "43",
     "cc": "PR",
     "ccc": "PRI",
-    "name": "德索乔岛",
+    "name": "Desecheo I.",
     "continent": "NA",
-    "ituzone": ["11"],
-    "cqzone": ["8"],
+    "ituzone": [
+      "11"
+    ],
+    "cqzone": [
+      "8"
+    ],
     "timezone": "-4",
     "ccode": "630",
     "aname": "Desecheo I.",
-    "mh": ["FK68"],
-    "prefix": ["KP5", "NP5", "WP5"],
+    "mh": [
+      "FK68"
+    ],
+    "prefix": [
+      "KP5",
+      "NP5",
+      "WP5"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "pr.png",
@@ -11468,14 +11796,20 @@
     "dxcc": "45",
     "cc": "GR",
     "ccc": "GRC",
-    "name": "多德卡尼斯群岛",
+    "name": "Dodecanese",
     "continent": "EU",
-    "ituzone": ["28"],
-    "cqzone": ["20"],
+    "ituzone": [
+      "28"
+    ],
+    "cqzone": [
+      "20"
+    ],
     "timezone": "2",
     "ccode": "300",
     "aname": "Dodecanese",
-    "mh": ["KM36"],
+    "mh": [
+      "KM36"
+    ],
     "prefix": [
       "=J42004/SP5MXZ",
       "J45",
@@ -11521,10 +11855,14 @@
     "dxcc": "46",
     "cc": "MY",
     "ccc": "MYS",
-    "name": "东马来西亚",
+    "name": "East Malaysia",
     "continent": "OC",
-    "ituzone": ["54"],
-    "cqzone": ["28"],
+    "ituzone": [
+      "54"
+    ],
+    "cqzone": [
+      "28"
+    ],
     "timezone": "8",
     "ccode": "458",
     "aname": "East Malaysia",
@@ -11652,15 +11990,30 @@
     "dxcc": "47",
     "cc": "CL",
     "ccc": "CHL",
-    "name": "复活节岛",
+    "name": "Easter I.",
     "continent": "SA",
-    "ituzone": ["63"],
-    "cqzone": ["12"],
+    "ituzone": [
+      "63"
+    ],
+    "cqzone": [
+      "12"
+    ],
     "timezone": "-7",
     "ccode": "152",
     "aname": "Easter I.",
-    "mh": ["DG52"],
-    "prefix": ["3G0", "CA0", "CB0", "CC0", "CD0", "CE0", "XQ0", "XR0"],
+    "mh": [
+      "DG52"
+    ],
+    "prefix": [
+      "3G0",
+      "CA0",
+      "CB0",
+      "CC0",
+      "CD0",
+      "CE0",
+      "XQ0",
+      "XR0"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "cl.png",
@@ -11677,10 +12030,15 @@
     "dxcc": "48",
     "cc": "KI",
     "ccc": "KIR",
-    "name": "东吉里巴斯岛",
+    "name": "E. Kiribati (Line Is.)",
     "continent": "OC",
-    "ituzone": ["61", "63"],
-    "cqzone": ["31"],
+    "ituzone": [
+      "61",
+      "63"
+    ],
+    "cqzone": [
+      "31"
+    ],
     "timezone": "12",
     "ccode": "296",
     "aname": "E. Kiribati (Line Is.)",
@@ -11695,7 +12053,9 @@
       "RJ62",
       "RJ63"
     ],
-    "prefix": ["T32"],
+    "prefix": [
+      "T32"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "ki.png",
@@ -11712,15 +12072,28 @@
     "dxcc": "49",
     "cc": "GQ",
     "ccc": "GNQ",
-    "name": "赤道几内亚",
+    "name": "Equatorial Guinea",
     "continent": "AF",
-    "ituzone": ["47"],
-    "cqzone": ["36"],
+    "ituzone": [
+      "47"
+    ],
+    "cqzone": [
+      "36"
+    ],
     "timezone": "-1",
     "ccode": "226",
     "aname": "Equatorial Guinea",
-    "mh": ["JJ40", "JJ41", "JJ42", "JJ43", "JJ51", "JJ52"],
-    "prefix": ["3C"],
+    "mh": [
+      "JJ40",
+      "JJ41",
+      "JJ42",
+      "JJ43",
+      "JJ51",
+      "JJ52"
+    ],
+    "prefix": [
+      "3C"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "gq.png",
@@ -11737,10 +12110,14 @@
     "dxcc": "50",
     "cc": "MX",
     "ccc": "MEX",
-    "name": "墨西哥",
+    "name": "Mexico",
     "continent": "NA",
-    "ituzone": ["10"],
-    "cqzone": ["6"],
+    "ituzone": [
+      "10"
+    ],
+    "cqzone": [
+      "6"
+    ],
     "timezone": "-6",
     "ccode": "484",
     "aname": "Mexico",
@@ -11930,10 +12307,14 @@
     "dxcc": "51",
     "cc": "ER",
     "ccc": "ERI",
-    "name": "厄立特里亚",
+    "name": "Eritrea",
     "continent": "AF",
-    "ituzone": ["48"],
-    "cqzone": ["37"],
+    "ituzone": [
+      "48"
+    ],
+    "cqzone": [
+      "37"
+    ],
     "timezone": "3",
     "ccode": "232",
     "aname": "Eritrea",
@@ -11955,7 +12336,9 @@
       "LK12",
       "LK13"
     ],
-    "prefix": ["E3"],
+    "prefix": [
+      "E3"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "er.png",
@@ -11972,10 +12355,14 @@
     "dxcc": "52",
     "cc": "EE",
     "ccc": "EST",
-    "name": "爱沙尼亚",
+    "name": "Estonia",
     "continent": "EU",
-    "ituzone": ["29"],
-    "cqzone": ["15"],
+    "ituzone": [
+      "29"
+    ],
+    "cqzone": [
+      "15"
+    ],
     "timezone": "2",
     "ccode": "233",
     "aname": "Estonia",
@@ -11993,7 +12380,12 @@
       "KO39",
       "KO49"
     ],
-    "prefix": ["ES", "=ES/RX3AMI/LH", "=ES/SA5FYR/LH", "=ES0TI/LH"],
+    "prefix": [
+      "ES",
+      "=ES/RX3AMI/LH",
+      "=ES/SA5FYR/LH",
+      "=ES0TI/LH"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "ee.png",
@@ -12010,10 +12402,14 @@
     "dxcc": "53",
     "cc": "ET",
     "ccc": "ETH",
-    "name": "埃塞俄比亚",
+    "name": "Ethiopia",
     "continent": "AF",
-    "ituzone": ["48"],
-    "cqzone": ["37"],
+    "ituzone": [
+      "48"
+    ],
+    "cqzone": [
+      "37"
+    ],
     "timezone": "3",
     "ccode": "231",
     "aname": "Ethiopia",
@@ -12085,7 +12481,12 @@
       "LK11",
       "LK12"
     ],
-    "prefix": ["9E", "9F", "ET", "=ET3AA/YOTA"],
+    "prefix": [
+      "9E",
+      "9F",
+      "ET",
+      "=ET3AA/YOTA"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "et.png",
@@ -12102,10 +12503,17 @@
     "dxcc": "54",
     "cc": "RU",
     "ccc": "RUS",
-    "name": "俄罗斯欧洲",
+    "name": "European Russia",
     "continent": "EU",
-    "ituzone": ["19", "20", "29", "30"],
-    "cqzone": ["16"],
+    "ituzone": [
+      "19",
+      "20",
+      "29",
+      "30"
+    ],
+    "cqzone": [
+      "16"
+    ],
     "timezone": "3",
     "ccode": "643",
     "aname": "European Russia",
@@ -13966,14 +14374,20 @@
     "dxcc": "56",
     "cc": "BR",
     "ccc": "BRA",
-    "name": "费尔南多群岛",
+    "name": "Fernando de Noronha",
     "continent": "SA",
-    "ituzone": ["13"],
-    "cqzone": ["11"],
+    "ituzone": [
+      "13"
+    ],
+    "cqzone": [
+      "11"
+    ],
     "timezone": "-2",
     "ccode": "76",
     "aname": "Fernando de Noronha",
-    "mh": ["HI36"],
+    "mh": [
+      "HI36"
+    ],
     "prefix": [
       "PP0F",
       "PP0R",
@@ -14052,10 +14466,14 @@
     "dxcc": "60",
     "cc": "BS",
     "ccc": "BHS",
-    "name": "巴哈马",
+    "name": "Bahamas",
     "continent": "NA",
-    "ituzone": ["11"],
-    "cqzone": ["8"],
+    "ituzone": [
+      "11"
+    ],
+    "cqzone": [
+      "8"
+    ],
     "timezone": "-5",
     "ccode": "44",
     "aname": "Bahamas",
@@ -14077,7 +14495,10 @@
       "FL32",
       "FL33"
     ],
-    "prefix": ["C6", "=WK2G/C6A/LH"],
+    "prefix": [
+      "C6",
+      "=WK2G/C6A/LH"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "bs.png",
@@ -14094,10 +14515,14 @@
     "dxcc": "61",
     "cc": "RU",
     "ccc": "RUS",
-    "name": "法兰士约瑟夫地群岛",
+    "name": "Franz Josef Land",
     "continent": "EU",
-    "ituzone": ["75"],
-    "cqzone": ["40"],
+    "ituzone": [
+      "75"
+    ],
+    "cqzone": [
+      "40"
+    ],
     "timezone": "3",
     "ccode": "643",
     "aname": "Franz Josef Land",
@@ -14124,7 +14549,13 @@
       "MR20",
       "MR21"
     ],
-    "prefix": ["=R1FJL", "=R1FJM", "RI1F", "=UA1PBN/1", "=UA4RX/1"],
+    "prefix": [
+      "=R1FJL",
+      "=R1FJM",
+      "RI1F",
+      "=UA1PBN/1",
+      "=UA4RX/1"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "ru.png",
@@ -14141,15 +14572,23 @@
     "dxcc": "62",
     "cc": "BB",
     "ccc": "BRB",
-    "name": "巴巴多斯",
+    "name": "Barbados",
     "continent": "NA",
-    "ituzone": ["11"],
-    "cqzone": ["8"],
+    "ituzone": [
+      "11"
+    ],
+    "cqzone": [
+      "8"
+    ],
     "timezone": "-4",
     "ccode": "52",
     "aname": "Barbados",
-    "mh": ["GK03"],
-    "prefix": ["8P"],
+    "mh": [
+      "GK03"
+    ],
+    "prefix": [
+      "8P"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "bb.png",
@@ -14166,10 +14605,14 @@
     "dxcc": "63",
     "cc": "GF",
     "ccc": "GUF",
-    "name": "法属圭亚那",
+    "name": "French Guiana",
     "continent": "SA",
-    "ituzone": ["12"],
-    "cqzone": ["9"],
+    "ituzone": [
+      "12"
+    ],
+    "cqzone": [
+      "9"
+    ],
     "timezone": "-4",
     "ccode": "254",
     "aname": "French Guiana",
@@ -14213,15 +14656,25 @@
     "dxcc": "64",
     "cc": "BM",
     "ccc": "BMU",
-    "name": "百慕大",
+    "name": "Bermuda",
     "continent": "NA",
-    "ituzone": ["11"],
-    "cqzone": ["5"],
+    "ituzone": [
+      "11"
+    ],
+    "cqzone": [
+      "5"
+    ],
     "timezone": "-4",
     "ccode": "60",
     "aname": "Bermuda",
-    "mh": ["FM72"],
-    "prefix": ["=VP400BO", "VP9", "=VP9400/HW"],
+    "mh": [
+      "FM72"
+    ],
+    "prefix": [
+      "=VP400BO",
+      "VP9",
+      "=VP9400/HW"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "bm.png",
@@ -14238,15 +14691,23 @@
     "dxcc": "65",
     "cc": "VG",
     "ccc": "VGB",
-    "name": "英属维京岛",
+    "name": "British Virgin Is.",
     "continent": "NA",
-    "ituzone": ["11"],
-    "cqzone": ["8"],
+    "ituzone": [
+      "11"
+    ],
+    "cqzone": [
+      "8"
+    ],
     "timezone": "-4",
     "ccode": "92",
     "aname": "British Virgin Is.",
-    "mh": ["FK78"],
-    "prefix": ["VP2V"],
+    "mh": [
+      "FK78"
+    ],
+    "prefix": [
+      "VP2V"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "vg.png",
@@ -14263,15 +14724,28 @@
     "dxcc": "66",
     "cc": "BZ",
     "ccc": "BLZ",
-    "name": "伯利兹",
+    "name": "Belize",
     "continent": "NA",
-    "ituzone": ["11"],
-    "cqzone": ["7"],
+    "ituzone": [
+      "11"
+    ],
+    "cqzone": [
+      "7"
+    ],
     "timezone": "-6",
     "ccode": "84",
     "aname": "Belize",
-    "mh": ["EK55", "EK56", "EK57", "EK58", "EK67", "EK68"],
-    "prefix": ["V3"],
+    "mh": [
+      "EK55",
+      "EK56",
+      "EK57",
+      "EK58",
+      "EK67",
+      "EK68"
+    ],
+    "prefix": [
+      "V3"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "bz.png",
@@ -14288,15 +14762,24 @@
     "dxcc": "69",
     "cc": "KY",
     "ccc": "CYM",
-    "name": "开曼群岛",
+    "name": "Cayman Is.",
     "continent": "NA",
-    "ituzone": ["11"],
-    "cqzone": ["8"],
+    "ituzone": [
+      "11"
+    ],
+    "cqzone": [
+      "8"
+    ],
     "timezone": "-5",
     "ccode": "136",
     "aname": "Cayman Is.",
-    "mh": ["EK99", "FK09"],
-    "prefix": ["ZF"],
+    "mh": [
+      "EK99",
+      "FK09"
+    ],
+    "prefix": [
+      "ZF"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "ky.png",
@@ -14313,10 +14796,14 @@
     "dxcc": "70",
     "cc": "CU",
     "ccc": "CUB",
-    "name": "古巴",
+    "name": "Cuba",
     "continent": "NA",
-    "ituzone": ["11"],
-    "cqzone": ["8"],
+    "ituzone": [
+      "11"
+    ],
+    "cqzone": [
+      "8"
+    ],
     "timezone": "-5",
     "ccode": "192",
     "aname": "Cuba",
@@ -14340,7 +14827,14 @@
       "FL20",
       "FL21"
     ],
-    "prefix": ["CL", "CM", "CO", "=CO2FRC/LH", "T4", "=T40C/LT"],
+    "prefix": [
+      "CL",
+      "CM",
+      "CO",
+      "=CO2FRC/LH",
+      "T4",
+      "=T40C/LT"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "cu.png",
@@ -14357,14 +14851,25 @@
     "dxcc": "71",
     "cc": "EC",
     "ccc": "ECU",
-    "name": "加拉帕戈斯岛",
+    "name": "Galapagos Is.",
     "continent": "SA",
-    "ituzone": ["12"],
-    "cqzone": ["10"],
+    "ituzone": [
+      "12"
+    ],
+    "cqzone": [
+      "10"
+    ],
     "timezone": "-6",
     "ccode": "218",
     "aname": "Galapagos Is.",
-    "mh": ["EI48", "EI49", "EI58", "EI59", "EJ40", "EJ50"],
+    "mh": [
+      "EI48",
+      "EI49",
+      "EI58",
+      "EI59",
+      "EJ40",
+      "EJ50"
+    ],
     "prefix": [
       "=HC1HC/8",
       "=HC2ANT/8",
@@ -14396,15 +14901,27 @@
     "dxcc": "72",
     "cc": "DO",
     "ccc": "DOM",
-    "name": "多米尼加共和国",
+    "name": "Dominican Republic",
     "continent": "NA",
-    "ituzone": ["11"],
-    "cqzone": ["8"],
+    "ituzone": [
+      "11"
+    ],
+    "cqzone": [
+      "8"
+    ],
     "timezone": "-4",
     "ccode": "214",
     "aname": "Dominican Republic",
-    "mh": ["FK47", "FK48", "FK49", "FK58", "FK59"],
-    "prefix": ["HI"],
+    "mh": [
+      "FK47",
+      "FK48",
+      "FK49",
+      "FK58",
+      "FK59"
+    ],
+    "prefix": [
+      "HI"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "do.png",
@@ -14421,15 +14938,27 @@
     "dxcc": "74",
     "cc": "SV",
     "ccc": "SLV",
-    "name": "萨尔瓦多",
+    "name": "El Salvador",
     "continent": "NA",
-    "ituzone": ["11"],
-    "cqzone": ["7"],
+    "ituzone": [
+      "11"
+    ],
+    "cqzone": [
+      "7"
+    ],
     "timezone": "-6",
     "ccode": "222",
     "aname": "El Salvador",
-    "mh": ["EK43", "EK53", "EK54", "EK63"],
-    "prefix": ["HU", "YS"],
+    "mh": [
+      "EK43",
+      "EK53",
+      "EK54",
+      "EK63"
+    ],
+    "prefix": [
+      "HU",
+      "YS"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "sv.png",
@@ -14446,10 +14975,14 @@
     "dxcc": "75",
     "cc": "GE",
     "ccc": "GEO",
-    "name": "格鲁吉亚",
+    "name": "Georgia",
     "continent": "AS",
-    "ituzone": ["29"],
-    "cqzone": ["21"],
+    "ituzone": [
+      "29"
+    ],
+    "cqzone": [
+      "21"
+    ],
     "timezone": "4",
     "ccode": "268",
     "aname": "Georgia",
@@ -14490,10 +15023,14 @@
     "dxcc": "76",
     "cc": "GT",
     "ccc": "GTM",
-    "name": "危地马拉",
+    "name": "Guatemala",
     "continent": "NA",
-    "ituzone": ["11"],
-    "cqzone": ["7"],
+    "ituzone": [
+      "11"
+    ],
+    "cqzone": [
+      "7"
+    ],
     "timezone": "-6",
     "ccode": "320",
     "aname": "Guatemala",
@@ -14511,7 +15048,10 @@
       "EK56",
       "EK57"
     ],
-    "prefix": ["TD", "TG"],
+    "prefix": [
+      "TD",
+      "TG"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "gt.png",
@@ -14528,15 +15068,24 @@
     "dxcc": "77",
     "cc": "GD",
     "ccc": "GRD",
-    "name": "格林纳达",
+    "name": "Grenada",
     "continent": "NA",
-    "ituzone": ["11"],
-    "cqzone": ["8"],
+    "ituzone": [
+      "11"
+    ],
+    "cqzone": [
+      "8"
+    ],
     "timezone": "-4",
     "ccode": "308",
     "aname": "Grenada",
-    "mh": ["FK91", "FK92"],
-    "prefix": ["J3"],
+    "mh": [
+      "FK91",
+      "FK92"
+    ],
+    "prefix": [
+      "J3"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "gd.png",
@@ -14553,15 +15102,29 @@
     "dxcc": "78",
     "cc": "HT",
     "ccc": "HTI",
-    "name": "海地",
+    "name": "Haiti",
     "continent": "NA",
-    "ituzone": ["11"],
-    "cqzone": ["8"],
+    "ituzone": [
+      "11"
+    ],
+    "cqzone": [
+      "8"
+    ],
     "timezone": "-5",
     "ccode": "332",
     "aname": "Haiti",
-    "mh": ["FK28", "FK38", "FK39", "FK48", "FK49", "FL30"],
-    "prefix": ["4V", "HH"],
+    "mh": [
+      "FK28",
+      "FK38",
+      "FK39",
+      "FK48",
+      "FK49",
+      "FL30"
+    ],
+    "prefix": [
+      "4V",
+      "HH"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "ht.png",
@@ -14578,14 +15141,21 @@
     "dxcc": "79",
     "cc": "GP",
     "ccc": "GLP",
-    "name": "瓜德罗普岛",
+    "name": "Guadeloupe",
     "continent": "NA",
-    "ituzone": ["11"],
-    "cqzone": ["8"],
+    "ituzone": [
+      "11"
+    ],
+    "cqzone": [
+      "8"
+    ],
     "timezone": "-4",
     "ccode": "312",
     "aname": "Guadeloupe",
-    "mh": ["FK95", "FK96"],
+    "mh": [
+      "FK95",
+      "FK96"
+    ],
     "prefix": [
       "FG",
       "=TO0MT",
@@ -14645,10 +15215,14 @@
     "dxcc": "80",
     "cc": "HN",
     "ccc": "HND",
-    "name": "洪都拉斯",
+    "name": "Honduras",
     "continent": "NA",
-    "ituzone": ["11"],
-    "cqzone": ["7"],
+    "ituzone": [
+      "11"
+    ],
+    "cqzone": [
+      "7"
+    ],
     "timezone": "-6",
     "ccode": "340",
     "aname": "Honduras",
@@ -14668,7 +15242,10 @@
       "EK84",
       "EK85"
     ],
-    "prefix": ["HQ", "HR"],
+    "prefix": [
+      "HQ",
+      "HR"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "hn.png",
@@ -14685,15 +15262,25 @@
     "dxcc": "82",
     "cc": "JM",
     "ccc": "JAM",
-    "name": "牙买加",
+    "name": "Jamaica",
     "continent": "NA",
-    "ituzone": ["11"],
-    "cqzone": ["8"],
+    "ituzone": [
+      "11"
+    ],
+    "cqzone": [
+      "8"
+    ],
     "timezone": "-5",
     "ccode": "388",
     "aname": "Jamaica",
-    "mh": ["FK08", "FK17", "FK18"],
-    "prefix": ["6Y"],
+    "mh": [
+      "FK08",
+      "FK17",
+      "FK18"
+    ],
+    "prefix": [
+      "6Y"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "jm.png",
@@ -14710,14 +15297,20 @@
     "dxcc": "84",
     "cc": "MQ",
     "ccc": "MTQ",
-    "name": "马提尼克岛",
+    "name": "Martinique",
     "continent": "NA",
-    "ituzone": ["11"],
-    "cqzone": ["8"],
+    "ituzone": [
+      "11"
+    ],
+    "cqzone": [
+      "8"
+    ],
     "timezone": "-4",
     "ccode": "474",
     "aname": "Martinique",
-    "mh": ["FK94"],
+    "mh": [
+      "FK94"
+    ],
     "prefix": [
       "FM",
       "=TO0O",
@@ -14782,14 +15375,20 @@
     "dxcc": "85",
     "cc": "AN",
     "ccc": "ANT",
-    "name": "荷属安的列斯群岛",
+    "name": "Netherlands Antilles",
     "continent": "SA",
-    "ituzone": ["0"],
-    "cqzone": ["0"],
+    "ituzone": [
+      "0"
+    ],
+    "cqzone": [
+      "0"
+    ],
     "timezone": "0",
     "ccode": "530",
     "aname": "Netherlands Antilles",
-    "mh": ["FK52"],
+    "mh": [
+      "FK52"
+    ],
     "prefix": [],
     "worked": false,
     "confirmed": false,
@@ -14807,10 +15406,14 @@
     "dxcc": "86",
     "cc": "NI",
     "ccc": "NIC",
-    "name": "尼加拉瓜",
+    "name": "Nicaragua",
     "continent": "NA",
-    "ituzone": ["11"],
-    "cqzone": ["7"],
+    "ituzone": [
+      "11"
+    ],
+    "cqzone": [
+      "7"
+    ],
     "timezone": "-6",
     "ccode": "558",
     "aname": "Nicaragua",
@@ -14831,7 +15434,12 @@
       "EK84",
       "EK85"
     ],
-    "prefix": ["H6", "H7", "HT", "YN"],
+    "prefix": [
+      "H6",
+      "H7",
+      "HT",
+      "YN"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "ni.png",
@@ -14848,10 +15456,14 @@
     "dxcc": "88",
     "cc": "PA",
     "ccc": "PAN",
-    "name": "巴拿马",
+    "name": "Panama",
     "continent": "NA",
-    "ituzone": ["11"],
-    "cqzone": ["7"],
+    "ituzone": [
+      "11"
+    ],
+    "cqzone": [
+      "7"
+    ],
     "timezone": "-5",
     "ccode": "591",
     "aname": "Panama",
@@ -14868,7 +15480,16 @@
       "FJ18",
       "FJ19"
     ],
-    "prefix": ["3E", "3F", "H3", "H8", "H9", "HO", "HP", "=HP2TP/LH"],
+    "prefix": [
+      "3E",
+      "3F",
+      "H3",
+      "H8",
+      "H9",
+      "HO",
+      "HP",
+      "=HP2TP/LH"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "pa.png",
@@ -14885,15 +15506,25 @@
     "dxcc": "89",
     "cc": "TC",
     "ccc": "TCA",
-    "name": "特克斯和凯科斯群岛",
+    "name": "Turks & Caicos Is.",
     "continent": "NA",
-    "ituzone": ["11"],
-    "cqzone": ["8"],
+    "ituzone": [
+      "11"
+    ],
+    "cqzone": [
+      "8"
+    ],
     "timezone": "-5",
     "ccode": "796",
     "aname": "Turks & Caicos Is.",
-    "mh": ["FL31", "FL41"],
-    "prefix": ["VP5", "VQ5"],
+    "mh": [
+      "FL31",
+      "FL41"
+    ],
+    "prefix": [
+      "VP5",
+      "VQ5"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "tc.png",
@@ -14910,15 +15541,25 @@
     "dxcc": "90",
     "cc": "TT",
     "ccc": "TTO",
-    "name": "特立尼达和多巴哥共和国",
+    "name": "Trinidad & Tobago",
     "continent": "SA",
-    "ituzone": ["11"],
-    "cqzone": ["9"],
+    "ituzone": [
+      "11"
+    ],
+    "cqzone": [
+      "9"
+    ],
     "timezone": "-4",
     "ccode": "780",
     "aname": "Trinidad & Tobago",
-    "mh": ["FK90", "FK91"],
-    "prefix": ["9Y", "9Z"],
+    "mh": [
+      "FK90",
+      "FK91"
+    ],
+    "prefix": [
+      "9Y",
+      "9Z"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "tt.png",
@@ -14935,15 +15576,25 @@
     "dxcc": "91",
     "cc": "AW",
     "ccc": "ABW",
-    "name": "阿鲁巴",
+    "name": "Aruba",
     "continent": "SA",
-    "ituzone": ["11"],
-    "cqzone": ["9"],
+    "ituzone": [
+      "11"
+    ],
+    "cqzone": [
+      "9"
+    ],
     "timezone": "-4",
     "ccode": "533",
     "aname": "Aruba",
-    "mh": ["FK42", "FK52"],
-    "prefix": ["P4", "=P40YL/YL"],
+    "mh": [
+      "FK42",
+      "FK52"
+    ],
+    "prefix": [
+      "P4",
+      "=P40YL/YL"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "aw.png",
@@ -14960,15 +15611,24 @@
     "dxcc": "94",
     "cc": "AG",
     "ccc": "ATG",
-    "name": "安地卡及巴布达",
+    "name": "Antigua & Barbuda",
     "continent": "NA",
-    "ituzone": ["11"],
-    "cqzone": ["8"],
+    "ituzone": [
+      "11"
+    ],
+    "cqzone": [
+      "8"
+    ],
     "timezone": "-4",
     "ccode": "28",
     "aname": "Antigua & Barbuda",
-    "mh": ["FK96", "FK97"],
-    "prefix": ["V2"],
+    "mh": [
+      "FK96",
+      "FK97"
+    ],
+    "prefix": [
+      "V2"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "ag.png",
@@ -14985,15 +15645,23 @@
     "dxcc": "95",
     "cc": "DM",
     "ccc": "DMA",
-    "name": "多米尼克",
+    "name": "Dominica",
     "continent": "NA",
-    "ituzone": ["11"],
-    "cqzone": ["8"],
+    "ituzone": [
+      "11"
+    ],
+    "cqzone": [
+      "8"
+    ],
     "timezone": "-4",
     "ccode": "212",
     "aname": "Dominica",
-    "mh": ["FK95"],
-    "prefix": ["J7"],
+    "mh": [
+      "FK95"
+    ],
+    "prefix": [
+      "J7"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "dm.png",
@@ -15010,15 +15678,23 @@
     "dxcc": "96",
     "cc": "MS",
     "ccc": "MSR",
-    "name": "蒙特塞拉特",
+    "name": "Montserrat",
     "continent": "NA",
-    "ituzone": ["11"],
-    "cqzone": ["8"],
+    "ituzone": [
+      "11"
+    ],
+    "cqzone": [
+      "8"
+    ],
     "timezone": "-4",
     "ccode": "500",
     "aname": "Montserrat",
-    "mh": ["FK86"],
-    "prefix": ["VP2M"],
+    "mh": [
+      "FK86"
+    ],
+    "prefix": [
+      "VP2M"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "ms.png",
@@ -15035,15 +15711,25 @@
     "dxcc": "97",
     "cc": "LC",
     "ccc": "LCA",
-    "name": "圣卢西亚",
+    "name": "St. Lucia",
     "continent": "NA",
-    "ituzone": ["11"],
-    "cqzone": ["8"],
+    "ituzone": [
+      "11"
+    ],
+    "cqzone": [
+      "8"
+    ],
     "timezone": "-4",
     "ccode": "662",
     "aname": "St. Lucia",
-    "mh": ["FK93", "FK94"],
-    "prefix": ["J6", "=J69DS/LH"],
+    "mh": [
+      "FK93",
+      "FK94"
+    ],
+    "prefix": [
+      "J6",
+      "=J69DS/LH"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "lc.png",
@@ -15060,15 +15746,24 @@
     "dxcc": "98",
     "cc": "VC",
     "ccc": "VCT",
-    "name": "圣文森特岛",
+    "name": "St. Vincent",
     "continent": "NA",
-    "ituzone": ["11"],
-    "cqzone": ["8"],
+    "ituzone": [
+      "11"
+    ],
+    "cqzone": [
+      "8"
+    ],
     "timezone": "-4",
     "ccode": "670",
     "aname": "St. Vincent",
-    "mh": ["FK92", "FK93"],
-    "prefix": ["J8"],
+    "mh": [
+      "FK92",
+      "FK93"
+    ],
+    "prefix": [
+      "J8"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "vc.png",
@@ -15085,14 +15780,20 @@
     "dxcc": "99",
     "cc": "FR",
     "ccc": "FRA",
-    "name": "格罗里奥索群岛",
+    "name": "Glorioso Is.",
     "continent": "AF",
-    "ituzone": ["53"],
-    "cqzone": ["39"],
+    "ituzone": [
+      "53"
+    ],
+    "cqzone": [
+      "39"
+    ],
     "timezone": "3",
     "ccode": "250",
     "aname": "Glorioso Is.",
-    "mh": ["LH38"],
+    "mh": [
+      "LH38"
+    ],
     "prefix": [
       "=FR5ZQ/G",
       "FT0G",
@@ -15122,10 +15823,15 @@
     "dxcc": "100",
     "cc": "AR",
     "ccc": "ARG",
-    "name": "阿根廷",
+    "name": "Argentina",
     "continent": "SA",
-    "ituzone": ["14", "16"],
-    "cqzone": ["13"],
+    "ituzone": [
+      "14",
+      "16"
+    ],
+    "cqzone": [
+      "13"
+    ],
     "timezone": "-3",
     "ccode": "32",
     "aname": "Argentina",
@@ -16127,14 +16833,20 @@
     "dxcc": "103",
     "cc": "GU",
     "ccc": "GUM",
-    "name": "关岛",
+    "name": "Guam",
     "continent": "OC",
-    "ituzone": ["64"],
-    "cqzone": ["27"],
+    "ituzone": [
+      "64"
+    ],
+    "cqzone": [
+      "27"
+    ],
     "timezone": "10",
     "ccode": "316",
     "aname": "Guam",
-    "mh": ["QK23"],
+    "mh": [
+      "QK23"
+    ],
     "prefix": [
       "=AB2AB",
       "=AB8EW",
@@ -16226,10 +16938,15 @@
     "dxcc": "104",
     "cc": "BO",
     "ccc": "BOL",
-    "name": "玻利维亚",
+    "name": "Bolivia",
     "continent": "SA",
-    "ituzone": ["12", "14"],
-    "cqzone": ["10"],
+    "ituzone": [
+      "12",
+      "14"
+    ],
+    "cqzone": [
+      "10"
+    ],
     "timezone": "-4",
     "ccode": "68",
     "aname": "Bolivia",
@@ -16304,7 +17021,15 @@
       "GH11",
       "GH12"
     ],
-    "prefix": ["CP", "CP2", "CP3", "CP4", "CP5", "CP6", "CP7"],
+    "prefix": [
+      "CP",
+      "CP2",
+      "CP3",
+      "CP4",
+      "CP5",
+      "CP6",
+      "CP7"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "bo.png",
@@ -16321,14 +17046,20 @@
     "dxcc": "105",
     "cc": "US",
     "ccc": "USA",
-    "name": "关塔那摩湾",
+    "name": "Guantanamo Bay",
     "continent": "NA",
-    "ituzone": ["11"],
-    "cqzone": ["8"],
+    "ituzone": [
+      "11"
+    ],
+    "cqzone": [
+      "8"
+    ],
     "timezone": "-5",
     "ccode": "840",
     "aname": "Guantanamo Bay",
-    "mh": ["FK29"],
+    "mh": [
+      "FK29"
+    ],
     "prefix": [
       "=KG4AA",
       "=KG4AB",
@@ -17024,14 +17755,20 @@
     "dxcc": "106",
     "cc": "GG",
     "ccc": "GGY",
-    "name": "格恩西岛",
+    "name": "Guernsey",
     "continent": "EU",
-    "ituzone": ["27"],
-    "cqzone": ["14"],
+    "ituzone": [
+      "27"
+    ],
+    "cqzone": [
+      "14"
+    ],
     "timezone": "0",
     "ccode": "831",
     "aname": "Guernsey",
-    "mh": ["IN89"],
+    "mh": [
+      "IN89"
+    ],
     "prefix": [
       "=2O0FER",
       "=2Q0ARE",
@@ -17078,10 +17815,14 @@
     "dxcc": "107",
     "cc": "GN",
     "ccc": "GIN",
-    "name": "几内亚",
+    "name": "Guinea",
     "continent": "AF",
-    "ituzone": ["46"],
-    "cqzone": ["35"],
+    "ituzone": [
+      "46"
+    ],
+    "cqzone": [
+      "35"
+    ],
     "timezone": "0",
     "ccode": "324",
     "aname": "Guinea",
@@ -17109,7 +17850,9 @@
       "IK52",
       "IK60"
     ],
-    "prefix": ["3X"],
+    "prefix": [
+      "3X"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "gn.png",
@@ -17126,10 +17869,16 @@
     "dxcc": "108",
     "cc": "BR",
     "ccc": "BRA",
-    "name": "巴西",
+    "name": "Brazil",
     "continent": "SA",
-    "ituzone": ["12", "13", "15"],
-    "cqzone": ["11"],
+    "ituzone": [
+      "12",
+      "13",
+      "15"
+    ],
+    "cqzone": [
+      "11"
+    ],
     "timezone": "-3",
     "ccode": "76",
     "aname": "Brazil",
@@ -17678,15 +18427,29 @@
     "dxcc": "109",
     "cc": "GW",
     "ccc": "GNB",
-    "name": "几内亚比绍",
+    "name": "Guinea-Bissau",
     "continent": "AF",
-    "ituzone": ["46"],
-    "cqzone": ["35"],
+    "ituzone": [
+      "46"
+    ],
+    "cqzone": [
+      "35"
+    ],
     "timezone": "-1",
     "ccode": "624",
     "aname": "Guinea-Bissau",
-    "mh": ["IK11", "IK12", "IK20", "IK21", "IK22", "IK31", "IK32"],
-    "prefix": ["J5"],
+    "mh": [
+      "IK11",
+      "IK12",
+      "IK20",
+      "IK21",
+      "IK22",
+      "IK31",
+      "IK32"
+    ],
+    "prefix": [
+      "J5"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "gw.png",
@@ -17703,10 +18466,14 @@
     "dxcc": "110",
     "cc": "US",
     "ccc": "USA",
-    "name": "夏威夷",
+    "name": "Hawaii",
     "continent": "OC",
-    "ituzone": ["61"],
-    "cqzone": ["31"],
+    "ituzone": [
+      "61"
+    ],
+    "cqzone": [
+      "31"
+    ],
     "timezone": "-10",
     "ccode": "840",
     "aname": "Hawaii",
@@ -18288,15 +19055,26 @@
     "dxcc": "111",
     "cc": "HM",
     "ccc": "HMD",
-    "name": "赫德岛",
+    "name": "Heard I.",
     "continent": "AF",
-    "ituzone": ["68"],
-    "cqzone": ["39"],
+    "ituzone": [
+      "68"
+    ],
+    "cqzone": [
+      "39"
+    ],
     "timezone": "5",
     "ccode": "334",
     "aname": "Heard I.",
-    "mh": ["MD66", "MD67"],
-    "prefix": ["=VK0/K2ARB", "=VK0EK", "=VK0LD"],
+    "mh": [
+      "MD66",
+      "MD67"
+    ],
+    "prefix": [
+      "=VK0/K2ARB",
+      "=VK0EK",
+      "=VK0LD"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "hm.png",
@@ -18313,10 +19091,15 @@
     "dxcc": "112",
     "cc": "CL",
     "ccc": "CHL",
-    "name": "智利",
+    "name": "Chile",
     "continent": "SA",
-    "ituzone": ["14", "16"],
-    "cqzone": ["12"],
+    "ituzone": [
+      "14",
+      "16"
+    ],
+    "cqzone": [
+      "12"
+    ],
     "timezone": "-4",
     "ccode": "152",
     "aname": "Chile",
@@ -18474,14 +19257,20 @@
     "dxcc": "114",
     "cc": "IM",
     "ccc": "IMN",
-    "name": "马恩岛",
+    "name": "Isle of Man",
     "continent": "EU",
-    "ituzone": ["27"],
-    "cqzone": ["14"],
+    "ituzone": [
+      "27"
+    ],
+    "cqzone": [
+      "14"
+    ],
     "timezone": "0",
     "ccode": "833",
     "aname": "Isle of Man",
-    "mh": ["IO74"],
+    "mh": [
+      "IO74"
+    ],
     "prefix": [
       "2D",
       "=2O0YLX",
@@ -18556,10 +19345,14 @@
     "dxcc": "116",
     "cc": "CO",
     "ccc": "COL",
-    "name": "哥伦比亚",
+    "name": "Colombia",
     "continent": "SA",
-    "ituzone": ["12"],
-    "cqzone": ["9"],
+    "ituzone": [
+      "12"
+    ],
+    "cqzone": [
+      "9"
+    ],
     "timezone": "-5",
     "ccode": "170",
     "aname": "Colombia",
@@ -18641,7 +19434,14 @@
       "FK41",
       "FK42"
     ],
-    "prefix": ["5J", "5K", "HJ", "HK", "=HK0GU/1", "=HK0GU/3"],
+    "prefix": [
+      "5J",
+      "5K",
+      "HJ",
+      "HK",
+      "=HK0GU/1",
+      "=HK0GU/3"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "co.png",
@@ -18658,15 +19458,26 @@
     "dxcc": "117",
     "cc": "IG",
     "ccc": "CHE",
-    "name": "国际电联总部",
+    "name": "ITU HQ",
     "continent": "EU",
-    "ituzone": ["28"],
-    "cqzone": ["14"],
+    "ituzone": [
+      "28"
+    ],
+    "cqzone": [
+      "14"
+    ],
     "timezone": "1",
     "ccode": "756",
     "aname": "ITU HQ",
-    "mh": ["JN36"],
-    "prefix": ["=4U0ITU", "=4U150ITU", "=4U1ITU", "=4U1WRC"],
+    "mh": [
+      "JN36"
+    ],
+    "prefix": [
+      "=4U0ITU",
+      "=4U150ITU",
+      "=4U1ITU",
+      "=4U1WRC"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "ch.png",
@@ -18683,15 +19494,25 @@
     "dxcc": "118",
     "cc": "SJ",
     "ccc": "SJM",
-    "name": "扬马延岛",
+    "name": "Jan Mayen",
     "continent": "EU",
-    "ituzone": ["18"],
-    "cqzone": ["40"],
+    "ituzone": [
+      "18"
+    ],
+    "cqzone": [
+      "40"
+    ],
     "timezone": "-1",
     "ccode": "744",
     "aname": "Jan Mayen",
-    "mh": ["IQ50", "IQ51", "IQ61"],
-    "prefix": ["JX"],
+    "mh": [
+      "IQ50",
+      "IQ51",
+      "IQ61"
+    ],
+    "prefix": [
+      "JX"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "no.png",
@@ -18708,10 +19529,14 @@
     "dxcc": "120",
     "cc": "EC",
     "ccc": "ECU",
-    "name": "厄瓜多尔",
+    "name": "Ecuador",
     "continent": "SA",
-    "ituzone": ["12"],
-    "cqzone": ["10"],
+    "ituzone": [
+      "12"
+    ],
+    "cqzone": [
+      "10"
+    ],
     "timezone": "-5",
     "ccode": "218",
     "aname": "Ecuador",
@@ -18740,7 +19565,11 @@
       "FJ10",
       "FJ20"
     ],
-    "prefix": ["HC", "=HC8GET/2", "HD"],
+    "prefix": [
+      "HC",
+      "=HC8GET/2",
+      "HD"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "ec.png",
@@ -18757,14 +19586,20 @@
     "dxcc": "122",
     "cc": "JE",
     "ccc": "JEY",
-    "name": "泽西岛",
+    "name": "Jersey",
     "continent": "EU",
-    "ituzone": ["27"],
-    "cqzone": ["14"],
+    "ituzone": [
+      "27"
+    ],
+    "cqzone": [
+      "14"
+    ],
     "timezone": "0",
     "ccode": "832",
     "aname": "Jersey",
-    "mh": ["IN89"],
+    "mh": [
+      "IN89"
+    ],
     "prefix": [
       "2J",
       "=2R0ODX",
@@ -18807,15 +19642,27 @@
     "dxcc": "123",
     "cc": "US",
     "ccc": "USA",
-    "name": "约翰斯顿岛",
+    "name": "Johnston I.",
     "continent": "OC",
-    "ituzone": ["61"],
-    "cqzone": ["31"],
+    "ituzone": [
+      "61"
+    ],
+    "cqzone": [
+      "31"
+    ],
     "timezone": "-11",
     "ccode": "840",
     "aname": "Johnston I.",
-    "mh": ["AK56"],
-    "prefix": ["AH3", "KH3", "=KJ6BZ", "NH3", "WH3"],
+    "mh": [
+      "AK56"
+    ],
+    "prefix": [
+      "AH3",
+      "KH3",
+      "=KJ6BZ",
+      "NH3",
+      "WH3"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "us.png",
@@ -18832,14 +19679,20 @@
     "dxcc": "124",
     "cc": "FR",
     "ccc": "FRA",
-    "name": "胡安德诺瓦岛",
+    "name": "Juan de Nova & Europa",
     "continent": "AF",
-    "ituzone": ["53"],
-    "cqzone": ["39"],
+    "ituzone": [
+      "53"
+    ],
+    "cqzone": [
+      "39"
+    ],
     "timezone": "3",
     "ccode": "250",
-    "aname": "胡安德诺瓦岛, 欧洲",
-    "mh": ["LH12"],
+    "aname": "Juan de Nova & Europa",
+    "mh": [
+      "LH12"
+    ],
     "prefix": [
       "=FR/F5NHJ/E",
       "=FR5IZ/E",
@@ -18880,14 +19733,21 @@
     "dxcc": "125",
     "cc": "CL",
     "ccc": "CHL",
-    "name": "费南德斯岛",
+    "name": "Juan Fernandez Is.",
     "continent": "SA",
-    "ituzone": ["14"],
-    "cqzone": ["12"],
+    "ituzone": [
+      "14"
+    ],
+    "cqzone": [
+      "12"
+    ],
     "timezone": "-4",
     "ccode": "152",
     "aname": "Juan Fernandez Is.",
-    "mh": ["EF96", "FF06"],
+    "mh": [
+      "EF96",
+      "FF06"
+    ],
     "prefix": [
       "3G0Z",
       "CA0Z",
@@ -18915,14 +19775,24 @@
     "dxcc": "126",
     "cc": "RU",
     "ccc": "RUS",
-    "name": "加里宁格勒",
+    "name": "Kalingrad",
     "continent": "EU",
-    "ituzone": ["29"],
-    "cqzone": ["15"],
+    "ituzone": [
+      "29"
+    ],
+    "cqzone": [
+      "15"
+    ],
     "timezone": "2",
     "ccode": "643",
     "aname": "Kalingrad",
-    "mh": ["JO94", "KO04", "KO05", "KO14", "KO15"],
+    "mh": [
+      "JO94",
+      "KO04",
+      "KO05",
+      "KO14",
+      "KO15"
+    ],
     "prefix": [
       "=R01DTV/2",
       "=R10RLHA/2",
@@ -19077,10 +19947,14 @@
     "dxcc": "129",
     "cc": "GY",
     "ccc": "GUY",
-    "name": "圭亚那",
+    "name": "Guyana",
     "continent": "SA",
-    "ituzone": ["12"],
-    "cqzone": ["9"],
+    "ituzone": [
+      "12"
+    ],
+    "cqzone": [
+      "9"
+    ],
     "timezone": "-4",
     "ccode": "328",
     "aname": "Guyana",
@@ -19105,7 +19979,10 @@
       "GJ15",
       "GJ16"
     ],
-    "prefix": ["8R", "=8R1AK/LH"],
+    "prefix": [
+      "8R",
+      "=8R1AK/LH"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "gy.png",
@@ -19122,10 +19999,16 @@
     "dxcc": "130",
     "cc": "KZ",
     "ccc": "KAZ",
-    "name": "哈萨克斯坦",
+    "name": "Kazakhstan",
     "continent": "AS",
-    "ituzone": ["29", "30", "31"],
-    "cqzone": ["17"],
+    "ituzone": [
+      "29",
+      "30",
+      "31"
+    ],
+    "cqzone": [
+      "17"
+    ],
     "timezone": "6",
     "ccode": "398",
     "aname": "Kazakhstan",
@@ -19535,15 +20418,29 @@
     "dxcc": "131",
     "cc": "FR",
     "ccc": "FRA",
-    "name": "克尔格伦岛",
+    "name": "Kerguelen Is.",
     "continent": "AF",
-    "ituzone": ["68"],
-    "cqzone": ["39"],
+    "ituzone": [
+      "68"
+    ],
+    "cqzone": [
+      "39"
+    ],
     "timezone": "5",
     "ccode": "250",
     "aname": "Kerguelen Is.",
-    "mh": ["ME40", "ME41", "ME50"],
-    "prefix": ["FT0X", "FT2X", "FT4X", "FT5X", "FT8X"],
+    "mh": [
+      "ME40",
+      "ME41",
+      "ME50"
+    ],
+    "prefix": [
+      "FT0X",
+      "FT2X",
+      "FT4X",
+      "FT5X",
+      "FT8X"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "fr.png",
@@ -19560,10 +20457,15 @@
     "dxcc": "132",
     "cc": "PY",
     "ccc": "PRY",
-    "name": "巴拉圭",
+    "name": "Paraguay",
     "continent": "SA",
-    "ituzone": ["14", "16"],
-    "cqzone": ["11"],
+    "ituzone": [
+      "14",
+      "16"
+    ],
+    "cqzone": [
+      "11"
+    ],
     "timezone": "-4",
     "ccode": "600",
     "aname": "Paraguay",
@@ -19601,7 +20503,9 @@
       "GG27",
       "GH00"
     ],
-    "prefix": ["ZP"],
+    "prefix": [
+      "ZP"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "py.png",
@@ -19618,15 +20522,28 @@
     "dxcc": "133",
     "cc": "NZ",
     "ccc": "NZL",
-    "name": "克马德克群岛",
+    "name": "Kermadec Is.",
     "continent": "OC",
-    "ituzone": ["60"],
-    "cqzone": ["32"],
+    "ituzone": [
+      "60"
+    ],
+    "cqzone": [
+      "32"
+    ],
     "timezone": "12",
     "ccode": "554",
     "aname": "Kermadec Is.",
-    "mh": ["AF09", "AF19", "AG00", "AG10"],
-    "prefix": ["=ZL1GO/8", "ZL8", "ZM8"],
+    "mh": [
+      "AF09",
+      "AF19",
+      "AG00",
+      "AG10"
+    ],
+    "prefix": [
+      "=ZL1GO/8",
+      "ZL8",
+      "ZM8"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "nz.png",
@@ -19643,14 +20560,20 @@
     "dxcc": "134",
     "cc": "US",
     "ccc": "USA",
-    "name": "金曼礁",
+    "name": "Kingman Reef",
     "continent": "OC",
-    "ituzone": ["61"],
-    "cqzone": ["31"],
+    "ituzone": [
+      "61"
+    ],
+    "cqzone": [
+      "31"
+    ],
     "timezone": "-11",
     "ccode": "840",
     "aname": "Kingman Reef",
-    "mh": ["AJ86"],
+    "mh": [
+      "AJ86"
+    ],
     "prefix": [],
     "worked": false,
     "confirmed": false,
@@ -19668,10 +20591,15 @@
     "dxcc": "135",
     "cc": "KG",
     "ccc": "KGZ",
-    "name": "吉尔吉斯斯坦",
+    "name": "Kyrgyzstan",
     "continent": "AS",
-    "ituzone": ["30", "31"],
-    "cqzone": ["17"],
+    "ituzone": [
+      "30",
+      "31"
+    ],
+    "cqzone": [
+      "17"
+    ],
     "timezone": "6",
     "ccode": "417",
     "aname": "Kyrgyzstan",
@@ -19728,10 +20656,14 @@
     "dxcc": "136",
     "cc": "PE",
     "ccc": "PER",
-    "name": "秘鲁",
+    "name": "Peru",
     "continent": "SA",
-    "ituzone": ["12"],
-    "cqzone": ["10"],
+    "ituzone": [
+      "12"
+    ],
+    "cqzone": [
+      "10"
+    ],
     "timezone": "-5",
     "ccode": "604",
     "aname": "Peru",
@@ -19820,7 +20752,12 @@
       "FI47",
       "FI55"
     ],
-    "prefix": ["4T", "OA", "OB", "OC"],
+    "prefix": [
+      "4T",
+      "OA",
+      "OB",
+      "OC"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "pe.png",
@@ -19837,10 +20774,14 @@
     "dxcc": "137",
     "cc": "KR",
     "ccc": "KOR",
-    "name": "韩国",
+    "name": "Republic of Korea",
     "continent": "AS",
-    "ituzone": ["44"],
-    "cqzone": ["25"],
+    "ituzone": [
+      "44"
+    ],
+    "cqzone": [
+      "25"
+    ],
     "timezone": "9",
     "ccode": "410",
     "aname": "Republic of Korea",
@@ -19897,15 +20838,26 @@
     "dxcc": "138",
     "cc": "US",
     "ccc": "USA",
-    "name": "库雷环礁",
+    "name": "Kure I.",
     "continent": "OC",
-    "ituzone": ["61"],
-    "cqzone": ["31"],
+    "ituzone": [
+      "61"
+    ],
+    "cqzone": [
+      "31"
+    ],
     "timezone": "-11",
     "ccode": "840",
     "aname": "Kure I.",
-    "mh": ["AL08"],
-    "prefix": ["AH7K", "KH7K", "NH7K", "WH7K"],
+    "mh": [
+      "AL08"
+    ],
+    "prefix": [
+      "AH7K",
+      "KH7K",
+      "NH7K",
+      "WH7K"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "us.png",
@@ -19922,10 +20874,14 @@
     "dxcc": "140",
     "cc": "SR",
     "ccc": "SUR",
-    "name": "苏里南",
+    "name": "Suriname",
     "continent": "SA",
-    "ituzone": ["12"],
-    "cqzone": ["9"],
+    "ituzone": [
+      "12"
+    ],
+    "cqzone": [
+      "9"
+    ],
     "timezone": "-4",
     "ccode": "740",
     "aname": "Suriname",
@@ -19944,7 +20900,9 @@
       "GJ25",
       "GJ35"
     ],
-    "prefix": ["PZ"],
+    "prefix": [
+      "PZ"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "sr.png",
@@ -19961,15 +20919,27 @@
     "dxcc": "141",
     "cc": "FK",
     "ccc": "FLK",
-    "name": "福克兰群岛",
+    "name": "Falkland Is.",
     "continent": "SA",
-    "ituzone": ["16"],
-    "cqzone": ["13"],
+    "ituzone": [
+      "16"
+    ],
+    "cqzone": [
+      "13"
+    ],
     "timezone": "-4",
     "ccode": "238",
     "aname": "Falkland Is.",
-    "mh": ["FD97", "FD98", "GD07", "GD08", "GD18"],
-    "prefix": ["VP8"],
+    "mh": [
+      "FD97",
+      "FD98",
+      "GD07",
+      "GD08",
+      "GD18"
+    ],
+    "prefix": [
+      "VP8"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "fk.png",
@@ -19986,15 +20956,28 @@
     "dxcc": "142",
     "cc": "IN",
     "ccc": "IND",
-    "name": "拉克沙威岛",
+    "name": "Lakshadweep Is.",
     "continent": "AS",
-    "ituzone": ["41"],
-    "cqzone": ["22"],
+    "ituzone": [
+      "41"
+    ],
+    "cqzone": [
+      "22"
+    ],
     "timezone": "6",
     "ccode": "356",
     "aname": "Lakshadweep Is.",
-    "mh": ["MJ68", "MK60", "MK61"],
-    "prefix": ["=VU3EBX", "VU7", "=VU7MY/JOS", "=VU7MY/RBI"],
+    "mh": [
+      "MJ68",
+      "MK60",
+      "MK61"
+    ],
+    "prefix": [
+      "=VU3EBX",
+      "VU7",
+      "=VU7MY/JOS",
+      "=VU7MY/RBI"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "in.png",
@@ -20011,10 +20994,14 @@
     "dxcc": "143",
     "cc": "LA",
     "ccc": "LAO",
-    "name": "老挝",
+    "name": "Laos",
     "continent": "AS",
-    "ituzone": ["49"],
-    "cqzone": ["26"],
+    "ituzone": [
+      "49"
+    ],
+    "cqzone": [
+      "26"
+    ],
     "timezone": "7",
     "ccode": "418",
     "aname": "Laos",
@@ -20045,7 +21032,10 @@
       "OL12",
       "OL20"
     ],
-    "prefix": ["XW", "=XW8KPL/RU3DX"],
+    "prefix": [
+      "XW",
+      "=XW8KPL/RU3DX"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "la.png",
@@ -20062,10 +21052,14 @@
     "dxcc": "144",
     "cc": "UY",
     "ccc": "URY",
-    "name": "乌拉圭",
+    "name": "Uruguay",
     "continent": "SA",
-    "ituzone": ["14"],
-    "cqzone": ["13"],
+    "ituzone": [
+      "14"
+    ],
+    "cqzone": [
+      "13"
+    ],
     "timezone": "-3",
     "ccode": "858",
     "aname": "Uruguay",
@@ -20120,10 +21114,14 @@
     "dxcc": "145",
     "cc": "LV",
     "ccc": "LVA",
-    "name": "拉脱维亚",
+    "name": "Latvia",
     "continent": "EU",
-    "ituzone": ["29"],
-    "cqzone": ["15"],
+    "ituzone": [
+      "29"
+    ],
+    "cqzone": [
+      "15"
+    ],
     "timezone": "2",
     "ccode": "428",
     "aname": "Latvia",
@@ -20174,10 +21172,14 @@
     "dxcc": "146",
     "cc": "LT",
     "ccc": "LTU",
-    "name": "立陶宛",
+    "name": "Lithuania",
     "continent": "EU",
-    "ituzone": ["29"],
-    "cqzone": ["15"],
+    "ituzone": [
+      "29"
+    ],
+    "cqzone": [
+      "15"
+    ],
     "timezone": "2",
     "ccode": "440",
     "aname": "Lithuania",
@@ -20237,14 +21239,20 @@
     "dxcc": "147",
     "cc": "AU",
     "ccc": "AUS",
-    "name": "豪勋爵岛",
+    "name": "Lord Howe I.",
     "continent": "OC",
-    "ituzone": ["60"],
-    "cqzone": ["30"],
+    "ituzone": [
+      "60"
+    ],
+    "cqzone": [
+      "30"
+    ],
     "timezone": "10",
     "ccode": "36",
     "aname": "Lord Howe I.",
-    "mh": ["QF98"],
+    "mh": [
+      "QF98"
+    ],
     "prefix": [
       "AX9L",
       "VH9L",
@@ -20297,10 +21305,14 @@
     "dxcc": "148",
     "cc": "VE",
     "ccc": "VEN",
-    "name": "委内瑞拉",
+    "name": "Venezuela",
     "continent": "SA",
-    "ituzone": ["12"],
-    "cqzone": ["9"],
+    "ituzone": [
+      "12"
+    ],
+    "cqzone": [
+      "9"
+    ],
     "timezone": "-4",
     "ccode": "862",
     "aname": "Venezuela",
@@ -20367,7 +21379,13 @@
       "FK81",
       "GJ08"
     ],
-    "prefix": ["4M", "YV", "YW", "YX", "YY"],
+    "prefix": [
+      "4M",
+      "YV",
+      "YW",
+      "YX",
+      "YY"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "ve.png",
@@ -20384,14 +21402,26 @@
     "dxcc": "149",
     "cc": "PT",
     "ccc": "PRT",
-    "name": "亚速尔群岛",
+    "name": "Azores",
     "continent": "EU",
-    "ituzone": ["36"],
-    "cqzone": ["14"],
+    "ituzone": [
+      "36"
+    ],
+    "cqzone": [
+      "14"
+    ],
     "timezone": "-1",
     "ccode": "620",
     "aname": "Azores",
-    "mh": ["HM49", "HM58", "HM59", "HM68", "HM69", "HM76", "HM77"],
+    "mh": [
+      "HM49",
+      "HM58",
+      "HM59",
+      "HM68",
+      "HM69",
+      "HM76",
+      "HM77"
+    ],
     "prefix": [
       "CQ1",
       "CQ8",
@@ -20423,10 +21453,17 @@
     "dxcc": "150",
     "cc": "AU",
     "ccc": "AUS",
-    "name": "澳大利亚",
+    "name": "Australia",
     "continent": "OC",
-    "ituzone": ["55", "58", "59"],
-    "cqzone": ["29", "30"],
+    "ituzone": [
+      "55",
+      "58",
+      "59"
+    ],
+    "cqzone": [
+      "29",
+      "30"
+    ],
     "timezone": "10",
     "ccode": "36",
     "aname": "Australia",
@@ -21040,14 +22077,20 @@
     "dxcc": "151",
     "cc": "RU",
     "ccc": "RUS",
-    "name": "马里-维索茨克岛",
+    "name": "Malyj Vysotskij I.",
     "continent": "EU",
-    "ituzone": ["29"],
-    "cqzone": ["16"],
+    "ituzone": [
+      "29"
+    ],
+    "cqzone": [
+      "16"
+    ],
     "timezone": "3",
     "ccode": "643",
     "aname": "Malyj Vysotskij I.",
-    "mh": ["KP40"],
+    "mh": [
+      "KP40"
+    ],
     "prefix": [],
     "worked": false,
     "confirmed": false,
@@ -21065,15 +22108,24 @@
     "dxcc": "152",
     "cc": "MO",
     "ccc": "MAC",
-    "name": "中国澳门",
+    "name": "Macao",
     "continent": "AS",
-    "ituzone": ["44"],
-    "cqzone": ["24"],
+    "ituzone": [
+      "44"
+    ],
+    "cqzone": [
+      "24"
+    ],
     "timezone": "8",
     "ccode": "446",
     "aname": "Macao",
-    "mh": ["OL61", "OL62"],
-    "prefix": ["XX9"],
+    "mh": [
+      "OL61",
+      "OL62"
+    ],
+    "prefix": [
+      "XX9"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "mo.png",
@@ -21090,14 +22142,20 @@
     "dxcc": "153",
     "cc": "AU",
     "ccc": "AUS",
-    "name": "麦格理岛",
+    "name": "Macquarie I.",
     "continent": "OC",
-    "ituzone": ["60"],
-    "cqzone": ["30"],
+    "ituzone": [
+      "60"
+    ],
+    "cqzone": [
+      "30"
+    ],
     "timezone": "11",
     "ccode": "36",
     "aname": "Macquarie I.",
-    "mh": ["QD95"],
+    "mh": [
+      "QD95"
+    ],
     "prefix": [
       "=AX/VK0TH",
       "=AX0LD",
@@ -21130,15 +22188,23 @@
     "dxcc": "157",
     "cc": "NR",
     "ccc": "NRU",
-    "name": "瑙鲁",
+    "name": "Nauru",
     "continent": "OC",
-    "ituzone": ["65"],
-    "cqzone": ["31"],
+    "ituzone": [
+      "65"
+    ],
+    "cqzone": [
+      "31"
+    ],
     "timezone": "12",
     "ccode": "520",
     "aname": "Nauru",
-    "mh": ["RI39"],
-    "prefix": ["C2"],
+    "mh": [
+      "RI39"
+    ],
+    "prefix": [
+      "C2"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "nr.png",
@@ -21155,10 +22221,14 @@
     "dxcc": "158",
     "cc": "VU",
     "ccc": "VUT",
-    "name": "瓦努阿图",
+    "name": "Vanuatu",
     "continent": "OC",
-    "ituzone": ["56"],
-    "cqzone": ["32"],
+    "ituzone": [
+      "56"
+    ],
+    "cqzone": [
+      "32"
+    ],
     "timezone": "11",
     "ccode": "548",
     "aname": "Vanuatu",
@@ -21176,7 +22246,9 @@
       "RH45",
       "RH50"
     ],
-    "prefix": ["YJ"],
+    "prefix": [
+      "YJ"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "vu.png",
@@ -21193,10 +22265,14 @@
     "dxcc": "159",
     "cc": "MV",
     "ccc": "MDV",
-    "name": "马尔代夫",
+    "name": "Maldives",
     "continent": "AS",
-    "ituzone": ["41"],
-    "cqzone": ["22"],
+    "ituzone": [
+      "41"
+    ],
+    "cqzone": [
+      "22"
+    ],
     "timezone": "5",
     "ccode": "462",
     "aname": "Maldives",
@@ -21211,7 +22287,9 @@
       "MJ66",
       "MJ67"
     ],
-    "prefix": ["8Q"],
+    "prefix": [
+      "8Q"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "mv.png",
@@ -21228,15 +22306,32 @@
     "dxcc": "160",
     "cc": "TO",
     "ccc": "TON",
-    "name": "汤加",
+    "name": "Tonga",
     "continent": "OC",
-    "ituzone": ["62"],
-    "cqzone": ["32"],
+    "ituzone": [
+      "62"
+    ],
+    "cqzone": [
+      "32"
+    ],
     "timezone": "13",
     "ccode": "776",
     "aname": "Tonga",
-    "mh": ["AG28", "AG29", "AH20", "AH21", "AH24", "AH31"],
-    "prefix": ["A3", "=A35JP/H", "=A35TN/N", "=A35TN/V", "=A35ZG/H"],
+    "mh": [
+      "AG28",
+      "AG29",
+      "AH20",
+      "AH21",
+      "AH24",
+      "AH31"
+    ],
+    "prefix": [
+      "A3",
+      "=A35JP/H",
+      "=A35TN/N",
+      "=A35TN/V",
+      "=A35ZG/H"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "to.png",
@@ -21253,14 +22348,20 @@
     "dxcc": "161",
     "cc": "CO",
     "ccc": "COL",
-    "name": "马尔佩洛岛",
+    "name": "Malpelo I.",
     "continent": "SA",
-    "ituzone": ["12"],
-    "cqzone": ["9"],
+    "ituzone": [
+      "12"
+    ],
+    "cqzone": [
+      "9"
+    ],
     "timezone": "-5",
     "ccode": "170",
     "aname": "Malpelo I.",
-    "mh": ["EJ93"],
+    "mh": [
+      "EJ93"
+    ],
     "prefix": [
       "HJ0M",
       "HK0M",
@@ -21288,10 +22389,14 @@
     "dxcc": "162",
     "cc": "NC",
     "ccc": "NCL",
-    "name": "新喀里多尼亚",
+    "name": "New Caledonia",
     "continent": "OC",
-    "ituzone": ["56"],
-    "cqzone": ["32"],
+    "ituzone": [
+      "56"
+    ],
+    "cqzone": [
+      "32"
+    ],
     "timezone": "11",
     "ccode": "540",
     "aname": "New Caledonia",
@@ -21344,10 +22449,14 @@
     "dxcc": "163",
     "cc": "PG",
     "ccc": "PNG",
-    "name": "巴布亚纽几内亚",
+    "name": "Papua New Guinea",
     "continent": "OC",
-    "ituzone": ["51"],
-    "cqzone": ["28"],
+    "ituzone": [
+      "51"
+    ],
+    "cqzone": [
+      "28"
+    ],
     "timezone": "10",
     "ccode": "598",
     "aname": "Papua New Guinea",
@@ -21424,7 +22533,9 @@
       "QI83",
       "QI95"
     ],
-    "prefix": ["P2"],
+    "prefix": [
+      "P2"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "pg.png",
@@ -21441,15 +22552,24 @@
     "dxcc": "165",
     "cc": "MU",
     "ccc": "MUS",
-    "name": "毛里求斯",
+    "name": "Mauritius",
     "continent": "AF",
-    "ituzone": ["53"],
-    "cqzone": ["39"],
+    "ituzone": [
+      "53"
+    ],
+    "cqzone": [
+      "39"
+    ],
     "timezone": "4",
     "ccode": "480",
     "aname": "Mauritius",
-    "mh": ["LG89", "LH80"],
-    "prefix": ["3B8"],
+    "mh": [
+      "LG89",
+      "LH80"
+    ],
+    "prefix": [
+      "3B8"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "mu.png",
@@ -21466,14 +22586,26 @@
     "dxcc": "166",
     "cc": "US",
     "ccc": "USA",
-    "name": "马利亚纳群岛",
+    "name": "Mariana Is.",
     "continent": "OC",
-    "ituzone": ["64"],
-    "cqzone": ["27"],
+    "ituzone": [
+      "64"
+    ],
+    "cqzone": [
+      "27"
+    ],
     "timezone": "10",
     "ccode": "840",
     "aname": "Mariana Is.",
-    "mh": ["QK24", "QK25", "QK26", "QK27", "QK28", "QK29", "QL20"],
+    "mh": [
+      "QK24",
+      "QK25",
+      "QK26",
+      "QK27",
+      "QK28",
+      "QK29",
+      "QL20"
+    ],
     "prefix": [
       "=AB2HV",
       "=AB2QH",
@@ -21550,15 +22682,23 @@
     "dxcc": "167",
     "cc": "SE",
     "ccc": "SWE",
-    "name": "马凯特礁",
+    "name": "Market Reef",
     "continent": "EU",
-    "ituzone": ["18"],
-    "cqzone": ["15"],
+    "ituzone": [
+      "18"
+    ],
+    "cqzone": [
+      "15"
+    ],
     "timezone": "2",
     "ccode": "752",
     "aname": "Market Reef",
-    "mh": ["JP90"],
-    "prefix": ["OJ0"],
+    "mh": [
+      "JP90"
+    ],
+    "prefix": [
+      "OJ0"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "ax.png",
@@ -21575,10 +22715,14 @@
     "dxcc": "168",
     "cc": "MH",
     "ccc": "MHL",
-    "name": "马歇尔岛",
+    "name": "Marshall Is.",
     "continent": "OC",
-    "ituzone": ["65"],
-    "cqzone": ["31"],
+    "ituzone": [
+      "65"
+    ],
+    "cqzone": [
+      "31"
+    ],
     "timezone": "12",
     "ccode": "584",
     "aname": "Marshall Is.",
@@ -21603,7 +22747,9 @@
       "RK41",
       "RK44"
     ],
-    "prefix": ["V7"],
+    "prefix": [
+      "V7"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "mh.png",
@@ -21620,14 +22766,21 @@
     "dxcc": "169",
     "cc": "YT",
     "ccc": "MYT",
-    "name": "马约特岛",
+    "name": "Mayotte",
     "continent": "AF",
-    "ituzone": ["53"],
-    "cqzone": ["39"],
+    "ituzone": [
+      "53"
+    ],
+    "cqzone": [
+      "39"
+    ],
     "timezone": "3",
     "ccode": "175",
     "aname": "Mayotte",
-    "mh": ["LH26", "LH27"],
+    "mh": [
+      "LH26",
+      "LH27"
+    ],
     "prefix": [
       "FH",
       "=TO0X",
@@ -21659,10 +22812,14 @@
     "dxcc": "170",
     "cc": "NZ",
     "ccc": "NZL",
-    "name": "纽西兰",
+    "name": "New Zealand",
     "continent": "OC",
-    "ituzone": ["60"],
-    "cqzone": ["32"],
+    "ituzone": [
+      "60"
+    ],
+    "cqzone": [
+      "32"
+    ],
     "timezone": "12",
     "ccode": "554",
     "aname": "New Zealand",
@@ -21752,14 +22909,20 @@
     "dxcc": "171",
     "cc": "AU",
     "ccc": "AUS",
-    "name": "梅利什礁",
+    "name": "Mellish Reef",
     "continent": "OC",
-    "ituzone": ["55"],
-    "cqzone": ["30"],
+    "ituzone": [
+      "55"
+    ],
+    "cqzone": [
+      "30"
+    ],
     "timezone": "10",
     "ccode": "36",
     "aname": "Mellish Reef",
-    "mh": ["QH72"],
+    "mh": [
+      "QH72"
+    ],
     "prefix": [
       "AX9M",
       "VH9M",
@@ -21788,15 +22951,25 @@
     "dxcc": "172",
     "cc": "PN",
     "ccc": "PCN",
-    "name": "皮特凯恩群岛",
+    "name": "Pitcairn I.",
     "continent": "OC",
-    "ituzone": ["63"],
-    "cqzone": ["32"],
+    "ituzone": [
+      "63"
+    ],
+    "cqzone": [
+      "32"
+    ],
     "timezone": "-9",
     "ccode": "612",
     "aname": "Pitcairn I.",
-    "mh": ["CG44", "CG55", "CG75"],
-    "prefix": ["VP6"],
+    "mh": [
+      "CG44",
+      "CG55",
+      "CG75"
+    ],
+    "prefix": [
+      "VP6"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "pn.png",
@@ -21813,10 +22986,15 @@
     "dxcc": "173",
     "cc": "FM",
     "ccc": "FSM",
-    "name": "密克罗尼西亚",
+    "name": "Micronesia",
     "continent": "OC",
-    "ituzone": ["64", "65"],
-    "cqzone": ["27"],
+    "ituzone": [
+      "64",
+      "65"
+    ],
+    "cqzone": [
+      "27"
+    ],
     "timezone": "11",
     "ccode": "583",
     "aname": "Micronesia",
@@ -21864,15 +23042,27 @@
     "dxcc": "174",
     "cc": "US",
     "ccc": "USA",
-    "name": "中途岛",
+    "name": "Midway I.",
     "continent": "OC",
-    "ituzone": ["61"],
-    "cqzone": ["31"],
+    "ituzone": [
+      "61"
+    ],
+    "cqzone": [
+      "31"
+    ],
     "timezone": "-11",
     "ccode": "840",
     "aname": "Midway I.",
-    "mh": ["AL08", "AL18"],
-    "prefix": ["AH4", "KH4", "NH4", "WH4"],
+    "mh": [
+      "AL08",
+      "AL18"
+    ],
+    "prefix": [
+      "AH4",
+      "KH4",
+      "NH4",
+      "WH4"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "us.png",
@@ -21889,10 +23079,14 @@
     "dxcc": "175",
     "cc": "PF",
     "ccc": "PYF",
-    "name": "法属波利尼西亚",
+    "name": "French Polynesia",
     "continent": "OC",
-    "ituzone": ["63"],
-    "cqzone": ["32"],
+    "ituzone": [
+      "63"
+    ],
+    "cqzone": [
+      "32"
+    ],
     "timezone": "-10",
     "ccode": "258",
     "aname": "French Polynesia",
@@ -21959,10 +23153,14 @@
     "dxcc": "176",
     "cc": "FJ",
     "ccc": "FJI",
-    "name": "斐济",
+    "name": "Fiji",
     "continent": "OC",
-    "ituzone": ["56"],
-    "cqzone": ["32"],
+    "ituzone": [
+      "56"
+    ],
+    "cqzone": [
+      "32"
+    ],
     "timezone": "12",
     "ccode": "242",
     "aname": "Fiji",
@@ -21983,7 +23181,10 @@
       "RH92",
       "RH93"
     ],
-    "prefix": ["3D2", "=3D5X"],
+    "prefix": [
+      "3D2",
+      "=3D5X"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "fj.png",
@@ -22000,14 +23201,20 @@
     "dxcc": "177",
     "cc": "JP",
     "ccc": "JPN",
-    "name": "南鸟岛",
+    "name": "Minami Torishima",
     "continent": "OC",
-    "ituzone": ["90"],
-    "cqzone": ["27"],
+    "ituzone": [
+      "90"
+    ],
+    "cqzone": [
+      "27"
+    ],
     "timezone": "10",
     "ccode": "392",
     "aname": "Minami Torishima",
-    "mh": ["QL64"],
+    "mh": [
+      "QL64"
+    ],
     "prefix": [
       "=8J1ZIU/JD1",
       "=8N1AQ/JD1",
@@ -22062,15 +23269,31 @@
     "dxcc": "179",
     "cc": "MD",
     "ccc": "MDA",
-    "name": "摩尔多瓦",
+    "name": "Moldova",
     "continent": "EU",
-    "ituzone": ["29"],
-    "cqzone": ["16"],
+    "ituzone": [
+      "29"
+    ],
+    "cqzone": [
+      "16"
+    ],
     "timezone": "3",
     "ccode": "498",
     "aname": "Moldova",
-    "mh": ["KN37", "KN38", "KN45", "KN46", "KN47", "KN48"],
-    "prefix": ["ER", "=ER3AC/FF", "=ER3CR/FF", "=ER4LX/FF"],
+    "mh": [
+      "KN37",
+      "KN38",
+      "KN45",
+      "KN46",
+      "KN47",
+      "KN48"
+    ],
+    "prefix": [
+      "ER",
+      "=ER3AC/FF",
+      "=ER3CR/FF",
+      "=ER4LX/FF"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "md.png",
@@ -22087,14 +23310,20 @@
     "dxcc": "180",
     "cc": "GR",
     "ccc": "GRC",
-    "name": "阿索斯圣山",
+    "name": "Mount Athos",
     "continent": "EU",
-    "ituzone": ["28"],
-    "cqzone": ["20"],
+    "ituzone": [
+      "28"
+    ],
+    "cqzone": [
+      "20"
+    ],
     "timezone": "2",
     "ccode": "300",
     "aname": "Mount Athos",
-    "mh": ["KN10"],
+    "mh": [
+      "KN10"
+    ],
     "prefix": [
       "=SV2/SV1RP/T",
       "=SV2ASP",
@@ -22119,10 +23348,14 @@
     "dxcc": "181",
     "cc": "MZ",
     "ccc": "MOZ",
-    "name": "莫桑比克",
+    "name": "Mozambique",
     "continent": "AF",
-    "ituzone": ["53"],
-    "cqzone": ["37"],
+    "ituzone": [
+      "53"
+    ],
+    "cqzone": [
+      "37"
+    ],
     "timezone": "2",
     "ccode": "508",
     "aname": "Mozambique",
@@ -22190,7 +23423,11 @@
       "LH08",
       "LH09"
     ],
-    "prefix": ["C8", "C9", "=C98DC/YL"],
+    "prefix": [
+      "C8",
+      "C9",
+      "=C98DC/YL"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "mz.png",
@@ -22207,15 +23444,25 @@
     "dxcc": "182",
     "cc": "US",
     "ccc": "USA",
-    "name": "纳瓦萨岛",
+    "name": "Navassa I.",
     "continent": "NA",
-    "ituzone": ["11"],
-    "cqzone": ["8"],
+    "ituzone": [
+      "11"
+    ],
+    "cqzone": [
+      "8"
+    ],
     "timezone": "-5",
     "ccode": "840",
     "aname": "Navassa I.",
-    "mh": ["FK28"],
-    "prefix": ["KP1", "NP1", "WP1"],
+    "mh": [
+      "FK28"
+    ],
+    "prefix": [
+      "KP1",
+      "NP1",
+      "WP1"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "us.png",
@@ -22232,10 +23479,14 @@
     "dxcc": "185",
     "cc": "SB",
     "ccc": "SLB",
-    "name": "所罗门群岛",
+    "name": "Solomon Is.",
     "continent": "OC",
-    "ituzone": ["51"],
-    "cqzone": ["28"],
+    "ituzone": [
+      "51"
+    ],
+    "cqzone": [
+      "28"
+    ],
     "timezone": "11",
     "ccode": "90",
     "aname": "Solomon Is.",
@@ -22263,7 +23514,10 @@
       "RI11",
       "RI30"
     ],
-    "prefix": ["H4", "=H40/H44RK"],
+    "prefix": [
+      "H4",
+      "=H40/H44RK"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "sb.png",
@@ -22280,10 +23534,14 @@
     "dxcc": "187",
     "cc": "NE",
     "ccc": "NER",
-    "name": "尼日尔",
+    "name": "Niger",
     "continent": "AF",
-    "ituzone": ["46"],
-    "cqzone": ["35"],
+    "ituzone": [
+      "46"
+    ],
+    "cqzone": [
+      "35"
+    ],
     "timezone": "1",
     "ccode": "562",
     "aname": "Niger",
@@ -22358,7 +23616,9 @@
       "JL71",
       "JL72"
     ],
-    "prefix": ["5U"],
+    "prefix": [
+      "5U"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "ne.png",
@@ -22375,15 +23635,24 @@
     "dxcc": "188",
     "cc": "NU",
     "ccc": "NIU",
-    "name": "纽埃",
+    "name": "Niue",
     "continent": "OC",
-    "ituzone": ["62"],
-    "cqzone": ["32"],
+    "ituzone": [
+      "62"
+    ],
+    "cqzone": [
+      "32"
+    ],
     "timezone": "-11",
     "ccode": "570",
     "aname": "Niue",
-    "mh": ["AH50", "AH51"],
-    "prefix": ["E6"],
+    "mh": [
+      "AH50",
+      "AH51"
+    ],
+    "prefix": [
+      "E6"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "nu.png",
@@ -22400,14 +23669,21 @@
     "dxcc": "189",
     "cc": "NF",
     "ccc": "NFK",
-    "name": "诺福克岛",
+    "name": "Norfolk I.",
     "continent": "OC",
-    "ituzone": ["60"],
-    "cqzone": ["32"],
+    "ituzone": [
+      "60"
+    ],
+    "cqzone": [
+      "32"
+    ],
     "timezone": "12",
     "ccode": "574",
     "aname": "Norfolk I.",
-    "mh": ["RG30", "RG31"],
+    "mh": [
+      "RG30",
+      "RG31"
+    ],
     "prefix": [
       "AX9",
       "=AX9YL",
@@ -22455,15 +23731,25 @@
     "dxcc": "190",
     "cc": "WS",
     "ccc": "WSM",
-    "name": "萨摩亚",
+    "name": "Samoa",
     "continent": "OC",
-    "ituzone": ["62"],
-    "cqzone": ["32"],
+    "ituzone": [
+      "62"
+    ],
+    "cqzone": [
+      "32"
+    ],
     "timezone": "-11",
     "ccode": "882",
     "aname": "Samoa",
-    "mh": ["AH36", "AH45", "AH46"],
-    "prefix": ["5W"],
+    "mh": [
+      "AH36",
+      "AH45",
+      "AH46"
+    ],
+    "prefix": [
+      "5W"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "ws.png",
@@ -22480,14 +23766,23 @@
     "dxcc": "191",
     "cc": "NZ",
     "ccc": "NZL",
-    "name": "北库克群岛",
+    "name": "North Cook Is.",
     "continent": "OC",
-    "ituzone": ["62"],
-    "cqzone": ["32"],
+    "ituzone": [
+      "62"
+    ],
+    "cqzone": [
+      "32"
+    ],
     "timezone": "-11",
     "ccode": "554",
     "aname": "North Cook Is.",
-    "mh": ["BI00", "BI01", "BI10", "BI11"],
+    "mh": [
+      "BI00",
+      "BI01",
+      "BI10",
+      "BI11"
+    ],
     "prefix": [
       "=E50W",
       "=E51AMF",
@@ -22536,15 +23831,26 @@
     "dxcc": "192",
     "cc": "JP",
     "ccc": "JPN",
-    "name": "小笠原岛",
+    "name": "Ogasawara",
     "continent": "AS",
-    "ituzone": ["45"],
-    "cqzone": ["27"],
+    "ituzone": [
+      "45"
+    ],
+    "cqzone": [
+      "27"
+    ],
     "timezone": "10",
     "ccode": "392",
     "aname": "Ogasawara",
-    "mh": ["QL16", "QL17"],
-    "prefix": ["=8N1OGA", "JD1", "=JR7ISY/JD1/CM"],
+    "mh": [
+      "QL16",
+      "QL17"
+    ],
+    "prefix": [
+      "=8N1OGA",
+      "JD1",
+      "=JR7ISY/JD1/CM"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "jp.png",
@@ -22561,14 +23867,23 @@
     "dxcc": "193",
     "cc": "JP",
     "ccc": "JPN",
-    "name": "琉球群岛",
+    "name": "Okinawa (Ryukyu Is.)",
     "continent": "AS",
-    "ituzone": ["45"],
-    "cqzone": ["25"],
+    "ituzone": [
+      "45"
+    ],
+    "cqzone": [
+      "25"
+    ],
     "timezone": "0",
     "ccode": "392",
     "aname": "Okinawa (Ryukyu Is.)",
-    "mh": ["PL36", "PL37", "PL46", "PL47"],
+    "mh": [
+      "PL36",
+      "PL37",
+      "PL46",
+      "PL47"
+    ],
     "prefix": [],
     "worked": false,
     "confirmed": false,
@@ -22586,15 +23901,23 @@
     "dxcc": "195",
     "cc": "GQ",
     "ccc": "GNQ",
-    "name": "安诺本岛",
+    "name": "Annobon I.",
     "continent": "AF",
-    "ituzone": ["52"],
-    "cqzone": ["36"],
+    "ituzone": [
+      "52"
+    ],
+    "cqzone": [
+      "36"
+    ],
     "timezone": "-1",
     "ccode": "226",
     "aname": "Annobon I.",
-    "mh": ["JI28"],
-    "prefix": ["3C0"],
+    "mh": [
+      "JI28"
+    ],
+    "prefix": [
+      "3C0"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "gq.png",
@@ -22611,15 +23934,27 @@
     "dxcc": "197",
     "cc": "US",
     "ccc": "USA",
-    "name": "巴尔米拉岛",
+    "name": "Palmyra & Jarvis Is.",
     "continent": "OC",
-    "ituzone": ["61", "62"],
-    "cqzone": ["31"],
+    "ituzone": [
+      "61",
+      "62"
+    ],
+    "cqzone": [
+      "31"
+    ],
     "timezone": "-11",
     "ccode": "840",
     "aname": "Palmyra & Jarvis Is.",
-    "mh": ["AJ85"],
-    "prefix": ["AH5", "KH5", "NH5", "WH5"],
+    "mh": [
+      "AJ85"
+    ],
+    "prefix": [
+      "AH5",
+      "KH5",
+      "NH5",
+      "WH5"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "us.png",
@@ -22636,15 +23971,23 @@
     "dxcc": "199",
     "cc": "NO",
     "ccc": "NOR",
-    "name": "彼得一世岛",
+    "name": "Peter I I.",
     "continent": "AN",
-    "ituzone": ["72"],
-    "cqzone": ["12"],
+    "ituzone": [
+      "72"
+    ],
+    "cqzone": [
+      "12"
+    ],
     "timezone": "-6",
     "ccode": "578",
     "aname": "Peter I I.",
-    "mh": ["EC41"],
-    "prefix": ["=3Y0X"],
+    "mh": [
+      "EC41"
+    ],
+    "prefix": [
+      "=3Y0X"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "no.png",
@@ -22661,15 +24004,26 @@
     "dxcc": "201",
     "cc": "ZA",
     "ccc": "ZAF",
-    "name": "爱德华王子岛",
+    "name": "Prince Edward & Marion Is.",
     "continent": "AF",
-    "ituzone": ["57"],
-    "cqzone": ["38"],
+    "ituzone": [
+      "57"
+    ],
+    "cqzone": [
+      "38"
+    ],
     "timezone": "3",
     "ccode": "710",
     "aname": "Prince Edward & Marion Is.",
-    "mh": ["KE83"],
-    "prefix": ["ZR8", "ZS8", "ZT8", "ZU8"],
+    "mh": [
+      "KE83"
+    ],
+    "prefix": [
+      "ZR8",
+      "ZS8",
+      "ZT8",
+      "ZU8"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "za.png",
@@ -22686,14 +24040,23 @@
     "dxcc": "202",
     "cc": "PR",
     "ccc": "PRI",
-    "name": "波多黎各",
+    "name": "Puerto Rico",
     "continent": "NA",
-    "ituzone": ["11"],
-    "cqzone": ["8"],
+    "ituzone": [
+      "11"
+    ],
+    "cqzone": [
+      "8"
+    ],
     "timezone": "-4",
     "ccode": "630",
     "aname": "Puerto Rico",
-    "mh": ["FK67", "FK68", "FK77", "FK78"],
+    "mh": [
+      "FK67",
+      "FK68",
+      "FK77",
+      "FK78"
+    ],
     "prefix": [
       "=AA2ZN",
       "=AB2DR",
@@ -22914,15 +24277,23 @@
     "dxcc": "203",
     "cc": "AD",
     "ccc": "AND",
-    "name": "安道尔",
+    "name": "Andorra",
     "continent": "EU",
-    "ituzone": ["27"],
-    "cqzone": ["14"],
+    "ituzone": [
+      "27"
+    ],
+    "cqzone": [
+      "14"
+    ],
     "timezone": "1",
     "ccode": "20",
     "aname": "Andorra",
-    "mh": ["JN02"],
-    "prefix": ["C3"],
+    "mh": [
+      "JN02"
+    ],
+    "prefix": [
+      "C3"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "ad.png",
@@ -22939,14 +24310,20 @@
     "dxcc": "204",
     "cc": "MX",
     "ccc": "MEX",
-    "name": "雷维亚希赫多群岛",
+    "name": "Revillagigedo",
     "continent": "NA",
-    "ituzone": ["10"],
-    "cqzone": ["6"],
+    "ituzone": [
+      "10"
+    ],
+    "cqzone": [
+      "6"
+    ],
     "timezone": "-7",
     "ccode": "484",
     "aname": "Revillagigedo",
-    "mh": ["DK28"],
+    "mh": [
+      "DK28"
+    ],
     "prefix": [
       "4A4",
       "4B4",
@@ -22984,15 +24361,23 @@
     "dxcc": "205",
     "cc": "AC",
     "ccc": "ASC",
-    "name": "阿森松岛",
+    "name": "Ascension I.",
     "continent": "AF",
-    "ituzone": ["66"],
-    "cqzone": ["36"],
+    "ituzone": [
+      "66"
+    ],
+    "cqzone": [
+      "36"
+    ],
     "timezone": "0",
     "ccode": "826",
     "aname": "Ascension I.",
-    "mh": ["II22"],
-    "prefix": ["ZD8"],
+    "mh": [
+      "II22"
+    ],
+    "prefix": [
+      "ZD8"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "ky.png",
@@ -23009,10 +24394,14 @@
     "dxcc": "206",
     "cc": "AT",
     "ccc": "AUT",
-    "name": "奥地利",
+    "name": "Austria",
     "continent": "EU",
-    "ituzone": ["28"],
-    "cqzone": ["15"],
+    "ituzone": [
+      "28"
+    ],
+    "cqzone": [
+      "15"
+    ],
     "timezone": "1",
     "ccode": "40",
     "aname": "Austria",
@@ -23090,15 +24479,23 @@
     "dxcc": "207",
     "cc": "MU",
     "ccc": "MUS",
-    "name": "罗德里格斯岛",
+    "name": "Rodriguez I.",
     "continent": "AF",
-    "ituzone": ["53"],
-    "cqzone": ["39"],
+    "ituzone": [
+      "53"
+    ],
+    "cqzone": [
+      "39"
+    ],
     "timezone": "4",
     "ccode": "480",
     "aname": "Rodriguez I.",
-    "mh": ["MH10"],
-    "prefix": ["3B9"],
+    "mh": [
+      "MH10"
+    ],
+    "prefix": [
+      "3B9"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "mu.png",
@@ -23115,14 +24512,25 @@
     "dxcc": "209",
     "cc": "BE",
     "ccc": "BEL",
-    "name": "比利时",
+    "name": "Belgium",
     "continent": "EU",
-    "ituzone": ["27"],
-    "cqzone": ["14"],
+    "ituzone": [
+      "27"
+    ],
+    "cqzone": [
+      "14"
+    ],
     "timezone": "1",
     "ccode": "56",
     "aname": "Belgium",
-    "mh": ["JN29", "JO10", "JO11", "JO20", "JO21", "JO30"],
+    "mh": [
+      "JN29",
+      "JO10",
+      "JO11",
+      "JO20",
+      "JO21",
+      "JO30"
+    ],
     "prefix": [
       "ON",
       "=ON3BLB/YL",
@@ -23186,15 +24594,24 @@
     "dxcc": "211",
     "cc": "CA",
     "ccc": "CAN",
-    "name": "塞布尔岛",
+    "name": "Sable I.",
     "continent": "NA",
-    "ituzone": ["9"],
-    "cqzone": ["5"],
+    "ituzone": [
+      "9"
+    ],
+    "cqzone": [
+      "5"
+    ],
     "timezone": "-5",
     "ccode": "124",
     "aname": "Sable I.",
-    "mh": ["FN93", "GN03"],
-    "prefix": ["CY0"],
+    "mh": [
+      "FN93",
+      "GN03"
+    ],
+    "prefix": [
+      "CY0"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "ca.png",
@@ -23211,10 +24628,14 @@
     "dxcc": "212",
     "cc": "BG",
     "ccc": "BGR",
-    "name": "保加利亚",
+    "name": "Bulgaria",
     "continent": "EU",
-    "ituzone": ["28"],
-    "cqzone": ["20"],
+    "ituzone": [
+      "28"
+    ],
+    "cqzone": [
+      "20"
+    ],
     "timezone": "2",
     "ccode": "100",
     "aname": "Bulgaria",
@@ -23234,7 +24655,12 @@
       "KN42",
       "KN43"
     ],
-    "prefix": ["LZ", "=LZ/G0SGB/LH", "=LZ2NU/LH", "=LZ4HWF/LH"],
+    "prefix": [
+      "LZ",
+      "=LZ/G0SGB/LH",
+      "=LZ2NU/LH",
+      "=LZ4HWF/LH"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "bg.png",
@@ -23251,14 +24677,20 @@
     "dxcc": "213",
     "cc": "FR",
     "ccc": "FRA",
-    "name": "圣马丁岛",
+    "name": "Saint Martin",
     "continent": "NA",
-    "ituzone": ["11"],
-    "cqzone": ["8"],
+    "ituzone": [
+      "11"
+    ],
+    "cqzone": [
+      "8"
+    ],
     "timezone": "-4",
     "ccode": "250",
     "aname": "Saint Martin",
-    "mh": ["FK88"],
+    "mh": [
+      "FK88"
+    ],
     "prefix": [
       "FS",
       "=TO1E",
@@ -23285,15 +24717,26 @@
     "dxcc": "214",
     "cc": "FR",
     "ccc": "FRA",
-    "name": "科西嘉",
+    "name": "Corsica",
     "continent": "EU",
-    "ituzone": ["28"],
-    "cqzone": ["15"],
+    "ituzone": [
+      "28"
+    ],
+    "cqzone": [
+      "15"
+    ],
     "timezone": "1",
     "ccode": "250",
     "aname": "Corsica",
-    "mh": ["JN41", "JN42", "JN43"],
-    "prefix": ["TK", "=TK/F4FET/LH"],
+    "mh": [
+      "JN41",
+      "JN42",
+      "JN43"
+    ],
+    "prefix": [
+      "TK",
+      "=TK/F4FET/LH"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "fr.png",
@@ -23310,14 +24753,23 @@
     "dxcc": "215",
     "cc": "CY",
     "ccc": "CYP",
-    "name": "塞浦路斯",
+    "name": "Cyprus",
     "continent": "AS",
-    "ituzone": ["39"],
-    "cqzone": ["20"],
+    "ituzone": [
+      "39"
+    ],
+    "cqzone": [
+      "20"
+    ],
     "timezone": "3",
     "ccode": "196",
     "aname": "Cyprus",
-    "mh": ["KM64", "KM65", "KM74", "KM75"],
+    "mh": [
+      "KM64",
+      "KM65",
+      "KM74",
+      "KM75"
+    ],
     "prefix": [
       "5B",
       "=5B/DJ5AA/LH",
@@ -23346,14 +24798,21 @@
     "dxcc": "216",
     "cc": "NI",
     "ccc": "NIC",
-    "name": "圣安德烈斯",
+    "name": "San Andres & Providencia",
     "continent": "NA",
-    "ituzone": ["11"],
-    "cqzone": ["7"],
+    "ituzone": [
+      "11"
+    ],
+    "cqzone": [
+      "7"
+    ],
     "timezone": "-6",
     "ccode": "558",
     "aname": "San Andres & Providencia",
-    "mh": ["EK92", "EK93"],
+    "mh": [
+      "EK92",
+      "EK93"
+    ],
     "prefix": [
       "5J0",
       "5K0",
@@ -23382,14 +24841,21 @@
     "dxcc": "217",
     "cc": "CL",
     "ccc": "CHL",
-    "name": "圣菲力斯岛",
+    "name": "San Felix & San Ambrosio",
     "continent": "SA",
-    "ituzone": ["14"],
-    "cqzone": ["12"],
+    "ituzone": [
+      "14"
+    ],
+    "cqzone": [
+      "12"
+    ],
     "timezone": "-5",
     "ccode": "152",
     "aname": "San Felix & San Ambrosio",
-    "mh": ["EG93", "FG03"],
+    "mh": [
+      "EG93",
+      "FG03"
+    ],
     "prefix": [
       "3G0X",
       "CA0X",
@@ -23417,15 +24883,25 @@
     "dxcc": "219",
     "cc": "ST",
     "ccc": "STP",
-    "name": "圣多美和普林西比",
+    "name": "Sao Tome & Principe",
     "continent": "AF",
-    "ituzone": ["47"],
-    "cqzone": ["36"],
+    "ituzone": [
+      "47"
+    ],
+    "cqzone": [
+      "36"
+    ],
     "timezone": "0",
     "ccode": "678",
     "aname": "Sao Tome & Principe",
-    "mh": ["JI39", "JJ30", "JJ31"],
-    "prefix": ["S9"],
+    "mh": [
+      "JI39",
+      "JJ30",
+      "JJ31"
+    ],
+    "prefix": [
+      "S9"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "st.png",
@@ -23442,10 +24918,14 @@
     "dxcc": "221",
     "cc": "DK",
     "ccc": "DNK",
-    "name": "丹麦",
+    "name": "Denmark",
     "continent": "EU",
-    "ituzone": ["18"],
-    "cqzone": ["14"],
+    "ituzone": [
+      "18"
+    ],
+    "cqzone": [
+      "14"
+    ],
     "timezone": "1",
     "ccode": "208",
     "aname": "Denmark",
@@ -23547,15 +25027,26 @@
     "dxcc": "222",
     "cc": "FO",
     "ccc": "FRO",
-    "name": "法罗群岛",
+    "name": "Faroe Is.",
     "continent": "EU",
-    "ituzone": ["18"],
-    "cqzone": ["14"],
+    "ituzone": [
+      "18"
+    ],
+    "cqzone": [
+      "14"
+    ],
     "timezone": "0",
     "ccode": "234",
     "aname": "Faroe Is.",
-    "mh": ["IP61", "IP62"],
-    "prefix": ["OW", "OY", "=OY1CT/HQ"],
+    "mh": [
+      "IP61",
+      "IP62"
+    ],
+    "prefix": [
+      "OW",
+      "OY",
+      "=OY1CT/HQ"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "fo.png",
@@ -23572,10 +25063,14 @@
     "dxcc": "223",
     "cc": "GB",
     "ccc": "GBR",
-    "name": "英国",
+    "name": "England",
     "continent": "EU",
-    "ituzone": ["27"],
-    "cqzone": ["14"],
+    "ituzone": [
+      "27"
+    ],
+    "cqzone": [
+      "14"
+    ],
     "timezone": "0",
     "ccode": "826",
     "aname": "England",
@@ -23682,10 +25177,14 @@
     "dxcc": "224",
     "cc": "FI",
     "ccc": "FIN",
-    "name": "芬兰",
+    "name": "Finland",
     "continent": "EU",
-    "ituzone": ["18"],
-    "cqzone": ["15"],
+    "ituzone": [
+      "18"
+    ],
+    "cqzone": [
+      "15"
+    ],
     "timezone": "2",
     "ccode": "246",
     "aname": "Finland",
@@ -23991,14 +25490,23 @@
     "dxcc": "225",
     "cc": "IT",
     "ccc": "ITA",
-    "name": "撒丁岛",
+    "name": "Sardinia",
     "continent": "EU",
-    "ituzone": ["28"],
-    "cqzone": ["15"],
+    "ituzone": [
+      "28"
+    ],
+    "cqzone": [
+      "15"
+    ],
     "timezone": "1",
     "ccode": "380",
     "aname": "Sardinia",
-    "mh": ["JM48", "JM49", "JN40", "JN41"],
+    "mh": [
+      "JM48",
+      "JM49",
+      "JN40",
+      "JN41"
+    ],
     "prefix": [
       "=II0C",
       "=II0EUDX",
@@ -24089,10 +25597,14 @@
     "dxcc": "227",
     "cc": "FR",
     "ccc": "FRA",
-    "name": "法国",
+    "name": "France",
     "continent": "EU",
-    "ituzone": ["27"],
-    "cqzone": ["14"],
+    "ituzone": [
+      "27"
+    ],
+    "cqzone": [
+      "14"
+    ],
     "timezone": "1",
     "ccode": "250",
     "aname": "France",
@@ -24198,10 +25710,14 @@
     "dxcc": "230",
     "cc": "DE",
     "ccc": "DEU",
-    "name": "德国",
+    "name": "Federal Republic of Germany",
     "continent": "EU",
-    "ituzone": ["28"],
-    "cqzone": ["14"],
+    "ituzone": [
+      "28"
+    ],
+    "cqzone": [
+      "14"
+    ],
     "timezone": "1",
     "ccode": "276",
     "aname": "Federal Republic of Germany",
@@ -24478,10 +25994,14 @@
     "dxcc": "232",
     "cc": "SO",
     "ccc": "SOM",
-    "name": "索马里",
+    "name": "Somalia",
     "continent": "AF",
-    "ituzone": ["48"],
-    "cqzone": ["37"],
+    "ituzone": [
+      "48"
+    ],
+    "cqzone": [
+      "37"
+    ],
     "timezone": "3",
     "ccode": "706",
     "aname": "Somalia",
@@ -24536,7 +26056,10 @@
       "LK50",
       "LK51"
     ],
-    "prefix": ["6O", "T5"],
+    "prefix": [
+      "6O",
+      "T5"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "so.png",
@@ -24553,15 +26076,25 @@
     "dxcc": "233",
     "cc": "GI",
     "ccc": "GIB",
-    "name": "直布罗陀",
+    "name": "Gibraltar",
     "continent": "EU",
-    "ituzone": ["37"],
-    "cqzone": ["14"],
+    "ituzone": [
+      "37"
+    ],
+    "cqzone": [
+      "14"
+    ],
     "timezone": "1",
     "ccode": "292",
     "aname": "Gibraltar",
-    "mh": ["IM76"],
-    "prefix": ["ZB", "=ZB2LGT/LH", "ZG"],
+    "mh": [
+      "IM76"
+    ],
+    "prefix": [
+      "ZB",
+      "=ZB2LGT/LH",
+      "ZG"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "gi.png",
@@ -24578,14 +26111,26 @@
     "dxcc": "234",
     "cc": "GS",
     "ccc": "SGS",
-    "name": "南库克群岛",
+    "name": "South Cook Is.",
     "continent": "OC",
-    "ituzone": ["63"],
-    "cqzone": ["32"],
+    "ituzone": [
+      "63"
+    ],
+    "cqzone": [
+      "32"
+    ],
     "timezone": "-11",
     "ccode": "239",
     "aname": "South Cook Is.",
-    "mh": ["BG08", "BG09", "BG18", "BG19", "BH00", "BH01", "BH10"],
+    "mh": [
+      "BG08",
+      "BG09",
+      "BG18",
+      "BG19",
+      "BH00",
+      "BH01",
+      "BH10"
+    ],
     "prefix": [
       "E5",
       "=ZK1/AC4LN",
@@ -24624,10 +26169,14 @@
     "dxcc": "235",
     "cc": "GS",
     "ccc": "SGS",
-    "name": "南乔治亚岛",
+    "name": "South Georgia I.",
     "continent": "SA",
-    "ituzone": ["73"],
-    "cqzone": ["13"],
+    "ituzone": [
+      "73"
+    ],
+    "cqzone": [
+      "13"
+    ],
     "timezone": "-2",
     "ccode": "239",
     "aname": "South Georgia I.",
@@ -24670,10 +26219,14 @@
     "dxcc": "236",
     "cc": "GR",
     "ccc": "GRC",
-    "name": "希腊",
+    "name": "Greece",
     "continent": "EU",
-    "ituzone": ["28"],
-    "cqzone": ["20"],
+    "ituzone": [
+      "28"
+    ],
+    "cqzone": [
+      "20"
+    ],
     "timezone": "2",
     "ccode": "300",
     "aname": "Greece",
@@ -24778,10 +26331,15 @@
     "dxcc": "237",
     "cc": "GL",
     "ccc": "GRL",
-    "name": "格陵兰",
+    "name": "Greenland",
     "continent": "NA",
-    "ituzone": ["5", "75"],
-    "cqzone": ["40"],
+    "ituzone": [
+      "5",
+      "75"
+    ],
+    "cqzone": [
+      "40"
+    ],
     "timezone": "-3",
     "ccode": "304",
     "aname": "Greenland",
@@ -25199,7 +26757,11 @@
       "IR31",
       "IR41"
     ],
-    "prefix": ["OX", "=OX/ON6JUN/LH", "XP"],
+    "prefix": [
+      "OX",
+      "=OX/ON6JUN/LH",
+      "XP"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "gl.png",
@@ -25216,14 +26778,21 @@
     "dxcc": "238",
     "cc": "GB",
     "ccc": "GBR",
-    "name": "南奥克尼岛",
+    "name": "South Orkney Is.",
     "continent": "SA",
-    "ituzone": ["73"],
-    "cqzone": ["13"],
+    "ituzone": [
+      "73"
+    ],
+    "cqzone": [
+      "13"
+    ],
     "timezone": "-3",
     "ccode": "826",
     "aname": "South Orkney Is.",
-    "mh": ["GC69", "GC79"],
+    "mh": [
+      "GC69",
+      "GC79"
+    ],
     "prefix": [
       "=AY1ZA",
       "=LU1ZA",
@@ -25252,10 +26821,14 @@
     "dxcc": "239",
     "cc": "HU",
     "ccc": "HUN",
-    "name": "匈牙利",
+    "name": "Hungary",
     "continent": "EU",
-    "ituzone": ["28"],
-    "cqzone": ["15"],
+    "ituzone": [
+      "28"
+    ],
+    "cqzone": [
+      "15"
+    ],
     "timezone": "1",
     "ccode": "348",
     "aname": "Hungary",
@@ -25301,15 +26874,27 @@
     "dxcc": "240",
     "cc": "GS",
     "ccc": "SGS",
-    "name": "南桑德韦奇岛",
+    "name": "South Sandwich Is.",
     "continent": "SA",
-    "ituzone": ["73"],
-    "cqzone": ["13"],
+    "ituzone": [
+      "73"
+    ],
+    "cqzone": [
+      "13"
+    ],
     "timezone": "-3",
     "ccode": "239",
     "aname": "South Sandwich Is.",
-    "mh": ["HD60", "HD61", "HD62", "HD63"],
-    "prefix": ["=VP8STI", "=VP8THU"],
+    "mh": [
+      "HD60",
+      "HD61",
+      "HD62",
+      "HD63"
+    ],
+    "prefix": [
+      "=VP8STI",
+      "=VP8THU"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "gs.png",
@@ -25326,14 +26911,27 @@
     "dxcc": "241",
     "cc": "GB",
     "ccc": "GBR",
-    "name": "南设特兰群岛",
+    "name": "South Shetland Is.",
     "continent": "SA",
-    "ituzone": ["73"],
-    "cqzone": ["13"],
+    "ituzone": [
+      "73"
+    ],
+    "cqzone": [
+      "13"
+    ],
     "timezone": "-4",
     "ccode": "826",
     "aname": "South Shetland Is.",
-    "mh": ["FC86", "FC87", "FC96", "FC97", "GC07", "GC08", "GC17", "GC18"],
+    "mh": [
+      "FC86",
+      "FC87",
+      "FC96",
+      "FC97",
+      "GC07",
+      "GC08",
+      "GC17",
+      "GC18"
+    ],
     "prefix": [
       "=BY/R1ANF",
       "=CA8WCI/9",
@@ -25418,10 +27016,14 @@
     "dxcc": "242",
     "cc": "IS",
     "ccc": "ISL",
-    "name": "冰岛",
+    "name": "Iceland",
     "continent": "EU",
-    "ituzone": ["17"],
-    "cqzone": ["40"],
+    "ituzone": [
+      "17"
+    ],
+    "cqzone": [
+      "40"
+    ],
     "timezone": "0",
     "ccode": "352",
     "aname": "Iceland",
@@ -25475,10 +27077,14 @@
     "dxcc": "245",
     "cc": "IE",
     "ccc": "IRL",
-    "name": "爱尔兰",
+    "name": "Ireland",
     "continent": "EU",
-    "ituzone": ["27"],
-    "cqzone": ["14"],
+    "ituzone": [
+      "27"
+    ],
+    "cqzone": [
+      "14"
+    ],
     "timezone": "0",
     "ccode": "372",
     "aname": "Ireland",
@@ -25528,15 +27134,23 @@
     "dxcc": "246",
     "cc": "MT",
     "ccc": "MLT",
-    "name": "马耳他",
+    "name": "Sovereign Military Order of Malta",
     "continent": "EU",
-    "ituzone": ["28"],
-    "cqzone": ["15"],
+    "ituzone": [
+      "28"
+    ],
+    "cqzone": [
+      "15"
+    ],
     "timezone": "1",
     "ccode": "470",
     "aname": "Sovereign Military Order of Malta",
-    "mh": ["JN61"],
-    "prefix": ["1A"],
+    "mh": [
+      "JN61"
+    ],
+    "prefix": [
+      "1A"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "mt.png",
@@ -25553,14 +27167,25 @@
     "dxcc": "247",
     "cc": "PH",
     "ccc": "PHL",
-    "name": "中国南沙群岛",
+    "name": "Spratly Is.",
     "continent": "AS",
-    "ituzone": ["50"],
-    "cqzone": ["26"],
+    "ituzone": [
+      "50"
+    ],
+    "cqzone": [
+      "26"
+    ],
     "timezone": "7",
     "ccode": "608",
     "aname": "Spratly Is.",
-    "mh": ["OJ79", "OJ89", "OK70", "OK71", "OK80", "OK81"],
+    "mh": [
+      "OJ79",
+      "OJ89",
+      "OK70",
+      "OK71",
+      "OK80",
+      "OK81"
+    ],
     "prefix": [
       "9M0",
       "=9M2/PG5M",
@@ -25599,10 +27224,14 @@
     "dxcc": "248",
     "cc": "IT",
     "ccc": "ITA",
-    "name": "意大利",
+    "name": "Italy",
     "continent": "EU",
-    "ituzone": ["28"],
-    "cqzone": ["15"],
+    "ituzone": [
+      "28"
+    ],
+    "cqzone": [
+      "15"
+    ],
     "timezone": "1",
     "ccode": "380",
     "aname": "Italy",
@@ -25879,15 +27508,23 @@
     "dxcc": "249",
     "cc": "KN",
     "ccc": "KNA",
-    "name": "圣基茨和尼维斯",
+    "name": "St. Kitts & Nevis",
     "continent": "NA",
-    "ituzone": ["11"],
-    "cqzone": ["8"],
+    "ituzone": [
+      "11"
+    ],
+    "cqzone": [
+      "8"
+    ],
     "timezone": "-4",
     "ccode": "659",
     "aname": "St. Kitts & Nevis",
-    "mh": ["FK87"],
-    "prefix": ["V4"],
+    "mh": [
+      "FK87"
+    ],
+    "prefix": [
+      "V4"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "kn.png",
@@ -25904,15 +27541,24 @@
     "dxcc": "250",
     "cc": "SH",
     "ccc": "SHN",
-    "name": "圣赫勒拿岛",
+    "name": "St. Helena",
     "continent": "AF",
-    "ituzone": ["66"],
-    "cqzone": ["36"],
+    "ituzone": [
+      "66"
+    ],
+    "cqzone": [
+      "36"
+    ],
     "timezone": "0",
     "ccode": "654",
     "aname": "St. Helena",
-    "mh": ["IH73", "IH74"],
-    "prefix": ["ZD7"],
+    "mh": [
+      "IH73",
+      "IH74"
+    ],
+    "prefix": [
+      "ZD7"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "sh.png",
@@ -25929,15 +27575,24 @@
     "dxcc": "251",
     "cc": "LI",
     "ccc": "LIE",
-    "name": "列支敦斯登",
+    "name": "Liechtenstein",
     "continent": "EU",
-    "ituzone": ["28"],
-    "cqzone": ["14"],
+    "ituzone": [
+      "28"
+    ],
+    "cqzone": [
+      "14"
+    ],
     "timezone": "1",
     "ccode": "438",
     "aname": "Liechtenstein",
-    "mh": ["JN47"],
-    "prefix": ["HB0", "HE0"],
+    "mh": [
+      "JN47"
+    ],
+    "prefix": [
+      "HB0",
+      "HE0"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "li.png",
@@ -25954,15 +27609,23 @@
     "dxcc": "252",
     "cc": "CA",
     "ccc": "CAN",
-    "name": "圣保罗岛",
+    "name": "St Paul I.",
     "continent": "NA",
-    "ituzone": ["9"],
-    "cqzone": ["5"],
+    "ituzone": [
+      "9"
+    ],
+    "cqzone": [
+      "5"
+    ],
     "timezone": "-5",
     "ccode": "124",
     "aname": "St Paul I.",
-    "mh": ["AO47"],
-    "prefix": ["CY9"],
+    "mh": [
+      "AO47"
+    ],
+    "prefix": [
+      "CY9"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "ca.png",
@@ -25979,14 +27642,20 @@
     "dxcc": "253",
     "cc": "BR",
     "ccc": "BRA",
-    "name": "圣彼得及圣保罗礁",
+    "name": "St. Peter & St. Paul Rocks",
     "continent": "SA",
-    "ituzone": ["13"],
-    "cqzone": ["11"],
+    "ituzone": [
+      "13"
+    ],
+    "cqzone": [
+      "11"
+    ],
     "timezone": "-2",
     "ccode": "76",
     "aname": "St. Peter & St. Paul Rocks",
-    "mh": ["HJ50"],
+    "mh": [
+      "HJ50"
+    ],
     "prefix": [
       "PP0S",
       "PP0ZS",
@@ -26035,15 +27704,27 @@
     "dxcc": "254",
     "cc": "LU",
     "ccc": "LUX",
-    "name": "卢森堡",
+    "name": "Luxembourg",
     "continent": "EU",
-    "ituzone": ["27"],
-    "cqzone": ["14"],
+    "ituzone": [
+      "27"
+    ],
+    "cqzone": [
+      "14"
+    ],
     "timezone": "1",
     "ccode": "442",
     "aname": "Luxembourg",
-    "mh": ["JN29", "JN39", "JO20", "JO30"],
-    "prefix": ["LX", "=LX9S/J"],
+    "mh": [
+      "JN29",
+      "JN39",
+      "JO20",
+      "JO30"
+    ],
+    "prefix": [
+      "LX",
+      "=LX9S/J"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "lu.png",
@@ -26060,14 +27741,21 @@
     "dxcc": "256",
     "cc": "PT",
     "ccc": "PRT",
-    "name": "马德拉岛",
+    "name": "Madeira Is.",
     "continent": "AF",
-    "ituzone": ["36"],
-    "cqzone": ["33"],
+    "ituzone": [
+      "36"
+    ],
+    "cqzone": [
+      "33"
+    ],
     "timezone": "-1",
     "ccode": "620",
     "aname": "Madeira Is.",
-    "mh": ["IM12", "IM13"],
+    "mh": [
+      "IM12",
+      "IM13"
+    ],
     "prefix": [
       "CQ2",
       "CQ3",
@@ -26096,14 +27784,21 @@
     "dxcc": "257",
     "cc": "MT",
     "ccc": "MLT",
-    "name": "马耳他",
+    "name": "Malta",
     "continent": "EU",
-    "ituzone": ["28"],
-    "cqzone": ["15"],
+    "ituzone": [
+      "28"
+    ],
+    "cqzone": [
+      "15"
+    ],
     "timezone": "1",
     "ccode": "470",
     "aname": "Malta",
-    "mh": ["JM75", "JM76"],
+    "mh": [
+      "JM75",
+      "JM76"
+    ],
     "prefix": [
       "9H",
       "=9H1AW/EU25",
@@ -26138,10 +27833,14 @@
     "dxcc": "259",
     "cc": "SJ",
     "ccc": "SJM",
-    "name": "斯瓦尔巴群岛",
+    "name": "Svalbard",
     "continent": "EU",
-    "ituzone": ["18"],
-    "cqzone": ["40"],
+    "ituzone": [
+      "18"
+    ],
+    "cqzone": [
+      "40"
+    ],
     "timezone": "1",
     "ccode": "744",
     "aname": "Svalbard",
@@ -26223,15 +27922,24 @@
     "dxcc": "260",
     "cc": "MC",
     "ccc": "MCO",
-    "name": "摩纳哥",
+    "name": "Monaco",
     "continent": "EU",
-    "ituzone": ["27"],
-    "cqzone": ["14"],
+    "ituzone": [
+      "27"
+    ],
+    "cqzone": [
+      "14"
+    ],
     "timezone": "1",
     "ccode": "492",
     "aname": "Monaco",
-    "mh": ["JN33"],
-    "prefix": ["3A", "=3A/4Z5KJ/LH"],
+    "mh": [
+      "JN33"
+    ],
+    "prefix": [
+      "3A",
+      "=3A/4Z5KJ/LH"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "mc.png",
@@ -26248,10 +27956,14 @@
     "dxcc": "262",
     "cc": "TJ",
     "ccc": "TJK",
-    "name": "塔吉克斯坦",
+    "name": "Tajikistan",
     "continent": "AS",
-    "ituzone": ["30"],
-    "cqzone": ["17"],
+    "ituzone": [
+      "30"
+    ],
+    "cqzone": [
+      "17"
+    ],
     "timezone": "6",
     "ccode": "762",
     "aname": "Tajikistan",
@@ -26277,7 +27989,10 @@
       "MN50",
       "MN51"
     ],
-    "prefix": ["EY", "=U8JB"],
+    "prefix": [
+      "EY",
+      "=U8JB"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "tj.png",
@@ -26294,10 +28009,14 @@
     "dxcc": "263",
     "cc": "NL",
     "ccc": "NLD",
-    "name": "荷兰",
+    "name": "Netherlands",
     "continent": "EU",
-    "ituzone": ["27"],
-    "cqzone": ["14"],
+    "ituzone": [
+      "27"
+    ],
+    "cqzone": [
+      "14"
+    ],
     "timezone": "1",
     "ccode": "528",
     "aname": "Netherlands",
@@ -26503,14 +28222,23 @@
     "dxcc": "265",
     "cc": "IE",
     "ccc": "IRL",
-    "name": "北爱尔兰",
+    "name": "Northern Ireland",
     "continent": "EU",
-    "ituzone": ["27"],
-    "cqzone": ["14"],
+    "ituzone": [
+      "27"
+    ],
+    "cqzone": [
+      "14"
+    ],
     "timezone": "0",
     "ccode": "372",
     "aname": "Northern Ireland",
-    "mh": ["IO54", "IO64", "IO65", "IO74"],
+    "mh": [
+      "IO54",
+      "IO64",
+      "IO65",
+      "IO74"
+    ],
     "prefix": [
       "2I",
       "=2O0BAD",
@@ -26880,10 +28608,14 @@
     "dxcc": "266",
     "cc": "NO",
     "ccc": "NOR",
-    "name": "挪威",
+    "name": "Norway",
     "continent": "EU",
-    "ituzone": ["18"],
-    "cqzone": ["14"],
+    "ituzone": [
+      "18"
+    ],
+    "cqzone": [
+      "14"
+    ],
     "timezone": "1",
     "ccode": "578",
     "aname": "Norway",
@@ -27084,10 +28816,14 @@
     "dxcc": "269",
     "cc": "PL",
     "ccc": "POL",
-    "name": "波兰",
+    "name": "Poland",
     "continent": "EU",
-    "ituzone": ["28"],
-    "cqzone": ["15"],
+    "ituzone": [
+      "28"
+    ],
+    "cqzone": [
+      "15"
+    ],
     "timezone": "1",
     "ccode": "616",
     "aname": "Poland",
@@ -27197,15 +28933,25 @@
     "dxcc": "270",
     "cc": "TK",
     "ccc": "TKL",
-    "name": "托克劳群岛",
+    "name": "Tokelau Is.",
     "continent": "OC",
-    "ituzone": ["62"],
-    "cqzone": ["31"],
+    "ituzone": [
+      "62"
+    ],
+    "cqzone": [
+      "31"
+    ],
     "timezone": "-11",
     "ccode": "772",
     "aname": "Tokelau Is.",
-    "mh": ["AI31", "AI40", "AI41"],
-    "prefix": ["ZK3"],
+    "mh": [
+      "AI31",
+      "AI40",
+      "AI41"
+    ],
+    "prefix": [
+      "ZK3"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "tk.png",
@@ -27222,10 +28968,14 @@
     "dxcc": "272",
     "cc": "PT",
     "ccc": "PRT",
-    "name": "葡萄牙",
+    "name": "Portugal",
     "continent": "EU",
-    "ituzone": ["37"],
-    "cqzone": ["14"],
+    "ituzone": [
+      "37"
+    ],
+    "cqzone": [
+      "14"
+    ],
     "timezone": "0",
     "ccode": "620",
     "aname": "Portugal",
@@ -27277,14 +29027,21 @@
     "dxcc": "273",
     "cc": "BR",
     "ccc": "BRA",
-    "name": "特林迪达岛",
+    "name": "Trindade & Martim Vaz Is.",
     "continent": "SA",
-    "ituzone": ["15"],
-    "cqzone": ["11"],
+    "ituzone": [
+      "15"
+    ],
+    "cqzone": [
+      "11"
+    ],
     "timezone": "-2",
     "ccode": "76",
     "aname": "Trindade & Martim Vaz Is.",
-    "mh": ["HG49", "HG59"],
+    "mh": [
+      "HG49",
+      "HG59"
+    ],
     "prefix": [
       "PP0T",
       "PP0ZT",
@@ -27333,15 +29090,24 @@
     "dxcc": "274",
     "cc": "GB",
     "ccc": "GBR",
-    "name": "特里斯坦达库尼亚岛",
+    "name": "Tristan da Cunha & Gough I.",
     "continent": "AF",
-    "ituzone": ["66"],
-    "cqzone": ["38"],
+    "ituzone": [
+      "66"
+    ],
+    "cqzone": [
+      "38"
+    ],
     "timezone": "0",
     "ccode": "826",
     "aname": "Tristan da Cunha & Gough I.",
-    "mh": ["IE49", "IE59"],
-    "prefix": ["ZD9"],
+    "mh": [
+      "IE49",
+      "IE59"
+    ],
+    "prefix": [
+      "ZD9"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "gb.png",
@@ -27358,10 +29124,14 @@
     "dxcc": "275",
     "cc": "RO",
     "ccc": "ROU",
-    "name": "罗马尼亚",
+    "name": "Romania",
     "continent": "EU",
-    "ituzone": ["28"],
-    "cqzone": ["20"],
+    "ituzone": [
+      "28"
+    ],
+    "cqzone": [
+      "20"
+    ],
     "timezone": "2",
     "ccode": "642",
     "aname": "Romania",
@@ -27421,14 +29191,20 @@
     "dxcc": "276",
     "cc": "FR",
     "ccc": "FRA",
-    "name": "特罗梅林岛",
+    "name": "Tromelin I.",
     "continent": "AF",
-    "ituzone": ["53"],
-    "cqzone": ["39"],
+    "ituzone": [
+      "53"
+    ],
+    "cqzone": [
+      "39"
+    ],
     "timezone": "4",
     "ccode": "250",
     "aname": "Tromelin I.",
-    "mh": ["LH74"],
+    "mh": [
+      "LH74"
+    ],
     "prefix": [
       "=FR/F6KDF/T",
       "=FR5ZU/T",
@@ -27459,15 +29235,29 @@
     "dxcc": "277",
     "cc": "CA",
     "ccc": "CAN",
-    "name": "克利珀顿岛",
+    "name": "St Pierre & Miquelon",
     "continent": "NA",
-    "ituzone": ["9"],
-    "cqzone": ["5"],
+    "ituzone": [
+      "9"
+    ],
+    "cqzone": [
+      "5"
+    ],
     "timezone": "-4",
     "ccode": "666",
     "aname": "St Pierre & Miquelon",
-    "mh": ["GN16", "GN17"],
-    "prefix": ["FP", "=TO200SPM", "=TO2U", "=TO5FP", "=TO5M", "=TO80SP"],
+    "mh": [
+      "GN16",
+      "GN17"
+    ],
+    "prefix": [
+      "FP",
+      "=TO200SPM",
+      "=TO2U",
+      "=TO5FP",
+      "=TO5M",
+      "=TO80SP"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "pm.png",
@@ -27484,15 +29274,23 @@
     "dxcc": "278",
     "cc": "SM",
     "ccc": "SMR",
-    "name": "圣马利诺",
+    "name": "San Marino",
     "continent": "EU",
-    "ituzone": ["28"],
-    "cqzone": ["15"],
+    "ituzone": [
+      "28"
+    ],
+    "cqzone": [
+      "15"
+    ],
     "timezone": "1",
     "ccode": "674",
     "aname": "San Marino",
-    "mh": ["JN63"],
-    "prefix": ["T7"],
+    "mh": [
+      "JN63"
+    ],
+    "prefix": [
+      "T7"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "sm.png",
@@ -27509,10 +29307,14 @@
     "dxcc": "279",
     "cc": "GB",
     "ccc": "GBR",
-    "name": "苏格兰",
+    "name": "Scotland",
     "continent": "EU",
-    "ituzone": ["27"],
-    "cqzone": ["14"],
+    "ituzone": [
+      "27"
+    ],
+    "cqzone": [
+      "14"
+    ],
     "timezone": "0",
     "ccode": "826",
     "aname": "Scotland",
@@ -28501,10 +30303,14 @@
     "dxcc": "280",
     "cc": "TM",
     "ccc": "TKM",
-    "name": "土库曼斯坦",
+    "name": "Turkmenistan",
     "continent": "AS",
-    "ituzone": ["30"],
-    "cqzone": ["17"],
+    "ituzone": [
+      "30"
+    ],
+    "cqzone": [
+      "17"
+    ],
     "timezone": "5",
     "ccode": "795",
     "aname": "Turkmenistan",
@@ -28555,7 +30361,9 @@
       "MN02",
       "MN10"
     ],
-    "prefix": ["EZ"],
+    "prefix": [
+      "EZ"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "tm.png",
@@ -28572,10 +30380,14 @@
     "dxcc": "281",
     "cc": "ES",
     "ccc": "ESP",
-    "name": "西班牙",
+    "name": "Spain",
     "continent": "EU",
-    "ituzone": ["37"],
-    "cqzone": ["14"],
+    "ituzone": [
+      "37"
+    ],
+    "cqzone": [
+      "14"
+    ],
     "timezone": "1",
     "ccode": "724",
     "aname": "Spain",
@@ -28825,15 +30637,27 @@
     "dxcc": "282",
     "cc": "TV",
     "ccc": "TUV",
-    "name": "图瓦卢",
+    "name": "Tuvalu",
     "continent": "OC",
-    "ituzone": ["65"],
-    "cqzone": ["31"],
+    "ituzone": [
+      "65"
+    ],
+    "cqzone": [
+      "31"
+    ],
     "timezone": "12",
     "ccode": "798",
     "aname": "Tuvalu",
-    "mh": ["RI82", "RI83", "RI84", "RI91", "RI92"],
-    "prefix": ["T2"],
+    "mh": [
+      "RI82",
+      "RI83",
+      "RI84",
+      "RI91",
+      "RI92"
+    ],
+    "prefix": [
+      "T2"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "tv.png",
@@ -28850,15 +30674,24 @@
     "dxcc": "283",
     "cc": "CY",
     "ccc": "CYP",
-    "name": "英国塞浦路斯基地",
+    "name": "UK Sovereign Base Areas on Cyprus",
     "continent": "AS",
-    "ituzone": ["39"],
-    "cqzone": ["20"],
+    "ituzone": [
+      "39"
+    ],
+    "cqzone": [
+      "20"
+    ],
     "timezone": "2",
     "ccode": "196",
     "aname": "UK Sovereign Base Areas on Cyprus",
-    "mh": ["KM64"],
-    "prefix": ["ZC4", "=ZC4ATC/2000Y"],
+    "mh": [
+      "KM64"
+    ],
+    "prefix": [
+      "ZC4",
+      "=ZC4ATC/2000Y"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "cy.png",
@@ -28875,10 +30708,14 @@
     "dxcc": "284",
     "cc": "SE",
     "ccc": "SWE",
-    "name": "瑞典",
+    "name": "Sweden",
     "continent": "EU",
-    "ituzone": ["18"],
-    "cqzone": ["14"],
+    "ituzone": [
+      "18"
+    ],
+    "cqzone": [
+      "14"
+    ],
     "timezone": "1",
     "ccode": "752",
     "aname": "Sweden",
@@ -29044,14 +30881,21 @@
     "dxcc": "285",
     "cc": "VI",
     "ccc": "VIR",
-    "name": "美属维京岛",
+    "name": "Virgin Is.",
     "continent": "NA",
-    "ituzone": ["11"],
-    "cqzone": ["8"],
+    "ituzone": [
+      "11"
+    ],
+    "cqzone": [
+      "8"
+    ],
     "timezone": "-4",
     "ccode": "850",
     "aname": "Virgin Is.",
-    "mh": ["FK77", "FK78"],
+    "mh": [
+      "FK77",
+      "FK78"
+    ],
     "prefix": [
       "=AC7FX",
       "=AJ2O",
@@ -29126,10 +30970,14 @@
     "dxcc": "286",
     "cc": "UG",
     "ccc": "UGA",
-    "name": "乌干达",
+    "name": "Uganda",
     "continent": "AF",
-    "ituzone": ["48"],
-    "cqzone": ["37"],
+    "ituzone": [
+      "48"
+    ],
+    "cqzone": [
+      "37"
+    ],
     "timezone": "3",
     "ccode": "800",
     "aname": "Uganda",
@@ -29155,7 +31003,9 @@
       "KJ73",
       "KJ74"
     ],
-    "prefix": ["5X"],
+    "prefix": [
+      "5X"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "ug.png",
@@ -29172,14 +31022,27 @@
     "dxcc": "287",
     "cc": "CH",
     "ccc": "CHE",
-    "name": "瑞士",
+    "name": "Switzerland",
     "continent": "EU",
-    "ituzone": ["28"],
-    "cqzone": ["14"],
+    "ituzone": [
+      "28"
+    ],
+    "cqzone": [
+      "14"
+    ],
     "timezone": "1",
     "ccode": "756",
     "aname": "Switzerland",
-    "mh": ["JN26", "JN35", "JN36", "JN37", "JN45", "JN46", "JN47", "JN56"],
+    "mh": [
+      "JN26",
+      "JN35",
+      "JN36",
+      "JN37",
+      "JN45",
+      "JN46",
+      "JN47",
+      "JN56"
+    ],
     "prefix": [
       "=4U0G",
       "=4U1AIDS",
@@ -29209,10 +31072,14 @@
     "dxcc": "288",
     "cc": "UA",
     "ccc": "UKR",
-    "name": "乌克兰",
+    "name": "Ukraine",
     "continent": "EU",
-    "ituzone": ["29"],
-    "cqzone": ["16"],
+    "ituzone": [
+      "29"
+    ],
+    "cqzone": [
+      "16"
+    ],
     "timezone": "2",
     "ccode": "804",
     "aname": "Ukraine",
@@ -29370,10 +31237,18 @@
     "dxcc": "291",
     "cc": "US",
     "ccc": "USA",
-    "name": "美国",
+    "name": "United States of America",
     "continent": "NA",
-    "ituzone": ["6", "7", "8"],
-    "cqzone": ["3", "4", "5"],
+    "ituzone": [
+      "6",
+      "7",
+      "8"
+    ],
+    "cqzone": [
+      "3",
+      "4",
+      "5"
+    ],
     "timezone": "-5",
     "ccode": "840",
     "aname": "United States of America",
@@ -33294,10 +35169,14 @@
     "dxcc": "292",
     "cc": "UZ",
     "ccc": "UZB",
-    "name": "乌兹别克斯坦",
+    "name": "Uzbekistan",
     "continent": "AS",
-    "ituzone": ["30"],
-    "cqzone": ["17"],
+    "ituzone": [
+      "30"
+    ],
+    "cqzone": [
+      "17"
+    ],
     "timezone": "6",
     "ccode": "860",
     "aname": "Uzbekistan",
@@ -33370,10 +35249,14 @@
     "dxcc": "293",
     "cc": "VN",
     "ccc": "VNM",
-    "name": "越南",
+    "name": "Viet Nam",
     "continent": "AS",
-    "ituzone": ["49"],
-    "cqzone": ["26"],
+    "ituzone": [
+      "49"
+    ],
+    "cqzone": [
+      "26"
+    ],
     "timezone": "7",
     "ccode": "704",
     "aname": "Viet Nam",
@@ -33419,7 +35302,11 @@
       "OL32",
       "OL41"
     ],
-    "prefix": ["3W", "XV", "=XV2G/C"],
+    "prefix": [
+      "3W",
+      "XV",
+      "=XV2G/C"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "vn.png",
@@ -33436,14 +35323,25 @@
     "dxcc": "294",
     "cc": "GB",
     "ccc": "GBR",
-    "name": "威尔士",
+    "name": "Wales",
     "continent": "EU",
-    "ituzone": ["27"],
-    "cqzone": ["14"],
+    "ituzone": [
+      "27"
+    ],
+    "cqzone": [
+      "14"
+    ],
     "timezone": "0",
     "ccode": "826",
     "aname": "Wales",
-    "mh": ["IO71", "IO72", "IO73", "IO81", "IO82", "IO83"],
+    "mh": [
+      "IO71",
+      "IO72",
+      "IO73",
+      "IO81",
+      "IO82",
+      "IO83"
+    ],
     "prefix": [
       "=2O0CDY",
       "=2O0CGM",
@@ -34227,15 +36125,24 @@
     "dxcc": "295",
     "cc": "VA",
     "ccc": "VAT",
-    "name": "梵蒂冈",
+    "name": "Vatican",
     "continent": "EU",
-    "ituzone": ["28"],
-    "cqzone": ["15"],
+    "ituzone": [
+      "28"
+    ],
+    "cqzone": [
+      "15"
+    ],
     "timezone": "1",
     "ccode": "336",
     "aname": "Vatican",
-    "mh": ["JN61"],
-    "prefix": ["HV", "=HV50VR/IMD"],
+    "mh": [
+      "JN61"
+    ],
+    "prefix": [
+      "HV",
+      "=HV50VR/IMD"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "va.png",
@@ -34252,10 +36159,14 @@
     "dxcc": "296",
     "cc": "RS",
     "ccc": "SRB",
-    "name": "塞尔维亚",
+    "name": "Serbia",
     "continent": "EU",
-    "ituzone": ["28"],
-    "cqzone": ["15"],
+    "ituzone": [
+      "28"
+    ],
+    "cqzone": [
+      "15"
+    ],
     "timezone": "1",
     "ccode": "688",
     "aname": "Serbia",
@@ -34307,15 +36218,26 @@
     "dxcc": "297",
     "cc": "US",
     "ccc": "USA",
-    "name": "威克岛",
+    "name": "Wake I.",
     "continent": "OC",
-    "ituzone": ["65"],
-    "cqzone": ["31"],
+    "ituzone": [
+      "65"
+    ],
+    "cqzone": [
+      "31"
+    ],
     "timezone": "12",
     "ccode": "840",
     "aname": "Wake I.",
-    "mh": ["RK39"],
-    "prefix": ["AH9", "KH9", "NH9", "WH9"],
+    "mh": [
+      "RK39"
+    ],
+    "prefix": [
+      "AH9",
+      "KH9",
+      "NH9",
+      "WH9"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "us.png",
@@ -34332,15 +36254,26 @@
     "dxcc": "298",
     "cc": "WF",
     "ccc": "WLF",
-    "name": "瓦利斯及富图纳群岛",
+    "name": "Wallis & Futuna Is.",
     "continent": "OC",
-    "ituzone": ["62"],
-    "cqzone": ["32"],
+    "ituzone": [
+      "62"
+    ],
+    "cqzone": [
+      "32"
+    ],
     "timezone": "-11",
     "ccode": "876",
     "aname": "Wallis & Futuna Is.",
-    "mh": ["AH05", "AH15", "AH16"],
-    "prefix": ["FW", "TW"],
+    "mh": [
+      "AH05",
+      "AH15",
+      "AH16"
+    ],
+    "prefix": [
+      "FW",
+      "TW"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "wf.png",
@@ -34357,10 +36290,14 @@
     "dxcc": "299",
     "cc": "MY",
     "ccc": "MYS",
-    "name": "西马来西亚",
+    "name": "West Malaysia",
     "continent": "AS",
-    "ituzone": ["54"],
-    "cqzone": ["28"],
+    "ituzone": [
+      "54"
+    ],
+    "cqzone": [
+      "28"
+    ],
     "timezone": "8",
     "ccode": "458",
     "aname": "West Malaysia",
@@ -34409,10 +36346,14 @@
     "dxcc": "301",
     "cc": "KI",
     "ccc": "KIR",
-    "name": "西吉里巴斯",
+    "name": "W. Kiribati (Gilbert Is.)",
     "continent": "OC",
-    "ituzone": ["65"],
-    "cqzone": ["31"],
+    "ituzone": [
+      "65"
+    ],
+    "cqzone": [
+      "31"
+    ],
     "timezone": "12",
     "ccode": "296",
     "aname": "W. Kiribati (Gilbert Is.)",
@@ -34441,7 +36382,10 @@
       "RJ62",
       "RJ63"
     ],
-    "prefix": ["T30", "=T3AJ"],
+    "prefix": [
+      "T30",
+      "=T3AJ"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "ki.png",
@@ -34458,10 +36402,14 @@
     "dxcc": "302",
     "cc": "EH",
     "ccc": "ESH",
-    "name": "西萨哈拉",
+    "name": "Western Sahara",
     "continent": "AF",
-    "ituzone": ["46"],
-    "cqzone": ["33"],
+    "ituzone": [
+      "46"
+    ],
+    "cqzone": [
+      "33"
+    ],
     "timezone": "0",
     "ccode": "732",
     "aname": "Western Sahara",
@@ -34488,7 +36436,9 @@
       "IL56",
       "IL57"
     ],
-    "prefix": ["S0"],
+    "prefix": [
+      "S0"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "eh.png",
@@ -34505,14 +36455,20 @@
     "dxcc": "303",
     "cc": "AU",
     "ccc": "AUS",
-    "name": "威里斯岛",
+    "name": "Willis I.",
     "continent": "OC",
-    "ituzone": ["55"],
-    "cqzone": ["30"],
+    "ituzone": [
+      "55"
+    ],
+    "cqzone": [
+      "30"
+    ],
     "timezone": "10",
     "ccode": "36",
     "aname": "Willis I.",
-    "mh": ["QH53"],
+    "mh": [
+      "QH53"
+    ],
     "prefix": [
       "AX9W",
       "AX9Z",
@@ -34551,15 +36507,25 @@
     "dxcc": "304",
     "cc": "BH",
     "ccc": "BHR",
-    "name": "巴林",
+    "name": "Bahrain",
     "continent": "AS",
-    "ituzone": ["39"],
-    "cqzone": ["21"],
+    "ituzone": [
+      "39"
+    ],
+    "cqzone": [
+      "21"
+    ],
     "timezone": "4",
     "ccode": "48",
     "aname": "Bahrain",
-    "mh": ["LL55", "LL56"],
-    "prefix": ["A9", "=A92AA/GR"],
+    "mh": [
+      "LL55",
+      "LL56"
+    ],
+    "prefix": [
+      "A9",
+      "=A92AA/GR"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "bh.png",
@@ -34576,10 +36542,14 @@
     "dxcc": "305",
     "cc": "BD",
     "ccc": "BGD",
-    "name": "孟加拉",
+    "name": "Bangladesh",
     "continent": "AS",
-    "ituzone": ["41"],
-    "cqzone": ["22"],
+    "ituzone": [
+      "41"
+    ],
+    "cqzone": [
+      "22"
+    ],
     "timezone": "6",
     "ccode": "50",
     "aname": "Bangladesh",
@@ -34602,7 +36572,10 @@
       "NL64",
       "NL65"
     ],
-    "prefix": ["S2", "S3"],
+    "prefix": [
+      "S2",
+      "S3"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "bd.png",
@@ -34619,15 +36592,30 @@
     "dxcc": "306",
     "cc": "BT",
     "ccc": "BTN",
-    "name": "不丹",
+    "name": "Bhutan",
     "continent": "AS",
-    "ituzone": ["41"],
-    "cqzone": ["22"],
+    "ituzone": [
+      "41"
+    ],
+    "cqzone": [
+      "22"
+    ],
     "timezone": "6",
     "ccode": "64",
     "aname": "Bhutan",
-    "mh": ["NL46", "NL47", "NL48", "NL56", "NL57", "NL58", "NL66", "NL67"],
-    "prefix": ["A5"],
+    "mh": [
+      "NL46",
+      "NL47",
+      "NL48",
+      "NL56",
+      "NL57",
+      "NL58",
+      "NL66",
+      "NL67"
+    ],
+    "prefix": [
+      "A5"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "bt.png",
@@ -34644,15 +36632,30 @@
     "dxcc": "308",
     "cc": "CR",
     "ccc": "CRI",
-    "name": "哥斯达黎加",
+    "name": "Costa Rica",
     "continent": "NA",
-    "ituzone": ["11"],
-    "cqzone": ["7"],
+    "ituzone": [
+      "11"
+    ],
+    "cqzone": [
+      "7"
+    ],
     "timezone": "-6",
     "ccode": "188",
     "aname": "Costa Rica",
-    "mh": ["EJ79", "EJ88", "EJ89", "EK70", "EK71", "EK80"],
-    "prefix": ["TE", "TI", "=TI90IARU"],
+    "mh": [
+      "EJ79",
+      "EJ88",
+      "EJ89",
+      "EK70",
+      "EK71",
+      "EK80"
+    ],
+    "prefix": [
+      "TE",
+      "TI",
+      "=TI90IARU"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "cr.png",
@@ -34669,10 +36672,14 @@
     "dxcc": "309",
     "cc": "MM",
     "ccc": "MMR",
-    "name": "缅甸",
+    "name": "Myanmar",
     "continent": "AS",
-    "ituzone": ["49"],
-    "cqzone": ["26"],
+    "ituzone": [
+      "49"
+    ],
+    "cqzone": [
+      "26"
+    ],
     "timezone": "7",
     "ccode": "104",
     "aname": "Myanmar",
@@ -34740,7 +36747,10 @@
       "OL00",
       "OL01"
     ],
-    "prefix": ["XY", "XZ"],
+    "prefix": [
+      "XY",
+      "XZ"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "mm.png",
@@ -34757,10 +36767,14 @@
     "dxcc": "312",
     "cc": "KH",
     "ccc": "KHM",
-    "name": "柬埔寨",
+    "name": "Cambodia",
     "continent": "AS",
-    "ituzone": ["49"],
-    "cqzone": ["26"],
+    "ituzone": [
+      "49"
+    ],
+    "cqzone": [
+      "26"
+    ],
     "timezone": "8",
     "ccode": "116",
     "aname": "Cambodia",
@@ -34782,7 +36796,9 @@
       "OK33",
       "OK34"
     ],
-    "prefix": ["XU"],
+    "prefix": [
+      "XU"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "kh.png",
@@ -34799,10 +36815,14 @@
     "dxcc": "315",
     "cc": "LK",
     "ccc": "LKA",
-    "name": "斯里兰卡",
+    "name": "Sri Lanka",
     "continent": "AS",
-    "ituzone": ["41"],
-    "cqzone": ["22"],
+    "ituzone": [
+      "41"
+    ],
+    "cqzone": [
+      "22"
+    ],
     "timezone": "6",
     "ccode": "144",
     "aname": "Sri Lanka",
@@ -34817,7 +36837,13 @@
       "NJ08",
       "NJ09"
     ],
-    "prefix": ["4P", "4Q", "4R", "4S", "=4S7CGM/AVR"],
+    "prefix": [
+      "4P",
+      "4Q",
+      "4R",
+      "4S",
+      "=4S7CGM/AVR"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "lk.png",
@@ -34834,10 +36860,18 @@
     "dxcc": "318",
     "cc": "CN",
     "ccc": "CHN",
-    "name": "中国",
+    "name": "China",
     "continent": "AS",
-    "ituzone": ["33", "42", "43", "44"],
-    "cqzone": ["23", "24"],
+    "ituzone": [
+      "33",
+      "42",
+      "43",
+      "44"
+    ],
+    "cqzone": [
+      "23",
+      "24"
+    ],
     "timezone": "8",
     "ccode": "156",
     "aname": "China",
@@ -37776,15 +39810,24 @@
     "dxcc": "321",
     "cc": "HK",
     "ccc": "HKG",
-    "name": "中国香港",
+    "name": "Hong Kong",
     "continent": "AS",
-    "ituzone": ["44"],
-    "cqzone": ["24"],
+    "ituzone": [
+      "44"
+    ],
+    "cqzone": [
+      "24"
+    ],
     "timezone": "8",
     "ccode": "344",
     "aname": "Hong Kong",
-    "mh": ["OL62", "OL72"],
-    "prefix": ["VR"],
+    "mh": [
+      "OL62",
+      "OL72"
+    ],
+    "prefix": [
+      "VR"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "hk.png",
@@ -37801,10 +39844,14 @@
     "dxcc": "324",
     "cc": "IN",
     "ccc": "IND",
-    "name": "印度",
+    "name": "India",
     "continent": "AS",
-    "ituzone": ["41"],
-    "cqzone": ["22"],
+    "ituzone": [
+      "41"
+    ],
+    "cqzone": [
+      "22"
+    ],
     "timezone": "6",
     "ccode": "356",
     "aname": "India",
@@ -38061,10 +40108,15 @@
     "dxcc": "327",
     "cc": "ID",
     "ccc": "IDN",
-    "name": "印度尼西亚",
+    "name": "Indonesia",
     "continent": "OC",
-    "ituzone": ["51", "54"],
-    "cqzone": ["28"],
+    "ituzone": [
+      "51",
+      "54"
+    ],
+    "cqzone": [
+      "28"
+    ],
     "timezone": "8",
     "ccode": "360",
     "aname": "Indonesia",
@@ -38437,10 +40489,14 @@
     "dxcc": "330",
     "cc": "IR",
     "ccc": "IRN",
-    "name": "伊朗",
+    "name": "Iran",
     "continent": "AS",
-    "ituzone": ["40"],
-    "cqzone": ["21"],
+    "ituzone": [
+      "40"
+    ],
+    "cqzone": [
+      "21"
+    ],
     "timezone": "4",
     "ccode": "364",
     "aname": "Iran",
@@ -38553,7 +40609,13 @@
       "MM06",
       "MM07"
     ],
-    "prefix": ["9B", "9C", "9D", "EP", "EQ"],
+    "prefix": [
+      "9B",
+      "9C",
+      "9D",
+      "EP",
+      "EQ"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "ir.png",
@@ -38570,10 +40632,14 @@
     "dxcc": "333",
     "cc": "IQ",
     "ccc": "IRQ",
-    "name": "伊拉克",
+    "name": "Iraq",
     "continent": "AS",
-    "ituzone": ["39"],
-    "cqzone": ["21"],
+    "ituzone": [
+      "39"
+    ],
+    "cqzone": [
+      "21"
+    ],
     "timezone": "3",
     "ccode": "368",
     "aname": "Iraq",
@@ -38613,7 +40679,12 @@
       "LM35",
       "LM40"
     ],
-    "prefix": ["HN", "=K4CY/M", "YI", "=YI1IRQ/ND"],
+    "prefix": [
+      "HN",
+      "=K4CY/M",
+      "YI",
+      "=YI1IRQ/ND"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "iq.png",
@@ -38630,14 +40701,24 @@
     "dxcc": "336",
     "cc": "IL",
     "ccc": "ISR",
-    "name": "以色列",
+    "name": "Israel",
     "continent": "AS",
-    "ituzone": ["39"],
-    "cqzone": ["20"],
+    "ituzone": [
+      "39"
+    ],
+    "cqzone": [
+      "20"
+    ],
     "timezone": "2",
     "ccode": "376",
     "aname": "Israel",
-    "mh": ["KL79", "KM70", "KM71", "KM72", "KM73"],
+    "mh": [
+      "KL79",
+      "KM70",
+      "KM71",
+      "KM72",
+      "KM73"
+    ],
     "prefix": [
       "4X",
       "=4X01T/FF",
@@ -38702,10 +40783,14 @@
     "dxcc": "339",
     "cc": "JP",
     "ccc": "JPN",
-    "name": "日本",
+    "name": "Japan",
     "continent": "AS",
-    "ituzone": ["45"],
-    "cqzone": ["25"],
+    "ituzone": [
+      "45"
+    ],
+    "cqzone": [
+      "25"
+    ],
     "timezone": "9",
     "ccode": "392",
     "aname": "Japan",
@@ -38827,10 +40912,14 @@
     "dxcc": "342",
     "cc": "JO",
     "ccc": "JOR",
-    "name": "约旦",
+    "name": "Jordan",
     "continent": "AS",
-    "ituzone": ["39"],
-    "cqzone": ["20"],
+    "ituzone": [
+      "39"
+    ],
+    "cqzone": [
+      "20"
+    ],
     "timezone": "2",
     "ccode": "400",
     "aname": "Jordan",
@@ -38847,7 +40936,9 @@
       "KM92",
       "KM93"
     ],
-    "prefix": ["JY"],
+    "prefix": [
+      "JY"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "jo.png",
@@ -38864,10 +40955,14 @@
     "dxcc": "344",
     "cc": "KP",
     "ccc": "PRK",
-    "name": "朝鲜",
+    "name": "Democratic People's Rep. of Korea",
     "continent": "AS",
-    "ituzone": ["44"],
-    "cqzone": ["25"],
+    "ituzone": [
+      "44"
+    ],
+    "cqzone": [
+      "25"
+    ],
     "timezone": "9",
     "ccode": "408",
     "aname": "Democratic People's Rep. of Korea",
@@ -38890,7 +40985,13 @@
       "PN51",
       "PN52"
     ],
-    "prefix": ["P5", "P6", "P7", "P8", "P9"],
+    "prefix": [
+      "P5",
+      "P6",
+      "P7",
+      "P8",
+      "P9"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "kp.png",
@@ -38907,15 +41008,24 @@
     "dxcc": "345",
     "cc": "BN",
     "ccc": "BRN",
-    "name": "文莱",
+    "name": "Brunei Darussalam",
     "continent": "OC",
-    "ituzone": ["54"],
-    "cqzone": ["28"],
+    "ituzone": [
+      "54"
+    ],
+    "cqzone": [
+      "28"
+    ],
     "timezone": "8",
     "ccode": "96",
     "aname": "Brunei Darussalam",
-    "mh": ["OJ74", "OJ75"],
-    "prefix": ["V8"],
+    "mh": [
+      "OJ74",
+      "OJ75"
+    ],
+    "prefix": [
+      "V8"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "bn.png",
@@ -38932,15 +41042,32 @@
     "dxcc": "348",
     "cc": "KW",
     "ccc": "KWT",
-    "name": "科威特",
+    "name": "Kuwait",
     "continent": "AS",
-    "ituzone": ["39"],
-    "cqzone": ["21"],
+    "ituzone": [
+      "39"
+    ],
+    "cqzone": [
+      "21"
+    ],
     "timezone": "3",
     "ccode": "414",
     "aname": "Kuwait",
-    "mh": ["LL38", "LL39", "LL48", "LL49", "LM30", "LM40"],
-    "prefix": ["9K", "=9K2BI/J", "=9K2BI/JOTA", "=9K2OK/KACC", "NLD"],
+    "mh": [
+      "LL38",
+      "LL39",
+      "LL48",
+      "LL49",
+      "LM30",
+      "LM40"
+    ],
+    "prefix": [
+      "9K",
+      "=9K2BI/J",
+      "=9K2BI/JOTA",
+      "=9K2OK/KACC",
+      "NLD"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "kw.png",
@@ -38957,15 +41084,29 @@
     "dxcc": "354",
     "cc": "LB",
     "ccc": "LBN",
-    "name": "黎巴嫩",
+    "name": "Lebanon",
     "continent": "AS",
-    "ituzone": ["39"],
-    "cqzone": ["20"],
+    "ituzone": [
+      "39"
+    ],
+    "cqzone": [
+      "20"
+    ],
     "timezone": "2",
     "ccode": "422",
     "aname": "Lebanon",
-    "mh": ["KM73", "KM74", "KM83", "KM84"],
-    "prefix": ["OD", "=OD5NJ/ID", "=OD5QB/ID", "=OD5RI/YOTA"],
+    "mh": [
+      "KM73",
+      "KM74",
+      "KM83",
+      "KM84"
+    ],
+    "prefix": [
+      "OD",
+      "=OD5NJ/ID",
+      "=OD5QB/ID",
+      "=OD5RI/YOTA"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "lb.png",
@@ -38982,10 +41123,15 @@
     "dxcc": "363",
     "cc": "MN",
     "ccc": "MNG",
-    "name": "蒙古",
+    "name": "Mongolia",
     "continent": "AS",
-    "ituzone": ["32", "33"],
-    "cqzone": ["23"],
+    "ituzone": [
+      "32",
+      "33"
+    ],
+    "cqzone": [
+      "23"
+    ],
     "timezone": "8",
     "ccode": "496",
     "aname": "Mongolia",
@@ -39117,7 +41263,17 @@
       "OO60",
       "OO70"
     ],
-    "prefix": ["JT", "JT2", "JT3", "JU", "JU2", "JU3", "JV", "JV2", "JV3"],
+    "prefix": [
+      "JT",
+      "JT2",
+      "JT3",
+      "JU",
+      "JU2",
+      "JU3",
+      "JV",
+      "JV2",
+      "JV3"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "mn.png",
@@ -39134,10 +41290,14 @@
     "dxcc": "369",
     "cc": "NP",
     "ccc": "NPL",
-    "name": "尼泊尔",
+    "name": "Nepal",
     "continent": "AS",
-    "ituzone": ["42"],
-    "cqzone": ["22"],
+    "ituzone": [
+      "42"
+    ],
+    "cqzone": [
+      "22"
+    ],
     "timezone": "545",
     "ccode": "524",
     "aname": "Nepal",
@@ -39160,7 +41320,9 @@
       "NM00",
       "NM10"
     ],
-    "prefix": ["9N"],
+    "prefix": [
+      "9N"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "np.png",
@@ -39177,10 +41339,14 @@
     "dxcc": "370",
     "cc": "OM",
     "ccc": "OMN",
-    "name": "阿曼",
+    "name": "Oman",
     "continent": "AS",
-    "ituzone": ["39"],
-    "cqzone": ["21"],
+    "ituzone": [
+      "39"
+    ],
+    "cqzone": [
+      "21"
+    ],
     "timezone": "4",
     "ccode": "512",
     "aname": "Oman",
@@ -39288,10 +41454,14 @@
     "dxcc": "372",
     "cc": "PK",
     "ccc": "PAK",
-    "name": "巴基斯坦",
+    "name": "Pakistan",
     "continent": "AS",
-    "ituzone": ["41"],
-    "cqzone": ["21"],
+    "ituzone": [
+      "41"
+    ],
+    "cqzone": [
+      "21"
+    ],
     "timezone": "5",
     "ccode": "586",
     "aname": "Pakistan",
@@ -39364,7 +41534,16 @@
       "MM85",
       "MM86"
     ],
-    "prefix": ["6P", "6Q", "6R", "6S", "AP", "AQ", "AR", "AS"],
+    "prefix": [
+      "6P",
+      "6Q",
+      "6R",
+      "6S",
+      "AP",
+      "AQ",
+      "AR",
+      "AS"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "pk.png",
@@ -39381,10 +41560,14 @@
     "dxcc": "375",
     "cc": "PH",
     "ccc": "PHL",
-    "name": "菲律宾",
+    "name": "Philippines",
     "continent": "OC",
-    "ituzone": ["50"],
-    "cqzone": ["27"],
+    "ituzone": [
+      "50"
+    ],
+    "cqzone": [
+      "27"
+    ],
     "timezone": "8",
     "ccode": "608",
     "aname": "Philippines",
@@ -39480,15 +41663,28 @@
     "dxcc": "376",
     "cc": "QA",
     "ccc": "QAT",
-    "name": "卡塔尔",
+    "name": "Qatar",
     "continent": "AS",
-    "ituzone": ["39"],
-    "cqzone": ["21"],
+    "ituzone": [
+      "39"
+    ],
+    "cqzone": [
+      "21"
+    ],
     "timezone": "4",
     "ccode": "634",
     "aname": "Qatar",
-    "mh": ["LL54", "LL55", "LL56"],
-    "prefix": ["A7", "=A71CM/ND", "=A71EM/QND", "=A71FJ/QND"],
+    "mh": [
+      "LL54",
+      "LL55",
+      "LL56"
+    ],
+    "prefix": [
+      "A7",
+      "=A71CM/ND",
+      "=A71EM/QND",
+      "=A71FJ/QND"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "qa.png",
@@ -39505,10 +41701,14 @@
     "dxcc": "378",
     "cc": "SA",
     "ccc": "SAU",
-    "name": "沙特阿拉伯",
+    "name": "Saudi Arabia",
     "continent": "AS",
-    "ituzone": ["39"],
-    "cqzone": ["21"],
+    "ituzone": [
+      "39"
+    ],
+    "cqzone": [
+      "21"
+    ],
     "timezone": "3",
     "ccode": "682",
     "aname": "Saudi Arabia",
@@ -39683,15 +41883,28 @@
     "dxcc": "379",
     "cc": "SC",
     "ccc": "SYC",
-    "name": "塞舌尔",
+    "name": "Seychelles",
     "continent": "AF",
-    "ituzone": ["53"],
-    "cqzone": ["39"],
+    "ituzone": [
+      "53"
+    ],
+    "cqzone": [
+      "39"
+    ],
     "timezone": "4",
     "ccode": "690",
     "aname": "Seychelles",
-    "mh": ["LI75", "LI76"],
-    "prefix": ["S7", "=S79EC/F", "=S79NAN/F", "=S79RRC/C", "=S79RRC/F"],
+    "mh": [
+      "LI75",
+      "LI76"
+    ],
+    "prefix": [
+      "S7",
+      "=S79EC/F",
+      "=S79NAN/F",
+      "=S79RRC/C",
+      "=S79RRC/F"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "sc.png",
@@ -39708,15 +41921,25 @@
     "dxcc": "381",
     "cc": "SG",
     "ccc": "SGP",
-    "name": "新加坡",
+    "name": "Singapore",
     "continent": "AS",
-    "ituzone": ["54"],
-    "cqzone": ["28"],
+    "ituzone": [
+      "54"
+    ],
+    "cqzone": [
+      "28"
+    ],
     "timezone": "8",
     "ccode": "702",
     "aname": "Singapore",
-    "mh": ["OJ11", "OJ21"],
-    "prefix": ["9V", "S6"],
+    "mh": [
+      "OJ11",
+      "OJ21"
+    ],
+    "prefix": [
+      "9V",
+      "S6"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "sg.png",
@@ -39733,15 +41956,28 @@
     "dxcc": "382",
     "cc": "DJ",
     "ccc": "DJI",
-    "name": "吉布提",
+    "name": "Djibouti",
     "continent": "AF",
-    "ituzone": ["48"],
-    "cqzone": ["37"],
+    "ituzone": [
+      "48"
+    ],
+    "cqzone": [
+      "37"
+    ],
     "timezone": "3",
     "ccode": "262",
     "aname": "Djibouti",
-    "mh": ["LK00", "LK01", "LK10", "LK11", "LK12"],
-    "prefix": ["J2", "=VERSION"],
+    "mh": [
+      "LK00",
+      "LK01",
+      "LK10",
+      "LK11",
+      "LK12"
+    ],
+    "prefix": [
+      "J2",
+      "=VERSION"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "dj.png",
@@ -39758,10 +41994,14 @@
     "dxcc": "384",
     "cc": "SY",
     "ccc": "SYR",
-    "name": "叙利亚",
+    "name": "Syria",
     "continent": "AS",
-    "ituzone": ["39"],
-    "cqzone": ["20"],
+    "ituzone": [
+      "39"
+    ],
+    "cqzone": [
+      "20"
+    ],
     "timezone": "2",
     "ccode": "760",
     "aname": "Syria",
@@ -39787,7 +42027,10 @@
       "LM16",
       "LM17"
     ],
-    "prefix": ["6C", "YK"],
+    "prefix": [
+      "6C",
+      "YK"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "sy.png",
@@ -39804,10 +42047,14 @@
     "dxcc": "386",
     "cc": "TW",
     "ccc": "TWN",
-    "name": "中国台湾",
+    "name": "Taiwan",
     "continent": "AS",
-    "ituzone": ["44"],
-    "cqzone": ["24"],
+    "ituzone": [
+      "44"
+    ],
+    "cqzone": [
+      "24"
+    ],
     "timezone": "8",
     "ccode": "158",
     "aname": "Taiwan",
@@ -39823,7 +42070,17 @@
       "PL06",
       "PL15"
     ],
-    "prefix": ["BM", "BN", "BO", "BP", "BQ", "BU", "BV", "BW", "BX"],
+    "prefix": [
+      "BM",
+      "BN",
+      "BO",
+      "BP",
+      "BQ",
+      "BU",
+      "BV",
+      "BW",
+      "BX"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "cn.png",
@@ -39840,10 +42097,14 @@
     "dxcc": "387",
     "cc": "TH",
     "ccc": "THA",
-    "name": "泰国",
+    "name": "Thailand",
     "continent": "AS",
-    "ituzone": ["49"],
-    "cqzone": ["26"],
+    "ituzone": [
+      "49"
+    ],
+    "cqzone": [
+      "26"
+    ],
     "timezone": "7",
     "ccode": "764",
     "aname": "Thailand",
@@ -39896,7 +42157,10 @@
       "OK28",
       "OL00"
     ],
-    "prefix": ["E2", "HS"],
+    "prefix": [
+      "E2",
+      "HS"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "th.png",
@@ -39913,10 +42177,14 @@
     "dxcc": "390",
     "cc": "TR",
     "ccc": "TUR",
-    "name": "土耳其",
+    "name": "Turkey",
     "continent": "AS",
-    "ituzone": ["39"],
-    "cqzone": ["20"],
+    "ituzone": [
+      "39"
+    ],
+    "cqzone": [
+      "20"
+    ],
     "timezone": "2",
     "ccode": "792",
     "aname": "Turkey",
@@ -40093,10 +42361,14 @@
     "dxcc": "391",
     "cc": "AE",
     "ccc": "ARE",
-    "name": "阿拉伯联合酋长国",
+    "name": "United Arab Emirates",
     "continent": "AS",
-    "ituzone": ["39"],
-    "cqzone": ["21"],
+    "ituzone": [
+      "39"
+    ],
+    "cqzone": [
+      "21"
+    ],
     "timezone": "4",
     "ccode": "784",
     "aname": "United Arab Emirates",
@@ -40169,10 +42441,14 @@
     "dxcc": "400",
     "cc": "DZ",
     "ccc": "DZA",
-    "name": "阿尔及利亚",
+    "name": "Algeria",
     "continent": "AF",
-    "ituzone": ["37"],
-    "cqzone": ["33"],
+    "ituzone": [
+      "37"
+    ],
+    "cqzone": [
+      "33"
+    ],
     "timezone": "0",
     "ccode": "12",
     "aname": "Algeria",
@@ -40342,10 +42618,14 @@
     "dxcc": "401",
     "cc": "AO",
     "ccc": "AGO",
-    "name": "安哥拉",
+    "name": "Angola",
     "continent": "AF",
-    "ituzone": ["52"],
-    "cqzone": ["36"],
+    "ituzone": [
+      "52"
+    ],
+    "cqzone": [
+      "36"
+    ],
     "timezone": "1",
     "ccode": "24",
     "aname": "Angola",
@@ -40431,7 +42711,10 @@
       "KI03",
       "KI10"
     ],
-    "prefix": ["D2", "D3"],
+    "prefix": [
+      "D2",
+      "D3"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "ao.png",
@@ -40448,10 +42731,14 @@
     "dxcc": "402",
     "cc": "BW",
     "ccc": "BWA",
-    "name": "博茨瓦纳",
+    "name": "Botswana",
     "continent": "AF",
-    "ituzone": ["57"],
-    "cqzone": ["38"],
+    "ituzone": [
+      "57"
+    ],
+    "cqzone": [
+      "38"
+    ],
     "timezone": "2",
     "ccode": "72",
     "aname": "Botswana",
@@ -40492,7 +42779,10 @@
       "KH22",
       "KH30"
     ],
-    "prefix": ["8O", "A2"],
+    "prefix": [
+      "8O",
+      "A2"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "bw.png",
@@ -40509,15 +42799,28 @@
     "dxcc": "404",
     "cc": "BI",
     "ccc": "BDI",
-    "name": "布隆迪",
+    "name": "Burundi",
     "continent": "AF",
-    "ituzone": ["52"],
-    "cqzone": ["36"],
+    "ituzone": [
+      "52"
+    ],
+    "cqzone": [
+      "36"
+    ],
     "timezone": "3",
     "ccode": "108",
     "aname": "Burundi",
-    "mh": ["KI45", "KI46", "KI47", "KI55", "KI56", "KI57"],
-    "prefix": ["9U"],
+    "mh": [
+      "KI45",
+      "KI46",
+      "KI47",
+      "KI55",
+      "KI56",
+      "KI57"
+    ],
+    "prefix": [
+      "9U"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "bi.png",
@@ -40534,10 +42837,14 @@
     "dxcc": "406",
     "cc": "CM",
     "ccc": "CMR",
-    "name": "喀麦隆",
+    "name": "Cameroon",
     "continent": "AF",
-    "ituzone": ["47"],
-    "cqzone": ["36"],
+    "ituzone": [
+      "47"
+    ],
+    "cqzone": [
+      "36"
+    ],
     "timezone": "1",
     "ccode": "120",
     "aname": "Cameroon",
@@ -40580,7 +42887,9 @@
       "JK72",
       "JK73"
     ],
-    "prefix": ["TJ"],
+    "prefix": [
+      "TJ"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "cm.png",
@@ -40597,10 +42906,14 @@
     "dxcc": "408",
     "cc": "CF",
     "ccc": "CAF",
-    "name": "中非共和国",
+    "name": "Central Africa",
     "continent": "AF",
-    "ituzone": ["47"],
-    "cqzone": ["36"],
+    "ituzone": [
+      "47"
+    ],
+    "cqzone": [
+      "36"
+    ],
     "timezone": "1",
     "ccode": "140",
     "aname": "Central Africa",
@@ -40648,7 +42961,9 @@
       "KK10",
       "KK11"
     ],
-    "prefix": ["TL"],
+    "prefix": [
+      "TL"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "cf.png",
@@ -40665,15 +42980,29 @@
     "dxcc": "409",
     "cc": "CV",
     "ccc": "CPV",
-    "name": "佛得角",
+    "name": "Cape Verde",
     "continent": "AF",
-    "ituzone": ["46"],
-    "cqzone": ["35"],
+    "ituzone": [
+      "46"
+    ],
+    "cqzone": [
+      "35"
+    ],
     "timezone": "-2",
     "ccode": "132",
     "aname": "Cape Verde",
-    "mh": ["HK74", "HK75", "HK76", "HK77", "HK84", "HK85", "HK86"],
-    "prefix": ["D4"],
+    "mh": [
+      "HK74",
+      "HK75",
+      "HK76",
+      "HK77",
+      "HK84",
+      "HK85",
+      "HK86"
+    ],
+    "prefix": [
+      "D4"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "cv.png",
@@ -40690,10 +43019,14 @@
     "dxcc": "410",
     "cc": "TD",
     "ccc": "TCD",
-    "name": "乍得",
+    "name": "Chad",
     "continent": "AF",
-    "ituzone": ["47"],
-    "cqzone": ["36"],
+    "ituzone": [
+      "47"
+    ],
+    "cqzone": [
+      "36"
+    ],
     "timezone": "1",
     "ccode": "148",
     "aname": "Chad",
@@ -40781,7 +43114,9 @@
       "KL01",
       "KL10"
     ],
-    "prefix": ["TT"],
+    "prefix": [
+      "TT"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "td.png",
@@ -40798,15 +43133,25 @@
     "dxcc": "411",
     "cc": "KM",
     "ccc": "COM",
-    "name": "科摩罗",
+    "name": "Comoros",
     "continent": "AF",
-    "ituzone": ["53"],
-    "cqzone": ["39"],
+    "ituzone": [
+      "53"
+    ],
+    "cqzone": [
+      "39"
+    ],
     "timezone": "3",
     "ccode": "174",
     "aname": "Comoros",
-    "mh": ["LH17", "LH18", "LH27"],
-    "prefix": ["D6"],
+    "mh": [
+      "LH17",
+      "LH18",
+      "LH27"
+    ],
+    "prefix": [
+      "D6"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "km.png",
@@ -40823,10 +43168,14 @@
     "dxcc": "412",
     "cc": "CG",
     "ccc": "COG",
-    "name": "刚果共和国",
+    "name": "Republic of the Congo",
     "continent": "AF",
-    "ituzone": ["52"],
-    "cqzone": ["36"],
+    "ituzone": [
+      "52"
+    ],
+    "cqzone": [
+      "36"
+    ],
     "timezone": "1",
     "ccode": "178",
     "aname": "Republic of the Congo",
@@ -40863,7 +43212,9 @@
       "JJ92",
       "JJ93"
     ],
-    "prefix": ["TN"],
+    "prefix": [
+      "TN"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "cg.png",
@@ -40880,10 +43231,14 @@
     "dxcc": "414",
     "cc": "CD",
     "ccc": "COD",
-    "name": "刚果民主共和国",
+    "name": "Democratic Republic of the Congo",
     "continent": "AF",
-    "ituzone": ["52"],
-    "cqzone": ["36"],
+    "ituzone": [
+      "52"
+    ],
+    "cqzone": [
+      "36"
+    ],
     "timezone": "1",
     "ccode": "180",
     "aname": "Democratic Republic of the Congo",
@@ -41017,7 +43372,14 @@
       "KJ53",
       "KJ54"
     ],
-    "prefix": ["9O", "9P", "9Q", "9R", "9S", "9T"],
+    "prefix": [
+      "9O",
+      "9P",
+      "9Q",
+      "9R",
+      "9S",
+      "9T"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "cd.png",
@@ -41034,10 +43396,14 @@
     "dxcc": "416",
     "cc": "BJ",
     "ccc": "BEN",
-    "name": "贝宁",
+    "name": "Benin",
     "continent": "AF",
-    "ituzone": ["46"],
-    "cqzone": ["35"],
+    "ituzone": [
+      "46"
+    ],
+    "cqzone": [
+      "35"
+    ],
     "timezone": "0",
     "ccode": "204",
     "aname": "Benin",
@@ -41056,7 +43422,9 @@
       "JK11",
       "JK12"
     ],
-    "prefix": ["TY"],
+    "prefix": [
+      "TY"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "bj.png",
@@ -41073,10 +43441,14 @@
     "dxcc": "420",
     "cc": "GA",
     "ccc": "GAB",
-    "name": "加蓬",
+    "name": "Gabon",
     "continent": "AF",
-    "ituzone": ["52"],
-    "cqzone": ["36"],
+    "ituzone": [
+      "52"
+    ],
+    "cqzone": [
+      "36"
+    ],
     "timezone": "1",
     "ccode": "266",
     "aname": "Gabon",
@@ -41105,7 +43477,9 @@
       "JJ70",
       "JJ71"
     ],
-    "prefix": ["TR"],
+    "prefix": [
+      "TR"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "ga.png",
@@ -41122,15 +43496,26 @@
     "dxcc": "422",
     "cc": "GM",
     "ccc": "GMB",
-    "name": "冈比亚",
+    "name": "The Gambia",
     "continent": "AF",
-    "ituzone": ["46"],
-    "cqzone": ["35"],
+    "ituzone": [
+      "46"
+    ],
+    "cqzone": [
+      "35"
+    ],
     "timezone": "0",
     "ccode": "270",
     "aname": "The Gambia",
-    "mh": ["IK13", "IK23", "IK33"],
-    "prefix": ["C5", "=C56W/BI"],
+    "mh": [
+      "IK13",
+      "IK23",
+      "IK33"
+    ],
+    "prefix": [
+      "C5",
+      "=C56W/BI"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "gm.png",
@@ -41147,10 +43532,14 @@
     "dxcc": "424",
     "cc": "GH",
     "ccc": "GHA",
-    "name": "加纳",
+    "name": "Ghana",
     "continent": "AF",
-    "ituzone": ["46"],
-    "cqzone": ["35"],
+    "ituzone": [
+      "46"
+    ],
+    "cqzone": [
+      "35"
+    ],
     "timezone": "0",
     "ccode": "288",
     "aname": "Ghana",
@@ -41179,7 +43568,9 @@
       "JK00",
       "JK01"
     ],
-    "prefix": ["9G"],
+    "prefix": [
+      "9G"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "gh.png",
@@ -41196,10 +43587,14 @@
     "dxcc": "428",
     "cc": "CI",
     "ccc": "CIV",
-    "name": "象牙海岸",
+    "name": "Cote d'Ivorie",
     "continent": "AF",
-    "ituzone": ["46"],
-    "cqzone": ["35"],
+    "ituzone": [
+      "46"
+    ],
+    "cqzone": [
+      "35"
+    ],
     "timezone": "0",
     "ccode": "384",
     "aname": "Cote d'Ivorie",
@@ -41229,7 +43624,9 @@
       "IK60",
       "IK70"
     ],
-    "prefix": ["TU"],
+    "prefix": [
+      "TU"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "ci.png",
@@ -41246,10 +43643,14 @@
     "dxcc": "430",
     "cc": "KE",
     "ccc": "KEN",
-    "name": "肯尼亚",
+    "name": "Kenya",
     "continent": "AF",
-    "ituzone": ["48"],
-    "cqzone": ["37"],
+    "ituzone": [
+      "48"
+    ],
+    "cqzone": [
+      "37"
+    ],
     "timezone": "3",
     "ccode": "404",
     "aname": "Kenya",
@@ -41293,7 +43694,12 @@
       "LJ03",
       "LJ04"
     ],
-    "prefix": ["5Y", "5Z", "=5Z4IC/Y2K", "=5Z4RT/Y2K"],
+    "prefix": [
+      "5Y",
+      "5Z",
+      "=5Z4IC/Y2K",
+      "=5Z4RT/Y2K"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "ke.png",
@@ -41310,15 +43716,28 @@
     "dxcc": "432",
     "cc": "LS",
     "ccc": "LSO",
-    "name": "莱索托",
+    "name": "Lesotho",
     "continent": "AF",
-    "ituzone": ["57"],
-    "cqzone": ["38"],
+    "ituzone": [
+      "57"
+    ],
+    "cqzone": [
+      "38"
+    ],
     "timezone": "2",
     "ccode": "426",
     "aname": "Lesotho",
-    "mh": ["KF39", "KF49", "KG30", "KG31", "KG40", "KG41"],
-    "prefix": ["7P"],
+    "mh": [
+      "KF39",
+      "KF49",
+      "KG30",
+      "KG31",
+      "KG40",
+      "KG41"
+    ],
+    "prefix": [
+      "7P"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "ls.png",
@@ -41335,10 +43754,14 @@
     "dxcc": "434",
     "cc": "LR",
     "ccc": "LBR",
-    "name": "利比里亚",
+    "name": "Liberia",
     "continent": "AF",
-    "ituzone": ["46"],
-    "cqzone": ["35"],
+    "ituzone": [
+      "46"
+    ],
+    "cqzone": [
+      "35"
+    ],
     "timezone": "-1",
     "ccode": "430",
     "aname": "Liberia",
@@ -41356,7 +43779,14 @@
       "IJ65",
       "IJ66"
     ],
-    "prefix": ["5L", "5M", "6Z", "A8", "D5", "EL"],
+    "prefix": [
+      "5L",
+      "5M",
+      "6Z",
+      "A8",
+      "D5",
+      "EL"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "lr.png",
@@ -41373,10 +43803,14 @@
     "dxcc": "436",
     "cc": "LY",
     "ccc": "LBY",
-    "name": "利比亚",
+    "name": "Libya",
     "continent": "AF",
-    "ituzone": ["38"],
-    "cqzone": ["34"],
+    "ituzone": [
+      "38"
+    ],
+    "cqzone": [
+      "34"
+    ],
     "timezone": "2",
     "ccode": "434",
     "aname": "Libya",
@@ -41484,7 +43918,9 @@
       "KM21",
       "KM22"
     ],
-    "prefix": ["5A"],
+    "prefix": [
+      "5A"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "ly.png",
@@ -41501,10 +43937,14 @@
     "dxcc": "438",
     "cc": "MG",
     "ccc": "MDG",
-    "name": "马达加斯加",
+    "name": "Madagascar",
     "continent": "AF",
-    "ituzone": ["53"],
-    "cqzone": ["39"],
+    "ituzone": [
+      "53"
+    ],
+    "cqzone": [
+      "39"
+    ],
     "timezone": "3",
     "ccode": "450",
     "aname": "Madagascar",
@@ -41555,7 +43995,11 @@
       "LH55",
       "LH56"
     ],
-    "prefix": ["5R", "5S", "6X"],
+    "prefix": [
+      "5R",
+      "5S",
+      "6X"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "mg.png",
@@ -41572,10 +44016,14 @@
     "dxcc": "440",
     "cc": "MW",
     "ccc": "MWI",
-    "name": "马拉维",
+    "name": "Malawi",
     "continent": "AF",
-    "ituzone": ["53"],
-    "cqzone": ["37"],
+    "ituzone": [
+      "53"
+    ],
+    "cqzone": [
+      "37"
+    ],
     "timezone": "2",
     "ccode": "454",
     "aname": "Malawi",
@@ -41596,7 +44044,9 @@
       "KI60",
       "KI70"
     ],
-    "prefix": ["7Q"],
+    "prefix": [
+      "7Q"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "mw.png",
@@ -41613,10 +44063,14 @@
     "dxcc": "442",
     "cc": "ML",
     "ccc": "MLI",
-    "name": "马里",
+    "name": "Mali",
     "continent": "AF",
-    "ituzone": ["46"],
-    "cqzone": ["35"],
+    "ituzone": [
+      "46"
+    ],
+    "cqzone": [
+      "35"
+    ],
     "timezone": "0",
     "ccode": "466",
     "aname": "Mali",
@@ -41702,7 +44156,9 @@
       "JL01",
       "JL10"
     ],
-    "prefix": ["TZ"],
+    "prefix": [
+      "TZ"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "ml.png",
@@ -41719,10 +44175,14 @@
     "dxcc": "444",
     "cc": "MR",
     "ccc": "MRT",
-    "name": "毛里塔尼亚",
+    "name": "Mauritania",
     "continent": "AF",
-    "ituzone": ["46"],
-    "cqzone": ["35"],
+    "ituzone": [
+      "46"
+    ],
+    "cqzone": [
+      "35"
+    ],
     "timezone": "-1",
     "ccode": "478",
     "aname": "Mauritania",
@@ -41793,7 +44253,9 @@
       "IL66",
       "IL75"
     ],
-    "prefix": ["5T"],
+    "prefix": [
+      "5T"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "mr.png",
@@ -41810,10 +44272,14 @@
     "dxcc": "446",
     "cc": "MA",
     "ccc": "MAR",
-    "name": "摩洛哥",
+    "name": "Morocco",
     "continent": "AF",
-    "ituzone": ["37"],
-    "cqzone": ["33"],
+    "ituzone": [
+      "37"
+    ],
+    "cqzone": [
+      "33"
+    ],
     "timezone": "0",
     "ccode": "504",
     "aname": "Morocco",
@@ -41854,7 +44320,14 @@
       "IM93",
       "IM94"
     ],
-    "prefix": ["5C", "5D", "5E", "5F", "5G", "CN"],
+    "prefix": [
+      "5C",
+      "5D",
+      "5E",
+      "5F",
+      "5G",
+      "CN"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "ma.png",
@@ -41871,10 +44344,14 @@
     "dxcc": "450",
     "cc": "NG",
     "ccc": "NGA",
-    "name": "尼日利亚",
+    "name": "Nigeria",
     "continent": "AF",
-    "ituzone": ["46"],
-    "cqzone": ["35"],
+    "ituzone": [
+      "46"
+    ],
+    "cqzone": [
+      "35"
+    ],
     "timezone": "1",
     "ccode": "566",
     "aname": "Nigeria",
@@ -41936,7 +44413,10 @@
       "JK72",
       "JK73"
     ],
-    "prefix": ["5N", "5O"],
+    "prefix": [
+      "5N",
+      "5O"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "ng.png",
@@ -41953,10 +44433,14 @@
     "dxcc": "452",
     "cc": "ZW",
     "ccc": "ZWE",
-    "name": "津巴布韦",
+    "name": "Zimbabwe",
     "continent": "AF",
-    "ituzone": ["53"],
-    "cqzone": ["38"],
+    "ituzone": [
+      "53"
+    ],
+    "cqzone": [
+      "38"
+    ],
     "timezone": "2",
     "ccode": "716",
     "aname": "Zimbabwe",
@@ -41993,7 +44477,11 @@
       "KH62",
       "KH63"
     ],
-    "prefix": ["Z2", "=Z21KD/L", "=Z27JAM/J"],
+    "prefix": [
+      "Z2",
+      "=Z21KD/L",
+      "=Z27JAM/J"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "zw.png",
@@ -42010,14 +44498,21 @@
     "dxcc": "453",
     "cc": "RE",
     "ccc": "REU",
-    "name": "留尼旺岛",
+    "name": "Reunion I.",
     "continent": "AF",
-    "ituzone": ["53"],
-    "cqzone": ["39"],
+    "ituzone": [
+      "53"
+    ],
+    "cqzone": [
+      "39"
+    ],
     "timezone": "4",
     "ccode": "638",
     "aname": "Reunion I.",
-    "mh": ["LG78", "LG79"],
+    "mh": [
+      "LG78",
+      "LG79"
+    ],
     "prefix": [
       "FR",
       "=TO019IEEE",
@@ -42052,15 +44547,26 @@
     "dxcc": "454",
     "cc": "RW",
     "ccc": "RWA",
-    "name": "卢旺达",
+    "name": "Rwanda",
     "continent": "AF",
-    "ituzone": ["52"],
-    "cqzone": ["36"],
+    "ituzone": [
+      "52"
+    ],
+    "cqzone": [
+      "36"
+    ],
     "timezone": "3",
     "ccode": "646",
     "aname": "Rwanda",
-    "mh": ["KI47", "KI48", "KI57", "KI58"],
-    "prefix": ["9X"],
+    "mh": [
+      "KI47",
+      "KI48",
+      "KI57",
+      "KI58"
+    ],
+    "prefix": [
+      "9X"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "rw.png",
@@ -42077,10 +44583,14 @@
     "dxcc": "456",
     "cc": "SN",
     "ccc": "SEN",
-    "name": "塞内加尔",
+    "name": "Senegal",
     "continent": "AF",
-    "ituzone": ["46"],
-    "cqzone": ["35"],
+    "ituzone": [
+      "46"
+    ],
+    "cqzone": [
+      "35"
+    ],
     "timezone": "0",
     "ccode": "686",
     "aname": "Senegal",
@@ -42104,7 +44614,10 @@
       "IK43",
       "IK44"
     ],
-    "prefix": ["6V", "6W"],
+    "prefix": [
+      "6V",
+      "6W"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "sn.png",
@@ -42121,15 +44634,29 @@
     "dxcc": "458",
     "cc": "SL",
     "ccc": "SLE",
-    "name": "塞拉利昂",
+    "name": "Sierra Leone",
     "continent": "AF",
-    "ituzone": ["46"],
-    "cqzone": ["35"],
+    "ituzone": [
+      "46"
+    ],
+    "cqzone": [
+      "35"
+    ],
     "timezone": "0",
     "ccode": "694",
     "aname": "Sierra Leone",
-    "mh": ["IJ37", "IJ38", "IJ39", "IJ46", "IJ47", "IJ48", "IJ49"],
-    "prefix": ["9L"],
+    "mh": [
+      "IJ37",
+      "IJ38",
+      "IJ39",
+      "IJ46",
+      "IJ47",
+      "IJ48",
+      "IJ49"
+    ],
+    "prefix": [
+      "9L"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "sl.png",
@@ -42146,14 +44673,20 @@
     "dxcc": "460",
     "cc": "FJ",
     "ccc": "FJI",
-    "name": "罗图马岛",
+    "name": "Rotuma I.",
     "continent": "OC",
-    "ituzone": ["56"],
-    "cqzone": ["32"],
+    "ituzone": [
+      "56"
+    ],
+    "cqzone": [
+      "32"
+    ],
     "timezone": "12",
     "ccode": "242",
     "aname": "Rotuma I.",
-    "mh": ["RH87"],
+    "mh": [
+      "RH87"
+    ],
     "prefix": [
       "=3D2AG/P",
       "=3D2EU",
@@ -42185,10 +44718,14 @@
     "dxcc": "462",
     "cc": "ZA",
     "ccc": "ZAF",
-    "name": "南非",
+    "name": "South Africa",
     "continent": "AF",
-    "ituzone": ["57"],
-    "cqzone": ["38"],
+    "ituzone": [
+      "57"
+    ],
+    "cqzone": [
+      "38"
+    ],
     "timezone": "2",
     "ccode": "710",
     "aname": "South Africa",
@@ -42329,10 +44866,14 @@
     "dxcc": "464",
     "cc": "NA",
     "ccc": "NAM",
-    "name": "纳米比亚",
+    "name": "Namibia",
     "continent": "AF",
-    "ituzone": ["57"],
-    "cqzone": ["38"],
+    "ituzone": [
+      "57"
+    ],
+    "cqzone": [
+      "38"
+    ],
     "timezone": "2",
     "ccode": "516",
     "aname": "Namibia",
@@ -42419,10 +44960,15 @@
     "dxcc": "466",
     "cc": "SD",
     "ccc": "SDN",
-    "name": "苏丹",
+    "name": "Sudan",
     "continent": "AF",
-    "ituzone": ["47", "48"],
-    "cqzone": ["34"],
+    "ituzone": [
+      "47",
+      "48"
+    ],
+    "cqzone": [
+      "34"
+    ],
     "timezone": "2",
     "ccode": "736",
     "aname": "Sudan",
@@ -42531,7 +45077,11 @@
       "KL80",
       "KL81"
     ],
-    "prefix": ["6T", "6U", "ST"],
+    "prefix": [
+      "6T",
+      "6U",
+      "ST"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "sd.png",
@@ -42548,15 +45098,28 @@
     "dxcc": "468",
     "cc": "SZ",
     "ccc": "SWZ",
-    "name": "斯瓦蒂尼",
+    "name": "Swaziland",
     "continent": "AF",
-    "ituzone": ["57"],
-    "cqzone": ["38"],
+    "ituzone": [
+      "57"
+    ],
+    "cqzone": [
+      "38"
+    ],
     "timezone": "2",
     "ccode": "748",
     "aname": "Swaziland",
-    "mh": ["KG52", "KG53", "KG54", "KG62", "KG63", "KG64"],
-    "prefix": ["3DA"],
+    "mh": [
+      "KG52",
+      "KG53",
+      "KG54",
+      "KG62",
+      "KG63",
+      "KG64"
+    ],
+    "prefix": [
+      "3DA"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "sz.png",
@@ -42573,10 +45136,14 @@
     "dxcc": "470",
     "cc": "TZ",
     "ccc": "TZA",
-    "name": "坦桑尼亚",
+    "name": "Tanzania",
     "continent": "AF",
-    "ituzone": ["53"],
-    "cqzone": ["37"],
+    "ituzone": [
+      "53"
+    ],
+    "cqzone": [
+      "37"
+    ],
     "timezone": "3",
     "ccode": "834",
     "aname": "Tanzania",
@@ -42635,7 +45202,10 @@
       "KI96",
       "LH09"
     ],
-    "prefix": ["5H", "5I"],
+    "prefix": [
+      "5H",
+      "5I"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "tz.png",
@@ -42652,10 +45222,14 @@
     "dxcc": "474",
     "cc": "TN",
     "ccc": "TUN",
-    "name": "突尼斯",
+    "name": "Tunisia",
     "continent": "AF",
-    "ituzone": ["37"],
-    "cqzone": ["33"],
+    "ituzone": [
+      "37"
+    ],
+    "cqzone": [
+      "33"
+    ],
     "timezone": "1",
     "ccode": "788",
     "aname": "Tunisia",
@@ -42679,7 +45253,12 @@
       "JM56",
       "JM57"
     ],
-    "prefix": ["3V", "=3V8CB/J", "=3V8ST/J", "TS"],
+    "prefix": [
+      "3V",
+      "=3V8CB/J",
+      "=3V8ST/J",
+      "TS"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "tn.png",
@@ -42696,10 +45275,14 @@
     "dxcc": "478",
     "cc": "EG",
     "ccc": "EGY",
-    "name": "埃及",
+    "name": "Egypt",
     "continent": "AF",
-    "ituzone": ["38"],
-    "cqzone": ["34"],
+    "ituzone": [
+      "38"
+    ],
+    "cqzone": [
+      "34"
+    ],
     "timezone": "2",
     "ccode": "818",
     "aname": "Egypt",
@@ -42773,7 +45356,12 @@
       "KM70",
       "KM71"
     ],
-    "prefix": ["6A", "6B", "SS", "SU"],
+    "prefix": [
+      "6A",
+      "6B",
+      "SS",
+      "SU"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "eg.png",
@@ -42790,10 +45378,14 @@
     "dxcc": "480",
     "cc": "BF",
     "ccc": "BFA",
-    "name": "布吉那法索",
+    "name": "Burkina Faso",
     "continent": "AF",
-    "ituzone": ["46"],
-    "cqzone": ["35"],
+    "ituzone": [
+      "46"
+    ],
+    "cqzone": [
+      "35"
+    ],
     "timezone": "0",
     "ccode": "854",
     "aname": "Burkina Faso",
@@ -42823,7 +45415,9 @@
       "JK11",
       "JK12"
     ],
-    "prefix": ["XT"],
+    "prefix": [
+      "XT"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "bf.png",
@@ -42840,10 +45434,14 @@
     "dxcc": "482",
     "cc": "ZM",
     "ccc": "ZMB",
-    "name": "赞比亚",
+    "name": "Zambia",
     "continent": "AF",
-    "ituzone": ["53"],
-    "cqzone": ["36"],
+    "ituzone": [
+      "53"
+    ],
+    "cqzone": [
+      "36"
+    ],
     "timezone": "2",
     "ccode": "894",
     "aname": "Zambia",
@@ -42896,7 +45494,11 @@
       "KI51",
       "KI60"
     ],
-    "prefix": ["=4U/ON6TT/M", "9I", "9J"],
+    "prefix": [
+      "=4U/ON6TT/M",
+      "9I",
+      "9J"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "zm.png",
@@ -42913,15 +45515,30 @@
     "dxcc": "483",
     "cc": "TG",
     "ccc": "TGO",
-    "name": "多哥",
+    "name": "Togo",
     "continent": "AF",
-    "ituzone": ["46"],
-    "cqzone": ["35"],
+    "ituzone": [
+      "46"
+    ],
+    "cqzone": [
+      "35"
+    ],
     "timezone": "0",
     "ccode": "768",
     "aname": "Togo",
-    "mh": ["IK90", "IK91", "JJ06", "JJ07", "JJ08", "JJ09", "JK00", "JK01"],
-    "prefix": ["5V"],
+    "mh": [
+      "IK90",
+      "IK91",
+      "JJ06",
+      "JJ07",
+      "JJ08",
+      "JJ09",
+      "JK00",
+      "JK01"
+    ],
+    "prefix": [
+      "5V"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "tg.png",
@@ -42938,15 +45555,27 @@
     "dxcc": "489",
     "cc": "FJ",
     "ccc": "FJI",
-    "name": "康威礁",
+    "name": "Conway Reef",
     "continent": "OC",
-    "ituzone": ["56"],
-    "cqzone": ["32"],
+    "ituzone": [
+      "56"
+    ],
+    "cqzone": [
+      "32"
+    ],
     "timezone": "12",
     "ccode": "242",
     "aname": "Conway Reef",
-    "mh": ["RG78"],
-    "prefix": ["=3D20CR", "=3D2C", "=3D2CI", "=3D2CR", "=3D2CY"],
+    "mh": [
+      "RG78"
+    ],
+    "prefix": [
+      "=3D20CR",
+      "=3D2C",
+      "=3D2CI",
+      "=3D2CR",
+      "=3D2CY"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "fj.png",
@@ -42963,15 +45592,24 @@
     "dxcc": "490",
     "cc": "KI",
     "ccc": "KIR",
-    "name": "巴纳巴岛",
+    "name": "Banaba I. (Ocean I.)",
     "continent": "OC",
-    "ituzone": ["65"],
-    "cqzone": ["31"],
+    "ituzone": [
+      "65"
+    ],
+    "cqzone": [
+      "31"
+    ],
     "timezone": "12",
     "ccode": "296",
     "aname": "Banaba I. (Ocean I.)",
-    "mh": ["RI49", "RJ40"],
-    "prefix": ["T33"],
+    "mh": [
+      "RI49",
+      "RJ40"
+    ],
+    "prefix": [
+      "T33"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "ki.png",
@@ -42988,10 +45626,14 @@
     "dxcc": "492",
     "cc": "YE",
     "ccc": "YEM",
-    "name": "也门",
+    "name": "Yemen",
     "continent": "AS",
-    "ituzone": ["39"],
-    "cqzone": ["21"],
+    "ituzone": [
+      "39"
+    ],
+    "cqzone": [
+      "21"
+    ],
     "timezone": "3",
     "ccode": "887",
     "aname": "Yemen",
@@ -43031,7 +45673,11 @@
       "LK68",
       "LK72"
     ],
-    "prefix": ["7O", "=7O2A", "=7O6T"],
+    "prefix": [
+      "7O",
+      "=7O2A",
+      "=7O6T"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "ye.png",
@@ -43048,10 +45694,14 @@
     "dxcc": "497",
     "cc": "HR",
     "ccc": "HRV",
-    "name": "克罗地亚",
+    "name": "Croatia",
     "continent": "EU",
-    "ituzone": ["28"],
-    "cqzone": ["15"],
+    "ituzone": [
+      "28"
+    ],
+    "cqzone": [
+      "15"
+    ],
     "timezone": "1",
     "ccode": "191",
     "aname": "Croatia",
@@ -43114,14 +45764,24 @@
     "dxcc": "499",
     "cc": "SI",
     "ccc": "SVN",
-    "name": "斯洛文尼亚",
+    "name": "Slovenia",
     "continent": "EU",
-    "ituzone": ["28"],
-    "cqzone": ["15"],
+    "ituzone": [
+      "28"
+    ],
+    "cqzone": [
+      "15"
+    ],
     "timezone": "1",
     "ccode": "705",
     "aname": "Slovenia",
-    "mh": ["JN65", "JN66", "JN75", "JN76", "JN86"],
+    "mh": [
+      "JN65",
+      "JN66",
+      "JN75",
+      "JN76",
+      "JN86"
+    ],
     "prefix": [
       "S5",
       "=S51LGT/LH",
@@ -43146,10 +45806,14 @@
     "dxcc": "501",
     "cc": "BA",
     "ccc": "BIH",
-    "name": "波斯尼亚和黑塞哥维那",
+    "name": "Bosnia-Herzegovina",
     "continent": "EU",
-    "ituzone": ["28"],
-    "cqzone": ["15"],
+    "ituzone": [
+      "28"
+    ],
+    "cqzone": [
+      "15"
+    ],
     "timezone": "1",
     "ccode": "70",
     "aname": "Bosnia-Herzegovina",
@@ -43165,7 +45829,10 @@
       "JN94",
       "JN95"
     ],
-    "prefix": ["E7", "=YU4WU"],
+    "prefix": [
+      "E7",
+      "=YU4WU"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "ba.png",
@@ -43182,15 +45849,27 @@
     "dxcc": "502",
     "cc": "MK",
     "ccc": "MKD",
-    "name": "北马其顿",
+    "name": "Macedonia",
     "continent": "EU",
-    "ituzone": ["28"],
-    "cqzone": ["15"],
+    "ituzone": [
+      "28"
+    ],
+    "cqzone": [
+      "15"
+    ],
     "timezone": "1",
     "ccode": "807",
     "aname": "Macedonia",
-    "mh": ["KN00", "KN01", "KN02", "KN11", "KN12"],
-    "prefix": ["Z3"],
+    "mh": [
+      "KN00",
+      "KN01",
+      "KN02",
+      "KN11",
+      "KN12"
+    ],
+    "prefix": [
+      "Z3"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "mk.png",
@@ -43207,10 +45886,14 @@
     "dxcc": "503",
     "cc": "CZ",
     "ccc": "CZE",
-    "name": "捷克",
+    "name": "Czech Republic",
     "continent": "EU",
-    "ituzone": ["28"],
-    "cqzone": ["15"],
+    "ituzone": [
+      "28"
+    ],
+    "cqzone": [
+      "15"
+    ],
     "timezone": "1",
     "ccode": "203",
     "aname": "Czech Republic",
@@ -43253,10 +45936,14 @@
     "dxcc": "504",
     "cc": "SK",
     "ccc": "SVK",
-    "name": "斯洛伐克",
+    "name": "Slovak Republic",
     "continent": "EU",
-    "ituzone": ["28"],
-    "cqzone": ["15"],
+    "ituzone": [
+      "28"
+    ],
+    "cqzone": [
+      "15"
+    ],
     "timezone": "1",
     "ccode": "703",
     "aname": "Slovak Republic",
@@ -43272,7 +45959,9 @@
       "KN18",
       "KN19"
     ],
-    "prefix": ["OM"],
+    "prefix": [
+      "OM"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "sk.png",
@@ -43289,14 +45978,20 @@
     "dxcc": "505",
     "cc": "TW",
     "ccc": "TWN",
-    "name": "中国东沙群岛",
+    "name": "Pratas I.",
     "continent": "AS",
-    "ituzone": ["44"],
-    "cqzone": ["24"],
+    "ituzone": [
+      "44"
+    ],
+    "cqzone": [
+      "24"
+    ],
     "timezone": "8",
     "ccode": "158",
     "aname": "Pratas I.",
-    "mh": ["OL80"],
+    "mh": [
+      "OL80"
+    ],
     "prefix": [
       "BM9P",
       "BN9P",
@@ -43324,15 +46019,23 @@
     "dxcc": "506",
     "cc": "PH",
     "ccc": "PHL",
-    "name": "中国黄岩岛",
+    "name": "Scarborough Reef",
     "continent": "AS",
-    "ituzone": ["50"],
-    "cqzone": ["27"],
+    "ituzone": [
+      "50"
+    ],
+    "cqzone": [
+      "27"
+    ],
     "timezone": "8",
     "ccode": "608",
     "aname": "Scarborough Reef",
-    "mh": ["OK85"],
-    "prefix": ["=BS7H"],
+    "mh": [
+      "OK85"
+    ],
+    "prefix": [
+      "=BS7H"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "cn.png",
@@ -43349,15 +46052,26 @@
     "dxcc": "507",
     "cc": "SB",
     "ccc": "SLB",
-    "name": "特莫图省",
+    "name": "Temotu Province",
     "continent": "OC",
-    "ituzone": ["51"],
-    "cqzone": ["28"],
+    "ituzone": [
+      "51"
+    ],
+    "cqzone": [
+      "28"
+    ],
     "timezone": "11",
     "ccode": "90",
     "aname": "Temotu Province",
-    "mh": ["RH29", "RH38", "RH39", "RI30"],
-    "prefix": ["H40"],
+    "mh": [
+      "RH29",
+      "RH38",
+      "RH39",
+      "RI30"
+    ],
+    "prefix": [
+      "H40"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "sb.png",
@@ -43374,14 +46088,20 @@
     "dxcc": "508",
     "cc": "PF",
     "ccc": "PYF",
-    "name": "奥斯亚群岛",
+    "name": "Austral I.",
     "continent": "OC",
-    "ituzone": ["63"],
-    "cqzone": ["32"],
+    "ituzone": [
+      "63"
+    ],
+    "cqzone": [
+      "32"
+    ],
     "timezone": "-10",
     "ccode": "258",
     "aname": "Austral I.",
-    "mh": ["BG37"],
+    "mh": [
+      "BG37"
+    ],
     "prefix": [
       "=FO/AC4LN/A",
       "=FO/DF6IC",
@@ -43441,14 +46161,25 @@
     "dxcc": "509",
     "cc": "FR",
     "ccc": "FRA",
-    "name": "马克萨斯岛",
+    "name": "Marquesas Is.",
     "continent": "OC",
-    "ituzone": ["63"],
-    "cqzone": ["31"],
+    "ituzone": [
+      "63"
+    ],
+    "cqzone": [
+      "31"
+    ],
     "timezone": "-10",
     "ccode": "250",
     "aname": "Marquesas Is.",
-    "mh": ["BI90", "BI91", "BI92", "CH09", "CI00", "CI01"],
+    "mh": [
+      "BI90",
+      "BI91",
+      "BI92",
+      "CH09",
+      "CI00",
+      "CI01"
+    ],
     "prefix": [
       "=FO/AC4LN/M",
       "=FO/DJ7RJ",
@@ -43500,15 +46231,24 @@
     "dxcc": "510",
     "cc": "PS",
     "ccc": "PSE",
-    "name": "巴勒斯坦",
+    "name": "Palestine",
     "continent": "AS",
-    "ituzone": ["39"],
-    "cqzone": ["20"],
+    "ituzone": [
+      "39"
+    ],
+    "cqzone": [
+      "20"
+    ],
     "timezone": "2",
     "ccode": "275",
     "aname": "Palestine",
-    "mh": ["KM71", "KM72"],
-    "prefix": ["E4"],
+    "mh": [
+      "KM71",
+      "KM72"
+    ],
+    "prefix": [
+      "E4"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "ps.png",
@@ -43525,15 +46265,27 @@
     "dxcc": "511",
     "cc": "TL",
     "ccc": "TLS",
-    "name": "东帝汶",
+    "name": "Timor-Leste",
     "continent": "OC",
-    "ituzone": ["54"],
-    "cqzone": ["28"],
+    "ituzone": [
+      "54"
+    ],
+    "cqzone": [
+      "28"
+    ],
     "timezone": "8",
     "ccode": "626",
     "aname": "Timor-Leste",
-    "mh": ["PI20", "PI21", "PI30", "PI31"],
-    "prefix": ["=4U1ET", "4W"],
+    "mh": [
+      "PI20",
+      "PI21",
+      "PI30",
+      "PI31"
+    ],
+    "prefix": [
+      "=4U1ET",
+      "4W"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "tl.png",
@@ -43550,14 +46302,20 @@
     "dxcc": "512",
     "cc": "GB",
     "ccc": "GBR",
-    "name": "切斯特菲尔德岛",
+    "name": "Chesterfield Is.",
     "continent": "OC",
-    "ituzone": ["55"],
-    "cqzone": ["30"],
+    "ituzone": [
+      "55"
+    ],
+    "cqzone": [
+      "30"
+    ],
     "timezone": "11",
     "ccode": "826",
     "aname": "Chesterfield Is.",
-    "mh": ["QH90"],
+    "mh": [
+      "QH90"
+    ],
     "prefix": [
       "=FK8C/AA7JV",
       "=FK8IK/C",
@@ -43584,15 +46342,28 @@
     "dxcc": "513",
     "cc": "PN",
     "ccc": "PCN",
-    "name": "迪西岛",
+    "name": "Ducie I.",
     "continent": "OC",
-    "ituzone": ["63"],
-    "cqzone": ["32"],
+    "ituzone": [
+      "63"
+    ],
+    "cqzone": [
+      "32"
+    ],
     "timezone": "-9",
     "ccode": "612",
     "aname": "Ducie I.",
-    "mh": ["CG75"],
-    "prefix": ["=VP6D", "=VP6DI", "=VP6DIA", "=VP6DX", "=VP6UU", "=VP6UU/VP6D"],
+    "mh": [
+      "CG75"
+    ],
+    "prefix": [
+      "=VP6D",
+      "=VP6DI",
+      "=VP6DIA",
+      "=VP6DX",
+      "=VP6UU",
+      "=VP6UU/VP6D"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "pn.png",
@@ -43609,15 +46380,27 @@
     "dxcc": "514",
     "cc": "ME",
     "ccc": "MNE",
-    "name": "黑山共和国",
+    "name": "Montenegro",
     "continent": "EU",
-    "ituzone": ["28"],
-    "cqzone": ["15"],
+    "ituzone": [
+      "28"
+    ],
+    "cqzone": [
+      "15"
+    ],
     "timezone": "1",
     "ccode": "499",
     "aname": "Montenegro",
-    "mh": ["JN91", "JN92", "JN93", "KN02", "KN03"],
-    "prefix": ["4O"],
+    "mh": [
+      "JN91",
+      "JN92",
+      "JN93",
+      "KN02",
+      "KN03"
+    ],
+    "prefix": [
+      "4O"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "me.png",
@@ -43634,14 +46417,20 @@
     "dxcc": "515",
     "cc": "US",
     "ccc": "USA",
-    "name": "斯温斯岛",
+    "name": "Swains I.",
     "continent": "OC",
-    "ituzone": ["62"],
-    "cqzone": ["32"],
+    "ituzone": [
+      "62"
+    ],
+    "cqzone": [
+      "32"
+    ],
     "timezone": "-11",
     "ccode": "840",
     "aname": "Swains I.",
-    "mh": ["AH48"],
+    "mh": [
+      "AH48"
+    ],
     "prefix": [
       "=KH6BK/KH8",
       "=KH8/WH7S",
@@ -43666,14 +46455,20 @@
     "dxcc": "516",
     "cc": "FR",
     "ccc": "FRA",
-    "name": "圣巴泰勒米岛",
+    "name": "Saint Barthélemy",
     "continent": "NA",
-    "ituzone": ["0"],
-    "cqzone": ["0"],
+    "ituzone": [
+      "0"
+    ],
+    "cqzone": [
+      "0"
+    ],
     "timezone": "0",
     "ccode": "250",
     "aname": "Saint Barthélemy",
-    "mh": ["FK87"],
+    "mh": [
+      "FK87"
+    ],
     "prefix": [
       "FJ",
       "=TO2D",
@@ -43706,15 +46501,23 @@
     "dxcc": "517",
     "cc": "AN",
     "ccc": "ANT",
-    "name": "库拉索岛",
+    "name": "Curacao",
     "continent": "SA",
-    "ituzone": ["11"],
-    "cqzone": ["9"],
+    "ituzone": [
+      "11"
+    ],
+    "cqzone": [
+      "9"
+    ],
     "timezone": "-4",
     "ccode": "530",
     "aname": "Curacao",
-    "mh": ["FK52"],
-    "prefix": ["PJ2"],
+    "mh": [
+      "FK52"
+    ],
+    "prefix": [
+      "PJ2"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "cw.png",
@@ -43731,15 +46534,25 @@
     "dxcc": "518",
     "cc": "SX",
     "ccc": "SXM",
-    "name": " 圣马丁岛",
+    "name": "Sint Maarten",
     "continent": "SA",
-    "ituzone": ["11"],
-    "cqzone": ["8"],
+    "ituzone": [
+      "11"
+    ],
+    "cqzone": [
+      "8"
+    ],
     "timezone": "0",
     "ccode": "534",
     "aname": "Sint Maarten",
-    "mh": ["FK88"],
-    "prefix": ["PJ0", "PJ7", "PJ8"],
+    "mh": [
+      "FK88"
+    ],
+    "prefix": [
+      "PJ0",
+      "PJ7",
+      "PJ8"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "sx.png",
@@ -43756,15 +46569,24 @@
     "dxcc": "519",
     "cc": "AN",
     "ccc": "ANT",
-    "name": "萨巴岛圣及尤斯特歇斯岛",
+    "name": "Saba & St Eustatius",
     "continent": "NA",
-    "ituzone": ["11"],
-    "cqzone": ["8"],
+    "ituzone": [
+      "11"
+    ],
+    "cqzone": [
+      "8"
+    ],
     "timezone": "-4",
     "ccode": "530",
     "aname": "Saba & St Eustatius",
-    "mh": ["FK87"],
-    "prefix": ["PJ5", "PJ6"],
+    "mh": [
+      "FK87"
+    ],
+    "prefix": [
+      "PJ5",
+      "PJ6"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "an.png",
@@ -43781,15 +46603,23 @@
     "dxcc": "520",
     "cc": "BQ",
     "ccc": "BES",
-    "name": "博奈尔岛",
+    "name": "Bonaire",
     "continent": "SA",
-    "ituzone": ["11"],
-    "cqzone": ["9"],
+    "ituzone": [
+      "11"
+    ],
+    "cqzone": [
+      "9"
+    ],
     "timezone": "0",
     "ccode": "535",
     "aname": "Bonaire",
-    "mh": ["FK52"],
-    "prefix": ["PJ4"],
+    "mh": [
+      "FK52"
+    ],
+    "prefix": [
+      "PJ4"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "nl.png",
@@ -43806,10 +46636,15 @@
     "dxcc": "521",
     "cc": "SS",
     "ccc": "SSD",
-    "name": "南苏丹",
+    "name": "South Sudan (Republic of)",
     "continent": "AF",
-    "ituzone": ["47", "48"],
-    "cqzone": ["34"],
+    "ituzone": [
+      "47",
+      "48"
+    ],
+    "cqzone": [
+      "34"
+    ],
     "timezone": "-3",
     "ccode": "728",
     "aname": "South Sudan (Republic of)",
@@ -43859,7 +46694,10 @@
       "KK61",
       "KK62"
     ],
-    "prefix": ["=ST0R", "Z8"],
+    "prefix": [
+      "=ST0R",
+      "Z8"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "ss.png",
@@ -43876,15 +46714,25 @@
     "dxcc": "522",
     "cc": "XK",
     "ccc": "XKX",
-    "name": "科索沃",
+    "name": "Republic of Kosovo",
     "continent": "EU",
-    "ituzone": ["28"],
-    "cqzone": ["15"],
+    "ituzone": [
+      "28"
+    ],
+    "cqzone": [
+      "15"
+    ],
     "timezone": "1",
     "ccode": "999",
     "aname": "Republic of Kosovo",
-    "mh": ["KN01", "KN02", "KN03"],
-    "prefix": ["Z6"],
+    "mh": [
+      "KN01",
+      "KN02",
+      "KN03"
+    ],
+    "prefix": [
+      "Z6"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "xk.png",
@@ -43901,15 +46749,28 @@
     "dxcc": "289",
     "cc": "UN",
     "ccc": "UNS",
-    "name": "联合国总部",
+    "name": "United Nations HQ",
     "continent": "NA",
-    "ituzone": ["8"],
-    "cqzone": ["5"],
+    "ituzone": [
+      "8"
+    ],
+    "cqzone": [
+      "5"
+    ],
     "timezone": "1",
     "ccode": "999",
     "aname": "United Nations HQ",
-    "mh": ["FN30"],
-    "prefix": ["4U1U", "=4U1UN", "=4U50SPACE", "=4U60UN", "=4U64UN", "=4U70UN"],
+    "mh": [
+      "FN30"
+    ],
+    "prefix": [
+      "4U1U",
+      "=4U1UN",
+      "=4U50SPACE",
+      "=4U60UN",
+      "=4U64UN",
+      "=4U70UN"
+    ],
     "worked": false,
     "confirmed": false,
     "flag": "un.png",
@@ -43926,10 +46787,14 @@
     "dxcc": "-1",
     "cc": "-",
     "ccc": "-",
-    "name": "不详",
+    "name": "-",
     "continent": "-",
-    "ituzone": ["-1"],
-    "cqzone": ["-1"],
+    "ituzone": [
+      "-1"
+    ],
+    "cqzone": [
+      "-1"
+    ],
     "timezone": "-",
     "ccode": "-",
     "aname": "-",

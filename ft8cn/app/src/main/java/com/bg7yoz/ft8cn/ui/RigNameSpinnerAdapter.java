@@ -1,6 +1,6 @@
 package com.bg7yoz.ft8cn.ui;
 /**
- * 电台型号列表。
+ * Rig model list.
  * @author BGY70Z
  * @date 2023-03-20
  */

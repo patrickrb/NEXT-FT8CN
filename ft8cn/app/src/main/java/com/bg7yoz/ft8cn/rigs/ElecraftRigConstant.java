@@ -13,15 +13,15 @@ public class ElecraftRigConstant {
     public static final int DATA = 0x06;
     public static final int CW_R = 0x07;
     public static final int DATA_R = 0x08;
-    public static final int swr_alert_max=30;//相当于3.0
+    public static final int swr_alert_max=30;//equivalent to 3.0
 
-    //PTT状态
+    //PTT state
 
-    //指令集
+    //command set
     private static final String PTT_ON = "TX;";
     private static final String PTT_OFF = "RX;";
     private static final String USB_MODE = "MD2;";
-    private static final String DATA_R_MODE = "MD6;";//TODO---此处要新增DATA_R模式指令
+    private static final String DATA_R_MODE = "MD6;";//TODO---need to add DATA_R mode command here
     private static final String READ_FREQ = "FA;";
     private static final String READ_SWR = "SWR;";
 
@@ -70,7 +70,7 @@ public class ElecraftRigConstant {
 
 
     @SuppressLint("DefaultLocale")
-    public static byte[] setOperationFreq11Byte(long freq) {//用于KENWOOD TS590
+    public static byte[] setOperationFreq11Byte(long freq) {//for KENWOOD TS590
         return String.format("FA%011d;",freq).getBytes();
     }
 

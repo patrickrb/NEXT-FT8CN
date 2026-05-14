@@ -1,6 +1,6 @@
 package com.bg7yoz.ft8cn.ui;
 /**
- * 自定义音频强度的图形控件。
+ * Custom audio level graphic control.
  * @author BGY70Z
  * @date 2023-03-20
  */
@@ -21,8 +21,8 @@ public class VolumeProgress extends View {
     private Paint mRadarPaint;
     private Paint mValuePaint;
 
-    private Path mLinePath;//外部容器形状
-    private Path mValuePath;//内部填充的形状
+    private Path mLinePath;//Outer container shape
+    private Path mValuePath;//Inner fill shape
     private float mPercent=0.45f;
     private int width,high;
 
@@ -70,20 +70,20 @@ public class VolumeProgress extends View {
     }
 
     public void init() {
-        //绘制外部容器
+        //Draw outer container
         mRadarPaint = new Paint();
         mRadarPaint.setAntiAlias(true);
         mRadarPaint.setStrokeWidth(dpToPixel(2));
         mRadarPaint.setStyle(Paint.Style.STROKE);
         mRadarPaint.setColor(radarColor);
 
-        //绘制填充的内容
+        //Draw fill content
         mValuePaint = new Paint();
         mValuePaint.setStrokeWidth(dpToPixel(2));
         mValuePaint.setStyle(Paint.Style.FILL_AND_STROKE);
 
 
-        //绘制外部容器路径
+        //Draw outer container path
         mLinePath = new Path();
         mValuePath = new Path();
 
@@ -92,13 +92,13 @@ public class VolumeProgress extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        //绘制外部容器
+        //Draw outer container
         drawLines(canvas);
-        //绘制每部填充
+        //Draw inner fill
         drawRegion(canvas,mPercent);
     }
 
-    //绘制外部容器，顺时针，O-A-B-C
+    //Draw outer container, clockwise, O-A-B-C
     public void drawLines(Canvas canvas) {
         mRadarPaint.setColor(radarColor);
         mLinePath.reset();
@@ -119,7 +119,7 @@ public class VolumeProgress extends View {
         canvas.drawPath(mLinePath, mRadarPaint);
     }
 
-    //绘制覆盖图层，顺时针，O-Q-P-C
+    //Draw overlay layer, clockwise, O-Q-P-C
     public void drawRegion(Canvas canvas, float percent) {
         if (alarmValue>mPercent) {
             mValuePaint.setColor(valueColor);
@@ -127,8 +127,8 @@ public class VolumeProgress extends View {
             mValuePaint.setColor(alarmColor);
         }
 
-        //直线CB与QH，求出交点坐标P，
-        //其中H点=（是以B点的Y坐标，Q点的X坐标），起始就是QP的延长线
+        //Lines CB and QH, find intersection point P,
+        //where point H = (B's Y coordinate, Q's X coordinate), which is the extension of line QP
        float xa=(1f-percent)*width;
        float ya=(1f-percent)*high;
        float xb=width;
@@ -145,7 +145,7 @@ public class VolumeProgress extends View {
         canvas.drawPath(mValuePath, mValuePaint);
     }
 
-    //求两直线相交的坐标
+    //Find the intersection coordinates of two lines
 
     public void setRadarColor(int radarColor) {
         this.radarColor = radarColor;

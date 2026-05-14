@@ -1,3 +1,3 @@
-请输入您梅登海德网格信息，至少4位，如果是6位，在FT8呼叫时会自动忽略后两位。
-如果您给本APP授权定位的权限，点击输入框旁边的定位按钮，APP会自动计算出您当前所在的网格。
-通过您的网格数据，APP会自动计算发起呼叫的电台与您的距离。
+Please enter your Maidenhead grid locator, at least 4 characters. If you enter 6 characters, the last two will be automatically ignored during FT8 calls.
+If you grant location permission to this app, tap the location button next to the input field and the app will automatically calculate your current grid locator.
+Using your grid data, the app will automatically calculate the distance between your station and the calling station.

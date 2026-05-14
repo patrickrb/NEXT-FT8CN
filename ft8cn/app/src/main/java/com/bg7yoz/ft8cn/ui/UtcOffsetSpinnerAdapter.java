@@ -1,6 +1,6 @@
 package com.bg7yoz.ft8cn.ui;
 /**
- * 时间偏移列表。
+ * Time offset list.
  * @author BGY70Z
  * @date 2023-03-20
  */

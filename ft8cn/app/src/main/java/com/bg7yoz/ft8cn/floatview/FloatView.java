@@ -1,6 +1,6 @@
 package com.bg7yoz.ft8cn.floatview;
 /**
- * FloatButton的主界面
+ * Main view for FloatButton
  * @author BGY70Z
  * @date 2023-03-20
  */
@@ -32,31 +32,31 @@ public class FloatView extends ConstraintLayout {
     }
 
 
-    private int parentViewHeight = 100;//上一级view的高度
-    private int parentViewWidth = 100;//上一级view的宽度
+    private int parentViewHeight = 100;//Parent view height
+    private int parentViewWidth = 100;//Parent view width
     private float mDownX = 0;
     private float mDownY = 0;
     private int lastLeft = 0;
     private int lastTop = 0;
 
 
-    //------------悬浮窗口的属性--------------------
-    private int buttonSize = 96;//按钮的大小
+    //------------Float window properties--------------------
+    private int buttonSize = 96;//Button size
     private final ArrayList<FloatViewButton> buttons = new ArrayList<>();
-    private boolean originalFromTop = false;//是否上下靠边
-    private boolean originalFromLeft = true;//是否左右靠边
-    private int buttonBackgroundResourceId = -1;//按钮的背景
-    private int backgroundResourceId = -1;//浮窗的背景
-    private int buttonMargin = 0;//按钮在浮窗中的边界宽度
-    private int floatMargin = 40;//浮窗距离边界的距离
+    private boolean originalFromTop = false;//Whether to snap to top/bottom edges
+    private boolean originalFromLeft = true;//Whether to snap to left/right edges
+    private int buttonBackgroundResourceId = -1;//Button background
+    private int backgroundResourceId = -1;//Float window background
+    private int buttonMargin = 0;//Button margin width within the float window
+    private int floatMargin = 40;//Float window distance from screen edge
     private FLOAT_BOARD floatBoard = FLOAT_BOARD.LEFT;
 
 
     /**
-     * 构造函数，需要大小
+     * Constructor with size
      *
      * @param context    context
-     * @param buttonSize 按钮大小，正方形
+     * @param buttonSize button size, square
      */
     public FloatView(@NonNull Context context, int buttonSize) {
         this(context);
@@ -116,9 +116,9 @@ public class FloatView extends ConstraintLayout {
     }
 
     /**
-     * 通过按钮的名称删除按钮
+     * Delete a button by name
      *
-     * @param name 按钮的名称
+     * @param name button name
      */
     public void deleteButtonByName(String name) {
         for (int i = buttons.size() - 1; i >= 0; i--) {
@@ -150,10 +150,10 @@ public class FloatView extends ConstraintLayout {
     }
 
     /**
-     * 把dp值转换为像素点
+     * Convert dp value to pixels
      *
-     * @param dp dp值
-     * @return 像素点
+     * @param dp dp value
+     * @return pixels
      */
     private int dpToPixel(int dp) {
         return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp
@@ -162,7 +162,7 @@ public class FloatView extends ConstraintLayout {
     }
 
     /**
-     * 重新设置一下按钮
+     * Reset the button layout
      */
     public void resetView() {
         for (int i = 0; i < buttons.size(); i++) {
@@ -177,7 +177,7 @@ public class FloatView extends ConstraintLayout {
                 buttonLp.topMargin = buttonMargin;
             } else {
                 buttonLp.topToBottom = buttons.get(i - 1).getId();
-                buttonLp.topMargin = buttonMargin+dpToPixel(4);//按钮之间留一点点空隙
+                buttonLp.topMargin = buttonMargin+dpToPixel(4);//Leave a small gap between buttons
             }
             if (i == buttons.size() - 1) {
                 buttonLp.bottomToBottom = ConstraintSet.PARENT_ID;
@@ -192,7 +192,7 @@ public class FloatView extends ConstraintLayout {
     @SuppressLint("ClickableViewAccessibility")
     private void initView() {
         LayoutParams lp = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);// LayoutParams.WRAP_CONTENT);
-        lp.startToStart = ConstraintSet.PARENT_ID;//只连接窗口的左边和上边
+        lp.startToStart = ConstraintSet.PARENT_ID;//Only connect left and top of the window
         lp.topToTop = ConstraintSet.PARENT_ID;
         this.setLayoutParams(lp);
     }
@@ -203,7 +203,7 @@ public class FloatView extends ConstraintLayout {
 
 
     /**
-     * 初始化浮窗的位置，默认在窗口的右侧，
+     * Initialize the float window position, defaults to the right side of the window
      */
     public void initLocation(FLOAT_BOARD float_board) {
         this.floatBoard = float_board;
@@ -215,7 +215,7 @@ public class FloatView extends ConstraintLayout {
             WindowManager wm = (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE);
             width = wm.getDefaultDisplay().getWidth();
             height = wm.getDefaultDisplay().getHeight();
-        } else {//这部分基本没有执行过
+        } else {//This part rarely executes
             width = parentViewWidth;
             height = parentViewHeight;
         }
@@ -240,7 +240,7 @@ public class FloatView extends ConstraintLayout {
     }
 
     /**
-     * 获取父View的高度和宽度
+     * Get parent View height and width
      */
     private void getParentViewHeightAndWidth() {
         View view = (View) getParent();
@@ -281,8 +281,8 @@ public class FloatView extends ConstraintLayout {
 
                 setLayoutLeftTop(lastLeft, lastTop);
 
-                adsorbTopAdnBottom();//吸附上下
-                adsorbLeftAndRight();//吸附左右
+                adsorbTopAdnBottom();//Snap to top/bottom
+                adsorbLeftAndRight();//Snap to left/right
                 break;
             case MotionEvent.ACTION_CANCEL:
                 break;

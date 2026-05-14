@@ -1,6 +1,6 @@
 package com.bg7yoz.ft8cn.database;
 /**
- * 各电台信号的列表。文件在rigaddress.txt中
+ * List of rig models. Data file is rigaddress.txt
  * @author BGY70Z
  * @date 2023-03-20
  */
@@ -26,7 +26,7 @@ public class RigNameList {
 
     public RigNameList(Context context) {
         this.context = context;
-        //电台数据导入到内存
+        //Load rig data into memory
         getRigNamesFromFile();
     }
 
@@ -39,9 +39,9 @@ public class RigNameList {
     }
 
     /**
-     * 获取各电台参数数据，以列表的索引值查找，如果没有返回默认值以空
-     * @param index 索引
-     * @return 电台参数
+     * Gets rig parameter data by list index; returns default empty value if not found
+     * @param index index
+     * @return rig parameters
      */
     public RigName getRigNameByIndex(int index){
         if (index==-1||index>=rigList.size()){
@@ -52,7 +52,7 @@ public class RigNameList {
     }
 
     /**
-     * rigaddress.txt文件中读出各电台参数列表。
+     * Reads rig parameter list from the rigaddress.txt file.
      */
     public void getRigNamesFromFile(){
         AssetManager assetManager = context.getAssets();
@@ -69,7 +69,7 @@ public class RigNameList {
             inputStream.close();
         } catch (IOException e) {
             e.printStackTrace();
-            Log.e(TAG, "从地址列表文件提取数据出错："+e.getMessage() );
+            Log.e(TAG, "Error extracting data from address list file: "+e.getMessage() );
         }
     }
     public String getRigNameInfo(int index){
@@ -83,7 +83,7 @@ public class RigNameList {
                 break;
             }
         }
-        if (index==-1){//如果没找到，就返回第一个，“空”
+        if (index==-1){//If not found, return the first one, "empty"
             return 0;
         }else {
             return index;
@@ -91,10 +91,10 @@ public class RigNameList {
     }
 
     /**
-     * 从InputStream中读出字符串
-     * @param inputStream 输入流
-     * @param deLimited 每行数据的分隔符。
-     * @return String 返回字符串,如果失败，返回null
+     * Reads strings from an InputStream
+     * @param inputStream input stream
+     * @param deLimited delimiter for each line of data
+     * @return String returns a string, or null if it fails
      */
     public static String[] getLinesFromInputStream(InputStream inputStream, String deLimited) {
         try {
@@ -110,9 +110,9 @@ public class RigNameList {
 
     public static class RigName {
         public String modelName;
-        public int address;//地址
-        public int bauRate;//波特率
-        public int instructionSet;//指令集0:icom,1:yaesu 2代,2:yaesu 3代
+        public int address;//address
+        public int bauRate;//baud rate
+        public int instructionSet;//command set 0:icom, 1:yaesu gen 2, 2:yaesu gen 3
 
         public RigName(String modelName, int address, int bauRate,int instructionSet) {
             this.modelName = modelName;
@@ -122,7 +122,7 @@ public class RigNameList {
         }
 
         /**
-         * 把String格式数据转换成电台型号ICOM IC-705,A4,19200
+         * Converts string format data to rig model, e.g. ICOM IC-705,A4,19200
          * @param s
          */
         public RigName(String s) {

@@ -1,9 +1,9 @@
-关于清空缓存
+About Clear Cache
 
-FT8CN在数据库中保存有您关注的呼号、通联过程中的消息（可以通过后台查看）。可以通过清空缓存操作彻底删除这些保存的临时数据。
+FT8CN stores your followed callsigns and contact messages in the database (viewable through the web interface). You can use the clear cache function to permanently delete this temporary data.
 
-清空缓存不会删除QSO数据。
+Clearing the cache does not delete QSO data.
 
-清空“关注的呼号”，关注的呼号是在平时通联是您关注的呼号，在该呼号出现时，会自动添加的呼叫列表中，方便自动呼叫。清空关注的呼号，是把所有关注的呼号清空。
+Clear "Followed Callsigns": Followed callsigns are callsigns you followed during contacts. When these callsigns appear, they are automatically added to the call list for convenient auto-calling. Clearing followed callsigns removes all followed callsigns.
 
-清空“解码的消息”，FT8CN可以保存所有解码的消息，这些消息暂时没有在FT8CN界面中显示，可以在后台中查看和查询。
+Clear "Decoded Messages": FT8CN can save all decoded messages. These messages are not currently displayed in the FT8CN interface but can be viewed and queried through the web interface.

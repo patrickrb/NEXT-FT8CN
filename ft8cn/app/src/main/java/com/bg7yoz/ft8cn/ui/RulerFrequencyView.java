@@ -1,6 +1,6 @@
 package com.bg7yoz.ft8cn.ui;
 /**
- * 频率标尺，自定义控件。
+ * Frequency ruler, custom view.
  * @author BGY70Z
  * @date 2023-03-20
  */
@@ -41,10 +41,10 @@ public class RulerFrequencyView extends View {
     }
 
     /**
-     * 把dp值转换为像素点
+     * Convert dp value to pixels
      *
-     * @param dp dp值
-     * @return 像素点
+     * @param dp dp value
+     * @return pixels
      */
     private int dpToPixel(int dp) {
         return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp
@@ -98,14 +98,14 @@ public class RulerFrequencyView extends View {
 
             }
         }
-        //主线
+        //Main line
         rect.top = 1;
         rect.left = 0;
         rect.right = rulerWidth;
         rect.bottom = (int) (rect.top + 2*getResources().getDisplayMetrics().density);
         canvas.drawRect(rect, paint);
 
-        //当前频率范围标记。红色块
+        //Current frequency range marker. Red block
         Rect mark = new Rect();
         paint.setColor(0xffff0000);
         mark.top = 1;

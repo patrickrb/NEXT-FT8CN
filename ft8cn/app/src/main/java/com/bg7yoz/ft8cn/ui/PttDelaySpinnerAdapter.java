@@ -1,6 +1,6 @@
 package com.bg7yoz.ft8cn.ui;
 /**
- * PTT延迟发射列表。
+ * PTT transmit delay list.
  * @author BGY70Z
  * @date 2023-03-20
  */

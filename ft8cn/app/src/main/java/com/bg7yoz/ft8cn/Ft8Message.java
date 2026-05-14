@@ -1,12 +1,12 @@
 package com.bg7yoz.ft8cn;
 /**
- * Ft8Message类是用于展现FT8信号的解析结果。
- * 包括UTC时间、信噪比、时间偏移、频率、得分、消息的文本、消息的哈希值
+ * Ft8Message class represents the parsed result of an FT8 signal.
+ * Includes UTC time, SNR, time offset, frequency, score, message text, message hash.
  * ----2022.5.6-----
- * time_sec可能是时间偏移，目前还不能完全确定，待后续解决。
- * 1.为方便在列表中显示，各要素通过Get方法，返回String类型的结果。
+ * time_sec may be the time offset; this is not fully confirmed yet and needs further investigation.
+ * 1. For convenient display in lists, each element returns a String result via Get methods.
  * -----2022.5.13---
- * 2.增加i3,n3消息类型内容
+ * 2. Added i3, n3 message type content.
  * @author BG7YOZ
  * @date 2022.5.6
  */
@@ -32,45 +32,45 @@ public class Ft8Message {
     private static String TAG = "Ft8Message";
     public int i3 = 0;
     public int n3 = 0;
-    public int signalFormat = FT8Common.FT8_MODE;//是不是FT8格式的消息
-    public long utcTime;//UTC时间
-    public boolean isValid;//是否是有效信息
-    public int snr = 0;//信噪比
-    public float time_sec = 0;//时间偏移(秒)
-    public float freq_hz = 0;//频率
-    public int score = 0;//得分
-    public int messageHash;//消息的哈希
+    public int signalFormat = FT8Common.FT8_MODE;//whether this is an FT8 format message
+    public long utcTime;//UTC time
+    public boolean isValid;//whether this is valid information
+    public int snr = 0;//signal-to-noise ratio
+    public float time_sec = 0;//time offset (seconds)
+    public float freq_hz = 0;//frequency
+    public int score = 0;//score
+    public int messageHash;//message hash
 
-    public String callsignFrom = null;//发起呼叫的呼号
-    public String callsignTo = null;//接收呼叫的呼号
+    public String callsignFrom = null;//callsign initiating the call
+    public String callsignTo = null;//callsign receiving the call
 
-    public String modifier = null;//目标呼号的修饰符 如CQ POTA BG7YOZ OL50中的POTA
+    public String modifier = null;//modifier for target callsign, e.g. POTA in "CQ POTA BG7YOZ OL50"
 
     public String extraInfo = null;
     public String maidenGrid = null;
 
-    public String rtty_state =null;//RTTY RU(i3=3类型)的地区名，两位字母如：CA、AL
-    public int r_flag=0;//RTTY RU,EU VHF(i3=3,i3=5类型)的R标志
-    public int rtty_tu;//RTTY RU(i3=3类型)的TU;标志
-    public int eu_serial;//EU VHF i3=5中的序列号
-    public String arrl_rac;//Field day 消息，Arrl rac
-    public String arrl_class;//Field day 发射级别
-    public String dx_call_to2;//DXpediton 消息中第二个接收的呼号
+    public String rtty_state =null;//RTTY RU (i3=3 type) state name, two-letter code e.g.: CA, AL
+    public int r_flag=0;//RTTY RU, EU VHF (i3=3, i3=5 type) R flag
+    public int rtty_tu;//RTTY RU (i3=3 type) TU; flag
+    public int eu_serial;//EU VHF i3=5 serial number
+    public String arrl_rac;//Field day message, ARRL RAC
+    public String arrl_class;//Field day transmit class
+    public String dx_call_to2;//DXpedition message second receiving callsign
 
-    public int report = -100;//当-100时，意味着没有信号报告
-    public long callFromHash10 = 0;//12位长度的哈希码
-    public long callFromHash12 = 0;//12位长度的哈希码
-    public long callFromHash22 = 0;//12位长度的哈希码
-    public long callToHash10 = 0;//12位长度的哈希码
-    public long callToHash12 = 0;//12位长度的哈希码
-    public long callToHash22 = 0;//12位长度的哈希码
-    //private boolean isCallMe = false;//是不是CALL我的消息
-    public long band;//载波频率
+    public int report = -100;//when -100, means no signal report
+    public long callFromHash10 = 0;//10-bit hash code
+    public long callFromHash12 = 0;//12-bit hash code
+    public long callFromHash22 = 0;//22-bit hash code
+    public long callToHash10 = 0;//10-bit hash code
+    public long callToHash12 = 0;//12-bit hash code
+    public long callToHash22 = 0;//22-bit hash code
+    //private boolean isCallMe = false;//whether this is a message calling me
+    public long band;//carrier frequency
 
-    public String fromWhere = null;//用于显示地址
-    public String toWhere = null;//用于显示地址
+    public String fromWhere = null;//used for displaying address/location
+    public String toWhere = null;//used for displaying address/location
 
-    public boolean isQSL_Callsign = false;//是不是通联过的呼号
+    public boolean isQSL_Callsign = false;//whether this callsign has been previously contacted
 
     public static MessageHashMap hashList = new MessageHashMap();
 
@@ -101,7 +101,7 @@ public class Ft8Message {
     }
 
     /**
-     * 创建一个解码消息对象，要确定信号的格式。
+     * Create a decoded message object; the signal format must be specified.
      *
      * @param signalFormat
      */
@@ -110,7 +110,7 @@ public class Ft8Message {
     }
 
     public Ft8Message(String callTo, String callFrom, String extraInfo) {
-        //如果是自由文本，callTo=CQ,callFrom=MyCall,extraInfo=freeText
+        //If free text, callTo=CQ, callFrom=MyCall, extraInfo=freeText
         this.callsignTo = callTo.toUpperCase();
         this.callsignFrom = callFrom.toUpperCase();
         this.extraInfo = extraInfo.toUpperCase();
@@ -122,13 +122,13 @@ public class Ft8Message {
         this.extraInfo = extraInfo;
         this.i3 = i3;
         this.n3 = n3;
-        this.utcTime = UtcTimer.getSystemTime();//用于显示TX
+        this.utcTime = UtcTimer.getSystemTime();//used for displaying TX
     }
 
     /**
-     * 创建一个解码消息对象
+     * Create a decoded message object.
      *
-     * @param message 如果message不为null，则创建一个与message内容一样的解码消息对象
+     * @param message If message is not null, create a decoded message object with the same content as message.
      */
     public Ft8Message(Ft8Message message) {
         if (message != null) {
@@ -144,13 +144,13 @@ public class Ft8Message {
 
             messageHash = message.messageHash;
 
-            if (message.callsignFrom.equals("<...>")) {//到哈希列表中查一下
+            if (message.callsignFrom.equals("<...>")) {//look up in the hash list
                 callsignFrom = hashList.getCallsign(new long[]{message.callFromHash10, message.callFromHash12, message.callFromHash22});
             } else {
                 callsignFrom = message.callsignFrom;
             }
 
-            if (message.callsignTo.equals("<...>")) {//到哈希列表中查一下
+            if (message.callsignTo.equals("<...>")) {//look up in the hash list
                 callsignTo = hashList.getCallsign(new long[]{message.callToHash10, message.callToHash12, message.callToHash22});
             } else {
                 callsignTo = message.callsignTo;
@@ -175,7 +175,7 @@ public class Ft8Message {
             i3 = message.i3;
             n3 = message.n3;
 
-            //把哈希和呼号对应关系保存到列表里
+            //Save the hash-to-callsign mapping to the list
             hashList.addHash(callToHash10, callsignTo);
             hashList.addHash(callToHash12, callsignTo);
             hashList.addHash(callToHash22, callsignTo);
@@ -183,12 +183,12 @@ public class Ft8Message {
             hashList.addHash(callFromHash12, callsignFrom);
             hashList.addHash(callFromHash22, callsignFrom);
 
-            //rtty ru(i3=3)消息新增的
+            //Added for RTTY RU (i3=3) messages
             rtty_tu = message.rtty_tu;
             rtty_state = message.rtty_state;
             r_flag =message.r_flag;
             eu_serial =message.eu_serial;
-            //field day 增加的
+            //Added for Field Day
             arrl_class = message.arrl_class;
             arrl_rac = message.arrl_rac;
             dx_call_to2 = message.dx_call_to2;
@@ -199,9 +199,9 @@ public class Ft8Message {
     }
 
     /**
-     * 返回解码消息的所使用的频率
+     * Return the frequency used by the decoded message.
      *
-     * @return String 为方便显示，返回值是字符串
+     * @return String For convenient display, the return value is a string.
      */
     @SuppressLint("DefaultLocale")
     public String getFreq_hz() {
@@ -217,21 +217,21 @@ public class Ft8Message {
     }
 
     /**
-     * 返回解码消息的文本内容
+     * Return the text content of the decoded message.
      *
      * @return String
      */
     @SuppressLint("DefaultLocale")
     public String getMessageText() {
 
-        if (i3 == 0 && n3 == 0) {//说明是自由文本
+        if (i3 == 0 && n3 == 0) {//this is free text
             if (extraInfo.length() < 13) {
                 return String.format("%-13s", extraInfo.toUpperCase());
             } else {
                 return extraInfo.toUpperCase().substring(0, 13);
             }
         }
-        if (i3 == 0 && (n3 == 3 || n3 == 4)) {//说明是野外日
+        if (i3 == 0 && (n3 == 3 || n3 == 4)) {//this is Field Day
             return String.format("%s %s %s%d%s %s"
                     ,callsignTo
                     ,callsignFrom
@@ -242,7 +242,7 @@ public class Ft8Message {
             );
         }
 
-        if (i3 == 0 && (n3 == 1)) {//说明是DXpedition
+        if (i3 == 0 && (n3 == 1)) {//this is DXpedition
 
             return String.format("%s RR73; %s %s %s%d"
                     ,callsignTo
@@ -253,7 +253,7 @@ public class Ft8Message {
             );
         }
 
-        if (i3 == 3){//说明是RTTY RU消息
+        if (i3 == 3){//this is an RTTY RU message
             return String.format("%s%s %s %s%d %s"
                     ,rtty_tu==0?"":"TU; "
                     ,callsignTo
@@ -263,7 +263,7 @@ public class Ft8Message {
                     ,rtty_state);
         }
 
-        if (i3 == 5){//说明是EU VHF <G4ABC> <PA9XYZ> R 570007 JO22DB
+        if (i3 == 5){//this is EU VHF <G4ABC> <PA9XYZ> R 570007 JO22DB
             return String.format("%s %s %s%d%04d %s"
                     , callsignTo
                     , callsignFrom
@@ -274,7 +274,7 @@ public class Ft8Message {
                     ).trim();
         }
 
-        if (modifier != null && checkIsCQ()) {//修饰符
+        if (modifier != null && checkIsCQ()) {//modifier
             if (modifier.matches("[0-9]{3}|[A-Z]{1,4}")) {
                 return String.format("%s %s %s %s", callsignTo, modifier, callsignFrom, extraInfo).trim();
             }
@@ -284,9 +284,9 @@ public class Ft8Message {
 
 
     /**
-     * 返回消息的延迟时间。可能不一定对，待研究清楚解码算法后在确定
+     * Return the time delay of the message. May not be accurate; needs confirmation after the decode algorithm is fully understood.
      *
-     * @return String 为方便显示，返回值是字符串。
+     * @return String For convenient display, the return value is a string.
      */
     @SuppressLint("DefaultLocale")
     public String getDt() {
@@ -294,18 +294,18 @@ public class Ft8Message {
     }
 
     /**
-     * 返回解码消息的信噪比dB值，该计算方法还为搞定，暂时用000代替
+     * Return the SNR dB value of the decoded message. The calculation method is not yet finalized; temporarily using 000 as placeholder.
      *
-     * @return String 为方便显示，返回值是字符串
+     * @return String For convenient display, the return value is a string.
      */
     public String getdB() {
         return String.valueOf(snr);
     }
 
     /**
-     * 检查消息处于奇数还是偶数序列。
+     * Check whether the message is in an odd or even sequence.
      *
-     * @return boolean 处于偶数序列true，第0,30秒为true
+     * @return boolean True for even sequence; seconds 0 and 30 are true.
      */
     public boolean isEvenSequence() {
         if (signalFormat == FT8Common.FT8_MODE) {
@@ -316,9 +316,9 @@ public class Ft8Message {
     }
 
     /**
-     * 显示当前消息处于哪一个时间序列的。
+     * Show which time sequence the current message belongs to.
      *
-     * @return String 以时间周期取模为结果。
+     * @return String Result is the modulo of the time cycle.
      */
     @SuppressLint("DefaultLocale")
     public int getSequence() {
@@ -339,12 +339,12 @@ public class Ft8Message {
     }
 
     /**
-     * 消息中含有mycall呼号的
+     * Check if the message contains my callsign.
      *
      * @return boolean
      */
     public boolean inMyCall() {
-        //判断是不是自己，有时候，我的呼号带/P或/R，对方可能会丢掉这个后缀
+        //Check if it's me; sometimes my callsign has /P or /R suffix, and the other party might drop that suffix
 //        if (GeneralVariables.myCallsign.length() == 0) return false;
 
          return GeneralVariables.checkIsMyCallsign(this.callsignFrom)
@@ -353,52 +353,52 @@ public class Ft8Message {
 //                || this.callsignTo.contains(GeneralVariables.myCallsign);
     }
 /*
-i3.n3类型	基本目的	消息范例	位字段标签
-0.0	自由文本（Free Text）	TNX BOB 73 GL	f71
-0.1	远征（DXpedition）	K1ABC RR73; W9XYZ <KH1/KH7Z> -08	c28 c28 h10 r5
-0.3	野外日（Field Day）	K1ABC W9XYZ 6A WI	c28 c28 R1 n4 k3 S7
-0.4	野外日（Field Day）	W9XYZ K1ABC R 17B EMA	c28 c28 R1 n4 k3 S7
-0.5	遥测（Telemetry）	123456789ABCDEF012	t71
-1.	标准消息（Std Msg）	K1ABC/R W9XYZ/R R EN37	c28 r1 c28 r1 R1 g15
-2.	欧盟甚高频（EU VHF）	G4ABC/P PA9XYZ JO22	c28 p1 c28 p1 R1 g15
-3.	电传（RTTY RU）	K1ABC W9XYZ 579 WI	t1 c28 c28 R1 r3 s13
-4.	非标准呼叫（NonStd Call）	<W9XYZ> PJ4/K1ABC RRR	h12 c58 h1 r2 c1
-5.	欧盟甚高频（EU VHF）	<G4ABC> <PA9XYZ> R 570007 JO22DB	h12 h22 R1 r3 s11 g25
+i3.n3 Type   Purpose              Example                                    Bit Field Labels
+0.0          Free Text            TNX BOB 73 GL                              f71
+0.1          DXpedition           K1ABC RR73; W9XYZ <KH1/KH7Z> -08          c28 c28 h10 r5
+0.3          Field Day            K1ABC W9XYZ 6A WI                          c28 c28 R1 n4 k3 S7
+0.4          Field Day            W9XYZ K1ABC R 17B EMA                      c28 c28 R1 n4 k3 S7
+0.5          Telemetry            123456789ABCDEF012                          t71
+1.           Standard Msg         K1ABC/R W9XYZ/R R EN37                     c28 r1 c28 r1 R1 g15
+2.           EU VHF               G4ABC/P PA9XYZ JO22                        c28 p1 c28 p1 R1 g15
+3.           RTTY RU              K1ABC W9XYZ 579 WI                         t1 c28 c28 R1 r3 s13
+4.           NonStd Call          <W9XYZ> PJ4/K1ABC RRR                      h12 c58 h1 r2 c1
+5.           EU VHF               <G4ABC> <PA9XYZ> R 570007 JO22DB           h12 h22 R1 r3 s11 g25
 */
 /*
-标签	传达的信息
-c1	第一个呼号是CQ；h12被忽略
-c28	标准呼号、CQ、DE、QRZ或22位哈希
-c58	非标准呼号，最多11个字符
-f71	自由文本，最多13个字符
-g15	4字符网格、报告、RRR、RR73、73或空白
-g25	6字符网格
-h1	哈希呼号是第二个呼号
-h10	哈希呼号，10位
-h12	哈希呼号，12位
-h22	哈希呼号，22位
-k3	野外日级别（Class）：A、B、…F
-n4	发射器数量：1-16、17-32
-p1	呼号后缀 /P
-r1	呼号后缀/R
-r2	RRR、RR73、73、或空白
-r3	报告：2-9，显示为529-599或52-59
-R1	R
-r5	报告：-30到+30，仅偶数
-s11	序列号（0-2047）
-s13	序列号（0-7999）或州/省
-S7	ARRL/RAC部分
-t1	TU;
-t71	遥感数据，最多18位十六进制数字
+Label   Information Conveyed
+c1      First callsign is CQ; h12 is ignored
+c28     Standard callsign, CQ, DE, QRZ, or 22-bit hash
+c58     Non-standard callsign, up to 11 characters
+f71     Free text, up to 13 characters
+g15     4-char grid, report, RRR, RR73, 73, or blank
+g25     6-char grid
+h1      Hashed callsign is the second callsign
+h10     Hashed callsign, 10 bits
+h12     Hashed callsign, 12 bits
+h22     Hashed callsign, 22 bits
+k3      Field Day class: A, B, ...F
+n4      Number of transmitters: 1-16, 17-32
+p1      Callsign suffix /P
+r1      Callsign suffix /R
+r2      RRR, RR73, 73, or blank
+r3      Report: 2-9, displayed as 529-599 or 52-59
+R1      R
+r5      Report: -30 to +30, even numbers only
+s11     Serial number (0-2047)
+s13     Serial number (0-7999) or state/province
+S7      ARRL/RAC section
+t1      TU;
+t71     Telemetry data, up to 18 hex digits
 
 */
 
 
     /**
-     * 获取发送者的呼号，fromTo的最终解决办法要在decode.c中解决---TO DO----
-     * 可获取发送者呼号的消息类型为i1，i2,i3,i4,i5,i0.1,i0.3,i0.4
+     * Get the sender's callsign. The final solution for fromTo needs to be resolved in decode.c ---TO DO----
+     * Message types that can provide the sender's callsign: i1, i2, i3, i4, i5, i0.1, i0.3, i0.4
      *
-     * @return String 返回呼号
+     * @return String Returns the callsign.
      */
     public String getCallsignFrom() {
         if (callsignFrom == null) {
@@ -408,7 +408,7 @@ t71	遥感数据，最多18位十六进制数字
     }
 
     /**
-     * 获取通联信息中的接收呼号
+     * Get the receiving callsign from the QSO information.
      *
      * @return
      */
@@ -427,23 +427,23 @@ t71	遥感数据，最多18位十六进制数字
     }
 
     /**
-     * 从消息中获取梅登海德网格信息
+     * Get the Maidenhead grid information from the message.
      *
-     * @return String，梅登海德网格，如果没有返回""。
+     * @return String, Maidenhead grid; returns "" if not found.
      */
     public String getMaidenheadGrid(DatabaseOpr db) {
-        if (i3 != 1 && i3 != 2) {//一般只有i3=1或i3=2，标准消息，甚高频消息才有网格
-            return GeneralVariables.getGridByCallsign(callsignFrom, db);//到对应表中找一下网格
+        if (i3 != 1 && i3 != 2) {//Generally only i3=1 or i3=2 (standard messages, VHF messages) contain grid
+            return GeneralVariables.getGridByCallsign(callsignFrom, db);//look up grid in the mapping table
         } else {
             String[] msg = getMessageText().split(" ");
             if (msg.length < 1) {
-                return GeneralVariables.getGridByCallsign(callsignFrom, db);//到对应表中找一下网格
+                return GeneralVariables.getGridByCallsign(callsignFrom, db);//look up grid in the mapping table
             }
             String s = msg[msg.length - 1];
             if (MaidenheadGrid.checkMaidenhead(s)) {
                 return s;
-            } else {//不是网格信息，就可能是信号报告
-                return GeneralVariables.getGridByCallsign(callsignFrom, db);//到对应表中找一下网格
+            } else {//not grid info, likely a signal report
+                return GeneralVariables.getGridByCallsign(callsignFrom, db);//look up grid in the mapping table
             }
         }
     }
@@ -454,9 +454,9 @@ t71	遥感数据，最多18位十六进制数字
     }
 
     /**
-     * 查看消息是不是CQ
+     * Check if the message is CQ.
      *
-     * @return boolean 是CQ返回true
+     * @return boolean Returns true if CQ.
      */
     public boolean checkIsCQ() {
         String s = callsignTo.trim().split(" ")[0];
@@ -468,9 +468,9 @@ t71	遥感数据，最多18位十六进制数字
     }
 
     /**
-     * 查消息的类型。i3.n3。
+     * Get the message type (i3.n3).
      *
-     * @return 消息类型
+     * @return Message type
      */
 
     public String getCommandInfo() {
@@ -478,11 +478,11 @@ t71	遥感数据，最多18位十六进制数字
     }
 
     /**
-     * 查消息的类型。i3.n3。
+     * Get the message type (i3.n3).
      *
      * @param i i3
      * @param n n3
-     * @return 消息类型
+     * @return Message type
      */
     @SuppressLint("DefaultLocale")
     public static String getCommandInfoByI3N3(int i, int n) {
@@ -513,16 +513,16 @@ t71	遥感数据，最多18位十六进制数字
         return "";
     }
 
-    //获取发送者的传输对象
+    //Get the sender's transmit callsign object
     public TransmitCallsign getFromCallTransmitCallsign() {
         return new TransmitCallsign(this.i3, this.n3, this.callsignFrom, freq_hz
                 , this.getSequence()
                 , snr);
     }
 
-    //获取发送者的传输对象，注意！！！与发送者的时序是相反的！！！
+    //Get the receiver's transmit callsign object. NOTE: the sequence is opposite to the sender's!!!
     public TransmitCallsign getToCallTransmitCallsign() {
-        if (report == -100) {//如果消息中没有信号报告，就用发送方的SNR代替
+        if (report == -100) {//if no signal report in the message, use the sender's SNR instead
             return new TransmitCallsign(this.i3, this.n3, this.callsignTo, freq_hz, (this.getSequence() + 1) % 2, snr);
         } else {
             return new TransmitCallsign(this.i3, this.n3, this.callsignTo, freq_hz, (this.getSequence() + 1) % 2, report);

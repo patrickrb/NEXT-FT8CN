@@ -1,6 +1,6 @@
 package com.bg7yoz.ft8cn.log;
 /**
- * 通联日志的列表。
+ * QSO log list.
  * @author BGY70Z
  * @date 2023-03-20
  */
@@ -51,16 +51,16 @@ public class LogQSLAdapter extends RecyclerView.Adapter<LogQSLAdapter.LogQSLItem
     }
 
     /**
-     * 清空记录列表
+     * Clear record list
      */
     public void clearRecords(){
         qslRecords.clear();
     }
 
     /**
-     * 删除日志
+     * Delete log entry
      *
-     * @param position 在列表中的位置
+     * @param position position in the list
      */
     public void deleteRecord(int position) {
         mainViewModel.databaseOpr.deleteQSLByID(qslRecords.get(position).id);
@@ -72,10 +72,10 @@ public class LogQSLAdapter extends RecyclerView.Adapter<LogQSLAdapter.LogQSLItem
     }
 
     /**
-     * 修改手工确认项
+     * Modify manual confirmation status
      *
-     * @param position 列表位置
-     * @param b        状态
+     * @param position list position
+     * @param b        status
      */
     public void setRecordIsQSL(int position, boolean b) {
         qslRecords.get(position).isQSL = b;
@@ -143,7 +143,7 @@ public class LogQSLAdapter extends RecyclerView.Adapter<LogQSLAdapter.LogQSLItem
                     R.color.is_not_qsl_text_color));
         }
 
-        //查呼号的位置
+        //Look up the callsign's location
         if (holder.record.where == null) {
             setQueryHolderCallsign(holder);
         } else if (holder.record.where.equals("")) {
@@ -153,7 +153,7 @@ public class LogQSLAdapter extends RecyclerView.Adapter<LogQSLAdapter.LogQSLItem
         }
     }
 
-    //查呼号的归属地
+    //Look up the callsign's location
     private void setQueryHolderCallsign(@NonNull LogQSLAdapter.LogQSLItemHolder holder) {
         GeneralVariables.callsignDatabase.getCallsignInformation(holder.record.getCall()
                 , new OnAfterQueryCallsignLocation() {
@@ -162,13 +162,8 @@ public class LogQSLAdapter extends RecyclerView.Adapter<LogQSLAdapter.LogQSLItem
                         holder.logQSLWhereTextView.post(new Runnable() {
                             @Override
                             public void run() {
-                                if (GeneralVariables.isChina) {
-                                    holder.logQSLWhereTextView.setText(callsignInfo.CountryNameCN);
-                                    holder.record.where = callsignInfo.CountryNameCN;
-                                } else {
-                                    holder.logQSLWhereTextView.setText(callsignInfo.CountryNameEn);
-                                    holder.record.where = callsignInfo.CountryNameEn;
-                                }
+                                holder.logQSLWhereTextView.setText(callsignInfo.CountryNameEn);
+                                holder.record.where = callsignInfo.CountryNameEn;
                             }
                         });
 
@@ -214,7 +209,7 @@ public class LogQSLAdapter extends RecyclerView.Adapter<LogQSLAdapter.LogQSLItem
                 public void onCreateContextMenu(ContextMenu contextMenu, View view
                         , ContextMenu.ContextMenuInfo contextMenuInfo) {
                     view.setTag(getAdapterPosition());
-                    //添加菜单的参数i1:组，i2:id值，i3:显示顺序
+                    //Menu parameters: i1=group, i2=id value, i3=display order
                     if (record.isQSL) {
                         contextMenu.add(0, 0, 0
                                 , String.format(GeneralVariables.getStringFromResource(R.string.qsl_cancel_confirmation)

@@ -1,6 +1,6 @@
 package com.bg7yoz.ft8cn.ui;
 /**
- * 瀑布图自定义控件。
+ * Waterfall view custom control.
  *
  * @author BGY70Z
  * @date 2023-03-20
@@ -36,8 +36,8 @@ import java.util.List;
 import java.util.ListIterator;
 
 public class WaterfallView extends View {
-    private int blockHeight = 2;//色块高度
-    private float freq_width = 1;//频率的宽度
+    private int blockHeight = 2;//Color block height
+    private float freq_width = 1;//Frequency width
     private final int cycle = 2;
     private final int symbols = 93;
     private int lastSequential = 0;
@@ -48,7 +48,7 @@ public class WaterfallView extends View {
     private final Paint fontPaint = new Paint();
     private final Paint messagePaint = new Paint();
     private final Paint textLinePaint = new Paint();
-//    private final Paint messagePaintBack = new Paint();//消息背景
+//    private final Paint messagePaintBack = new Paint();//Message background
     private final Paint utcPaint = new Paint();
     Paint linearPaint = new Paint();
     private final Paint utcPainBack = new Paint();
@@ -57,7 +57,7 @@ public class WaterfallView extends View {
 
     private int touch_x = -1;
     private int freq_hz = -1;
-    private boolean drawMessage = false;//是否画消息内容
+    private boolean drawMessage = false;//Whether to draw message content
 
     public WaterfallView(Context context) {
         super(context);
@@ -74,10 +74,10 @@ public class WaterfallView extends View {
 
 
     /**
-     * 把dp值转换为像素点
+     * Convert dp value to pixels
      *
-     * @param dp dp值
-     * @return 像素点
+     * @param dp dp value
+     * @return pixels
      */
     private int dpToPixel(int dp) {
         return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp
@@ -93,7 +93,7 @@ public class WaterfallView extends View {
         _canvas = new Canvas(lastBitMap);
         Paint blackPaint = new Paint();
         blackPaint.setColor(0xFF000000);
-        _canvas.drawRect(0, 0, w, h, blackPaint);//先把背景画黑，防止文字重叠
+        _canvas.drawRect(0, 0, w, h, blackPaint);//Paint background black first to prevent text overlap
 
         //linePaint = new Paint();
         linePaint.setColor(0xff990000);
@@ -129,7 +129,7 @@ public class WaterfallView extends View {
 
         //messagePaintBack = new Paint();
 //        messagePaintBack.setTextSize(dpToPixel(11));
-//        messagePaintBack.setColor(0xff000000);//背景不透明
+//        messagePaintBack.setColor(0xff000000);//Opaque background
 //        messagePaintBack.setAntiAlias(true);
 //        messagePaintBack.setDither(true);
 //        messagePaintBack.setStrokeWidth(dpToPixel(3));
@@ -149,7 +149,7 @@ public class WaterfallView extends View {
 
         //utcPainBack = new Paint();
         utcPainBack.setTextSize(dpToPixel(10));
-        utcPainBack.setColor(0xff000000);//背景不透明
+        utcPainBack.setColor(0xff000000);//Opaque background
         utcPainBack.setAntiAlias(true);
         utcPainBack.setDither(true);
         utcPainBack.setStrokeWidth(dpToPixel(4));
@@ -159,7 +159,7 @@ public class WaterfallView extends View {
 
         pathStart = blockHeight * 2;
         pathEnd = blockHeight * 90;
-        if (pathEnd < 130 * getResources().getDisplayMetrics().density) {//为了保证能写的下
+        if (pathEnd < 130 * getResources().getDisplayMetrics().density) {//Ensure there's enough space to write text
             pathEnd = 130 * getResources().getDisplayMetrics().density;
         }
 
@@ -173,8 +173,8 @@ public class WaterfallView extends View {
         super.onDraw(canvas);
         canvas.drawBitmap(lastBitMap, 0, 0, null);
 
-        //计算频率
-        if (touch_x > 0) {//画触摸线
+        //Calculate frequency
+        if (touch_x > 0) {//Draw touch line
             freq_hz = Math.round(3000f * (float) touch_x / (float) getWidth());
             if (freq_hz > 2900) {
                 freq_hz = 2900;
@@ -199,10 +199,10 @@ public class WaterfallView extends View {
     }
 
     public void setWaveData(int[] data, int sequential, List<Ft8Message> msgs) {
-        if (drawMessage&& msgs!=null){//把需要画的消息复制出来防止多线程访问冲突
+        if (drawMessage&& msgs!=null){//Copy messages to draw to prevent multi-thread access conflicts
             messages=new ArrayList<>(msgs);
         }else {
-            messages.clear();//当设定不标记消息时，要清空原来的消息
+            messages.clear();//When message marking is disabled, clear existing messages
         }
 
         if (data == null) {
@@ -217,7 +217,7 @@ public class WaterfallView extends View {
 
         int[] colors = new int[data.length];
 
-        //画分割线
+        //Draw divider line
         if (sequential != lastSequential) {
             Bitmap bitmap = Bitmap.createBitmap(lastBitMap, 0, 0, getWidth(), getHeight() - blockHeight);
             _canvas.drawBitmap(bitmap, 0, blockHeight, linePaint);
@@ -231,17 +231,17 @@ public class WaterfallView extends View {
         }
         lastSequential = sequential;
 
-        //色块分布
+        //Color block distribution
         for (int i = 0; i < data.length; i++) {
 
 
-            if (data[i] < 128) {//低于一半的音量，用蓝色0~256
+            if (data[i] < 128) {//Below half volume, use blue 0~256
                 colors[i] = 0xff000000 | (data[i] << 1);
             } else if (data[i] < 192) {
-                colors[i] = 0xff0000ff | (((data[i] - 127)) << 10);//放大4倍
+                colors[i] = 0xff0000ff | (((data[i] - 127)) << 10);//Amplify 4x
 //                colors[i] = 0xff000000 | (data[i] * 2 * 256 + 255);
             } else {
-                colors[i] = 0xff00ffff | (((data[i] - 127)) << 18);//放大4倍
+                colors[i] = 0xff00ffff | (((data[i] - 127)) << 18);//Amplify 4x
             }
         }
         LinearGradient linearGradient = new LinearGradient(0, 0, getWidth() * 2, 0, colors
@@ -253,14 +253,14 @@ public class WaterfallView extends View {
         bitmap.recycle();
         _canvas.drawRect(0, 0, getWidth(), blockHeight, linearPaint);
 
-        //消息有3种：普通、CQ、有我
+        //Messages have 3 types: normal, CQ, and involving me
         if (drawMessage && messages != null) {
-            drawMessage = false;//只画一遍
+            drawMessage = false;//Only draw once
             //fontPaint.setTextAlign(Paint.Align.LEFT);
             //fontPaint.setStrikeThruText(true);
             for (Ft8Message msg : messages) {
 
-                if (msg.inMyCall()) {//与我有关
+                if (msg.inMyCall()) {//Related to me
                     messagePaint.setColor(0xffffb2b2);
                     textLinePaint.setColor(0xffffb2b2);
                 } else if (msg.checkIsCQ()) {//CQ
@@ -279,10 +279,10 @@ public class WaterfallView extends View {
 
 
 //                _canvas.drawTextOnPath(msg.getMessageText(true), path
-//                        , 0, 0, messagePaintBack);//消息背景
+//                        , 0, 0, messagePaintBack);//Message background
                 _canvas.drawTextOnPath(msg.getMessageText(true), path
-                        , 0, 0, messagePaint);//消息
-                if (GeneralVariables.checkQSLCallsign(msg.getCallsignFrom())) {//画删除线
+                        , 0, 0, messagePaint);//Message
+                if (GeneralVariables.checkQSLCallsign(msg.getCallsignFrom())) {//Draw strikethrough line
                     float text_len = messagePaint.measureText(msg.getMessageText(true));
                     float text_start = ((pathEnd- pathStart)-text_len)/2;
                     float text_high =dpToPixel(4);//messagePaint.getFontSpacing()/2;

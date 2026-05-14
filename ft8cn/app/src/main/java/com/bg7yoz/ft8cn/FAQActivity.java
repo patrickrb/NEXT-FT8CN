@@ -1,6 +1,6 @@
 package com.bg7yoz.ft8cn;
 /**
- * 问题收集的WebView。
+ * WebView for collecting questions/feedback.
  * @author BGY70Z
  * @date 2023-03-20
  */
@@ -23,13 +23,13 @@ public class FAQActivity extends AppCompatActivity {
 
         WebView webView = (WebView) findViewById(R.id.faqWebView);
         webView.getSettings().setJavaScriptEnabled(true);
-        webView.getSettings().setDomStorageEnabled(true);       // 这个要加上
+        webView.getSettings().setDomStorageEnabled(true);       // This needs to be enabled
 
-        /* 获得 webview url，请注意url单词是product而不是products，products是旧版本的参数，用错地址将不能成功提交 */
+        /* Get the webview url. Note the word is "product" not "products"; "products" is an old parameter and using the wrong address will prevent successful submission */
         //String url = "https://www.qrz.com/db/BG7YOZ";
         String url = "https://support.qq.com/product/415890";
 
-        /* WebView 内嵌 Client 可以在APP内打开网页而不是跳出到浏览器 */
+        /* Embedded WebViewClient allows opening web pages within the app instead of launching an external browser */
         WebViewClient webViewClient = new WebViewClient() {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {

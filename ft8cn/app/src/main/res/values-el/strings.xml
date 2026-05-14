@@ -98,10 +98,10 @@
     <string name="telemetry">Τηλεμετρία</string>>
 
 
-    <!--   配置栏-->
+    <!--   Configuration bar -->
     <string name="offset_time_sec">%.1f δευτ</string>>
 
-    <!--   频谱图-->
+    <!--   Spectrum chart -->
     <string name="decoding_takes_milliseconds">Αποκωδικοποιήθηκαν : %d ms</string>>
     <string name="sound_frequency_is_set_to">Η συχνότητα ήχουν είναι %d Hz</string>>
     <string name="de_noise">Αφαίρεση θόρυβου</string>
@@ -109,27 +109,27 @@
     <string name="markMessage">Δείξε μήνυμα</string>
     <string name="unMarkMessage">Κρύψε μήνυμα</string>
 
-    <!--   选择蓝牙设备对话框-->
+    <!--   Select Bluetooth device dialog -->
     <string name="select_bluetooth_device">Επιλογή συσκευής Bluetooth : %s</string>
 
-    <!--   PTT延迟毫秒数-->
+    <!--   PTT delay in milliseconds -->
     <string name="milliseconds">%d ms</string>
-    <!--   不回复次数-->
+    <!--   No-reply count -->
     <string name="ignore">Αγνόηση</string>
     <string name="times">%d φορές</string>
 
-    <!--   呼叫栏-->
+    <!--   Call bar -->
     <string name="sound_frequency_is">Συχν : %.0f Hz</string>
     <string name="target_callsign">Στόχος : %s</string>
     <string name="transmission_sequence">Sequential : %d</string>
     <string name="message_count">Messages(%d)</string>
 
-    <!--   日志导出栏栏-->
+    <!--   Log export bar -->
     <string name="export_info">Παρακαλώ χρησιμοποιήστε τον web browser των άλλων συσκευών για εξαγωγή στο παρασκήνιο στο ίδιο LAN που είναι αυτή η συσκευή.\nΔώσε το URL στον browser:\nhttp://%s:%d</string>
-    <!--   发射监管-->
+    <!--   Transmit supervision -->
     <string name="minutes">%d Λεπτά</string>
 
-    <!--   发射监管-->
+    <!--   Transmit supervision -->
     <string name="freq_syn">Κλείδωμα TX=RX</string>
     <string name="freq_asyn">Tx/Rx Split</string>
     <string name="auto_follow_cq">Αυτόματο track CQ</string>
@@ -137,22 +137,22 @@
     <string name="automatic_call_following">Αυτόματη παρακολούθηση κλήσης</string>
     <string name="do_not_call_the_following_callsign">Οχι παρακολούθηση διακριτικού</string>
 
-    <!--   解码栏-->
+    <!--   Decode bar -->
     <string name="message_count_count">Μυνήματα s(%d/%d)</string>
     <string name="average_offset_seconds">Μέσο Offset : %.2f δευτ</string>
     <string name="my_grid">Grid : %s</string>
 
-    <!--   解码列表-->
+    <!--   Decode list -->
     <string name="tracking_receiver">Δέκτης παρακολούθησης %s(%s)</string>
     <string name="calling_receiver">Δέκτης κλήσης %s(%s)</string>
     <string name="reply_to">Απάντηση σε %s(%s)</string>
     <string name="tracking">Παρακολούθηση %s(%s)</string>
     <string name="calling">Κλήση %s(%s)</string>
 
-    <!--   网格距离计算-->
+    <!--   Grid distance calculation -->
     <string name="distance">%.0f km</string>
 
-    <!--   日志列表-->
+    <!--   Log list -->
     <string name="confirmed">Επιβεβαιώθηκε</string>
     <string name="unconfirmed">Χωρίς επιβεβαίωση</string>
     <string name="lotw_confirmation">Επιβεβαίωση LoTW</string>
@@ -165,7 +165,7 @@
     <string name="log_cancel_confirmation">Ακύρωση επιβεβαίωσης (%s)</string>
     <string name="log_manual_confirmation">Manual confirmation (%s)</string>
 
-    <!--   QSL日志列表-->
+    <!--   QSL log list -->
     <string name="qsl_grid">Grid:%s</string>
     <string name="qsl_start_time">Χρόνος έναρξης : %s</string>
     <string name="qsl_end_time">Χρόνος τερματισμού : %s</string>

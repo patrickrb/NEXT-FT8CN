@@ -64,7 +64,7 @@
                 app:layout_constraintEnd_toStartOf="@+id/guideline6"
                 app:layout_constraintStart_toEndOf="@+id/clearMycallListImageButton"
                 app:layout_constraintTop_toBottomOf="@+id/baseFrequencyTextView"
-                tools:text="发射时序:0"
+                tools:text="TX sequence:0"
                 tools:visibility="visible" />
 
             <TextView
@@ -99,7 +99,7 @@
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="@+id/guideline6"
                 app:layout_constraintTop_toTopOf="parent"
-                tools:text="发射频率:2000Hz" />
+                tools:text="TX freq:2000Hz" />
 
             <ImageButton
                 android:id="@+id/setTransmitImageButton"

@@ -1,6 +1,6 @@
 package com.bg7yoz.ft8cn;
 /**
- * 呼号的哈希码列表。
+ * Hash code list for callsigns.
  * @author BGY70Z
  * @date 2023-03-20
  */
@@ -13,11 +13,11 @@ public class MessageHashMap extends HashMap<Long,String> {
     private static final String TAG = "MessageHashMap";
 
     /**
-     * 添加呼号和哈希码到列表
+     * Add a callsign and its hash code to the list
      *
-     * @param hashCode 哈希码
-     * @param callsign 呼号
-     * @return false说明已经存在了
+     * @param hashCode hash code
+     * @param callsign callsign
+     * @return false means it already exists
      */
     public synchronized void addHash(long hashCode, String callsign) {
         //if (callsign.length()<2){return;}
@@ -32,7 +32,7 @@ public class MessageHashMap extends HashMap<Long,String> {
         put(hashCode,callsign);
     }
 
-    //检查是否存在这个hash码
+    //Check if this hash code exists
     public boolean checkHash(long hashCode) {
        return get(hashCode)!=null;
 //        for (HashStruct hash : this) {
@@ -43,7 +43,7 @@ public class MessageHashMap extends HashMap<Long,String> {
 //        return false;
     }
 
-    //通过哈希码查呼号
+    //Look up callsign by hash code
     public synchronized String getCallsign(long[] hashCode) {
         for (long l : hashCode) {
             if (checkHash(l)) {

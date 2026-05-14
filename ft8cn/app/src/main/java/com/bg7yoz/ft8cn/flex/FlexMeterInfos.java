@@ -3,7 +3,7 @@ package com.bg7yoz.ft8cn.flex;
 import java.util.HashMap;
 
 /**
- * Meter的ID与定义映射表，启动Flex后，Meter的ID值并不是固定不变的，所以要保存一个Hash表
+ * Mapping table of Meter IDs to definitions. After starting Flex, Meter ID values are not fixed, so a hash table is needed.
  * @author BGY70Z
  * @date 2023-03-20
  */
@@ -20,9 +20,9 @@ public class FlexMeterInfos extends HashMap<Integer, FlexMeterInfos.FlexMeterInf
     }
 
     /**
-     * 根据电台回复的消息，获取每个METER的ID与meter定义的映射表
+     * Based on the radio's response message, builds the mapping table of each METER's ID to its meter definition
      *
-     * @param content 消息
+     * @param content message
      */
     public synchronized void setMeterInfos(String content) {
         String[] temp;
@@ -51,7 +51,7 @@ public class FlexMeterInfos extends HashMap<Integer, FlexMeterInfos.FlexMeterInf
                     }
                     if (val[0].toLowerCase().contains(".nam")) {
                         meterInfo.nam = val[1];
-                        //为了方便MeterList快速查询
+                        //For fast MeterList lookup
                         if (val[1].toUpperCase().contains("LEVEL")) {
                             sMeterId = index;
                         } else if (val[1].toUpperCase().contains("PATEMP")) {
@@ -106,7 +106,7 @@ public class FlexMeterInfos extends HashMap<Integer, FlexMeterInfos.FlexMeterInf
     }
 
     /**
-     * 查Meter得id,没有返回-1
+     * Looks up Meter ID; returns -1 if not found
      *
      * @return id
      */

@@ -1,7 +1,7 @@
 package com.bg7yoz.ft8cn.rigs;
 
 /**
- * 电台状态的回调。
+ * Callback for rig state changes.
  * @author BGY70Z
  * @date 2023-03-20
  */

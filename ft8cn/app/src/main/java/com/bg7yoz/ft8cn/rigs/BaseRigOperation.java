@@ -1,6 +1,6 @@
 package com.bg7yoz.ft8cn.rigs;
 /**
- * 电台相关计算。
+ * Radio-related calculations.
  * @author BGY70Z
  * @date 2023-03-20
  */
@@ -13,13 +13,13 @@ public class BaseRigOperation {
         return String.format("%d.%03dMHz", freq / 1000000, (freq % 1000000) / 1000);
     }
     /**
-     * 检查是不是在WSPR2的频段内
+     * Check if the frequency is within a WSPR2 band
      *
-     * @param freq 频率
-     * @return 是否
+     * @param freq frequency
+     * @return true if within WSPR2 band
      */
     public static boolean checkIsWSPR2(long freq) {
-        //freq=电台频率+声音频率
+        //freq = rig frequency + audio frequency
         return (freq >= 137400 && freq <= 137600)       //2190m
                 || (freq >= 475400 && freq <= 475600)   //630m
                 || (freq >= 1838000 && freq <= 1838200)  //160m
@@ -40,10 +40,10 @@ public class BaseRigOperation {
     }
 
     /**
-     * 通过频率获取波长
+     * Get wavelength from frequency
      *
-     * @param freq 频率
-     * @return 波长
+     * @param freq frequency
+     * @return wavelength string
      */
     @SuppressLint("DefaultLocale")
     public static String getMeterFromFreq(long freq) {
@@ -103,18 +103,18 @@ public class BaseRigOperation {
         }  //0.23m
         else {
             return calculationMeterFromFreq(freq);
-        }//不在范围内，就计算一下
+        }//not in a known range, so calculate it
     }
 
     @SuppressLint("DefaultLocale")
     private static String calculationMeterFromFreq(Long freq) {
         if (freq == 0) return "";
         float meter = 300000000f / (float) freq;
-        if (meter < 1) {//以厘米为单位
+        if (meter < 1) {//in centimeters
             return String.format("%dcm", Math.round(meter * 10) * 10);
-        } else if (meter < 20) {//小于20米，以米为单位
+        } else if (meter < 20) {//less than 20 meters, in meters
             return String.format("%dm", Math.round(meter));
-        } else {//大于20M,以10米为单位
+        } else {//greater than 20m, in units of 10 meters
             return String.format("%dm", Math.round(meter / 10) * 10);
         }
     }

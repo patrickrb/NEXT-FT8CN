@@ -1,6 +1,6 @@
 package com.bg7yoz.ft8cn.flex;
 /**
- * 简单封装的Tcp类，用于Flex的命令操作
+ * Simple TCP wrapper class for Flex command operations
  * @author BGY70Z
  * @date 2023-03-20
  */
@@ -97,9 +97,9 @@ public class RadioTcpClient {
                 }
                 InetAddress ipAddress = InetAddress.getByName(ip);
                 mSocket = new Socket(ipAddress, port);
-                //设置不延时发送
+                //Set no-delay sending
                 //mSocket.setTcpNoDelay(true);
-                //设置输入输出缓冲流大小
+                //Set input/output buffer stream size
                 //mSocket.setSendBufferSize(8*1024);
                 //mSocket.setReceiveBufferSize(8*1024);
                 if (isConnect()) {
@@ -110,7 +110,7 @@ public class RadioTcpClient {
                     isStop = false;
                     connectSuccess();
                 }
-                /* 此处这样做没什么意义不大，真正的socket未连接还是靠心跳发送，等待服务端回应比较好，一段时间内未回应，则socket未连接成功 */
+                /* This approach has limited value here; true socket disconnection should rely on heartbeat sending and waiting for server response; no response within a period means connection failed */
                 else {
                     connectFail();
                     return;

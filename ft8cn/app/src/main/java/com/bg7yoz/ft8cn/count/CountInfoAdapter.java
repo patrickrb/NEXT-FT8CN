@@ -1,6 +1,6 @@
 package com.bg7yoz.ft8cn.count;
 /**
- * 用于列出统计结果的Adapter
+ * Adapter for listing statistics results.
  *
  * @author BGY70Z
  * @date 2023-03-20
@@ -110,9 +110,9 @@ public class CountInfoAdapter extends RecyclerView.Adapter<CountInfoAdapter.Coun
 
         BarChart barChart;
         barChart=(BarChart) holder.countChart;
-        barChart.getLegend().setEnabled(false);//不显示图例
-        barChart.getXAxis().setDrawLabels(true);//显示X轴标签
-        barChart.getXAxis().setDrawGridLines(false);//不显示X网格线
+        barChart.getLegend().setEnabled(false);//hide legend
+        barChart.getXAxis().setDrawLabels(true);//show X-axis labels
+        barChart.getXAxis().setDrawGridLines(false);//hide X-axis grid lines
         barChart.getXAxis().setPosition(XAxis.XAxisPosition.TOP);
         barChart.getXAxis().setTextColor(context.getResources().getColor(R.color.text_view_color));
         barChart.getLegend().setTextColor(context.getResources().getColor(R.color.text_view_color));
@@ -133,7 +133,7 @@ public class CountInfoAdapter extends RecyclerView.Adapter<CountInfoAdapter.Coun
         BarData barData = new BarData(dataSet);
         barData.setValueTextColor(context.getResources().getColor(R.color.text_view_color));
         barChart.setData(barData);
-        //显示标签信息
+        //display label info
         IndexAxisValueFormatter formatter=new IndexAxisValueFormatter(){
             @Override
             public String getFormattedValue(float value) {

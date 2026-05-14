@@ -1,6 +1,7 @@
 package com.bg7yoz.ft8cn.grid_tracker;
 /**
- * OsmMapView中画通联线、画网格等操作。地图是sqlite模式，采用离线方式（nightUSGS4Layer）。
+ * Operations for drawing QSO lines and grids in OsmMapView. The map uses SQLite format
+ * with an offline tile source (nightUSGS4Layer).
  * @author BGY70Z
  * @date 2023-03-20
  */
@@ -61,7 +62,7 @@ import java.util.Set;
 public class GridOsmMapView {
     private static final String TAG = "GridOsmMapView";
 
-    public enum GridMode {//网格的模式
+    public enum GridMode {//Grid display mode
         QSX, QSO, QSL
     }
 
@@ -70,9 +71,9 @@ public class GridOsmMapView {
     }
 
     private final MainViewModel mainViewModel;
-    //public static int COLOR_QSX = 0x7f0000ff;//红色50%，未通联过
-    //public static int COLOR_QSO = 0x7fffff00;//黄色50%，通联过
-    //public static int COLOR_QSL = 0x7fff0000;//红色50%，确认过
+    //public static int COLOR_QSX = 0x7f0000ff;//Red 50%, not yet contacted
+    //public static int COLOR_QSO = 0x7fffff00;//Yellow 50%, contacted
+    //public static int COLOR_QSL = 0x7fff0000;//Red 50%, confirmed
     private boolean showCQ = true;
     private boolean showQSX = false;
 
@@ -83,7 +84,7 @@ public class GridOsmMapView {
     private final ArrayList<GridPolyLine> gridLines = new ArrayList<>();
     private GridPolyLine selectedLine = null;
     private static final int TIME_OUT = 3;
-    private int selectLineTimeOut = TIME_OUT;//被选择的画线，停留的周期数
+    private int selectLineTimeOut = TIME_OUT;//Number of cycles the selected line remains highlighted
     private final ArrayList<GridPolygon> gridPolygons = new ArrayList<>();
     private final ArrayList<GridMarker> gridMarkers = new ArrayList<>();
 
@@ -97,9 +98,9 @@ public class GridOsmMapView {
 
 
     public void initMap(String grid, boolean offset) {
-        mapViewOtherData(gridMapView);//设置内部源
+        mapViewOtherData(gridMapView);//Set up the tile source
         gridMapView.setMultiTouchControls(true);
-        gridMapView.setBuiltInZoomControls(true);//显示缩放按钮
+        gridMapView.setBuiltInZoomControls(true);//Show zoom buttons
         gridMapView.getZoomController().getDisplay().setPositions(true
                 , CustomZoomButtonsDisplay.HorizontalPosition.RIGHT
                 , CustomZoomButtonsDisplay.VerticalPosition.BOTTOM);
@@ -115,12 +116,12 @@ public class GridOsmMapView {
         gridMapView.setSelected(true);
         setGrayLine();
 
-        //addMarkerOverlay();//添加Marker图层
+        //addMarkerOverlay();//Add marker overlay
 
 
-        //[A-Ra-r]{2}[0-9]{2}[A-Xa-x]{2}，六位梅登海德正则
-        // [A-Ra-r]{2}[0-9]{2}，四位梅登海德正则
-        LatLng latLng = MaidenheadGrid.gridToLatLng(grid);//做一下判断是不是网格
+        //[A-Ra-r]{2}[0-9]{2}[A-Xa-x]{2}, regex for 6-character Maidenhead grid
+        // [A-Ra-r]{2}[0-9]{2}, regex for 4-character Maidenhead grid
+        LatLng latLng = MaidenheadGrid.gridToLatLng(grid);//Validate if it is a valid grid locator
         if (latLng != null) {
             if (offset) {
                 gridMapView.getController().setCenter(new GeoPoint(latLng.latitude
@@ -133,9 +134,9 @@ public class GridOsmMapView {
     }
 
     /**
-     * 缩放到线路的范围之内
+     * Zoom to fit the line within the visible bounds
      *
-     * @param line 线
+     * @param line the polyline
      */
     public void zoomToLineBound(GridPolyLine line) {
         BoundingBox boundingBox = new BoundingBox();
@@ -180,10 +181,10 @@ public class GridOsmMapView {
 
 
     /**
-     * 显示CQ的位置
+     * Navigate to the CQ marker location
      *
-     * @param marker CQ的标记
-     * @param offset 是否偏移
+     * @param marker the CQ marker
+     * @param offset whether to apply a longitude offset
      */
     public void gotoCqGrid(GridMarker marker, boolean offset) {
         GeoPoint geoPoint = new GeoPoint(marker.getPosition());
@@ -195,7 +196,7 @@ public class GridOsmMapView {
 
 
     public synchronized GridMarker addGridMarker(String grid, Ft8Message msg) {
-        //todo 对于4.0的CQ消息，是没有网格信息的，可以以国家的地理位置代替
+        //todo For type 4.0 CQ messages that lack grid info, the country's coordinates could be used instead
         if (LatLng2GeoPoint(MaidenheadGrid.gridToLatLng(grid)) == null) return null;
         GridMarker marker = new GridMarker(context, mainViewModel, gridMapView, grid, msg);
         gridMarkers.add(marker);
@@ -203,7 +204,7 @@ public class GridOsmMapView {
     }
 
     /**
-     * 清除标记marker
+     * Clear all markers
      */
     public synchronized void clearMarkers() {
         for (GridMarker marker : gridMarkers) {
@@ -228,7 +229,7 @@ public class GridOsmMapView {
     }
 
     /**
-     * 清除线条
+     * Clear all lines
      */
     public synchronized void clearLines() {
 
@@ -254,7 +255,7 @@ public class GridOsmMapView {
 
 
     /**
-     * 清除网格瓦片
+     * Clear all grid polygons
      */
     public synchronized void clearGridPolygon() {
         for (GridPolygon polygon : gridPolygons) {
@@ -265,7 +266,7 @@ public class GridOsmMapView {
     }
 
     /**
-     * 清除全部图层
+     * Clear all overlays
      */
     public void clearAll() {
         clearMarkers();
@@ -274,10 +275,10 @@ public class GridOsmMapView {
     }
 
     /**
-     * 按照网格，查找网格图层，如果没有返回null
+     * Find a grid polygon by grid locator; returns null if not found
      *
-     * @param grid 网格
-     * @return 图层
+     * @param grid the grid locator
+     * @return the grid polygon, or null
      */
     public synchronized GridPolygon getGridPolygon(String grid) {
         synchronized (gridPolygons) {
@@ -289,12 +290,12 @@ public class GridOsmMapView {
     }
 
     /**
-     * 标记、更新新发生消息的网格
+     * Mark or update the grid where a new message occurred
      *
-     * @param grid      网格
-     * @param msg       消息内容
-     * @param subDetail 细节
-     * @return 网格对象
+     * @param grid      the grid locator
+     * @param msg       the message content
+     * @param subDetail additional detail text
+     * @return the grid polygon object
      */
     public GridPolygon upgradeGridInfo(String grid, String msg, String subDetail) {
         GridPolygon gridPolygon = getGridPolygon(grid);
@@ -308,10 +309,10 @@ public class GridOsmMapView {
     }
 
     /**
-     * 标记、更新新发生消息的网格
+     * Mark or update the grid from a historical QSO record
      *
-     * @param recordStr 历史记录
-     * @return 网格对象
+     * @param recordStr the QSO record
+     * @return the grid polygon object
      */
     public GridPolygon upgradeGridInfo(QSLRecordStr recordStr) {
         GridPolygon gridPolygon = getGridPolygon(recordStr.getGridsquare());
@@ -343,24 +344,25 @@ public class GridOsmMapView {
                         , recordStr.getMode()),
                 recordStr.getComment()
         ));
-        gridPolygon.setTitle(String.format("%s--%s", recordStr.getCall(), recordStr.getStation_callsign()));//显示消息内容
+        gridPolygon.setTitle(String.format("%s--%s", recordStr.getCall(), recordStr.getStation_callsign()));//Display message content
         gridPolygon.setInfoWindow(new GridRecordInfoWindow(R.layout.tracker_record_info_win, gridMapView));
         return gridPolygon;
     }
 
     /**
-     * 更新地图
+     * Refresh the map view
      */
     public void mapUpdate(){
         gridMapView.invalidate();
     }
 
     /**
-     * 升级网格状态，如果没有，说明是新的，就添加网格。返回false。如果有，返回true。
+     * Upgrade grid status. If the grid does not exist, it is new and will be added (returns false).
+     * If it already exists, returns true.
      *
-     * @param grid     网格
-     * @param gridMode 模式
-     * @return 发现
+     * @param grid     the grid locator
+     * @param gridMode the mode
+     * @return true if the grid already existed
      */
     public boolean upgradeGridMode(String grid, GridMode gridMode) {
         GridPolygon polygon = getGridPolygon(grid);
@@ -374,16 +376,16 @@ public class GridOsmMapView {
     }
 
     /**
-     * 添加网格图层
+     * Add a grid polygon overlay
      *
-     * @param grid     网格
-     * @param gridMode 网格类型
-     * @return 返回一个网格图层对象
+     * @param grid     the grid locator
+     * @param gridMode the grid type
+     * @return the created grid polygon object
      */
     public synchronized GridPolygon addGridPolygon(String grid, GridMode gridMode) {
         if (gridMapView == null) return null;
         if (gridMapView.getRepository()==null) return null;
-        try {//当日志量过多时，会出现闪退的问题，在此处做一个异常捕获，防止闪退
+        try {//When log volume is too large, a crash can occur; catch the exception here to prevent it
 
             GridPolygon polygon = new GridPolygon(context, gridMapView, grid, gridMode);
             gridPolygons.add(polygon);
@@ -397,10 +399,10 @@ public class GridOsmMapView {
     }
 
     /**
-     * 查找有没有符合的CQ Marker
+     * Find a matching CQ marker for the given message
      *
-     * @param message 消息
-     * @return Marker
+     * @param message the message
+     * @return the matching marker, or null
      */
     public GridMarker getMarker(Ft8Message message) {
         for (GridMarker marker : gridMarkers) {
@@ -412,10 +414,10 @@ public class GridOsmMapView {
     }
 
     /**
-     * 查找有没有符合消息的线
+     * Find a matching line for the given message
      *
-     * @param message 消息
-     * @return 线
+     * @param message the message
+     * @return the matching line, or null
      */
     public GridPolyLine getLine(Ft8Message message) {
         for (GridPolyLine line : gridLines) {
@@ -427,10 +429,10 @@ public class GridOsmMapView {
     }
 
     /**
-     * 在两个网格之间画线。
+     * Draw a line between two grid locations.
      *
-     * @param message 消息
-     * @param db      数据库
+     * @param message the message
+     * @param db      the database
      */
     public synchronized GridPolyLine drawLine(Ft8Message message, DatabaseOpr db) {
         LatLng fromLatLng = MaidenheadGrid.gridToLatLng(message.getMaidenheadGrid(db));
@@ -454,12 +456,12 @@ public class GridOsmMapView {
         LatLng fromLatLng = MaidenheadGrid.gridToLatLng(recordStr.getGridsquare());
         LatLng toLatLng = MaidenheadGrid.gridToLatLng(recordStr.getMy_gridsquare());
         if (fromLatLng == null) {
-            //todo 把呼号转为国家的经纬度
+            //todo Convert callsign to country coordinates
             return null;
         }
 
         if (toLatLng == null) {
-            //todo 把呼号转为国家的经纬度
+            //todo Convert callsign to country coordinates
             return null;
         }
         final GridPolyLine line = new GridPolyLine(gridMapView, fromLatLng, toLatLng, recordStr);
@@ -467,12 +469,12 @@ public class GridOsmMapView {
     }
 
     /**
-     * 设定地图的离线来源
+     * Set the offline tile source for the map
      *
      * @param mapView osmMap
      */
     public void mapViewOtherData(MapView mapView) {
-        //可以根据时间不同，显示不同的地图
+        //Can display different maps depending on the time of day
         String strFilepath = getAssetsCacheFile(context, context.getString(R.string.map_name));
         File exitFile = new File(strFilepath);
         if (!exitFile.exists()) {
@@ -499,11 +501,11 @@ public class GridOsmMapView {
     }
 
     /**
-     * 获取Assets目录，这里面保存着地图文件
+     * Get the map file from the assets directory
      *
      * @param context  context
-     * @param fileName 地图文件名，sqlite格式
-     * @return 包含全路径的文件名
+     * @param fileName the map file name in SQLite format
+     * @return the full path to the cached file
      */
     public String getAssetsCacheFile(Context context, String fileName) {
         File cacheFile = new File(context.getCacheDir(), fileName);
@@ -575,7 +577,7 @@ public class GridOsmMapView {
                             , recordStr.getMode()),
                     recordStr.getComment()
             ));
-            setTitle(String.format("%s--%s", recordStr.getCall(), recordStr.getStation_callsign()));//显示消息内容
+            setTitle(String.format("%s--%s", recordStr.getCall(), recordStr.getStation_callsign()));//Display message content
             this.mOutlinePaint = getStrokePaint(
                     mapView.getResources().getColor(
                             R.color.tracker_history_line_color), 3);
@@ -595,11 +597,11 @@ public class GridOsmMapView {
             super(mapView);
             this.msg = msg;
 
-            setSnippet(String.format("%s<--%s", msg.toWhere, msg.fromWhere));//表示距离
+            setSnippet(String.format("%s<--%s", msg.toWhere, msg.fromWhere));//Indicates the path
             setSubDescription(String.format("%dBm , %.1f ms , %s"
                     , msg.snr, msg.time_sec
                     , MaidenheadGrid.getDistLatLngStr(fromLatLng, toLatLng)));
-            setTitle(msg.getMessageText());//显示消息内容
+            setTitle(msg.getMessageText());//Display message content
             if (msg.inMyCall()) {
                 this.mOutlinePaint = getStrokePaint(
                         mapView.getResources().getColor(
@@ -631,7 +633,7 @@ public class GridOsmMapView {
             setMilestoneManagers(managers);
 
 
-            //设置方向动画
+            //Set up directional animation
             final ValueAnimator percentageCompletion = ValueAnimator.ofFloat(0, 1); // 10 kilometers
 
             percentageCompletion.setRepeatCount(ValueAnimator.INFINITE);
@@ -652,7 +654,7 @@ public class GridOsmMapView {
         }
 
         /**
-         * 线条的动画点，设置：绿色，10f宽度
+         * Animated path points on the line, set to green with 15f width
          */
         private MilestoneManager getAnimatedPathManager(final MilestoneLister pMilestoneLister) {
             final Paint slicePaint = getStrokePaint(Color.GREEN, 15f);
@@ -711,7 +713,7 @@ public class GridOsmMapView {
         }
 
         public synchronized void updateGridMode() {
-            synchronized (this) {//防止闪退
+            synchronized (this) {//Prevent crash
                 switch (gridMode) {
                     case QSL:
                         this.mFillPaint.setColor(this.context.getColor(R.color.tracker_sample_qsl_color));
@@ -757,8 +759,8 @@ public class GridOsmMapView {
             setSnippet(String.format("%d dBm , %.1f ms", msg.snr, msg.time_sec));
             setSubDescription(String.format("%s , %s"
                     , MaidenheadGrid.getDistStr(grid, GeneralVariables.getMyMaidenheadGrid())
-                    , msg.fromWhere));//表示距离
-            setTitle(msg.getMessageText());//显示消息内容
+                    , msg.fromWhere));//Indicates distance
+            setTitle(msg.getMessageText());//Display message content
 
 
             @SuppressLint("UseCompatLoadingForDrawables")
@@ -791,14 +793,14 @@ public class GridOsmMapView {
 
 
     /**
-     * 显示提示，根据显示模式来显示。
+     * Show info windows based on the current display mode.
      */
     public void showInfoWindows() {
         setShowTipsMode(showTipsMode);
     }
 
     /**
-     * 显示全部提示
+     * Show all info windows
      */
     public void showAllInfoWindows() {
         if (showQSX) {
@@ -814,7 +816,7 @@ public class GridOsmMapView {
     }
 
     /**
-     * 只显示新的提示
+     * Show only new info windows
      */
     public void showNewInfoWindows() {
         if (showQSX) {
@@ -830,7 +832,7 @@ public class GridOsmMapView {
     }
 
     /**
-     * 关闭全部提示窗口
+     * Close all info windows
      */
     public synchronized void hideInfoWindows() {
         for (GridPolygon polygon : gridPolygons
@@ -923,7 +925,7 @@ public class GridOsmMapView {
     }
 
     /**
-     * 根据当前时间画灰线
+     * Draw the gray line (day/night terminator) based on the current time
      */
     public void setGrayLine() {
         double[] lats = computeDayNightTerminator(System.currentTimeMillis());

@@ -12,7 +12,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 /**
- * KENWOOD TS590,与YAESU3代指令接近，命令结构使用Yaesu3Command,指令在KenwoodTK90RigConstant中。
+ * KENWOOD TS590, similar to YAESU gen-3 commands. Uses Yaesu3Command structure, commands in KenwoodTK90RigConstant.
  */
 public class Flex6000Rig extends BaseRig {
     private static final String TAG = "KenwoodTS590Rig";
@@ -40,7 +40,7 @@ public class Flex6000Rig extends BaseRig {
     }
 
     /**
-     * 清空缓存数据
+     * Clear buffer data
      */
     private void clearBufferData() {
         buffer.setLength(0);
@@ -51,7 +51,7 @@ public class Flex6000Rig extends BaseRig {
         super.setPTT(on);
         if (getConnector() != null) {
             switch (getControlMode()) {
-                case ControlMode.CAT://以CIV指令
+                case ControlMode.CAT://via CAT command
                     getConnector().setPttOn(Flex6000RigConstant.setPTTState(on));
                     break;
                 case ControlMode.RTS:
@@ -92,15 +92,15 @@ public class Flex6000Rig extends BaseRig {
         {
             buffer.append(s);
             if (buffer.length()>1000) clearBufferData();
-            return;//说明数据还没接收完。
+            return;//data reception not yet complete.
         }else {
-            if (s.indexOf(";")>0){//说明接到结束的数据了，并且不是第一个字符是;
+            if (s.indexOf(";")>0){//received end-of-data, and ';' is not the first character
               buffer.append(s.substring(0,s.indexOf(";")));
             }
-            //开始分析数据
+            //begin parsing data
             Flex6000Command flex6000Command = Flex6000Command.getCommand(buffer.toString());
-            clearBufferData();//清一下缓存
-            //要把剩下的数据放到缓存里
+            clearBufferData();//clear buffer
+            //put remaining data into buffer
             buffer.append(s.substring(s.indexOf(";")+1));
 
             if (flex6000Command == null) {
@@ -108,7 +108,7 @@ public class Flex6000Rig extends BaseRig {
             }
             if (flex6000Command.getCommandID().equalsIgnoreCase("ZZFA")) {
                 long tempFreq=Flex6000Command.getFrequency(flex6000Command);
-                if (tempFreq!=0) {//如果tempFreq==0，说明频率不正常
+                if (tempFreq!=0) {//if tempFreq==0, frequency is invalid
                     setFreq(Flex6000Command.getFrequency(flex6000Command));
                 }
             }
@@ -120,7 +120,7 @@ public class Flex6000Rig extends BaseRig {
     @Override
     public void readFreqFromRig() {
         if (getConnector() != null) {
-            clearBufferData();//清空一下缓存
+            clearBufferData();//clear buffer
             getConnector().sendData(Flex6000RigConstant.setReadOperationFreq());
         }
     }
@@ -134,7 +134,7 @@ public class Flex6000Rig extends BaseRig {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                if (getConnector()!=null){//切换VFO A
+                if (getConnector()!=null){//switch to VFO A
                     //getConnector().sendData(Flex6000RigConstant.setVFOMode());
                 }
             }

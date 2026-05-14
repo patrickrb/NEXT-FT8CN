@@ -6,31 +6,31 @@ import com.bg7yoz.ft8cn.Ft8Message;
 import com.bg7yoz.ft8cn.connector.BaseRigConnector;
 
 /**
- * 电台的抽象类。
+ * Abstract class for radios.
  * @author BGY70Z
  * @date 2023-03-20
  */
 public abstract class BaseRig {
-    private long freq;//当前频率值
+    private long freq;//current frequency value
     public MutableLiveData<Long> mutableFrequency = new MutableLiveData<>();
-    private int controlMode;//控制模式
-    private OnRigStateChanged onRigStateChanged;//当电台的一些状态发生变化的回调
-    private int civAddress;//CIV地址
-    private int baudRate;//波特率
-    private boolean isPttOn=false;//ptt是否打开
-    private BaseRigConnector connector = null;//连接电台的对象
+    private int controlMode;//control mode
+    private OnRigStateChanged onRigStateChanged;//callback when rig state changes
+    private int civAddress;//CIV address
+    private int baudRate;//baud rate
+    private boolean isPttOn=false;//whether PTT is on
+    private BaseRigConnector connector = null;//rig connector object
 
-    public abstract boolean isConnected();//确认电台是否连接
+    public abstract boolean isConnected();//check if rig is connected
 
-    public abstract void setUsbModeToRig();//设置电台上边带方式
+    public abstract void setUsbModeToRig();//set rig to upper sideband (USB) mode
 
-    public abstract void setFreqToRig();//设置电台频率
+    public abstract void setFreqToRig();//set rig frequency
 
-    public abstract void onReceiveData(byte[] data);//当电台发送回数据的动作
+    public abstract void onReceiveData(byte[] data);//action when rig sends data back
 
-    public abstract void readFreqFromRig();//从电台读取频率
+    public abstract void readFreqFromRig();//read frequency from rig
 
-    public abstract String getName();//获取电台的名字
+    public abstract String getName();//get rig name
 
     private final OnConnectReceiveData onConnectReceiveData = new OnConnectReceiveData() {
         @Override
@@ -39,7 +39,7 @@ public abstract class BaseRig {
         }
     };
 
-    public void setPTT(boolean on) {//设置PTT打开或关闭
+    public void setPTT(boolean on) {//set PTT on or off
         isPttOn=on;
         if (onRigStateChanged != null) {
             onRigStateChanged.onPttChanged(on);
@@ -47,10 +47,10 @@ public abstract class BaseRig {
     }
 
 //    public void sendWaveData(float[] data) {
-//        //留给ICOM电台使用
+//        //reserved for ICOM rig use
 //    }
     public void sendWaveData(Ft8Message message) {
-        //留给ICOM电台使用
+        //reserved for ICOM rig use
     }
 
     public long getFreq() {
@@ -133,7 +133,7 @@ public abstract class BaseRig {
 
 
     /**
-     * 2023-08-16 由DS1UFX提交修改（基于0.9版），增加(tr)uSDX audio over cat的支持。
+     * 2023-08-16 Modification submitted by DS1UFX (based on v0.9), adding (tr)uSDX audio over CAT support.
      */
     public boolean supportWaveOverCAT() {
         return false;

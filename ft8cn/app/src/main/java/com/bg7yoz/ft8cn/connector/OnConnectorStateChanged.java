@@ -1,7 +1,7 @@
 package com.bg7yoz.ft8cn.connector;
 
 /**
- * 连接器的回调
+ * Connector callback interface
  * @author BGY70Z
  * @date 2023-03-20
  */

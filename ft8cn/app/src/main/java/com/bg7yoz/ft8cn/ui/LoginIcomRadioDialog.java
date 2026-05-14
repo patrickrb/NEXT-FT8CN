@@ -1,6 +1,6 @@
 package com.bg7yoz.ft8cn.ui;
 /**
- * 网络模式登录ICOM的对话框。
+ * Dialog for logging in to ICOM radio in network mode.
  *
  * @author BGY70Z
  * @date 2023-03-20
@@ -67,7 +67,7 @@ public class LoginIcomRadioDialog extends Dialog {
             public void onClick(View view) {
 
 
-                if (GeneralVariables.instructionSet == InstructionSet.ICOM) {//icom 电台
+                if (GeneralVariables.instructionSet == InstructionSet.ICOM) {//ICOM radio
                     ToastMessage.show(String.format(
                             GeneralVariables.getStringFromResource(R.string.connect_icom_ip)
                             , inputIcomAddressEdit.getText()));
@@ -75,7 +75,7 @@ public class LoginIcomRadioDialog extends Dialog {
                                     , GeneralVariables.icomUdpPort
                                     , GeneralVariables.icomUserName
                                     , GeneralVariables.icomPassword));
-                } else if (GeneralVariables.instructionSet == InstructionSet.XIEGU_6100) {//协谷x6100
+                } else if (GeneralVariables.instructionSet == InstructionSet.XIEGU_6100) {//Xiegu X6100
                     ToastMessage.show(String.format(
                             GeneralVariables.getStringFromResource(R.string.connect_xiegu_ip)
                             , inputIcomAddressEdit.getText()));
@@ -191,10 +191,10 @@ public class LoginIcomRadioDialog extends Dialog {
     }
 
     /**
-     * 把配置信息写到数据库
+     * Write configuration to the database
      *
-     * @param KeyName 关键词
-     * @param Value   值
+     * @param KeyName key name
+     * @param Value   value
      */
     private void writeConfig(String KeyName, String Value) {
         mainViewModel.databaseOpr.writeConfig(KeyName, Value, null);
@@ -204,7 +204,7 @@ public class LoginIcomRadioDialog extends Dialog {
     public void show() {
         super.show();
         WindowManager.LayoutParams params = getWindow().getAttributes();
-        //设置对话框的大小，以百分比0.6
+        //Set dialog size as a percentage (0.6)
         int height = getWindow().getWindowManager().getDefaultDisplay().getHeight();
         int width = getWindow().getWindowManager().getDefaultDisplay().getWidth();
 //        params.height = (int) (height * 0.6);

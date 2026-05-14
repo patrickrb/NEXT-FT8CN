@@ -1,7 +1,7 @@
 package com.bg7yoz.ft8cn.wave;
 /**
- * 读取Wave文件的操作。
- * 已经弃用，FT8CN不采用音频文件的方法。
+ * Operations for reading WAV files.
+ * Deprecated. FT8CN no longer uses the audio file approach.
  * @author BGY70Z
  * @date 2023-03-20
  */
@@ -40,33 +40,33 @@ public class WaveFileReader {
 		this.initReader(filename);
 	}
 
-	// 判断是否创建wav读取器成功
+	// check if WAV reader was created successfully
 	public boolean isSuccess() {
 		return issuccess;
 	}
 
-	// 获取每个采样的编码长度，8bit或者16bit
+	// get the encoding length per sample, 8-bit or 16-bit
 	public int getBitPerSample() {
 		return this.bitspersample;
 	}
 
-	// 获取采样率
+	// get the sampling rate
 	public long getSampleRate() {
 		return this.samplerate;
 	}
 
-	// 获取声道个数，1代表单声道 2代表立体声
+	// get the number of channels: 1 = mono, 2 = stereo
 	public int getNumChannels() {
 		return this.numchannels;
 	}
 
-	// 获取数据长度，也就是一共采样多少个
+	// get the data length, i.e. the total number of samples
 	public int getDataLen() {
 		return this.len;
 	}
 
-	// 获取数据
-	// 数据是一个二维数组，[n][m]代表第n个声道的第m个采样值
+	// get data
+	// data is a 2D array; [n][m] represents the m-th sample value of the n-th channel
 	public int[][] getData() {
 		return this.data;
 	}
@@ -108,7 +108,7 @@ public class WaveFileReader {
 
 			this.data = new int[this.numchannels][this.len];
 
-			// 读取数据
+			// read data
 			for (int i = 0; i < this.len; ++i) {
 				for (int n = 0; n < this.numchannels; ++n) {
 					if (this.bitspersample == 8) {

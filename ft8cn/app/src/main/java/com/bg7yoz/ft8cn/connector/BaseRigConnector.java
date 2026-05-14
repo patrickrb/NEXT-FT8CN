@@ -1,6 +1,7 @@
 package com.bg7yoz.ft8cn.connector;
 /**
- * 用于连接电台的基础类，蓝牙、USB线、FLEX网络、ICOM网络都是继承于此
+ * Base class for connecting to radios. Bluetooth, USB cable, FLEX network,
+ * and ICOM network connectors all inherit from this class.
  *
  * @author BG7YOZ
  * @date 2023-03-20
@@ -11,9 +12,9 @@ import com.bg7yoz.ft8cn.rigs.OnRigStateChanged;
 
 
 public class BaseRigConnector {
-    private boolean connected;//是否处于连接状态
-    private OnConnectReceiveData onConnectReceiveData;//当接收到数据后的动作
-    private int controlMode;//控制模式
+    private boolean connected;//Whether currently connected
+    private OnConnectReceiveData onConnectReceiveData;//Action to take when data is received
+    private int controlMode;//Control mode
     private OnRigStateChanged onRigStateChanged;
     private final OnConnectorStateChanged onConnectorStateChanged=new OnConnectorStateChanged() {
         @Override
@@ -45,20 +46,21 @@ public class BaseRigConnector {
     }
 
     /**
-     * 发送数据
-     * @param data 数据
+     * Send data
+     * @param data the data to send
      */
     public synchronized void sendData(byte[] data){};
 
     /**
-     * 设置PTT状态，ON OFF,如果是RTS和DTR，这个是在有线方式才有的，在CableConnector中会重载此方法
-     * @param on 是否ON
+     * Set PTT state ON/OFF. For RTS and DTR, this only applies in wired mode
+     * and is overridden in CableConnector.
+     * @param on whether to turn PTT on
      */
     public void setPttOn(boolean on){};
 
     /**
-     * 使用发送数据的方式设置PTT状态
-     * @param command 指令数据
+     * Set PTT state by sending a data command
+     * @param command command data
      */
     public void setPttOn(byte[] command){};
 
@@ -76,9 +78,9 @@ public class BaseRigConnector {
 
 
     /**
-     * 2023-08-16 由DS1UFX提交修改（基于0.9版），用于(tr)uSDX audio over cat的支持。
-     * 发送音频数据流，把16位int格式转为32位float格式
-     * @param data byte格式，实际上是16位的int
+     * 2023-08-16 Submitted by DS1UFX (based on v0.9) to support (tr)uSDX audio over CAT.
+     * Send audio data stream, converting 16-bit int format to 32-bit float format.
+     * @param data byte format, actually 16-bit int
      */
     public void sendWaveData(byte[] data){
         float[] waveFloat=new float[data.length/2];
@@ -89,17 +91,17 @@ public class BaseRigConnector {
     }
 
     public void sendWaveData(float[] data){
-        //留给网络方式发送音频流
+        //Reserved for sending audio stream via network
     }
     public void sendFt8A91(byte[] a91,float baseFreq){
-        //用于给x6100的ft8cns模式
+        //Used for X6100 FT8CNs mode
     }
 
     public void setRFVolume(int volume){
-        //用于给x6100的ft8cns模式
+        //Used for X6100 FT8CNs mode
     }
 
-    //2023-08-16 由DS1UFX提交修改（基于0.9版），用于(tr)uSDX audio over cat的支持。
+    //2023-08-16 Submitted by DS1UFX (based on v0.9) to support (tr)uSDX audio over CAT.
     public void receiveWaveData(byte[] data){
         float[] waveFloat=new float[data.length/2];
         for (int i = 0; i <waveFloat.length ; i++) {
@@ -141,10 +143,10 @@ public class BaseRigConnector {
     }
 
     /**
-     * 从流数据中读取小端模式的Short
+     * Read a little-endian Short from stream data
      *
-     * @param data  流数据
-     * @param start 起始点
+     * @param data  stream data
+     * @param start starting offset
      * @return Int16
      */
     public static short readShortBigEndianData(byte[] data, int start) {

@@ -1,6 +1,6 @@
 package com.bg7yoz.ft8cn.ft8transmit;
 /**
- * 通联记录的列表
+ * List of QSO records.
  * @author BGY70Z
  * @date 2023-03-20
  */
@@ -12,9 +12,9 @@ import java.util.ArrayList;
 public class QslRecordList extends ArrayList<QSLRecord> {
 
     /**
-     * 根据呼号查是否有通联记录
-     * @param callsign 呼号
-     * @return 记录，没有则为空
+     * Check if a QSO record exists for the given callsign.
+     * @param callsign callsign
+     * @return the record, or null if not found
      */
     public QSLRecord getRecordByCallsign(String callsign){
         for (int i = this.size()-1; i >=0 ; i--) {
@@ -26,9 +26,10 @@ public class QslRecordList extends ArrayList<QSLRecord> {
     }
 
     /**
-     * 按照呼号查找，是否有通联记录，且保存过。如果没有记录，视作没保存过。
-     * @param callsign 呼号
-     * @return 是否保存过
+     * Look up by callsign whether a QSO record exists and has been saved.
+     * If no record exists, it is treated as not saved.
+     * @param callsign callsign
+     * @return whether it has been saved
      */
     public boolean getSavedRecByCallsign(String callsign){
         QSLRecord record=getRecordByCallsign(callsign);
@@ -40,13 +41,13 @@ public class QslRecordList extends ArrayList<QSLRecord> {
     }
 
     /**
-     * 添加通联过的记录，如果已经存在，就更新记录
-     * @param record 通联记录
-     * @return 通联记录
+     * Add a QSO record; if it already exists, update the record.
+     * @param record QSO record
+     * @return QSO record
      */
     public QSLRecord addQSLRecord(QSLRecord record){
         if (record.getToCallsign().equals("CQ")) return null;
-        //清除已经保存过的通联记录
+        // remove already saved QSO records
         //for (int i = this.size()-1; i >=0 ; i--) {
         //    if (this.get(i).getToCallsign().equals(record.getToCallsign())){
         //        if (this.get(i).saved){
@@ -54,7 +55,7 @@ public class QslRecordList extends ArrayList<QSLRecord> {
         //        }
         //    }
         //}
-        //找一下看有没有已经在列表中，但还没有保存的记录
+        // check if there is a record already in the list that has not been saved yet
         QSLRecord oldRecord= getRecordByCallsign(record.getToCallsign());
         if (oldRecord==null){
             this.add(record);
@@ -66,11 +67,11 @@ public class QslRecordList extends ArrayList<QSLRecord> {
     }
 
     /**
-     * 删除已经保存过的呼号
+     * Delete records for callsigns that have already been saved.
      * @param record
      */
     public void deleteIfSaved(QSLRecord record){
-        //清除已经保存过的通联记录
+        // remove already saved QSO records
         for (int i = this.size()-1; i >=0 ; i--) {
             if (this.get(i).getToCallsign().equals(record.getToCallsign())){
                 if (this.get(i).saved){

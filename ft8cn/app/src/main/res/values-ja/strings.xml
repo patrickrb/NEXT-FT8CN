@@ -169,7 +169,7 @@
     >
     <string name="exit_confirmation">終了しますか？</string>
     >
-    <!-- FT8メッセージ -->
+    <!-- FT8 Message -->
 
 
     <string name="std_msg">定形文</string>
@@ -184,12 +184,12 @@
     >
     <string name="telemetry">テレメトリー</string>
     >
-    <!-- 設定バー -->
+    <!-- Configuration bar -->
 
 
     <string name="offset_time_sec">%.1f秒</string>
     >
-    <!-- テレメトリー　グラフ -->
+    <!-- Spectrum chart -->
 
 
     <string name="decoding_takes_milliseconds">デコード時間%dミリ秒</string>
@@ -204,24 +204,24 @@
 
     <string name="unMarkMessage">メッセージを隠す</string>
 
-    <!-- ブルートゥース　ダイアログボックス -->
+    <!-- Select Bluetooth device dialog -->
 
 
     <string name="select_bluetooth_device">Bluetoothデバイス：%sを選ぶ</string>
 
-    <!-- PTT　ディレー　タイム -->
+    <!-- PTT delay in milliseconds -->
 
 
     <string name="milliseconds">%dミリ秒</string>
 
-    <!-- 返事なしの回数 -->
+    <!-- No-reply count -->
 
 
     <string name="ignore">無視</string>
 
     <string name="times">%d回</string>
 
-    <!-- コール·バー -->
+    <!-- Call bar -->
 
 
     <string name="sound_frequency_is">受信周波数 : %.0f Hz</string>
@@ -232,17 +232,17 @@
 
     <string name="message_count">メッセージ(%d)</string>
 
-    <!-- ログ　エクスポート　バー -->
+    <!-- Log export bar -->
 
 
     <string name="export_info">本機と同じLANでほかのデバイスのウェブブラウザーを利用しエクスポートする\nウェブブラウザーのアドレスバーで：\nhttp://%s:%dを入力</string>
 
-    <!-- 送信ウオッチドッグ -->
+    <!-- Transmit supervision -->
 
 
     <string name="minutes">%d分</string>
 
-    <!-- 送信ウオッチドッグ -->
+    <!-- Transmit supervision -->
 
 
     <string name="freq_syn">TX=RX固定</string>
@@ -257,7 +257,7 @@
 
     <string name="do_not_call_the_following_callsign">自動応答しない</string>
 
-    <!-- デコード　バー -->
+    <!-- Decode bar -->
 
 
     <string name="message_count_count">メッセージ(%d/%d)</string>
@@ -266,7 +266,7 @@
 
     <string name="my_grid">自分のグリッド : %s</string>
 
-    <!-- デコード　リスト -->
+    <!-- Decode list -->
 
 
     <string name="tracking_receiver">相手局を追跡 %s(%s)</string>
@@ -279,12 +279,12 @@
 
     <string name="calling">コール %s(%s)</string>
 
-    <!-- グリッド距離 -->
+    <!-- Grid distance calculation -->
 
 
     <string name="distance">%.0f km</string>
 
-    <!-- ログ　リスト -->
+    <!-- Log list -->
 
 
     <string name="confirmed">確認済み</string>
@@ -307,7 +307,7 @@
 
     <string name="log_manual_confirmation">手動で確認%s</string>
 
-    <!-- QSL　ログ　リスト -->
+    <!-- QSL log list -->
 
 
     <string name="qsl_grid">グリッド:%s</string>
@@ -338,7 +338,7 @@
 
     <string name="qsl_manual_confirmation_s">手動で確認%s</string>
 
-    <!-- QSL レコード -->
+    <!-- QSL record -->
 
 
     <string name="qsl_record_import_time">インポートタイム:%s</string>

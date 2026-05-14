@@ -1,6 +1,6 @@
 package com.bg7yoz.ft8cn.rigs;
 /**
- * 由DS1UFX 于2023-08-16提交修改（基于0.9版），增加(tr)uSDX audio over cat的支持。
+ * Modification submitted by DS1UFX on 2023-08-16 (based on v0.9), adding (tr)uSDX audio over CAT support.
  */
 
 import android.annotation.SuppressLint;
@@ -15,12 +15,12 @@ public class KenwoodTK90RigConstant {
     public static final int AM = 0x05;
     public static final int DATA = 0x06;
 
-    public static final int ts_590_swr_alert_max = 15;//相当于3.0
-    public static final int ts_590_alc_alert_max = 15;//超过，在表上显示红色
+    public static final int ts_590_swr_alert_max = 15;//equivalent to 3.0
+    public static final int ts_590_alc_alert_max = 15;//shows red on meter when exceeded
 
-    //PTT状态
+    //PTT state
 
-    //指令集
+    //command set
     private static final String PTT_ON = "TX\r";
     private static final String PTT_OFF = "RX\r";
     private static final String USB_MODE = "MD2\r";
@@ -29,15 +29,15 @@ public class KenwoodTK90RigConstant {
     private static final String SET_VFO = "FR0\r";
 
 
-    private static final String TS590_VFO_A = "FR0;";//KENWOOD TS590,设置VFO -A
+    private static final String TS590_VFO_A = "FR0;";//KENWOOD TS590,set VFO-A
     private static final String TS2000_PTT_ON = "TX0;";//KENWOOD TS2000,PTT
     private static final String TS590_PTT_ON = "TX1;";//KENWOOD TS590,PTT
     private static final String FLEX_6000_PTT_ON = "TX01;";//FLEX_6000,PTT
     private static final String TS590_PTT_OFF = "RX;";//KENWOOD TS590,PTT
     private static final String FLEX_SET_USB_DATA = "MD9;";//FLEX6000 DIGU
     private static final String TS590_SET_USB = "MD2;";//KENWOOD USB MODE
-    private static final String TS590_READ_FREQ = "FA;";//KENWOOD 读频率
-    private static final String TS590_READ_METERS = "RM;";//KENWOOD 读METER
+    private static final String TS590_READ_FREQ = "FA;";//KENWOOD read frequency
+    private static final String TS590_READ_METERS = "RM;";//KENWOOD read METER
 
     private static final String TS570_PTT_OFF = "RX;";//KENWOOD TS570,PTT
     private static final String TS570_PTT_ON = "TX;";//KENWOOD TS570,PTT
@@ -114,7 +114,7 @@ public class KenwoodTK90RigConstant {
     }
 
 
-    //设置成VFO模式
+    //set to VFO mode
     public static byte[] setVFOMode() {
         return SET_VFO.getBytes();
     }
@@ -158,7 +158,7 @@ public class KenwoodTK90RigConstant {
     }
 
 
-    //2023-08-16 由DS1UFX提交修改（基于0.9版），增加(tr)uSDX audio over cat的支持。
+    //2023-08-16 Modification submitted by DS1UFX (based on v0.9), adding (tr)uSDX audio over CAT support.
     public static byte[] setTrUSDXStreaming(boolean on) {
         if (on) {
             return TRUSDX_STREAMING_ON_SPEAKER_OFF.getBytes();

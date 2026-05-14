@@ -1,4 +1,4 @@
-关于解码模式
-快速解码：沿用原来FT8CN的解码，对接收到的音频做一次性的解码。
-多次解码：在快速解码的基础上，再做多次的解码，增加迭代的次数，并尝试解码频率有叠加的信号。
-注：多次解码增加的运算量，总的解码时间会变长，会缩短设备的续航时间。
+About Decoding Modes
+Fast decode: Uses the original FT8CN decoding method, performing a single-pass decode on the received audio.
+Multi-pass decode: Builds on fast decode by performing multiple decoding passes, increasing the number of iterations and attempting to decode overlapping signals.
+Note: Multi-pass decoding requires significantly more processing power, resulting in longer overall decode times and reduced battery life.

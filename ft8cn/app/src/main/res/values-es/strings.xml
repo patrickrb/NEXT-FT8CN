@@ -98,10 +98,10 @@
     <string name="telemetry">telemetría</string>>
 
 
-    <!--   配置栏-->
+    <!--   Configuration bar -->
     <string name="offset_time_sec">%.1f Secs</string>>
 
-    <!--   频谱图-->
+    <!--   Spectrum chart -->
     <string name="decoding_takes_milliseconds">Descifrado : %d ms</string>>
     <string name="sound_frequency_is_set_to">La frecuencia del sonido es %d Hz</string>>
     <string name="de_noise">Eliminar ruido</string>
@@ -109,27 +109,27 @@
     <string name="markMessage">Mostrar mensaje</string>
     <string name="unMarkMessage">Ocultar mensaje</string>
 
-    <!--   选择蓝牙设备对话框-->
+    <!--   Select Bluetooth device dialog -->
     <string name="select_bluetooth_device">Seleccionar dispositivo bluetooth : %s</string>
 
-    <!--   PTT延迟毫秒数-->
+    <!--   PTT delay in milliseconds -->
     <string name="milliseconds">%d ms</string>
-    <!--   不回复次数-->
+    <!--   No-reply count -->
     <string name="ignore">pasar por alto</string>
     <string name="times">%d llamadas</string>
 
-    <!--   呼叫栏-->
+    <!--   Call bar -->
     <string name="sound_frequency_is">Freq : %.0f Hz</string>
     <string name="target_callsign">Objetivo : %s</string>
     <string name="transmission_sequence">Secuential : %d</string>
     <string name="message_count">Messajes(%d)</string>
 
-    <!--   日志导出栏栏-->
+    <!--   Log export bar -->
     <string name="export_info">Utilice el navegador web de otros dispositivos para exportar desde el fondo en la misma LAN que este dispositivo.\nIntroduzca la URL en el navegador:\nhttp://%s:%d</string>
-    <!--   发射监管-->
+    <!--   Transmit supervision -->
     <string name="minutes">%d Mins</string>
 
-    <!--   发射监管-->
+    <!--   Transmit supervision -->
     <string name="freq_syn">Bloqueada TX=RX</string>
     <string name="freq_asyn">Tx/Rx Separar</string>
     <string name="auto_follow_cq">Auto sequimiento CQ</string>
@@ -137,22 +137,22 @@
     <string name="automatic_call_following">Auto indicativo rastreado</string>
     <string name="do_not_call_the_following_callsign">No indicativo rastreado</string>
 
-    <!--   解码栏-->
+    <!--   Decode bar -->
     <string name="message_count_count">Mensajes(%d/%d)</string>
     <string name="average_offset_seconds">Compensar promedio : %.2f Sec</string>
     <string name="my_grid">Cuadrícula : %s</string>
 
-    <!--   解码列表-->
+    <!--   Decode list -->
     <string name="tracking_receiver">Receptor de seguimiento %s(%s)</string>
     <string name="calling_receiver">Receptor de llamadas %s(%s)</string>
     <string name="reply_to">Responder %s(%s)</string>
     <string name="tracking">seguimiento %s(%s)</string>
     <string name="calling">Llamada %s(%s)</string>
 
-    <!--   网格距离计算-->
+    <!--   Grid distance calculation -->
     <string name="distance">%.0f km</string>
 
-    <!--   日志列表-->
+    <!--   Log list -->
     <string name="confirmed">Confirmado</string>
     <string name="unconfirmed">Inconfirmado</string>
     <string name="lotw_confirmation">LoTW confirmado</string>
@@ -165,7 +165,7 @@
     <string name="log_cancel_confirmation">Cancelar confirmación (%s)</string>
     <string name="log_manual_confirmation">Confirmación manual (%s)</string>
 
-    <!--   QSL日志列表-->
+    <!--   QSL log list -->
     <string name="qsl_grid">Grid:%s</string>
     <string name="qsl_start_time">Hora de inicio : %s</string>
     <string name="qsl_end_time">Hora de finalización: %s</string>

@@ -1,6 +1,6 @@
 package com.bg7yoz.ft8cn.ui;
 /**
- * 提示消息。
+ * Toast message display.
  * @author BGY70Z
  * @date 2023-03-20
  */

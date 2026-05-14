@@ -1,6 +1,6 @@
 package com.bg7yoz.ft8cn.ui;
 /**
- * 串口数据位列表界面
+ * Serial port data bits list view
  * @author BGY70Z
  * @date 2024-01-03
  */

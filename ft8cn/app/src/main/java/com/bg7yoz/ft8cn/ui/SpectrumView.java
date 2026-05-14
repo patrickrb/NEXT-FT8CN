@@ -1,6 +1,6 @@
 package com.bg7yoz.ft8cn.ui;
 /**
- * 包含瀑布图、频率柱状图、标尺的自定义控件。
+ * Custom view containing waterfall, frequency bar chart, and ruler.
  * @author BGY70Z
  * @date 2023-03-20
  */
@@ -36,7 +36,7 @@ public class SpectrumView extends ConstraintLayout {
     private Fragment fragment;
 
 
-    private int frequencyLineTimeOut = 0;//画频率线的时间量
+    private int frequencyLineTimeOut = 0;//Frequency line display duration
 
     static {
         System.loadLibrary("ft8cn");
@@ -72,7 +72,7 @@ public class SpectrumView extends ConstraintLayout {
         mainViewModel.currentMessages=null;
 
 
-        //原始频谱开关
+        //Raw spectrum switch
         controlDeNoiseSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
@@ -81,7 +81,7 @@ public class SpectrumView extends ConstraintLayout {
                 mainViewModel.currentMessages=null;
             }
         });
-        //标记消息开关
+        //Mark message switch
         controlShowMessageSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
@@ -90,7 +90,7 @@ public class SpectrumView extends ConstraintLayout {
             }
         });
 
-        //当声音变化，画频谱
+        //Draw spectrum when audio changes
         mainViewModel.spectrumListener.mutableDataBuffer.observe(fragment.getViewLifecycleOwner(), new Observer<float[]>() {
             @Override
             public void onChanged(float[] ints) {
@@ -99,21 +99,21 @@ public class SpectrumView extends ConstraintLayout {
         });
 
 
-        //观察解码的变化
+        //Observe decode state changes
         mainViewModel.mutableIsDecoding.observe(fragment.getViewLifecycleOwner(), new Observer<Boolean>() {
             @Override
             public void onChanged(Boolean aBoolean) {
-                waterfallView.setDrawMessage(!aBoolean);//aBoolean==false说明解码完毕
+                waterfallView.setDrawMessage(!aBoolean);//aBoolean==false means decoding is complete
             }
         });
 
-        //触摸频谱时的动作
+        //Action when touching the spectrum
         View.OnTouchListener touchListener = new View.OnTouchListener() {
             @SuppressLint("DefaultLocale")
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
 
-                frequencyLineTimeOut = 60;//显示频率线的时长：60*0.16
+                frequencyLineTimeOut = 60;//Frequency line display duration: 60*0.16
 
                 waterfallView.setTouch_x(Math.round(motionEvent.getX()));
                 columnarView.setTouch_x(Math.round(motionEvent.getX()));
@@ -122,7 +122,7 @@ public class SpectrumView extends ConstraintLayout {
                 if (!mainViewModel.ft8TransmitSignal.isSynFrequency()
                         && (waterfallView.getFreq_hz() > 0)
                         && (motionEvent.getAction() == ACTION_UP)
-                ) {//如果时异频发射
+                ) {//If split frequency transmit
                     mainViewModel.databaseOpr.writeConfig("freq",
                             String.valueOf(waterfallView.getFreq_hz()),
                             null);
@@ -183,13 +183,13 @@ public class SpectrumView extends ConstraintLayout {
         if (frequencyLineTimeOut < 0) {
             frequencyLineTimeOut = 0;
         }
-        //达到显示的时长，就取取消掉频率线
+        //When display duration is reached, cancel the frequency line
         if (frequencyLineTimeOut == 0) {
             waterfallView.setTouch_x(-1);
             columnarView.setTouch_x(-1);
         }
         columnarView.setWaveData(fft);
-        if (mainViewModel.markMessage) {//是否标记消息
+        if (mainViewModel.markMessage) {//Whether to mark messages
             waterfallView.setWaveData(fft, UtcTimer.getNowSequential(), mainViewModel.currentMessages);
         } else {
             waterfallView.setWaveData(fft, UtcTimer.getNowSequential(), null);

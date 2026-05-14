@@ -80,7 +80,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/linearLayout"
         tools:ignore="SmallSp"
-        tools:text="12345公里" />
+        tools:text="12345km" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline2"
@@ -130,7 +130,7 @@
         app:layout_constraintStart_toEndOf="@+id/callingUtcTextView"
         app:layout_constraintTop_toTopOf="@+id/callingUtcTextView"
         tools:ignore="SmallSp"
-        tools:text="4.0:非标准消息" />
+        tools:text="4.0:NonStd Msg" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline7"

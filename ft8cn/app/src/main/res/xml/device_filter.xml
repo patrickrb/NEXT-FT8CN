@@ -34,7 +34,7 @@
     <usb-device vendor-id="3368" product-id="516"  /> <!-- 0x0d28 / 0x0204: ARM mbed -->
     <usb-device vendor-id="1155" product-id="22336" /><!-- 0x0483 / 0x5740: ST CDC -->
     <usb-device vendor-id="1155" product-id="41804" /><!-- 0x0483 / 0xA34C: ST CDC -->
-    <usb-device vendor-id="22136" product-id="26505" /><!--国赫一代 0x5678/0x6789 -->
+    <usb-device vendor-id="22136" product-id="26505" /><!-- Guohe Gen1 0x5678/0x6789 -->
     <usb-device vendor-id="1155" product-id="22322" /><!-- 0x0483 / 0x5732: ST CDC -->
     <usb-device vendor-id="11914" product-id="5"   /> <!-- 0x2E8A: Raspberry Pi Pico Micropython -->
     <usb-device vendor-id="0x0c26"  /> <!-- icom  -->

@@ -1,6 +1,6 @@
 package com.bg7yoz.ft8cn.ft8transmit;
 /**
- * 呼叫过程所记录的呼号信息
+ * Callsign information recorded during the calling process.
  * @author BGY70Z
  * @date 2023-03-20
  */
@@ -38,8 +38,8 @@ public class TransmitCallsign {
     }
 
     /**
-     * 当目标呼号为空，或CQ，说明没有目标呼号
-     * @return 是否有目标呼号
+     * When the target callsign is null or "CQ", there is no target callsign.
+     * @return whether there is a target callsign
      */
     public boolean haveTargetCallsign(){
         if (callsign==null){

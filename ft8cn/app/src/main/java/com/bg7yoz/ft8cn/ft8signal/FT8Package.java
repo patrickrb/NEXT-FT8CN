@@ -1,6 +1,6 @@
 package com.bg7yoz.ft8cn.ft8signal;
 /**
- * 按照FT8协议打包符号。
+ * Pack symbols according to the FT8 protocol.
  *
  * @author BGY70Z
  * @date 2023-03-20
@@ -30,21 +30,21 @@ public class FT8Package {
 
 
     /**
-     * 生成i3=4的非标准消息的77位数据包。
-     * @param message 消息
-     * @return 数据包
+     * Generate a 77-bit data packet for non-standard messages with i3=4.
+     * @param message the message
+     * @return data packet
      */
     public static byte[] generatePack77_i4(Ft8Message message) {
 
         String toCall = message.callsignTo.replace("<", "").replace(">", "");
         String fromCall = message.callsignFrom.replace("<", "").replace(">", "");
         int hash12;
-        if (message.checkIsCQ()) {//如果是CQ，就把自己的呼号的哈希加上
+        if (message.checkIsCQ()) {// if CQ, add our own callsign's hash
             hash12 = getHash12(fromCall);
         } else {
             hash12 = getHash12(toCall);
         }
-        if (fromCall.length() > 11) {//非标准呼号的长度不等长于11位
+        if (fromCall.length() > 11) {// non-standard callsign length must not exceed 11 characters
             fromCall = fromCall.substring(0, 11);
         }
 
@@ -77,7 +77,7 @@ public class FT8Package {
                     break;
                 case "RR73": //r2=2
                     data[8] = (byte) (data[8] | 0x01);
-                    //data[9] = (byte) (data[9] | 0x00);//data[9]无需改变
+                    //data[9] = (byte) (data[9] | 0x00);//data[9] does not need to change
                     break;
                 case "73": //r2=3
                     data[8] = (byte) (data[8] | 0x01);
@@ -90,22 +90,23 @@ public class FT8Package {
     }
 
     /**
-     * 从复合呼号中提取标准呼号，复合呼号是指带“/”的呼号。
-     * 此应用场景：双方都是复合呼号，那么发送方（我方）要改为标准呼号。
-     * 从复合呼号提取标准呼号的逻辑是：拆解“/”分隔的部分，取符合FT8标准呼号的正则表达式，如果没有则取最长字符串部分。
-     * @param compoundCallsign 复合呼号
-     * @return 标准呼号
+     * Extract the standard callsign from a compound callsign (a callsign containing "/").
+     * Use case: when both parties have compound callsigns, the sender (our side) must use
+     * the standard callsign. The extraction logic splits on "/", matches against the FT8
+     * standard callsign regex, and falls back to the longest part if no match is found.
+     * @param compoundCallsign compound callsign
+     * @return standard callsign
      */
     public static String getStdCall(String compoundCallsign) {
         if (!compoundCallsign.contains("/")) return compoundCallsign;
         String[] callsigns = compoundCallsign.split("/");
-        for (String callsign : callsigns) {//用正则表达式提取标准呼号
-            //FT8的认定：标准业余呼号由一个或两个字符的前缀组成，其中至少一个必须是字母，后跟一个十进制数字和最多三个字母的后缀。
+        for (String callsign : callsigns) {// extract standard callsign using regex
+            // FT8 definition: a standard amateur callsign consists of a one or two character prefix (at least one must be a letter), followed by a decimal digit and up to three letter suffix.
             if (callsign.matches("[A-Z0-9]?[A-Z0-9][0-9][A-Z][A-Z0-9]?[A-Z]?")) {
                 return callsign;
             }
         }
-        //当无法提取标准呼号时，取最长的字段
+        // when unable to extract a standard callsign, use the longest segment
         int len = 0;
         int index = 0;
         for (int i = 0; i < callsigns.length; i++) {
@@ -118,24 +119,24 @@ public class FT8Package {
     }
 
     /**
-     * i1=1,i1=2，在FT8协议的定义当中，分别是标准消息，和欧盟甚高频（EU VHF），这两个消息的唯一区别是：
-     * i1=1，消息可以带/R，i1=2，消息是可以带/P
-     * 所以，这两个消息可以合并为一个类型。
+     * i1=1 and i1=2 are defined in the FT8 protocol as standard messages and EU VHF messages
+     * respectively. The only difference is: i1=1 messages can carry /R, i1=2 messages can carry /P.
+     * Therefore, these two message types can be merged into one.
      *
-     * @param message 原始消息
+     * @param message original message
      * @return packet77
      */
     public static byte[] generatePack77_i1(Ft8Message message) {
         String toCall = message.callsignTo.replace("<", "").replace(">", "");
         String fromCall = message.callsignFrom.replace("<", "").replace(">", "");
 
-        if (message.checkIsCQ() && message.modifier != null) {//把修饰符加上
+        if (message.checkIsCQ() && message.modifier != null) {// add the modifier
             if (message.modifier.length() > 0) {
                 toCall = toCall + " " + message.modifier;
             }
         }
 
-        //如果以/P 或/R结尾的呼号，要把这个/P /R去掉
+        // if the callsign ends with /P or /R, strip the /P or /R
         if (toCall.endsWith("/P") || toCall.endsWith("/R")) {
             toCall = toCall.substring(0, toCall.length() - 2);
         }
@@ -145,15 +146,15 @@ public class FT8Package {
 //            fromCall = message.callsignFrom.substring(0, message.callsignFrom.length() - 2);
         }
 
-        //当双方都是复合呼号或非标准呼号时（带/的呼号），我的呼号变成标准呼号
+        // when both parties have compound or non-standard callsigns (containing /), convert our callsign to standard
         if ((toCall.contains("/")) && fromCall.contains("/")) {
-            fromCall = getStdCall(fromCall);//从复合呼号中提取标准呼号
+            fromCall = getStdCall(fromCall);// extract standard callsign from compound callsign
             // fromCall = fromCall.substring(0, fromCall.indexOf("/"));
         }
         byte r1_p1=pack_r1_p1(message.callsignTo);
 
         byte r2_p2;
-        //如果双方都有后缀，但不是相同的类型后缀，则取消r1或p1标志，以发送方后缀为准
+        // if both parties have suffixes but of different types, cancel the r1 or p1 flag; the sender's suffix takes precedence
         if ((message.callsignFrom.endsWith("/R")&&message.callsignTo.endsWith("/P"))
             ||(message.callsignFrom.endsWith("/P")&&message.callsignTo.endsWith("/R"))){
             r2_p2=0;
@@ -188,21 +189,22 @@ public class FT8Package {
     }
 
     /**
-     * 生成R1+g15数据（网格、或信号报告），实际是16位，包括前面R1。如R-17:R1=1,-17:R1=0
+     * Generate R1+g15 data (grid or signal report). Actually 16 bits including R1.
+     * e.g., R-17: R1=1, -17: R1=0
      *
-     * @param grid4 网格或信号报告
-     * @return 返回R1+g15数据
+     * @param grid4 grid or signal report
+     * @return R1+g15 data
      */
     public static int pack_R1_g15(String grid4) {
-        if (grid4 == null)// 只有两个呼号，没有信号报告和网格
+        if (grid4 == null)// only two callsigns, no signal report or grid
         {
             return MAXGRID4 + 1;
         }
-        if (grid4.length() == 0) {// 只有两个呼号，没有信号报告和网格
+        if (grid4.length() == 0) {// only two callsigns, no signal report or grid
             return MAXGRID4 + 1;
         }
 
-        // 特殊的报告，RRR,RR73,73
+        // special reports: RRR, RR73, 73
         if (grid4.equals("RRR"))
             return MAXGRID4 + 2;
         if (grid4.equals("RR73"))
@@ -211,7 +213,7 @@ public class FT8Package {
             return MAXGRID4 + 4;
 
 
-        // 检查是不是标准的4字符网格
+        // check if it is a standard 4-character grid
         if (grid4.matches("[A-Z][A-Z][0-9][0-9]")) {
             int igrid4 = grid4.charAt(0) - 'A';
             igrid4 = igrid4 * 18 + (grid4.charAt(1) - 'A');
@@ -221,9 +223,9 @@ public class FT8Package {
         }
 
 
-        // 检查是不是信号报告: +dd / -dd / R+dd / R-dd
-        // 信号报告在-30到99dB之间
-        // 信号报告的正则：[R]?[+-][0-9]{1,2}
+        // check if it is a signal report: +dd / -dd / R+dd / R-dd
+        // signal report range: -30 to 99 dB
+        // signal report regex: [R]?[+-][0-9]{1,2}
         String s = grid4;
         if (grid4.charAt(0) == 'R') {
             s = grid4.substring(1);
@@ -246,10 +248,11 @@ public class FT8Package {
     }
 
     /**
-     * 根据呼号生成c28数据。呼号为标准呼号时,不带/R或/P。如果呼号不是标准呼号，用hash22+2063592;
+     * Generate c28 data from a callsign. For standard callsigns, without /R or /P.
+     * If the callsign is non-standard, use hash22+2063592.
      *
-     * @param callsign 呼号
-     * @return c28数据
+     * @param callsign callsign
+     * @return c28 data
      */
     public static int pack_c28(String callsign) {
         //byte[] data=new byte[]{(byte)0x00,(byte)0x00,(byte)0x00,(byte)0x00};
@@ -262,7 +265,7 @@ public class FT8Package {
                 return 2;
         }
 
-        //判断是否有修饰符000-999,A-Z,AA-ZZ,AAA-ZZZ,AAAA-ZZZZ
+        // check for modifier: 000-999, A-Z, AA-ZZ, AAA-ZZZ, AAAA-ZZZZ
         if (callsign.startsWith("CQ ") && callsign.length() > 3) {
             String temp = callsign.substring(3).trim().toUpperCase();
             if (temp.matches("[0-9]{3}")) {
@@ -301,15 +304,15 @@ public class FT8Package {
         }
 
 
-        //格式化成标准的呼号。6位、第3位带数字
-        //c6也可以是非标准呼号。大于6位的都是非标准呼号
+        // format into a standard callsign: 6 characters, 3rd character is a digit
+        // c6 can also be a non-standard callsign; anything longer than 6 characters is non-standard
         String c6 = formatCallsign(callsign);
-        //判断是不是标准呼号
-        if (!GenerateFT8.checkIsStandardCallsign(callsign)) {//生成HASH22+2063592
+        // check if it is a standard callsign
+        if (!GenerateFT8.checkIsStandardCallsign(callsign)) {// generate HASH22+2063592
             return NTOKENS + getHash22(callsign);
         }
 
-        //6位呼号取值
+        // extract values from the 6-character callsign
         int i0, i1, i2, i3, i4, i5;
         i0 = A1.indexOf(c6.substring(0, 1));
         i1 = A2.indexOf(c6.substring(1, 2));
@@ -332,33 +335,33 @@ public class FT8Package {
 
 
     /**
-     * 格式化标准的呼号
-     * 标准呼号是6位，前缀是1~2个字母+1个数字，后缀对多3个字母
-     * 格式化的内容：
-     * 1.斯威士兰（Swaziland）的呼号前缀问题: 3DA0XYZ -> 3D0XYZ
-     * 2.几内亚（Guinea）呼号前缀问题: 3XA0XYZ -> QA0XYZ
-     * 3.第2位是数字的呼号，前面用空格补充。A0XYZ->" A0XYZ"
-     * 4.后缀不足3位的，也要补足空格。BA2BI->"BA2BI "
+     * Format a standard callsign.
+     * A standard callsign is 6 characters: 1-2 letter prefix + 1 digit, suffix up to 3 letters.
+     * Formatting rules:
+     * 1. Swaziland callsign prefix issue: 3DA0XYZ -> 3D0XYZ
+     * 2. Guinea callsign prefix issue: 3XA0XYZ -> QA0XYZ
+     * 3. Callsigns with a digit in position 2 are left-padded with a space: A0XYZ -> " A0XYZ"
+     * 4. Suffixes shorter than 3 characters are right-padded with spaces: BA2BI -> "BA2BI "
      *
-     * @param callsign 呼号
-     * @return 返回C28值，以int的值来表示
+     * @param callsign callsign
+     * @return the C28 value represented as an int
      */
     private static String formatCallsign(String callsign) {
         String c6 = callsign;
-        // 解决斯威士兰（Swaziland）的呼号前缀问题: 3DA0XYZ -> 3D0XYZ
+        // fix Swaziland callsign prefix issue: 3DA0XYZ -> 3D0XYZ
         if (callsign.length() > 3 && callsign.substring(0, 4).equals("3DA0") && callsign.length() <= 7) {
             c6 = "3D0" + callsign.substring(4);
-            // 解决几内亚（Guinea）呼号前缀问题: 3XA0XYZ -> QA0XYZ
+            // fix Guinea callsign prefix issue: 3XA0XYZ -> QA0XYZ
         } else if (callsign.length() > 3 && callsign.substring(0, 3).matches("3X[A-Z]") && callsign.length() <= 7) {
             c6 = "Q" + callsign.substring(2);
         } else {
-            // 第2位是数字,第3位是字母的，要在前面补充空格：A0XYZ -> " A0XYZ",A6开头的除外
+            // if position 2 is a digit and position 3 is a letter, left-pad with a space: A0XYZ -> " A0XYZ" (except A6 prefix)
             if (callsign.substring(0, 3).matches("[A-Z][0-9][A-Z]")) {
                 c6 = " " + callsign;
             }
         }
 
-        if (c6.length() < 6) {//如果长度不足6位，结尾补充空格
+        if (c6.length() < 6) {// if length is less than 6, right-pad with spaces
             for (int i = 0; i < 6 - c6.length() + 1; i++) {
                 c6 = c6 + " ";
             }

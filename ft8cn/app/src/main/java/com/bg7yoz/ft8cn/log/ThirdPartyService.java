@@ -112,14 +112,14 @@ public class ThirdPartyService {
         String comment = qslRecord.getComment();
 
         //<comment:15>Distance: 99 km <eor>
-        //在写库的时候，一定要加" km"
+        //When writing to the database, be sure to append " km"
         logStr.append(String.format("<comment:%d>%s <eor>\n"
                 , comment.length()
                 , comment));
         return logStr.toString();
     }
     public static void UploadToCloudLog(QSLRecord qslRecord){
-        // 转换为adif格式
+        // Convert to ADIF format
         String logStr = QSLRecordToADIF(qslRecord,ServiceType.Cloudlog);
         Log.d(TAG,logStr);
         String address = GeneralVariables.getCloudlogServerAddress();
@@ -145,7 +145,7 @@ public class ThirdPartyService {
     public static boolean CheckCloudlogConnection(){
         String address = GeneralVariables.getCloudlogServerAddress();
         String apiKey = GeneralVariables.getCloudlogServerApiKey();
-        // 检查地址末尾是否含有 /
+        // Check if the address ends with /
         if (!address.endsWith("/")){
             address+="/";
         }
@@ -188,7 +188,7 @@ public class ThirdPartyService {
     }
 
     public static void UploadToQRZ(QSLRecord qslRecord){
-        // 转换为adif格式
+        // Convert to ADIF format
         String logStr = QSLRecordToADIF(qslRecord, ServiceType.QRZ);
         Log.d(TAG,logStr);
         String apikey = GeneralVariables.getQrzApiKey();
@@ -212,19 +212,19 @@ public class ThirdPartyService {
             URL urlObj = new URL(url);
             conn = (HttpURLConnection) urlObj.openConnection();
 
-            // 设置请求方法为POST
+            // Set request method to POST
             conn.setRequestMethod("POST");
-            // 设置请求的头部信息
+            // Set request headers
             conn.setRequestProperty("Content-Type", "application/json");
 
-            // 获取OutputStream，将请求的数据写入流中
+            // Get OutputStream and write request data to the stream
             OutputStream os = conn.getOutputStream();
             os.write(json.getBytes());
             os.flush();
 
-            // 获取服务器的响应结果
+            // Get server response
             int responseCode = conn.getResponseCode();
-            // cloudlog使用HTTP_CREATED作为创建记录成功的响应
+            // Cloudlog uses HTTP_CREATED as the response for successful record creation
             if (responseCode == HttpURLConnection.HTTP_OK || responseCode==HttpURLConnection.HTTP_CREATED) {
                 reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
                 StringBuilder response = new StringBuilder();
@@ -253,12 +253,12 @@ public class ThirdPartyService {
             URL urlObj = new URL(url);
             conn = (HttpURLConnection) urlObj.openConnection();
 
-            // 设置请求方法为POST
+            // Set request method to GET
             conn.setRequestMethod("GET");
-            // 设置请求的头部信息
+            // Set request headers
             conn.setRequestProperty("Content-Type", "application/json");
 
-            // 获取服务器的响应结果
+            // Get server response
             int responseCode = conn.getResponseCode();
             if (responseCode == HttpURLConnection.HTTP_OK) {
                 reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));

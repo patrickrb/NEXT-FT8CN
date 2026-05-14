@@ -1,7 +1,8 @@
 package com.bg7yoz.ft8cn.ui;
 /**
- * 用于可以自动换行的RadioGroup控件
- * 原生RadioGroup控件在布局不够宽度时，无法把RadioButton自动换行，此控件可以自动换行
+ * A RadioGroup control that supports automatic line wrapping.
+ * The native RadioGroup control cannot wrap RadioButtons when the layout width is insufficient;
+ * this control supports automatic line wrapping.
  * @author BGY70Z
  * @date 2023-08-30
  */
@@ -26,59 +27,59 @@ public class RadioGroupFt8cn extends RadioGroup {
         int heightSize = MeasureSpec.getSize(heightMeasureSpec);
         int heightMode = MeasureSpec.getMode(heightMeasureSpec);
 
-        //调用ViewGroup的方法，测量子view
+        //Call ViewGroup's method to measure child views
         measureChildren(widthMeasureSpec, heightMeasureSpec);
 
-        //最大的宽
+        //Maximum width
         int maxWidth = 0;
-        //累计的高
+        //Accumulated height
         int totalHeight = 0;
 
-        //当前这一行的累计行宽
+        //Accumulated line width for the current row
         int lineWidth = 0;
-        //当前这行的最大行高
+        //Maximum line height for the current row
         int maxLineHeight = 0;
-        //用于记录换行前的行宽和行高
+        //Used to record line width and height before wrapping
         int oldHeight;
         int oldWidth;
 
         int count = getChildCount();
-        //假设 widthMode和heightMode都是AT_MOST
+        //Assume both widthMode and heightMode are AT_MOST
         for (int i = 0; i < count; i++) {
             View child = getChildAt(i);
             MarginLayoutParams params = (MarginLayoutParams) child.getLayoutParams();
-            //得到这一行的最高
+            //Get the maximum height of this row
             oldHeight = maxLineHeight;
-            //当前最大宽度
+            //Current maximum width
             oldWidth = maxWidth;
 
             int deltaX = child.getMeasuredWidth() + params.leftMargin + params.rightMargin;
-            if (lineWidth + deltaX + getPaddingLeft() + getPaddingRight() > widthSize) {//如果折行,height增加
-                //和目前最大的宽度比较,得到最宽。不能加上当前的child的宽,所以用的是oldWidth
+            if (lineWidth + deltaX + getPaddingLeft() + getPaddingRight() > widthSize) {//If wrapping, height increases
+                //Compare with current max width to get the widest. Cannot add current child's width, so use oldWidth
                 maxWidth = Math.max(lineWidth, oldWidth);
-                //重置宽度
+                //Reset width
                 lineWidth = deltaX;
-                //累加高度
+                //Accumulate height
                 totalHeight += oldHeight;
-                //重置行高,当前这个View，属于下一行，因此当前最大行高为这个child的高度加上margin
+                //Reset line height; current View belongs to the next row, so max line height is this child's height plus margin
                 maxLineHeight = child.getMeasuredHeight() + params.topMargin + params.bottomMargin;
 
             } else {
-                //不换行，累加宽度
+                //No wrapping, accumulate width
                 lineWidth += deltaX;
-                //不换行，计算行最高
+                //No wrapping, calculate max row height
                 int deltaY = child.getMeasuredHeight() + params.topMargin + params.bottomMargin;
                 maxLineHeight = Math.max(maxLineHeight, deltaY);
             }
             if (i == count - 1) {
-                //前面没有加上下一行的搞，如果是最后一行，还要再叠加上最后一行的最高的值
+                //The next row's height wasn't added earlier; if this is the last row, add the last row's max height
                 totalHeight += maxLineHeight;
-                //计算最后一行和前面的最宽的一行比较
+                //Compare the last row with the widest row so far
                 maxWidth = Math.max(lineWidth, oldWidth);
             }
         }
 
-        //加上当前容器的padding值
+        //Add the current container's padding values
         maxWidth += getPaddingLeft() + getPaddingRight();
         totalHeight += getPaddingTop() + getPaddingBottom();
         setMeasuredDimension(widthMode == MeasureSpec.EXACTLY ? widthSize : maxWidth,
@@ -89,33 +90,33 @@ public class RadioGroupFt8cn extends RadioGroup {
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
         int count = getChildCount();
-        //pre为前面所有的child的相加后的位置
+        //pre is the accumulated position of all previous children
         int preLeft = getPaddingLeft();
         int preTop = getPaddingTop();
-        //记录每一行的最高值
+        //Record the maximum height of each row
         int maxHeight = 0;
         for (int i = 0; i < count; i++) {
             View child = getChildAt(i);
             MarginLayoutParams params = (MarginLayoutParams) child.getLayoutParams();
-            //r-l为当前容器的宽度。如果子view的累积宽度大于容器宽度，就换行。
+            //r-l is the current container width. If accumulated child view width exceeds container width, wrap to next line.
             if (preLeft + params.leftMargin + child.getMeasuredWidth() + params.rightMargin + getPaddingRight() > (r - l)) {
-                //重置
+                //Reset
                 preLeft = getPaddingLeft();
-                //要选择child的height最大的作为设置
+                //Use the child with the maximum height for the setting
                 preTop = preTop + maxHeight;
                 maxHeight = getChildAt(i).getMeasuredHeight() + params.topMargin + params.bottomMargin;
-            } else { //不换行,计算最大高度
+            } else { //No wrapping, calculate max height
                 maxHeight = Math.max(maxHeight, child.getMeasuredHeight() + params.topMargin + params.bottomMargin);
             }
-            //left坐标
+            //left coordinate
             int left = preLeft + params.leftMargin;
-            //top坐标
+            //top coordinate
             int top = preTop + params.topMargin;
             int right = left + child.getMeasuredWidth();
             int bottom = top + child.getMeasuredHeight();
-            //为子view布局
+            //Layout the child view
             child.layout(left, top, right, bottom);
-            //计算布局结束后，preLeft的值
+            //Calculate preLeft value after layout
             preLeft += params.leftMargin + child.getMeasuredWidth() + params.rightMargin;
 
         }

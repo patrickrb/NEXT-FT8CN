@@ -15,7 +15,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 /**
- * KENWOOD TS590,与YAESU3代指令接近，命令结构使用Yaesu3Command,指令在KenwoodTK90RigConstant中。
+ * KENWOOD TS590, similar to YAESU gen-3 commands. Uses Yaesu3Command structure, commands in KenwoodTK90RigConstant.
  */
 public class KenwoodTS570Rig extends BaseRig {
     private static final String TAG = "KenwoodTS570Rig";
@@ -39,9 +39,9 @@ public class KenwoodTS570Rig extends BaseRig {
                         return;
                     }
                     if (isPttOn()) {
-                        readMeters();//读METER
+                        readMeters();//read METER
                     } else {
-                        readFreqFromRig();//读频率
+                        readFreqFromRig();//read frequency
                     }
 
                 } catch (Exception e) {
@@ -52,17 +52,17 @@ public class KenwoodTS570Rig extends BaseRig {
     }
 
     /**
-     * 读取Meter RM;
+     * Read Meter RM;
      */
     private void readMeters() {
         if (getConnector() != null) {
-            clearBufferData();//清空一下缓存
+            clearBufferData();//clear buffer
             getConnector().sendData(KenwoodTK90RigConstant.setRead590Meters());
         }
     }
 
     /**
-     * 清空缓存数据
+     * Clear buffer data
      */
     private void clearBufferData() {
         buffer.setLength(0);
@@ -73,7 +73,7 @@ public class KenwoodTS570Rig extends BaseRig {
         super.setPTT(on);
         if (getConnector() != null) {
             switch (getControlMode()) {
-                case ControlMode.CAT://以CIV指令
+                case ControlMode.CAT://via CAT command
                     getConnector().setPttOn(KenwoodTK90RigConstant.setTS570PTTState(on));
                     break;
                 case ControlMode.RTS:
@@ -113,24 +113,24 @@ public class KenwoodTS570Rig extends BaseRig {
         if (!s.contains("\r")) {
             buffer.append(s);
             if (buffer.length() > 1000) clearBufferData();
-            //return;//说明数据还没接收完。
+            //return;//data reception not yet complete.
         } else {
-            if (s.indexOf("\r") > 0) {//说明接到结束的数据了，并且不是第一个字符是;
+            if (s.indexOf("\r") > 0) {//received end-of-data, and delimiter is not the first character
                 buffer.append(s.substring(0, s.indexOf("\r")));
             }
-            //开始分析数据
+            //begin parsing data
             Yaesu3Command yaesu3Command = Yaesu3Command.getCommand(buffer.toString());
-            clearBufferData();//清一下缓存
-            //要把剩下的数据放到缓存里
+            clearBufferData();//clear buffer
+            //put remaining data into buffer
             buffer.append(s.substring(s.indexOf("\r") + 1));
 
             if (yaesu3Command == null) {
                 return;
             }
             String cmd = yaesu3Command.getCommandID();
-            if (cmd.equalsIgnoreCase("FA")) {//频率
+            if (cmd.equalsIgnoreCase("FA")) {//frequency
                 long tempFreq = Yaesu3Command.getFrequency(yaesu3Command);
-                if (tempFreq != 0) {//如果tempFreq==0，说明频率不正常
+                if (tempFreq != 0) {//if tempFreq==0, frequency is invalid
                     setFreq(Yaesu3Command.getFrequency(yaesu3Command));
                 }
             } else if (cmd.equalsIgnoreCase("RM")) {//meter
@@ -158,7 +158,7 @@ public class KenwoodTS570Rig extends BaseRig {
             swrAlert = false;
         }
         if ((alc > KenwoodTK90RigConstant.ts_590_alc_alert_max)
-                && GeneralVariables.alc_switch_on) {//网络模式下不警告ALC
+                && GeneralVariables.alc_switch_on) {//ALC alert
             if (!alcMaxAlert) {
                 alcMaxAlert = true;
                 ToastMessage.show(GeneralVariables.getStringFromResource(R.string.alc_high_alert));
@@ -172,7 +172,7 @@ public class KenwoodTS570Rig extends BaseRig {
     @Override
     public void readFreqFromRig() {
         if (getConnector() != null) {
-            clearBufferData();//清空一下缓存
+            clearBufferData();//clear buffer
             getConnector().sendData(KenwoodTK90RigConstant.setTS590ReadOperationFreq());
         }
     }

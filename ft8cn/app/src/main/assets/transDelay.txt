@@ -1,7 +1,7 @@
-设置发射延迟（以毫秒为单位）是为了在上一个监听周期结束后，给解码运算一个时间。
-设定一个延迟可以在发射前获知上一个周期对方的反馈情况，并在本周期内做出反应。
-延迟时间的设定取决于本设备的运算能力，延迟时间不能小于解码运算的时间长度。
-如果延迟时间过短，可能无法对上一周期的信号做出反应。
-如果延迟时间过长，其它电台可能无法正常解析出您的信号。
-在实际应用中，由于在给电台发送PTT指令后，电台会有一个响应时间（FT8CN暂定为100毫秒），所以实际声音信号的发射时间是发射延迟+100毫秒，如：设定发射延迟500毫秒，实际信号的发射是500+100=600毫秒。
-FT8的信号实际周期长度为12.64秒，建议最大延迟时间不要超过1.08秒。
+Setting the transmission delay (in milliseconds) allows time for decoding after the previous listening cycle ends.
+Setting a delay allows the app to know the other party's response from the previous cycle before transmitting, and react accordingly in the current cycle.
+The delay setting depends on the device's processing capability - the delay must not be shorter than the time needed for decoding.
+If the delay is too short, the app may not be able to react to signals from the previous cycle.
+If the delay is too long, other stations may not be able to properly decode your signal.
+In practice, since the radio has a response time after receiving the PTT command (FT8CN assumes 100 milliseconds), the actual audio signal transmission time is the transmission delay plus 100 milliseconds. For example, with a 500 ms transmission delay, the actual signal transmission starts at 500 + 100 = 600 milliseconds.
+The actual FT8 signal cycle length is 12.64 seconds. It is recommended that the maximum delay not exceed 1.08 seconds.

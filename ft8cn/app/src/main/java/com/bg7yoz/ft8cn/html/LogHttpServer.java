@@ -1,6 +1,6 @@
 package com.bg7yoz.ft8cn.html;
 /**
- * Http服务的具体内容。数据库访问不需要异步方式。
+ * HTTP service content implementation. Database access does not require async operations.
  *
  * @author BGY70Z
  * @date 2023-03-20
@@ -43,7 +43,7 @@ public class LogHttpServer extends NanoHTTPD {
     public static int DEFAULT_PORT = 7050;
     private static final String TAG = "LOG HTTP";
 
-    private final ImportTaskList importTaskList = new ImportTaskList();//导如日志的任务列表
+    private final ImportTaskList importTaskList = new ImportTaskList();//log import task list
 
 
     public LogHttpServer(MainViewModel viewModel, int port) {
@@ -63,31 +63,31 @@ public class LogHttpServer extends NanoHTTPD {
             uri = uriList[1];
         }
 
-        if (uri.equalsIgnoreCase("CONFIG")) {//查配置信息
+        if (uri.equalsIgnoreCase("CONFIG")) {//Query configuration info
             msg = HTML_STRING(getConfig());
-        } else if (uri.equalsIgnoreCase("showQSLCallsigns")) {//显示通联过的呼号，包括最后的时间
+        } else if (uri.equalsIgnoreCase("showQSLCallsigns")) {//Show QSO callsigns, including last contact time
             msg = HTML_STRING(showQslCallsigns(session));
-        } else if (uri.equalsIgnoreCase("DEBUG")) {//查通联过的呼号
+        } else if (uri.equalsIgnoreCase("DEBUG")) {//Query QSO callsigns
             msg = HTML_STRING(showDebug());
-        } else if (uri.equalsIgnoreCase("SHOWHASH")) {//查通呼号的哈希表
+        } else if (uri.equalsIgnoreCase("SHOWHASH")) {//Query callsign hash table
             msg = HTML_STRING(showCallsignHash());
-        } else if (uri.equalsIgnoreCase("NEWMESSAGE")) {//查本周期通联消息表
+        } else if (uri.equalsIgnoreCase("NEWMESSAGE")) {//Query current cycle QSO message table
             msg = HTML_STRING(getNewMessages());
-        } else if (uri.equalsIgnoreCase("MESSAGE")) {//查保存的SWL通联消息表
+        } else if (uri.equalsIgnoreCase("MESSAGE")) {//Query saved SWL QSO message table
             return getMessages(session);
-        } else if (uri.equalsIgnoreCase("QSOSWLMSG")) {//查SWL QSO通联消息表
+        } else if (uri.equalsIgnoreCase("QSOSWLMSG")) {//Query SWL QSO contact message table
             return getSWLQsoMessages(session);
-        } else if (uri.equalsIgnoreCase("QSOLogs")) {//查QSO日志
+        } else if (uri.equalsIgnoreCase("QSOLogs")) {//Query QSO logs
             return getQsoLogs(session);
-        } else if (uri.equalsIgnoreCase("CALLSIGNGRID")) {//查呼号与网格的对应关系
+        } else if (uri.equalsIgnoreCase("CALLSIGNGRID")) {//Query callsign-to-grid mapping
             msg = HTML_STRING(showCallGridList());
         } else if (uri.equalsIgnoreCase("GETCALLSIGNQTH")) {
             msg = HTML_STRING(getCallsignQTH(session));
-        } else if (uri.equalsIgnoreCase("ALLTABLE")) {//查所有的表
+        } else if (uri.equalsIgnoreCase("ALLTABLE")) {//Query all tables
             msg = HTML_STRING(getAllTableName());
-        } else if (uri.equalsIgnoreCase("FOLLOWCALLSIGNS")) {//查关注的呼号
+        } else if (uri.equalsIgnoreCase("FOLLOWCALLSIGNS")) {//Query tracked callsigns
             msg = HTML_STRING(getFollowCallsigns());
-        } else if (uri.equalsIgnoreCase("DELFOLLOW")) {//删除关注的呼号
+        } else if (uri.equalsIgnoreCase("DELFOLLOW")) {//Delete tracked callsign
             if (uriList.length >= 3) {
                 deleteFollowCallSign(uriList[2].replace("_", "/"));
             }
@@ -97,15 +97,15 @@ public class LogHttpServer extends NanoHTTPD {
                 deleteQSLByMonth(uriList[2].replace("_", "/"));
             }
             msg = HTML_STRING(showQSLTable());
-        } else if (uri.equalsIgnoreCase("QSLCALLSIGNS")) {//查通联过的呼号
+        } else if (uri.equalsIgnoreCase("QSLCALLSIGNS")) {//Query QSO callsigns
             msg = HTML_STRING(getQSLCallsigns());
         } else if (uri.equalsIgnoreCase("QSLTABLE")) {
             msg = HTML_STRING(showQSLTable());
         } else if (uri.equalsIgnoreCase("IMPORTLOG")) {
             msg = HTML_STRING(showImportLog());
-        } else if (uri.equalsIgnoreCase("GETIMPORTTASK")) {//这个是用户实时获取导入状态的URI
+        } else if (uri.equalsIgnoreCase("GETIMPORTTASK")) {//URI for real-time import status retrieval
             msg = HTML_STRING(makeGetImportTaskHTML(session));
-        } else if (uri.equalsIgnoreCase("CANCELTASK")) {//这个是用户取消导入的URI
+        } else if (uri.equalsIgnoreCase("CANCELTASK")) {//URI for canceling an import
             msg = HTML_STRING(doCancelImport(session));
         } else if (uri.equalsIgnoreCase("IMPORTLOGDATA")) {
             msg = HTML_STRING(doImportLogFile(session));
@@ -113,7 +113,7 @@ public class LogHttpServer extends NanoHTTPD {
             msg = HTML_STRING(showAllQSL());
         } else if (uri.equalsIgnoreCase("SHOWQSL")) {
             msg = HTML_STRING(showQSLByMonth(uriList[2]));
-        } else if (uri.equalsIgnoreCase("DELQSLCALLSIGN")) {//删除通联过的呼号
+        } else if (uri.equalsIgnoreCase("DELQSLCALLSIGN")) {//Delete a QSO callsign
             if (uriList.length >= 3) {
                 deleteQSLCallSign(uriList[2].replace("_", "/"));
             }
@@ -125,7 +125,7 @@ public class LogHttpServer extends NanoHTTPD {
 
         try {
             Response response;
-            if (uri.equalsIgnoreCase("DOWNALLQSL")) {//下载日志
+            if (uri.equalsIgnoreCase("DOWNALLQSL")) {//Download logs
                 msg = downAllQSl();
                 response = newFixedLengthResponse(NanoHTTPD.Response.Status.OK, "text/plain", msg);
                 response.addHeader("Content-Disposition", "attachment;filename=All_log.adi");
@@ -159,7 +159,7 @@ public class LogHttpServer extends NanoHTTPD {
 
     @SuppressLint("DefaultLocale")
     private String doImportLogFile(IHTTPSession session) {
-        //判断是不是POST日志文件
+        //Check if this is a POST log file request
         if (session.getMethod().equals(Method.POST)
                 || session.getMethod().equals(Method.PUT)) {
             Map<String, String> files = new HashMap<>();
@@ -168,14 +168,14 @@ public class LogHttpServer extends NanoHTTPD {
                 session.parseBody(files);
 
                 Log.e(TAG, "doImportLogFile: information:" + files.toString());
-                String param = files.get("file1");//这个是post或put文件的key
+                String param = files.get("file1");//this is the key for the POST or PUT file
 
-                ImportTaskList.ImportTask task = importTaskList.addTask(param.hashCode());//生成一个新的任务
+                ImportTaskList.ImportTask task = importTaskList.addTask(param.hashCode());//create a new task
 
                 LogFileImport logFileImport = new LogFileImport(task, param);
 
 
-                //把提交的数据放到一个独立的线程运行，防止WEB页面停留太久
+                //Run the submitted data in a separate thread to prevent the web page from stalling too long
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
@@ -183,7 +183,7 @@ public class LogHttpServer extends NanoHTTPD {
                     }
                 }).start();
 
-                //重定向,跳转到实时导入信息界面
+                //Redirect to the real-time import status page
                 return String.format("<head>\n<meta http-equiv=\"Refresh\" content=\"0; URL=getImportTask?session=%d\" /></head><body></body>"
                         , param.hashCode());
 
@@ -209,7 +209,7 @@ public class LogHttpServer extends NanoHTTPD {
         if (pars.get("session") != null) {
             String s = Objects.requireNonNull(pars.get("session"));
             int id = Integer.parseInt(s);
-            if (!importTaskList.checkTaskIsRunning(id)) {//如果任务停止，就没有必要刷新了
+            if (!importTaskList.checkTaskIsRunning(id)) {//If the task has stopped, no need to refresh
                 script = "";
             }
             return script + importTaskList.getTaskHTML(id);
@@ -235,11 +235,11 @@ public class LogHttpServer extends NanoHTTPD {
     @SuppressLint("DefaultLocale")
     private void doImportADI(ImportTaskList.ImportTask task, LogFileImport logFileImport) {
         task.setStatus(ImportTaskList.ImportState.IMPORTING);
-        ArrayList<HashMap<String, String>> recordList = logFileImport.getLogRecords();//以正则表达式：[<][Ee][Oo][Rr][>]分行
+        ArrayList<HashMap<String, String>> recordList = logFileImport.getLogRecords();//Split lines using regex: [<][Ee][Oo][Rr][>]
         task.importedCount = 0;
-        task.count = recordList.size();//总行数
+        task.count = recordList.size();//total number of lines
         for (HashMap<String, String> record : recordList) {
-            if (task.status == ImportTaskList.ImportState.CANCELED) break;//检查是不是取消导入
+            if (task.status == ImportTaskList.ImportState.CANCELED) break;//Check if import was canceled
 
             QSLRecord qslRecord = new QSLRecord(record);
             task.processCount++;
@@ -262,7 +262,7 @@ public class LogHttpServer extends NanoHTTPD {
         }
 
 
-        //此处是显示错误的数据
+        //Display erroneous data here
         StringBuilder temp = new StringBuilder();
         if (logFileImport.getErrorCount() > 0) {
             temp.append("<table>");
@@ -279,14 +279,14 @@ public class LogHttpServer extends NanoHTTPD {
         if (task.status!= ImportTaskList.ImportState.CANCELED) {
             task.setStatus(ImportTaskList.ImportState.FINISHED);
         }
-        mainViewModel.databaseOpr.getQslDxccToMap();//更新一下已经通联的分区
+        mainViewModel.databaseOpr.getQslDxccToMap();//Refresh the map of contacted zones
     }
 
 
     /**
-     * 获取配置信息
+     * Get configuration information
      *
-     * @return config表内容
+     * @return config table content
      */
     private String getConfig() {
         Cursor cursor = mainViewModel.databaseOpr.getDb()
@@ -295,13 +295,13 @@ public class LogHttpServer extends NanoHTTPD {
     }
 
     /**
-     * 获取通联过的呼号，包括：呼号、最后时间、频段，波长、网格
+     * Get QSO callsigns, including: callsign, last time, band, wavelength, grid
      *
-     * @return config表内容
+     * @return config table content
      */
     private String showQslCallsigns(IHTTPSession session) {
         String callsign = "";
-        //读取查询的参数
+        //Read query parameters
         Map<String, String> pars = session.getParms();
         if (pars.get("callsign") != null) {
             callsign = Objects.requireNonNull(pars.get("callsign"));
@@ -326,7 +326,7 @@ public class LogHttpServer extends NanoHTTPD {
     }
 
     /**
-     * 获取全部的表名
+     * Get all table names
      *
      * @return html
      */
@@ -340,7 +340,7 @@ public class LogHttpServer extends NanoHTTPD {
     private String getCallsignQTH(IHTTPSession session) {
         String callsign = "";
         String grid = "";
-        //读取查询的参数
+        //Read query parameters
         Map<String, String> pars = session.getParms();
 
         if (pars.get("callsign") != null) {
@@ -365,7 +365,7 @@ public class LogHttpServer extends NanoHTTPD {
                 , GeneralVariables.getStringFromResource(R.string.html_qsl_grid)
                 , grid
                 , GeneralVariables.getStringFromResource(R.string.html_message_query)));
-        //写字段名
+        //Write column names
         HtmlContext.tableRowBegin(result).append("\n");
         HtmlContext.tableCellHeader(result
                 , GeneralVariables.getStringFromResource(R.string.html_callsign)
@@ -400,7 +400,7 @@ public class LogHttpServer extends NanoHTTPD {
 
 
     /**
-     * 获取关注的呼号
+     * Get tracked callsigns
      *
      * @return HTML
      */
@@ -409,7 +409,7 @@ public class LogHttpServer extends NanoHTTPD {
         StringBuilder result = new StringBuilder();
         HtmlContext.tableBegin(result, true, 3, false).append("\n");
 
-        //写字段名
+        //Write column names
         HtmlContext.tableRowBegin(result).append("\n");
         for (int i = 0; i < cursor.getColumnCount(); i++) {
             HtmlContext.tableCellHeader(result
@@ -437,9 +437,9 @@ public class LogHttpServer extends NanoHTTPD {
     }
 
     /**
-     * 删除关注的呼号
+     * Delete a tracked callsign
      *
-     * @param callsign 关注的呼号
+     * @param callsign the tracked callsign
      */
     private void deleteFollowCallSign(String callsign) {
         mainViewModel.databaseOpr.getDb().execSQL("delete from followCallsigns where callsign=?", new String[]{callsign});
@@ -452,7 +452,7 @@ public class LogHttpServer extends NanoHTTPD {
 
 
     /**
-     * 查询通联过的呼号
+     * Query QSO callsigns
      *
      * @return HTML
      */
@@ -463,7 +463,7 @@ public class LogHttpServer extends NanoHTTPD {
         StringBuilder result = new StringBuilder();
         HtmlContext.tableBegin(result, false, 0, true).append("\n");
 
-        //写字段名
+        //Write column names
         HtmlContext.tableRowBegin(result).append("\n");
         HtmlContext.tableCellHeader(result
                 , GeneralVariables.getStringFromResource(R.string.html_qsl_start_time)
@@ -512,7 +512,7 @@ public class LogHttpServer extends NanoHTTPD {
     }
 
     /**
-     * 显示呼号与网格的对应关系
+     * Show callsign-to-grid mapping
      *
      * @return html
      */
@@ -523,7 +523,7 @@ public class LogHttpServer extends NanoHTTPD {
                 "function myrefresh(){\n" +
                 "window.location.reload();\n" +
                 "}\n" +
-                "setTimeout('myrefresh()',5000); //指定5秒刷新一次，5000处可自定义设置，1000为1秒\n" +
+                "setTimeout('myrefresh()',5000); //Refresh every 5 seconds; customizable (1000 = 1 second)\n" +
                 "</script>");
         result.append(String.format(GeneralVariables.getStringFromResource(R.string.html_callsign_grid_total)
                 , GeneralVariables.callsignAndGrids.size()));
@@ -540,7 +540,7 @@ public class LogHttpServer extends NanoHTTPD {
     }
 
     /**
-     * 显示调试信息
+     * Show debug information
      *
      * @return html
      */
@@ -551,7 +551,7 @@ public class LogHttpServer extends NanoHTTPD {
                 "function myrefresh(){\n" +
                 "window.location.reload();\n" +
                 "}\n" +
-                "setTimeout('myrefresh()',5000);\n " +////指定5秒刷新一次，5000处可自定义设置，1000为1秒\n" +
+                "setTimeout('myrefresh()',5000);\n " +////Refresh every 5 seconds; customizable (1000 = 1 second)\n" +
                 "</script>");
 
         HtmlContext.tableBegin(result, true, 5, false).append("\n");
@@ -572,11 +572,11 @@ public class LogHttpServer extends NanoHTTPD {
                 , GeneralVariables.getStringFromResource(R.string.html_my_grid)
                 , GeneralVariables.getMyMaidenheadGrid());
 
-        HtmlContext.tableKeyRow(result, true//消息最大缓存条数
+        HtmlContext.tableKeyRow(result, true//Max cached message count
                 , GeneralVariables.getStringFromResource(R.string.html_max_message_cache)
                 , String.format("%d", GeneralVariables.MESSAGE_COUNT));
 
-        HtmlContext.tableKeyRow(result, false//音量大小
+        HtmlContext.tableKeyRow(result, false//Volume level
                 , GeneralVariables.getStringFromResource(R.string.signal_strength)
                 , String.format("%.0f%%\n", GeneralVariables.volumePercent * 100f));
 
@@ -806,7 +806,7 @@ public class LogHttpServer extends NanoHTTPD {
     }
 
     /**
-     * 显示呼号的HASH
+     * Show callsign hash table
      *
      * @return html
      */
@@ -816,11 +816,11 @@ public class LogHttpServer extends NanoHTTPD {
                 "function myrefresh(){\n" +
                 "window.location.reload();\n" +
                 "}\n" +
-                "setTimeout('myrefresh()',5000); //指定5秒刷新一次，5000处可自定义设置，1000为1秒\n" +
+                "setTimeout('myrefresh()',5000); //Refresh every 5 seconds; customizable (1000 = 1 second)\n" +
                 "</script>");
         HtmlContext.tableBegin(result, true, 3, false).append("\n");
         HtmlContext.tableRowBegin(result);
-        //表头
+        //Table header
         HtmlContext.tableCellHeader(result, GeneralVariables.getStringFromResource(R.string.html_callsign)
                 , GeneralVariables.getStringFromResource(R.string.html_hash_value));
 
@@ -921,7 +921,7 @@ public class LogHttpServer extends NanoHTTPD {
     }
 
     /**
-     * 查SWL消息表
+     * Query SWL message table
      *
      * @return html
      */
@@ -936,7 +936,7 @@ public class LogHttpServer extends NanoHTTPD {
         String endDate = "";
         String exportFile = "";
 
-        //读取查询的参数
+        //Read query parameters
         Map<String, String> pars = session.getParms();
         int pageIndex = 1;
         if (pars.get("page") != null) {
@@ -960,7 +960,7 @@ public class LogHttpServer extends NanoHTTPD {
             exportFile = Objects.requireNonNull(pars.get("exportFile"));
         }
 
-        //导出到文件中
+        //Export to file
         if (exportFile.equalsIgnoreCase("CSV")
                 || exportFile.equalsIgnoreCase("TXT")) {
             return exportSWLMessage(exportFile, callsign, startDate, endDate);
@@ -985,7 +985,7 @@ public class LogHttpServer extends NanoHTTPD {
             dateSql.append(String.format(" AND (SUBSTR(UTC,1,8)<=\"%s\") "
                     , endDate.replace("-", "")));
         }
-        //计算总的记录数
+        //Calculate total record count
         cursor = mainViewModel.databaseOpr.getDb().rawQuery(
                 "select count(*) as rc from SWLMessages " +
                         "where ((CALL_TO LIKE ?)OR(CALL_FROM LIKE ?))" + dateSql
@@ -995,13 +995,13 @@ public class LogHttpServer extends NanoHTTPD {
         if (pageIndex > pageCount) pageIndex = pageCount;
         cursor.close();
 
-        //查询、每页消息数设定
+        //Query and per-page message count settings
         result.append(String.format("<form >%s , %s" +
-                        "<input type=number name=pageSize style=\"width:80px\" value=%d>" +//页码及页大小
-                        "<br>\n%s&nbsp;<input type=text name=callsign value=\"%s\">" +//呼号
+                        "<input type=number name=pageSize style=\"width:80px\" value=%d>" +//Page number and page size
+                        "<br>\n%s&nbsp;<input type=text name=callsign value=\"%s\">" +//Callsign
                         "&nbsp;&nbsp;<input type=submit value=\"%s\"><br>\n" +
-                        "<br>\n%s&nbsp;<input type=date name=\"start_date\" value=\"%s\" onchange=\"javascript:form.submit();\">" +//起始时间
-                        "&nbsp;\n%s&nbsp;<input type=date name=end_date value=\"%s\" onchange=\"javascript:form.submit();\"><br>" //结束时间
+                        "<br>\n%s&nbsp;<input type=date name=\"start_date\" value=\"%s\" onchange=\"javascript:form.submit();\">" +//Start date
+                        "&nbsp;\n%s&nbsp;<input type=date name=end_date value=\"%s\" onchange=\"javascript:form.submit();\"><br>" //End date
 
                 , String.format(GeneralVariables.getStringFromResource(R.string.html_message_page_count), pageCount)
                 , GeneralVariables.getStringFromResource(R.string.html_message_page_size)
@@ -1015,7 +1015,7 @@ public class LogHttpServer extends NanoHTTPD {
                 , endDate));
 
 
-        //定位页，第一页、上一页、下一页，最后一页
+        //Page navigation: first, previous, next, last
         result.append(String.format("<a href=\"message?page=%d&pageSize=%d&callsign=%s&start_date=%s&end_date=%s\">|&lt;</a>" +
                         "&nbsp;&nbsp;<a href=\"message?page=%d&pageSize=%d&callsign=%s&start_date=%s&end_date=%s\">&lt;&lt;</a>" +
                         "<input type=\"number\" name=\"page\" value=%d style=\"width:50px\">" +
@@ -1099,13 +1099,13 @@ public class LogHttpServer extends NanoHTTPD {
 
 
     /**
-     * 把swo的QSO日志导出到文件
+     * Export SWL QSO logs to file
      *
-     * @param exportFile 文件名
-     * @param callsign   呼号
-     * @param start_date 起始日期
-     * @param end_date   结束日期
-     * @return 数据
+     * @param exportFile file name
+     * @param callsign   callsign
+     * @param start_date start date
+     * @param end_date   end date
+     * @return data
      */
     @SuppressLint("Range")
     private Response exportSWLQSOMessage(String exportFile, String callsign, String start_date, String end_date) {
@@ -1164,9 +1164,9 @@ public class LogHttpServer extends NanoHTTPD {
 
 
     /**
-     * 查询SWL日志
+     * Query SWL logs
      *
-     * @param session 会话
+     * @param session session
      * @return html
      */
     @SuppressLint({"DefaultLocale", "Range"})
@@ -1180,7 +1180,7 @@ public class LogHttpServer extends NanoHTTPD {
         String endDate = "";
         String exportFile = "";
 
-        //读取查询的参数
+        //Read query parameters
         Map<String, String> pars = session.getParms();
         int pageIndex = 1;
         if (pars.get("page") != null) {
@@ -1204,7 +1204,7 @@ public class LogHttpServer extends NanoHTTPD {
             exportFile = Objects.requireNonNull(pars.get("exportFile"));
         }
 
-        //导出到文件中
+        //Export to file
         if (exportFile.equalsIgnoreCase("ADI")) {
             return exportSWLQSOMessage(exportFile, callsign, startDate, endDate);
         }
@@ -1226,7 +1226,7 @@ public class LogHttpServer extends NanoHTTPD {
             dateSql.append(String.format(" AND (SUBSTR(qso_date_off,1,8)<=\"%s\") "
                     , endDate.replace("-", "")));
         }
-        //计算总的记录数
+        //Calculate total record count
         cursor = mainViewModel.databaseOpr.getDb().rawQuery(
                 "select count(*) as rc from SWLQSOTable " +
                         "where (([call] LIKE ?)OR(station_callsign LIKE ?))" + dateSql
@@ -1236,13 +1236,13 @@ public class LogHttpServer extends NanoHTTPD {
         if (pageIndex > pageCount) pageIndex = pageCount;
         cursor.close();
 
-        //查询、每页消息数设定
+        //Query and per-page message count settings
         result.append(String.format("<form >%s , %s" +
-                        "<input type=number name=pageSize style=\"width:80px\" value=%d>" +//页码及页大小
-                        "<br>\n%s&nbsp;<input type=text name=callsign value=\"%s\">" +//呼号
+                        "<input type=number name=pageSize style=\"width:80px\" value=%d>" +//Page number and page size
+                        "<br>\n%s&nbsp;<input type=text name=callsign value=\"%s\">" +//Callsign
                         "&nbsp;&nbsp;<input type=submit value=\"%s\"><br>\n" +
-                        "<br>\n%s&nbsp;<input type=date name=\"start_date\" value=\"%s\" onchange=\"javascript:form.submit();\">" +//起始时间
-                        "&nbsp;\n%s&nbsp;<input type=date name=end_date value=\"%s\" onchange=\"javascript:form.submit();\"><br>" //结束时间
+                        "<br>\n%s&nbsp;<input type=date name=\"start_date\" value=\"%s\" onchange=\"javascript:form.submit();\">" +//Start date
+                        "&nbsp;\n%s&nbsp;<input type=date name=end_date value=\"%s\" onchange=\"javascript:form.submit();\"><br>" //End date
 
                 , String.format(GeneralVariables.getStringFromResource(R.string.html_message_page_count), pageCount)
                 , GeneralVariables.getStringFromResource(R.string.html_message_page_size)
@@ -1256,7 +1256,7 @@ public class LogHttpServer extends NanoHTTPD {
                 , endDate));
 
 
-        //定位页，第一页、上一页、下一页，最后一页
+        //Page navigation: first, previous, next, last
         result.append(String.format("<a href=\"QSOSWLMSG?page=%d&pageSize=%d&callsign=%s&start_date=%s&end_date=%s\">|&lt;</a>" +
                         "&nbsp;&nbsp;<a href=\"QSOSWLMSG?page=%d&pageSize=%d&callsign=%s&start_date=%s&end_date=%s\">&lt;&lt;</a>" +
                         "<input type=\"number\" name=\"page\" value=%d style=\"width:50px\">" +
@@ -1322,7 +1322,7 @@ public class LogHttpServer extends NanoHTTPD {
             String comment = cursor.getString(cursor.getColumnIndex("comment"));
 
 
-            //生成数据表的一行
+            //Generate one row of the data table
             HtmlContext.tableCell(result, String.format("%d", order + 1 + pageSize * (pageIndex - 1)));
             HtmlContext.tableCell(result, String.format("<a href=\"QSOSWLMSG?&pageSize=%d&callsign=%s\">%s</a>"
                     , pageSize, call.replace("<", "")
@@ -1352,13 +1352,13 @@ public class LogHttpServer extends NanoHTTPD {
 
 
     /**
-     * 把QSO日志导出到文件
+     * Export QSO logs to file
      *
-     * @param exportFile 文件名
-     * @param callsign   呼号
-     * @param start_date 起始日期
-     * @param end_date   结束日期
-     * @return 数据
+     * @param exportFile file name
+     * @param callsign   callsign
+     * @param start_date start date
+     * @param end_date   end date
+     * @return data
      */
     @SuppressLint("Range")
     private Response exportQSOLogs(String exportFile, String callsign, String start_date, String end_date, String extWhere) {
@@ -1407,9 +1407,9 @@ public class LogHttpServer extends NanoHTTPD {
     }
 
     /**
-     * 查询QSO日志
+     * Query QSO logs
      *
-     * @param session 会话
+     * @param session session
      * @return html
      */
     @SuppressLint({"DefaultLocale", "Range"})
@@ -1425,7 +1425,7 @@ public class LogHttpServer extends NanoHTTPD {
         String qIsQSL = "";
         String qIsImported = "";
 
-        //读取查询的参数
+        //Read query parameters
         Map<String, String> pars = session.getParms();
         int pageIndex = 1;
         if (pars.get("page") != null) {
@@ -1481,12 +1481,12 @@ public class LogHttpServer extends NanoHTTPD {
         }
 
 
-        //导出到文件中
+        //Export to file
         if (exportFile.equalsIgnoreCase("ADI")) {
             return exportQSOLogs(exportFile, callsign, startDate, endDate, dateSql.toString());
         }
 
-        //计算总的记录数
+        //Calculate total record count
         cursor = mainViewModel.databaseOpr.getDb().rawQuery(
                 "select count(*) as rc from QSLTable " +
                         "where (([call] LIKE ?)OR(station_callsign LIKE ?))" + dateSql
@@ -1496,17 +1496,17 @@ public class LogHttpServer extends NanoHTTPD {
         if (pageIndex > pageCount) pageIndex = pageCount;
         cursor.close();
 
-        //查询、每页消息数设定
+        //Query and per-page message count settings
         result.append("</td>");
         HtmlContext.tableRowEnd(result);
         HtmlContext.tableRowBegin(result).append("<td>\n");
 
         result.append(String.format("%s , %s" +
-                        "<input type=number name=pageSize style=\"width:80px\" value=%d>" +//页码及页大小
+                        "<input type=number name=pageSize style=\"width:80px\" value=%d>" +//Page number and page size
                         "&nbsp;&nbsp;<input type=submit value=\"%s\"><br>\n" +
-                        "<br>\n%s&nbsp;<input type=text name=callsign value=\"%s\">" +//呼号
-                        "\n%s&nbsp;<input type=date name=\"start_date\" value=\"%s\" onchange=\"javascript:form.submit();\">" +//起始时间
-                        "\n%s&nbsp;<input type=date name=end_date value=\"%s\" onchange=\"javascript:form.submit();\">\n" +//结束时间
+                        "<br>\n%s&nbsp;<input type=text name=callsign value=\"%s\">" +//Callsign
+                        "\n%s&nbsp;<input type=date name=\"start_date\" value=\"%s\" onchange=\"javascript:form.submit();\">" +//Start date
+                        "\n%s&nbsp;<input type=date name=end_date value=\"%s\" onchange=\"javascript:form.submit();\">\n" +//End date
                         " </td></tr></table>\n" +
                         " <table bgcolor=#a1a1a1 border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n" +
                         "<tr><td class=\"default\">\n" +
@@ -1562,7 +1562,7 @@ public class LogHttpServer extends NanoHTTPD {
         ));
 
 
-        //定位页，第一页、上一页、下一页，最后一页
+        //Page navigation: first, previous, next, last
         result.append(String.format("<a href=\"QSOLogs?page=%d&pageSize=%d&callsign=%s&start_date=%s&end_date=%s&QSL=%s&Imported=%s\">|&lt;</a>" +
                         "&nbsp;&nbsp;<a href=\"QSOLogs?page=%d&pageSize=%d&callsign=%s&start_date=%s&end_date=%s&QSL=%s&Imported=%s\">&lt;&lt;</a>" +
                         "<input type=\"number\" name=\"page\" value=%d style=\"width:50px\">" +
@@ -1590,7 +1590,7 @@ public class LogHttpServer extends NanoHTTPD {
 
         HtmlContext.tableBegin(result, false, true).append("\n");
 
-        //表头
+        //Table header
         HtmlContext.tableRowBegin(result).append("\n");
         HtmlContext.tableCellHeader(result, "No.", "QSL"
                         , GeneralVariables.getStringFromResource(R.string.html_qso_source)
@@ -1611,7 +1611,7 @@ public class LogHttpServer extends NanoHTTPD {
                 .append("\n");
         HtmlContext.tableRowEnd(result).append("\n");
 
-        //表内容
+        //Table content
         int order = 0;
         while (cursor.moveToNext()) {
             HtmlContext.tableRowBegin(result, true, order % 2 != 0).append("\n");
@@ -1641,7 +1641,7 @@ public class LogHttpServer extends NanoHTTPD {
                     String.format("<font color=red>%s</font>"
                             , GeneralVariables.getStringFromResource(R.string.html_qso_external))
                     : String.format("<font color=green>%s</font>"
-                    , GeneralVariables.getStringFromResource(R.string.html_qso_raw)));//是否是导入的
+                    , GeneralVariables.getStringFromResource(R.string.html_qso_raw)));//Whether it was imported
             HtmlContext.tableCell(result, String.format("<a href=\"QSOLogs?&pageSize=%d&callsign=%s\">%s</a>"
                     , pageSize
                     , call.replace("<", "")
@@ -1670,7 +1670,7 @@ public class LogHttpServer extends NanoHTTPD {
     }
 
     /**
-     * 获取全部通联日志
+     * Get all QSO logs
      *
      * @return HTML
      */
@@ -1681,9 +1681,9 @@ public class LogHttpServer extends NanoHTTPD {
     }
 
     /**
-     * 按月获取日志
+     * Get logs by month
      *
-     * @param month 月份yyyymm
+     * @param month month in yyyymm format
      * @return HTML
      */
     private String showQSLByMonth(String month) {
@@ -1694,7 +1694,7 @@ public class LogHttpServer extends NanoHTTPD {
     }
 
     /**
-     * 查最新解码的消息
+     * Query latest decoded messages
      *
      * @return html
      */
@@ -1704,7 +1704,7 @@ public class LogHttpServer extends NanoHTTPD {
                 "function myrefresh(){\n" +
                 "window.location.reload();\n" +
                 "}\n" +
-                "setTimeout('myrefresh()',5000); //指定5秒刷新一次，5000处可自定义设置，1000为1秒\n" +
+                "setTimeout('myrefresh()',5000); //Refresh every 5 seconds; customizable (1000 = 1 second)\n" +
                 "</script>");
         HtmlContext.tableBegin(result, false, true).append("\n");
 
@@ -1729,7 +1729,7 @@ public class LogHttpServer extends NanoHTTPD {
     }
 
     /**
-     * 显示导入FT8CN日志文件的HTML
+     * Show HTML for importing FT8CN log files
      *
      * @return HTML
      */
@@ -1748,7 +1748,7 @@ public class LogHttpServer extends NanoHTTPD {
         result.append("<td class=\"default\"><br><form action=\"importLogData\" method=\"post\"\n" +
                 "            enctype=\"multipart/form-data\">\n" +
                 "            <input type=\"file\" name=\"file1\" id=\"file1\" title=\"select ADI file\" accept=\".adi,.txt\" />\n" +
-                "            <input type=\"submit\" value=\"上传\" />\n" +
+                "            <input type=\"submit\" value=\"Upload\" />\n" +
                 "        </form></td>");
         HtmlContext.tableRowEnd(result).append("\n");
         HtmlContext.tableEnd(result).append("\n");
@@ -1853,7 +1853,7 @@ public class LogHttpServer extends NanoHTTPD {
     }
 
     /**
-     * 下载全部日志
+     * Download all logs
      *
      * @return String
      */
@@ -1863,9 +1863,9 @@ public class LogHttpServer extends NanoHTTPD {
     }
 
     /**
-     * 生成QSL记录文本
+     * Generate QSL record text
      *
-     * @return 日志内容
+     * @return log content
      */
 //    @SuppressLint({"Range", "DefaultLocale"})
 //    private String downQSLTable(Cursor cursor, boolean isSWL) {
@@ -1974,7 +1974,7 @@ public class LogHttpServer extends NanoHTTPD {
 //            String comment = cursor.getString(cursor.getColumnIndex("comment"));
 //
 //            //<comment:15>Distance: 99 km <eor>
-//            //在写库的时候，一定要加" km"
+//            //When writing to DB, must append " km"
 //            logStr.append(String.format("<comment:%d>%s <eor>\n"
 //                    , comment.length()
 //                    , comment));

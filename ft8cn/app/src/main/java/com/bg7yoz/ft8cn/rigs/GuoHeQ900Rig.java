@@ -9,7 +9,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 /**
- * YAESU的部分电台，回送的数据不是连续的，所以，要做一个缓冲区，接受5字节长度。满了就复位。或发送指令时，就复位。
+ * Some YAESU rigs send data non-continuously, so a buffer is needed to receive 5-byte blocks. Resets when full or when sending a command.
  */
 public class GuoHeQ900Rig extends BaseRig {
     private static final String TAG = "GuoHeQ900Rig";
@@ -49,7 +49,7 @@ public class GuoHeQ900Rig extends BaseRig {
 
     public synchronized void setPttOn(byte[] command) {
 
-        getConnector().sendData(command);//以CAT指令发送PTT
+        getConnector().sendData(command);//send PTT via CAT command
     }
 
     @Override
@@ -63,8 +63,8 @@ public class GuoHeQ900Rig extends BaseRig {
     @Override
     public void setUsbModeToRig() {
         if (getConnector() != null) {
-            getConnector().sendData(GuoHeRigConstant.setOperationUSBMode());//USB模式
-            //getConnector().sendData(GuoHeRigConstant.setOperationFT8Mode());//FT8模式
+            getConnector().sendData(GuoHeRigConstant.setOperationUSBMode());//USB mode
+            //getConnector().sendData(GuoHeRigConstant.setOperationFT8Mode());//FT8 mode
         }
     }
 
@@ -126,7 +126,7 @@ public class GuoHeQ900Rig extends BaseRig {
                     }
                 }
 
-                if (buffer.length == dataCount) {//说明已经收取全部指令
+                if (buffer.length == dataCount) {//all command data has been received
                     byte[] crcData=new byte[buffer.length-2];
                     for (int i = 0; i < crcData.length; i++) {
                         crcData[i]=buffer[i];
@@ -135,10 +135,10 @@ public class GuoHeQ900Rig extends BaseRig {
                     //Log.e(TAG, "onReceiveData: crc --->"+String.format("%x",CRC16.crc16(crcData)) );
                     int crc=CRC16.crc16(crcData);
                     int ttt=((buffer[buffer.length-2]& 0xFF)<<8)|(buffer[buffer.length-1]&0xff);
-                    //Log.e(TAG, "onReceiveData:数据内容：" + byteToStr(buffer));
-                    if (crc==ttt) {//crc校验成功
+                    //Log.e(TAG, "onReceiveData: data content: " + byteToStr(buffer));
+                    if (crc==ttt) {//CRC check passed
 
-                        if (buffer[1] == (byte) 0x0b) {//是电台状态指令
+                        if (buffer[1] == (byte) 0x0b) {//rig status command
 
                             long vfoa = ((buffer[5] & 0xFFL) << 24) |
                                     ((buffer[6] & 0xFFL) << 16) |

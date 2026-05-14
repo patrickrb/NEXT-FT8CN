@@ -1,7 +1,7 @@
 package com.bg7yoz.ft8cn.log;
 
 /**
- * 通联过的呼号的日志。
+ * Log of contacted callsigns.
  * @author BGY70Z
  * @date 2023-03-20
  */
@@ -13,8 +13,8 @@ public class QSLCallsignRecord {
     private String lastTime;
     public String where=null;
     public String dxccStr="";
-    public boolean isQSL=false;//是否手工确认
-    public boolean isLotW_QSL = false;//是否是lotw确认的
+    public boolean isQSL=false;//Whether manually confirmed
+    public boolean isLotW_QSL = false;//Whether confirmed via LoTW
 
     public String getCallsign() {
         return callsign;

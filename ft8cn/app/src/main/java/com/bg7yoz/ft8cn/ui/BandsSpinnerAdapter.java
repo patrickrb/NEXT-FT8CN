@@ -1,6 +1,6 @@
 package com.bg7yoz.ft8cn.ui;
 /**
- * 频段列表界面
+ * Band list UI adapter.
  * @author BGY70Z
  * @date 2023-03-20
  */

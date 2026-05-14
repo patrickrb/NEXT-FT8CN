@@ -1,6 +1,6 @@
 package com.bg7yoz.ft8cn.bluetooth;
 /**
- * 蓝牙串口的SOCKET
+ * Bluetooth serial port socket
  * BG7YOZ
  * 2023-03
  */

@@ -8,20 +8,20 @@ public class Flex6000Command {
     private final String commandID;
     private final String data;
     /**
-     * 获取命令(两字节字符串)
+     * Get the command ID (two-character string)
      *
-     * @return 主命令值
+     * @return main command value
      */
-    public String getCommandID() {//获取主命令
+    public String getCommandID() {//get main command
         return commandID;
     }
 
     /**
-     * 获取命令数据，字符串，没有分号
+     * Get command data as a string, without semicolon
      *
-     * @return 命令数据
+     * @return command data
      */
-    public String getData() {//获取命令数据
+    public String getData() {//get command data
         return data;
     }
 
@@ -29,16 +29,16 @@ public class Flex6000Command {
         this.commandID = commandID;
         this.data = data;
     }
-    //解析接收的指令
+    //parse received command
 
     /**
-     * 从串口中接到的数据解析出指令的数据:指令头+内容+分号
+     * Parse command data from serial port data: command header + content + semicolon
      *
-     * @param buffer  从串口接收到的数据
-     * @return 返回电台指令对象，如果不符合指令的格式，返回null。
+     * @param buffer  data received from serial port
+     * @return rig command object, or null if data does not match command format.
      */
     public static Flex6000Command getCommand(String buffer) {
-        if (buffer.length() < 4) {//指令的长度必须大于等于4,ZZFA
+        if (buffer.length() < 4) {//command length must be >= 4, e.g. ZZFA
             return null;
         }
         if (buffer.substring(0,4).matches("[a-zA-Z][a-zA-Z][a-zA-Z][a-zA-Z]")) {
@@ -49,9 +49,9 @@ public class Flex6000Command {
 
 
     /**
-     * 计算频率
-     * @param command 指令
-     * @return 频率
+     * Calculate frequency
+     * @param command command
+     * @return frequency
      */
     public static long getFrequency(Flex6000Command command) {
         try {
@@ -61,7 +61,7 @@ public class Flex6000Command {
                 return 0;
             }
         }catch (Exception e){
-            Log.e(TAG, "获取频率失败: "+command.getData()+"\n"+e.getMessage() );
+            Log.e(TAG, "Failed to get frequency: "+command.getData()+"\n"+e.getMessage() );
         }
        return 0;
     }

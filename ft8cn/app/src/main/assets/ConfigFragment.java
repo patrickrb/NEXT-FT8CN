@@ -1,6 +1,6 @@
 package com.bg7yoz.ft8cn.ui;
 /**
- * 设置界面。
+ * Settings screen.
  * @author BGY70Z
  * @date 2023-03-20
  */
@@ -63,7 +63,7 @@ public class ConfigFragment extends Fragment {
         super.onCreate(savedInstanceState);
     }
 
-    //我的网格位置
+    //my grid location
     private final TextWatcher onGridEditorChanged = new TextWatcher() {
         @Override
         public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -92,7 +92,7 @@ public class ConfigFragment extends Fragment {
             GeneralVariables.setMyMaidenheadGrid(s.toString());
         }
     };
-    //我的呼号
+    //my callsign
     private final TextWatcher onMyCallEditorChanged = new TextWatcher() {
         @Override
         public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -116,7 +116,7 @@ public class ConfigFragment extends Fragment {
             GeneralVariables.myCallsign = (editable.toString().toUpperCase().trim());
         }
     };
-    //发射频率
+    //transmit frequency
     private final TextWatcher onFreqEditorChanged = new TextWatcher() {
         @Override
         public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -133,7 +133,7 @@ public class ConfigFragment extends Fragment {
             setfreq(editable.toString());
         }
     };
-    //发射延迟时间
+    //transmit delay time
     private final TextWatcher onTransDelayEditorChanged = new TextWatcher() {
         @Override
         public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -157,7 +157,7 @@ public class ConfigFragment extends Fragment {
         }
     };
 
-    //排除的呼号前缀
+    //excluded callsign prefixes
     private final TextWatcher onExcludedCallsigns=new TextWatcher() {
         @Override
         public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -176,7 +176,7 @@ public class ConfigFragment extends Fragment {
         }
     };
 
-    //修饰符
+    //modifier
     private final TextWatcher onModifierEditorChanged = new TextWatcher() {
         @Override
         public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -201,7 +201,7 @@ public class ConfigFragment extends Fragment {
         }
     };
 
-    //CI-V地址
+    //CI-V address
     private final TextWatcher onCIVAddressEditorChanged = new TextWatcher() {
         @Override
         public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -219,7 +219,7 @@ public class ConfigFragment extends Fragment {
                 return;
             }
             String s = "0x" + editable.toString();
-            if (s.matches("\\b0[xX][0-9a-fA-F]+\\b")) {//匹配十六进制
+            if (s.matches("\\b0[xX][0-9a-fA-F]+\\b")) {//match hexadecimal
                 String temp = editable.toString().substring(0, 2).toUpperCase();
                 writeConfig("civ", temp);
                 GeneralVariables.civAddress = Integer.parseInt(temp, 16);
@@ -257,7 +257,7 @@ public class ConfigFragment extends Fragment {
         mainViewModel = MainViewModel.getInstance(this);
         binding = FragmentConfigBinding.inflate(inflater, container, false);
 
-        //只对中国开方问题收集
+        //issue collection only for China
 //        if (GeneralVariables.isChina) {
 //            binding.faqButton.setVisibility(View.VISIBLE);
 //        } else {
@@ -265,49 +265,49 @@ public class ConfigFragment extends Fragment {
 //        }
 
 
-        //设置时间偏移
+        //set time offset
         setUtcTimeOffsetSpinner();
 
-        //设置PTT延时
+        //set PTT delay
         setPttDelaySpinner();
 
-        //设置操作频段
+        //set operating band
         setBandsSpinner();
 
-        //设置波特率列表
+        //set baud rate list
         setBauRateSpinner();
 
-        //设置电台名称，参数列表
+        //set rig name and parameter list
         setRigNameSpinner();
 
-        //设置解码模式
+        //set decode mode
         setDecodeMode();
 
-        //设置音频输出的位数
+        //set audio output bit depth
         setAudioOutputBitsMode();
 
-        //设置音频输出采样率
+        //set audio output sampling rate
         setAudioOutputRateMode();
 
-        //设置显示消息模式
+        //set message display mode
         setMessageMode();
 
-        //设置控制模式 VOX CAT
+        //set control mode VOX CAT
         setControlMode();
 
-        //设置连线的方式
+        //set connection method
         setConnectMode();
 
-        //设置发射监管列表
+        //set transmit supervision list
         setLaunchSupervision();
 
-        //设置帮助对话框
+        //set help dialogs
         setHelpDialog();
 
-        //设置无回应次数中断
+        //set no-reply limit
         setNoReplyLimitSpinner();
 
-        //显示滚动箭头
+        //show scroll arrows
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -321,7 +321,7 @@ public class ConfigFragment extends Fragment {
             }
         });
 
-        //FAQ按钮的onClick
+        //FAQ button onClick
         binding.faqButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -330,34 +330,34 @@ public class ConfigFragment extends Fragment {
             }
         });
 
-        //梅登海德网格
+        //Maidenhead grid
         binding.inputMyGridEdit.removeTextChangedListener(onGridEditorChanged);
         binding.inputMyGridEdit.setText(GeneralVariables.getMyMaidenheadGrid());
         binding.inputMyGridEdit.addTextChangedListener(onGridEditorChanged);
 
-        //我的呼号
+        //my callsign
         binding.inputMycallEdit.removeTextChangedListener(onMyCallEditorChanged);
         binding.inputMycallEdit.setText(GeneralVariables.myCallsign);
         binding.inputMycallEdit.addTextChangedListener(onMyCallEditorChanged);
 
-        //修饰符
+        //modifier
         binding.modifierEdit.removeTextChangedListener(onModifierEditorChanged);
         binding.modifierEdit.setText(GeneralVariables.toModifier);
         binding.modifierEdit.addTextChangedListener(onModifierEditorChanged);
 
-        //发射频率
+        //transmit frequency
         binding.inputFreqEditor.removeTextChangedListener(onFreqEditorChanged);
         binding.inputFreqEditor.setText(GeneralVariables.getBaseFrequencyStr());
         binding.inputFreqEditor.addTextChangedListener(onFreqEditorChanged);
 
 
 
-        //CIV地址
+        //CIV address
         binding.civAddressEdit.removeTextChangedListener(onCIVAddressEditorChanged);
         binding.civAddressEdit.setText(GeneralVariables.getCivAddressStr());
         binding.civAddressEdit.addTextChangedListener(onCIVAddressEditorChanged);
 
-        //发射延迟
+        //transmit delay
         binding.inputTransDelayEdit.removeTextChangedListener(onTransDelayEditorChanged);
         binding.inputTransDelayEdit.setText(GeneralVariables.getTransmitDelayStr());
         binding.inputTransDelayEdit.addTextChangedListener(onTransDelayEditorChanged);
@@ -367,10 +367,10 @@ public class ConfigFragment extends Fragment {
         binding.excludedCallsignEdit.addTextChangedListener(onExcludedCallsigns);
 
 
-        //设置同频发射开关
+        //set same-frequency transmit switch
         binding.synFrequencySwitch.setOnCheckedChangeListener(null);
         binding.synFrequencySwitch.setChecked(GeneralVariables.synFrequency);
-        setSyncFreqText();//设置开关的文本
+        setSyncFreqText();//set switch text
         binding.synFrequencySwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
@@ -386,7 +386,7 @@ public class ConfigFragment extends Fragment {
             }
         });
 
-        //设置PTT延迟
+        //set PTT delay
         binding.pttDelayOffsetSpinner.setOnItemSelectedListener(null);
         binding.pttDelayOffsetSpinner.setSelection(GeneralVariables.pttDelay / 10);
         binding.pttDelayOffsetSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -403,21 +403,21 @@ public class ConfigFragment extends Fragment {
         });
 
 
-        //获取操作的波段
+        //get the operating band
         binding.operationBandSpinner.setOnItemSelectedListener(null);
         binding.operationBandSpinner.setSelection(GeneralVariables.bandListIndex);
         binding.operationBandSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 GeneralVariables.bandListIndex = i;
-                GeneralVariables.band = OperationBand.getBandFreq(i);//把当前的频段保存下来
+                GeneralVariables.band = OperationBand.getBandFreq(i);//save the current band
 
-                mainViewModel.databaseOpr.getAllQSLCallsigns();//通联成功的呼号读出来
+                mainViewModel.databaseOpr.getAllQSLCallsigns();//read out successfully contacted callsigns
                 writeConfig("bandFreq", String.valueOf(GeneralVariables.band));
-                if (GeneralVariables.controlMode == ControlMode.CAT//CAT、RTS、DTR模式下控制电台
+                if (GeneralVariables.controlMode == ControlMode.CAT//control radio in CAT, RTS, DTR mode
                         || GeneralVariables.controlMode == ControlMode.RTS
                         || GeneralVariables.controlMode == ControlMode.DTR) {
-                    //如果在CAT、RTS模式下，修改电台的频率
+                    //if in CAT or RTS mode, change the radio's frequency
                     mainViewModel.setOperationBand();
                 }
             }
@@ -429,10 +429,10 @@ public class ConfigFragment extends Fragment {
         });
 
 
-        //获取电台型号
+        //get rig model
         binding.rigNameSpinner.setOnItemSelectedListener(null);
         binding.rigNameSpinner.setSelection(GeneralVariables.modelNo);
-        new Handler().postDelayed(new Runnable() {//延迟2秒修改OnItemSelectedListener
+        new Handler().postDelayed(new Runnable() {//delay 2 seconds to modify OnItemSelectedListener
             @Override
             public void run() {
                 binding.rigNameSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -442,7 +442,7 @@ public class ConfigFragment extends Fragment {
                         writeConfig("model", String.valueOf(i));
                         setAddrAndBauRate(rigNameSpinnerAdapter.getRigName(i));
 
-                        //指令集
+                        //instruction set
                         GeneralVariables.instructionSet = rigNameSpinnerAdapter.getRigName(i).instructionSet;
                         writeConfig("instruction", String.valueOf(GeneralVariables.instructionSet));
                     }
@@ -455,7 +455,7 @@ public class ConfigFragment extends Fragment {
         }, 2000);
 
 
-        //获取波特率
+        //get baud rate
         binding.baudRateSpinner.setOnItemSelectedListener(null);
         binding.baudRateSpinner.setSelection(bauRateSpinnerAdapter.getPosition(
                 GeneralVariables.baudRate));
@@ -471,7 +471,7 @@ public class ConfigFragment extends Fragment {
             }
         });
 
-        //设置发射监管
+        //set transmit supervision
         binding.launchSupervisionSpinner.setOnItemSelectedListener(null);
         binding.launchSupervisionSpinner.setSelection(launchSupervisionSpinnerAdapter
                 .getPosition(GeneralVariables.launchSupervision));
@@ -488,7 +488,7 @@ public class ConfigFragment extends Fragment {
             }
         });
 
-        //设置无回应中断
+        //set no-reply cutoff
         binding.noResponseCountSpinner.setOnItemSelectedListener(null);
         binding.noResponseCountSpinner.setSelection(GeneralVariables.noReplyLimit);
         binding.noResponseCountSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -505,7 +505,7 @@ public class ConfigFragment extends Fragment {
         });
 
 
-        //设置自动关注CQ
+        //set auto-follow CQ
         binding.followCQSwitch.setOnCheckedChangeListener(null);
         binding.followCQSwitch.setChecked(GeneralVariables.autoFollowCQ);
         setAutoFollowCQText();
@@ -524,7 +524,7 @@ public class ConfigFragment extends Fragment {
 
 
 
-        //设置自动呼叫关注的呼号
+        //set auto-call for followed callsigns
         binding.autoCallfollowSwitch.setOnCheckedChangeListener(null);
         binding.autoCallfollowSwitch.setChecked(GeneralVariables.autoCallFollow);
         setAutoCallFollow();
@@ -541,7 +541,7 @@ public class ConfigFragment extends Fragment {
             }
         });
 
-        //设置保存SWL选项
+        //set save SWL option
         binding.saveSWLSwitch.setOnCheckedChangeListener(null);
         binding.saveSWLSwitch.setChecked(GeneralVariables.saveSWLMessage);
         setSaveSwl();
@@ -558,7 +558,7 @@ public class ConfigFragment extends Fragment {
             }
         });
 
-        //设置保存SWL选项
+        //set save SWL option
         binding.saveSWLQSOSwitch.setOnCheckedChangeListener(null);
         binding.saveSWLQSOSwitch.setChecked(GeneralVariables.saveSWLMessage);
         setSaveSwlQSO();
@@ -576,7 +576,7 @@ public class ConfigFragment extends Fragment {
         });
 
 
-        //获取梅登海德网格
+        //get Maidenhead grid
         binding.configGetGridImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -592,9 +592,9 @@ public class ConfigFragment extends Fragment {
     }
 
     /**
-     * 设置地址和波特率，指令集
+     * Set address, baud rate, and instruction set
      *
-     * @param rigName 电台型号
+     * @param rigName rig model
      */
     private void setAddrAndBauRate(RigNameList.RigName rigName) {
         //mainViewModel.setCivAddress(rigName.address);
@@ -608,7 +608,7 @@ public class ConfigFragment extends Fragment {
 
 
     /**
-     * 设置同频发射开关的显示文本
+     * Set the display text for the same-frequency transmit switch
      */
     private void setSyncFreqText() {
         if (binding.synFrequencySwitch.isChecked()) {
@@ -619,7 +619,7 @@ public class ConfigFragment extends Fragment {
     }
 
     /**
-     * 设置自动关注CQ开关的文本
+     * Set the text for the auto-follow CQ switch
      */
     private void setAutoFollowCQText() {
         if (binding.followCQSwitch.isChecked()) {
@@ -629,7 +629,7 @@ public class ConfigFragment extends Fragment {
         }
     }
 
-    //设置自动呼叫关注的呼号
+    //set auto-call for followed callsigns
     private void setAutoCallFollow() {
         if (binding.autoCallfollowSwitch.isChecked()) {
             binding.autoCallfollowSwitch.setText(getString(R.string.automatic_call_following));
@@ -652,7 +652,7 @@ public class ConfigFragment extends Fragment {
         }
     }
     /**
-     * 设置UTC时间偏移的spinner
+     * Set the UTC time offset spinner
      */
     private void setUtcTimeOffsetSpinner() {
         UtcOffsetSpinnerAdapter adapter = new UtcOffsetSpinnerAdapter(requireContext());
@@ -668,7 +668,7 @@ public class ConfigFragment extends Fragment {
         binding.utcTimeOffsetSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                UtcTimer.delay = i * 500 - 7500;//设置延迟
+                UtcTimer.delay = i * 500 - 7500;//set delay
             }
 
             @Override
@@ -679,7 +679,7 @@ public class ConfigFragment extends Fragment {
     }
 
     /**
-     * 设置操作频段的spinner
+     * Set the operating band spinner
      */
     private void setBandsSpinner() {
         GeneralVariables.mutableBandChange.observe(getViewLifecycleOwner(), new Observer<Integer>() {
@@ -702,7 +702,7 @@ public class ConfigFragment extends Fragment {
     }
 
     /**
-     * 设置波特率列表
+     * Set the baud rate list
      */
     private void setBauRateSpinner() {
         bauRateSpinnerAdapter = new BauRateSpinnerAdapter(requireContext());
@@ -716,7 +716,7 @@ public class ConfigFragment extends Fragment {
     }
 
     /**
-     * 设置无回应次数中断
+     * Set the no-reply count limit
      */
     private void setNoReplyLimitSpinner() {
         noReplyLimitSpinnerAdapter = new NoReplyLimitSpinnerAdapter(requireContext());
@@ -730,7 +730,7 @@ public class ConfigFragment extends Fragment {
     }
 
     /**
-     * 设置发射监管列表
+     * Set the transmit supervision list
      */
     private void setLaunchSupervision() {
         launchSupervisionSpinnerAdapter = new LaunchSupervisionSpinnerAdapter(requireContext());
@@ -744,7 +744,7 @@ public class ConfigFragment extends Fragment {
     }
 
     /**
-     * 设置电台名称，参数列表
+     * Set the rig name and parameter list
      */
     private void setRigNameSpinner() {
         rigNameSpinnerAdapter = new RigNameSpinnerAdapter(requireContext());
@@ -759,7 +759,7 @@ public class ConfigFragment extends Fragment {
     }
 
     /**
-     * 设置PTT延时
+     * Set PTT delay
      */
     private void setPttDelaySpinner() {
         pttDelaySpinnerAdapter = new PttDelaySpinnerAdapter(requireContext());
@@ -795,7 +795,7 @@ public class ConfigFragment extends Fragment {
 
 
     /**
-     * 设置音频输出的位数
+     * Set the audio output bit depth
      */
     private void setAudioOutputBitsMode() {
         //binding.controlModeRadioGroup.setOnCheckedChangeListener(null);
@@ -820,7 +820,7 @@ public class ConfigFragment extends Fragment {
     }
 
     /**
-     * 输出音频的采样率设置
+     * Set the output audio sampling rate
      */
     private void setAudioOutputRateMode() {
         binding.audioRateRadioGroup.clearCheck();
@@ -849,7 +849,7 @@ public class ConfigFragment extends Fragment {
 
 
     /**
-     * 设置消息列表显示模式
+     * Set the message list display mode
      */
     private void setMessageMode() {
         binding.messageModeRadioGroup.clearCheck();
@@ -881,7 +881,7 @@ public class ConfigFragment extends Fragment {
 
 
     /**
-     * 设置控制模式VOX CAT
+     * Set control mode VOX/CAT
      */
     private void setControlMode() {
         //binding.controlModeRadioGroup.setOnCheckedChangeListener(null);
@@ -910,15 +910,15 @@ public class ConfigFragment extends Fragment {
 
                 if (buttonId == binding.ctrVOXradioButton.getId()) {
                     GeneralVariables.controlMode = ControlMode.VOX;
-                } else if (buttonId == binding.ctrCATradioButton.getId()) {//CAT模式
+                } else if (buttonId == binding.ctrCATradioButton.getId()) {//CAT mode
                     GeneralVariables.controlMode = ControlMode.CAT;
-                } else if (buttonId == binding.ctrRTSradioButton.getId()) {//RTS模式
+                } else if (buttonId == binding.ctrRTSradioButton.getId()) {//RTS mode
                     GeneralVariables.controlMode = ControlMode.RTS;
-                } else if (buttonId == binding.ctrDTRradioButton.getId()) {//RTS模式
+                } else if (buttonId == binding.ctrDTRradioButton.getId()) {//DTR mode
                     GeneralVariables.controlMode = ControlMode.DTR;
                 }
-                mainViewModel.setControlMode();//通知一下电台控制模式改变
-                //无论CAT还是RTS，CI-V指令还是有效的，都是串口
+                mainViewModel.setControlMode();//notify that radio control mode has changed
+                //whether CAT or RTS, CI-V commands are still valid, both use serial port
                 if (GeneralVariables.controlMode == ControlMode.CAT
                         || GeneralVariables.controlMode == ControlMode.RTS
                         || GeneralVariables.controlMode == ControlMode.DTR) {
@@ -940,13 +940,13 @@ public class ConfigFragment extends Fragment {
     }
 
     /**
-     * 设置连线的方式，可以是USB，也可以是BLUE_TOOTH
+     * Set the connection method, can be USB or Bluetooth
      */
     private void setConnectMode() {
         if (GeneralVariables.controlMode == ControlMode.CAT
                 //&& BluetoothConstants.checkBluetoothIsOpen()
             ) {
-            //此处要改成VISIBLE
+            //should be changed to VISIBLE here
             binding.connectModeLayout.setVisibility(View.VISIBLE);
         } else {
             binding.connectModeLayout.setVisibility(View.GONE);
@@ -974,15 +974,15 @@ public class ConfigFragment extends Fragment {
                 }else if (buttonId==binding.networkConnectRadioButton.getId()){
                     GeneralVariables.connectMode=ConnectMode.NETWORK;
                 }
-                //------显示蓝牙列表，并选择，然后建立蓝牙连接
+                //------show Bluetooth list, select, then establish Bluetooth connection
                 if (GeneralVariables.connectMode == ConnectMode.BLUE_TOOTH) {
-                    //根据安卓12，要判断一下蓝牙权限：
+                    //for Android 12+, need to check Bluetooth permissions:
                     new SelectBluetoothDialog(requireContext(), mainViewModel).show();
                 }
 
-                //-----显示网络上的电台，目前是flex电台，-------------------
+                //-----show network radios, currently Flex radios-------------------
                 if (GeneralVariables.connectMode==ConnectMode.NETWORK){
-                    //打开网络电台列表对话框
+                    //open network radio list dialog
                     if (GeneralVariables.instructionSet== InstructionSet.FLEX_NETWORK) {
                         new SelectFlexRadioDialog(requireContext(), mainViewModel).show();
                     }else if(GeneralVariables.instructionSet== InstructionSet.ICOM
@@ -1003,17 +1003,17 @@ public class ConfigFragment extends Fragment {
 
 
     /**
-     * 把配置信息写到数据库
+     * Write configuration to the database
      *
-     * @param KeyName 关键词
-     * @param Value   值
+     * @param KeyName key name
+     * @param Value   value
      */
     private void writeConfig(String KeyName, String Value) {
         mainViewModel.databaseOpr.writeConfig(KeyName, Value, null);
     }
 
     private void setHelpDialog() {
-        //呼号帮助
+        //callsign help
         binding.callsignHelpImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -1022,7 +1022,7 @@ public class ConfigFragment extends Fragment {
                             , true).show();
             }
         });
-        //梅登海德网格的帮助
+        //Maidenhead grid help
         binding.maidenGridImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -1031,7 +1031,7 @@ public class ConfigFragment extends Fragment {
                             , true).show();
             }
         });
-        //发射频率的帮助
+        //transmit frequency help
         binding.frequencyImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -1040,7 +1040,7 @@ public class ConfigFragment extends Fragment {
                             , true).show();
             }
         });
-        //延迟发射帮助
+        //transmit delay help
         binding.transDelayImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -1049,7 +1049,7 @@ public class ConfigFragment extends Fragment {
                             , true).show();
             }
         });
-        //时间偏移帮助
+        //time offset help
         binding.timeOffsetImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -1058,7 +1058,7 @@ public class ConfigFragment extends Fragment {
                             , true).show();
             }
         });
-        //PTT延时帮助
+        //PTT delay help
         binding.pttDelayImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -1067,7 +1067,7 @@ public class ConfigFragment extends Fragment {
                             , true).show();
             }
         });
-        //显示列表方式
+        //list display mode
         binding.messageModeeHelpImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -1077,14 +1077,14 @@ public class ConfigFragment extends Fragment {
             }
         });
 
-        //设置ABOUT
+        //set up ABOUT
         binding.aboutButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 new HelpDialog(requireContext(), requireActivity(), "readme.txt", true).show();
             }
         });
-        //设置操作频段
+        //set operating band
         binding.operationHelpImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -1093,7 +1093,7 @@ public class ConfigFragment extends Fragment {
                             , true).show();
             }
         });
-        //设置操作模式
+        //set control mode
         binding.controlModeHelpImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -1102,7 +1102,7 @@ public class ConfigFragment extends Fragment {
                             , true).show();
             }
         });
-        //设置CI-V地址和波特率帮助
+        //CI-V address and baud rate help
         binding.baudRateHelpImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -1111,7 +1111,7 @@ public class ConfigFragment extends Fragment {
                             , true).show();
             }
         });
-        //电台型号列表
+        //rig model list
         binding.rigNameHelpImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -1120,7 +1120,7 @@ public class ConfigFragment extends Fragment {
                             , true).show();
             }
         });
-        //发射监管
+        //transmit supervision
         binding.launchSupervisionImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -1129,7 +1129,7 @@ public class ConfigFragment extends Fragment {
                             , true).show();
             }
         });
-        //无回应次数
+        //no-reply count
         binding.noResponseCountButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -1138,7 +1138,7 @@ public class ConfigFragment extends Fragment {
                             , true).show();
             }
         });
-        //自动呼叫
+        //auto call
         binding.autoFollowCountButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -1147,7 +1147,7 @@ public class ConfigFragment extends Fragment {
                             , true).show();
             }
         });
-        //连接模式
+        //connection mode
         binding.connectModeHelpImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -1156,7 +1156,7 @@ public class ConfigFragment extends Fragment {
                             , true).show();
             }
         });
-        //排除选项
+        //exclusion options
         binding.excludedHelpButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -1175,7 +1175,7 @@ public class ConfigFragment extends Fragment {
             }
         });
 
-        //解码模式
+        //decode mode
         binding.decodeModeHelpButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -1185,7 +1185,7 @@ public class ConfigFragment extends Fragment {
             }
         });
 
-        //音频输出帮助
+        //audio output help
         binding.audioOutputImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -1195,7 +1195,7 @@ public class ConfigFragment extends Fragment {
             }
         });
 
-        //清除缓存
+        //clear cache
         binding.clearCacheHelpButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -1236,7 +1236,7 @@ public class ConfigFragment extends Fragment {
                     @Override
                     public void doAfterSyncTimer(int secTime) {
                         setUtcTimeOffsetSpinner();
-                        if (secTime>100) {//正数时慢了
+                        if (secTime>100) {//positive value means clock is slow
                             ToastMessage.show(String.format(GeneralVariables
                                     .getStringFromResource(R.string.utc_time_sync_delay_slow), secTime));
                         }else if (secTime<-100){
@@ -1260,7 +1260,7 @@ public class ConfigFragment extends Fragment {
     }
 
     /**
-     * 设置界面的上下滚动的图标
+     * Set the visibility of the scroll up/down arrow icons
      */
     private void setScrollImageVisible() {
 

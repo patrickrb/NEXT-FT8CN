@@ -1,7 +1,8 @@
 package com.bg7yoz.ft8cn.connector;
 /**
- * 网络方式的连接器的基本类。
- * 注：基本兼容ICom网络方式，但有些差异的音频数据包是Int类型，需要转换成Float类型
+ * Base class for network-based connectors.
+ * Note: Mostly compatible with ICom network mode, but some audio data packets differ -
+ * they are Int type and need to be converted to Float type.
  *
  * @author BGY70Z
  * @date 2023-08-19
@@ -79,10 +80,10 @@ public class WifiConnector extends BaseRigConnector{
     }
 
     /**
-     * 从流数据中读取小端模式的Short
+     * Read a little-endian Short from stream data
      *
-     * @param data  流数据
-     * @param start 起始点
+     * @param data  stream data
+     * @param start starting offset
      * @return Int16
      */
     public static short readShortBigEndianData(byte[] data, int start) {

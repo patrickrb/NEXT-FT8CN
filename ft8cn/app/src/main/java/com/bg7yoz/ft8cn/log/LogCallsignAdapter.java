@@ -1,6 +1,6 @@
 package com.bg7yoz.ft8cn.log;
 /**
- * 日志中通联呼号的列表
+ * List of QSO callsigns in the log
  * @author BGY70Z
  * @date 2023-03-20
  */
@@ -48,16 +48,16 @@ public class LogCallsignAdapter extends RecyclerView.Adapter<LogCallsignAdapter.
 
 
     /**
-     * 获取记录
-     * @param position 位置
-     * @return 记录
+     * Get record
+     * @param position position
+     * @return record
      */
     public QSLCallsignRecord getRecord(int position){
         return mainViewModel.callsignRecords.get(position);
     }
     /**
-     * 返回查询结题
-     * @param records 记录
+     * Return query results
+     * @param records records
      */
     @SuppressLint("NotifyDataSetChanged")
     public void setQSLCallsignList(ArrayList<QSLCallsignRecord> records){
@@ -67,7 +67,7 @@ public class LogCallsignAdapter extends RecyclerView.Adapter<LogCallsignAdapter.
     }
 
     /**
-     * 清空记录
+     * Clear records
      */
     public void clearRecords(){
         mainViewModel.callsignRecords.clear();
@@ -118,7 +118,7 @@ public class LogCallsignAdapter extends RecyclerView.Adapter<LogCallsignAdapter.
         holder.callsignQSOModeTextView.setText(String.format(
                 GeneralVariables.getStringFromResource(R.string.log_mode)
                 ,holder.record.getMode()));
-        //计算距离
+        //Calculate distance
         holder.callsignQSLDistTextView.setText(MaidenheadGrid.getDistStr(
                 GeneralVariables.getMyMaidenheadGrid()
                 , holder.record.getGrid()));
@@ -130,7 +130,7 @@ public class LogCallsignAdapter extends RecyclerView.Adapter<LogCallsignAdapter.
     }
 
 
-    //查呼号的归属地
+    //Look up the callsign's location
     private void setQueryHolderCallsign(@NonNull LogCallsignAdapter.LogCallsignItemHolder holder) {
         GeneralVariables.callsignDatabase.getCallsignInformation(holder.record.getCallsign()
                 , new OnAfterQueryCallsignLocation() {
@@ -140,13 +140,8 @@ public class LogCallsignAdapter extends RecyclerView.Adapter<LogCallsignAdapter.
                             @SuppressLint("DefaultLocale")
                             @Override
                             public void run() {
-                                if (GeneralVariables.isChina) {
-                                    holder.callsignQSOWhereTextView.setText(callsignInfo.CountryNameCN);
-                                    holder.record.where = callsignInfo.CountryNameCN;
-                                }else {
-                                    holder.callsignQSOWhereTextView.setText(callsignInfo.CountryNameEn);
-                                    holder.record.where = callsignInfo.CountryNameEn;
-                                }
+                                holder.callsignQSOWhereTextView.setText(callsignInfo.CountryNameEn);
+                                holder.record.where = callsignInfo.CountryNameEn;
                                 holder.record.dxccStr=String.format("DXCC : %s, ITU : %d, CQZONE : %d"
                                         ,callsignInfo.DXCC,callsignInfo.ITUZone,callsignInfo.CQZone);
                                 holder.callsignDxccZoneTextView.setText(holder.record.dxccStr);

@@ -1,6 +1,6 @@
 package com.bg7yoz.ft8cn.icom;
 /**
- * 处理音频流的基本类。
+ * Base class for audio stream handling.
  * @author BGY70Z
  * @date 2023-08-26
  */

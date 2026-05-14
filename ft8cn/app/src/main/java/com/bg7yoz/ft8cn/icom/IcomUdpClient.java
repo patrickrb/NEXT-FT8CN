@@ -1,6 +1,6 @@
 package com.bg7yoz.ft8cn.icom;
 /**
- * 简单封装的udp协议处理
+ * Simple UDP protocol handler wrapper
  *
  * @author BGY70Z
  * @date 2023-03-20
@@ -34,11 +34,11 @@ public class IcomUdpClient {
     private final ExecutorService sendDataThreadPool = Executors.newCachedThreadPool();
     private SendDataRunnable sendDataRunnable = new SendDataRunnable(this);
 
-    public IcomUdpClient() {//本地端口随机
+    public IcomUdpClient() {//Random local port
         localPort = -1;
     }
 
-    public IcomUdpClient(int localPort) {//如果localPort==-1，本地端口随机
+    public IcomUdpClient(int localPort) {//If localPort==-1, random local port
         this.localPort = localPort;
     }
 
@@ -105,15 +105,15 @@ public class IcomUdpClient {
 
     public synchronized void setActivated(boolean activated) throws SocketException {
         this.activated = activated;
-        if (activated) {//通过activated判断是否结束接收线程，并清空sendSocket指针
+        if (activated) {//Use activated flag to determine if receive thread should end, and clear sendSocket pointer
             sendSocket = new DatagramSocket();
-            //new DatagramSocket(null);//绑定的端口号随机
+            //new DatagramSocket(null);//Bind to random port
             sendSocket.setReuseAddress(true);
-            if (localPort != -1) {//绑定指定的本机端口
+            if (localPort != -1) {//Bind to specified local port
                 sendSocket.bind(new InetSocketAddress(localPort));
             }
 
-            //更新一下本地端口值
+            //Update local port value
             localPort = sendSocket.getLocalPort();
             Log.e(TAG, "openUdpPort: " + sendSocket.getLocalPort());
             //Log.e(TAG, "openUdpIp: " + sendSocket.getLocalAddress());

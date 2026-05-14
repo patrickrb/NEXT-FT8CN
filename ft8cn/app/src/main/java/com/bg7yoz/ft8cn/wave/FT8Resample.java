@@ -1,7 +1,7 @@
 package com.bg7yoz.ft8cn.wave;
 
 /**
- * 用于重采样的库。
+ * Library for resampling.
  * @author bg7yoz
  * @date 2023-09-09
  */

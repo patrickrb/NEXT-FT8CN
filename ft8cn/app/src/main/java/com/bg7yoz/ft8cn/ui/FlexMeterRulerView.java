@@ -1,6 +1,6 @@
 package com.bg7yoz.ft8cn.ui;
 /**
- * flexRadio仪表的自定义控件。
+ * Custom view for FlexRadio meter display.
  * @author BGY70Z
  * @date 2023-03-20
  */
@@ -34,7 +34,7 @@ public class FlexMeterRulerView extends View {
     private float value=5f;
 
 
-    private final int labelDp=12;//标签字体大小dp
+    private final int labelDp=12;// Label font size in dp
     private Rect rulerRect = new Rect();
     private Rect valueRect =new Rect();
     private Paint fontPaint = new Paint();
@@ -42,8 +42,8 @@ public class FlexMeterRulerView extends View {
     private Paint valuePaint = new Paint();
     private Paint labelPaint=new Paint();
     private int rulerWidth = getWidth();
-    private int labelWidth=dpToPixel(40);//标签宽度
-    private int valueWidth=dpToPixel(65);//值标签宽度
+    private int labelWidth=dpToPixel(40);// Label width
+    private int valueWidth=dpToPixel(65);// Value label width
 
     @SuppressLint("DefaultLocale")
     public void setValue(float value,OnSetValue onSetValue) {
@@ -98,10 +98,10 @@ public class FlexMeterRulerView extends View {
     }
 
     /**
-     * 把dp值转换为像素点
+     * Convert dp value to pixels.
      *
-     * @param dp dp值
-     * @return 像素点
+     * @param dp dp value
+     * @return pixels
      */
     private int dpToPixel(int dp) {
         return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp
@@ -118,7 +118,7 @@ public class FlexMeterRulerView extends View {
     @SuppressLint({"DefaultLocale", "ResourceAsColor"})
     public void drawRuler(Canvas canvas) {
 
-        int width_rate = Math.round((float) rulerWidth / (normalCount+highCount));//最大得长度比率
+        int width_rate = Math.round((float) rulerWidth / (normalCount+highCount));// Max length ratio
 
         labelPaint.setColor(0xff00ffff);
         labelPaint.setTextSize(dpToPixel(labelDp));
@@ -150,7 +150,7 @@ public class FlexMeterRulerView extends View {
 
 
 
-        //主线
+        // Main line
         rulerRect.top = valueRect.bottom+5;
         rulerRect.left = labelWidth;
         rulerRect.right = width_rate*normalCount+labelWidth;

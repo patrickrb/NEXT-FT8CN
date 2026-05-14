@@ -1,6 +1,6 @@
 package com.bg7yoz.ft8cn.ui;
 /**
- * 频谱图的主界面。
+ * Spectrum view main interface.
  * @author BGY70Z
  * @date 2023-03-20
  */
@@ -34,7 +34,7 @@ public class SpectrumFragment extends Fragment {
     private MainViewModel mainViewModel;
 
 
-    private int frequencyLineTimeOut = 0;//画频率线的时间量
+    private int frequencyLineTimeOut = 0;//Frequency line display duration
 
 
     static {
@@ -54,7 +54,7 @@ public class SpectrumFragment extends Fragment {
         mainViewModel = MainViewModel.getInstance(this);
         binding = FragmentSpectrumBinding.inflate(inflater, container, false);
         binding.columnarView.setShowBlock(true);
-        binding.deNoiseSwitch.setChecked(mainViewModel.deNoise);//噪声抑制
+        binding.deNoiseSwitch.setChecked(mainViewModel.deNoise);//Noise suppression
         binding.waterfallView.setDrawMessage(false);
         setDeNoiseSwitchState();
         setMarkMessageSwitchState();
@@ -63,7 +63,7 @@ public class SpectrumFragment extends Fragment {
         mainViewModel.currentMessages=null;
 
 
-        //原始频谱开关
+        //Raw spectrum switch
         binding.deNoiseSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
@@ -72,7 +72,7 @@ public class SpectrumFragment extends Fragment {
                 mainViewModel.currentMessages=null;
             }
         });
-        //标记消息开关
+        //Mark message switch
         binding.showMessageSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
@@ -81,7 +81,7 @@ public class SpectrumFragment extends Fragment {
             }
         });
 
-        //当声音变化，画频谱
+        //Draw spectrum when audio changes
         mainViewModel.spectrumListener.mutableDataBuffer.observe(getViewLifecycleOwner(), new Observer<float[]>() {
             @Override
             public void onChanged(float[] floats) {
@@ -91,7 +91,7 @@ public class SpectrumFragment extends Fragment {
 
 
 
-        //观察解码的时长
+        //Observe decode duration
         mainViewModel.ft8SignalListener.decodeTimeSec.observe(getViewLifecycleOwner(), new Observer<Long>() {
             @SuppressLint("DefaultLocale")
             @Override
@@ -100,16 +100,16 @@ public class SpectrumFragment extends Fragment {
                         GeneralVariables.getStringFromResource(R.string.decoding_takes_milliseconds), aLong));
             }
         });
-        //观察解码的变化
+        //Observe decode state changes
         mainViewModel.mutableIsDecoding.observe(getViewLifecycleOwner(), new Observer<Boolean>() {
             @Override
             public void onChanged(Boolean aBoolean) {
-                binding.waterfallView.setDrawMessage(!aBoolean);//false说明解码完毕
+                binding.waterfallView.setDrawMessage(!aBoolean);//false means decoding is complete
             }
         });
 
 
-        //显示UTC时间
+        //Display UTC time
         mainViewModel.timerSec.observe(getViewLifecycleOwner(), new Observer<Long>() {
             @Override
             public void onChanged(Long aLong) {
@@ -119,13 +119,13 @@ public class SpectrumFragment extends Fragment {
         });
 
 
-        //触摸频谱时的动作
+        //Action when touching the spectrum
         View.OnTouchListener touchListener = new View.OnTouchListener() {
             @SuppressLint("DefaultLocale")
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
 
-                frequencyLineTimeOut = 60;//显示频率线的时长：60*0.16
+                frequencyLineTimeOut = 60;//Frequency line display duration: 60*0.16
 
                 binding.waterfallView.setTouch_x(Math.round(motionEvent.getX()));
                 binding.columnarView.setTouch_x(Math.round(motionEvent.getX()));
@@ -135,7 +135,7 @@ public class SpectrumFragment extends Fragment {
                 if (!mainViewModel.ft8TransmitSignal.isSynFrequency()
                         && (binding.waterfallView.getFreq_hz() > 0)
                         && (motionEvent.getAction() == ACTION_UP)
-                ) {//如果时异频发射
+                ) {//If split frequency transmit
                     mainViewModel.databaseOpr.writeConfig("freq",
                             String.valueOf(binding.waterfallView.getFreq_hz()),
                             null);
@@ -179,13 +179,13 @@ public class SpectrumFragment extends Fragment {
         if (frequencyLineTimeOut < 0) {
             frequencyLineTimeOut = 0;
         }
-        //达到显示的时长，就取取消掉频率线
+        //When display duration is reached, cancel the frequency line
         if (frequencyLineTimeOut == 0) {
             binding.waterfallView.setTouch_x(-1);
             binding.columnarView.setTouch_x(-1);
         }
         binding.columnarView.setWaveData(fft);
-        if (mainViewModel.markMessage) {//是否标记消息
+        if (mainViewModel.markMessage) {//Whether to mark messages
             binding.waterfallView.setWaveData(fft, UtcTimer.getNowSequential(), mainViewModel.currentMessages);
         } else {
             binding.waterfallView.setWaveData(fft, UtcTimer.getNowSequential(), null);

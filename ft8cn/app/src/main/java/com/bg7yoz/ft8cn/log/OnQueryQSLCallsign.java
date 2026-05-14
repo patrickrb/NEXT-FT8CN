@@ -1,6 +1,6 @@
 package com.bg7yoz.ft8cn.log;
 /**
- * 查询呼号日志的回调。
+ * Callback for querying callsign logs.
  * @author BGY70Z
  * @date 2023-03-20
  */

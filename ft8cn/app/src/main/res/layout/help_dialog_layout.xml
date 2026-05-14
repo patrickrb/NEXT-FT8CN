@@ -63,7 +63,7 @@
                 android:lineSpacingMultiplier="1.2"
                 android:textColor="@color/help_dialog_text_color"
                 android:textSize="14sp"
-                tools:text="提示消息提示" />
+                tools:text="Help message" />
         </LinearLayout>
     </ScrollView>
 

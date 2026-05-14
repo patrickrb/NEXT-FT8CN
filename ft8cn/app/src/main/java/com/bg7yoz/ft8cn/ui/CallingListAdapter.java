@@ -1,7 +1,7 @@
 package com.bg7yoz.ft8cn.ui;
 /**
- * 消息列表Adapter。使用此Adapter有解码界面、呼叫界面、网格追踪界面。
- * 不同周期背景不同。为了区分，共有4种背景颜色。
+ * Message list Adapter. Used by the decode view, call view, and grid tracker view.
+ * Different time periods have different backgrounds. There are 4 background colors to distinguish them.
  * @author BGY70Z
  * @date 2023-03-20
  */
@@ -45,31 +45,31 @@ public class CallingListAdapter extends RecyclerView.Adapter<CallingListAdapter.
         @Override
         public void onCreateContextMenu(ContextMenu contextMenu, View view, ContextMenu.ContextMenuInfo contextMenuInfo) {
 
-            //view.setTag(ft8Message);//把消息对象传递给上一级界面
+            //view.setTag(ft8Message);// Pass the message object to the parent view
             int postion= (int) view.getTag();
             if (postion==-1) return;
             if (postion>ft8MessageArrayList.size()-1) return;
             Ft8Message ft8Message=ft8MessageArrayList.get(postion);
 
-            //添加菜单的参数i1:组，i2:id值，i3:显示顺序
-            if (!ft8Message.getCallsignTo().contains("...")//目标不能是自己
+            // Menu parameters: i1=group, i2=id, i3=display order
+            if (!ft8Message.getCallsignTo().contains("...")// Target cannot be self
                     //&& !ft8Message.getCallsignTo().equals(GeneralVariables.myCallsign)
                     && !GeneralVariables.checkIsMyCallsign(ft8Message.getCallsignTo())
                     && !(ft8Message.i3==0&&ft8Message.n3==0)) {
                 if (!ft8Message.checkIsCQ()) {
-                    if (showMode==ShowMode.CALLING_LIST) {//在消息列表中就可以显示这个菜单了
+                    if (showMode==ShowMode.CALLING_LIST) {// Show this menu in the message list
                         contextMenu.add(0, 0, 0, String.format(
                                         GeneralVariables.getStringFromResource(R.string.tracking_receiver)
                                         , ft8Message.getCallsignTo(), ft8Message.toWhere))
                                 .setActionView(view);
                     }
-                    if (!mainViewModel.ft8TransmitSignal.isSynFrequency()) {//如果同频率的话，会与发送者同频，会影响发送者！！！
+                    if (!mainViewModel.ft8TransmitSignal.isSynFrequency()) {// If same frequency, it would collide with the sender's frequency and interfere!
                         contextMenu.add(0, 1, 0, String.format(
                                         GeneralVariables.getStringFromResource(R.string.calling_receiver)
                                         , ft8Message.getCallsignTo(), ft8Message.toWhere))
                                 .setActionView(view);
                     }
-                    //说明是对我呼叫，加上回复菜单
+                    // This is a call directed to me, add reply menu
                     //if (ft8Message.getCallsignTo().equals(GeneralVariables.myCallsign)) {
                     if (GeneralVariables.checkIsMyCallsign(ft8Message.getCallsignTo())) {
                         contextMenu.add(0, 4, 0, String.format(
@@ -84,7 +84,7 @@ public class CallingListAdapter extends RecyclerView.Adapter<CallingListAdapter.
                                         , ft8Message.getCallsignTo())).setActionView(view);
                     }
 
-                    //增加查询日志
+                    // Add query log entry
                     contextMenu.add(0, 7, 0
                             , String.format(GeneralVariables.getStringFromResource(R.string.qsl_query_log_menu)
                                     , ft8Message.getCallsignTo())).setActionView(view);
@@ -96,7 +96,7 @@ public class CallingListAdapter extends RecyclerView.Adapter<CallingListAdapter.
                     //&& !ft8Message.getCallsignFrom().equals(GeneralVariables.myCallsign)
                     && !GeneralVariables.checkIsMyCallsign(ft8Message.getCallsignFrom())
                     && !(ft8Message.i3==0&&ft8Message.n3==0)) {
-                if (showMode==ShowMode.CALLING_LIST) {//在消息列表中就可以显示这个菜单了
+                if (showMode==ShowMode.CALLING_LIST) {// Show this menu in the message list
                     contextMenu.add(1, 2, 0, String.format(
                                     GeneralVariables.getStringFromResource(R.string.tracking)
                                     , ft8Message.getCallsignFrom(), ft8Message.fromWhere))
@@ -112,7 +112,7 @@ public class CallingListAdapter extends RecyclerView.Adapter<CallingListAdapter.
                                     , ft8Message.getCallsignFrom())).setActionView(view);
                 }
 
-                //增加查询日志
+                // Add query log entry
                 contextMenu.add(0, 8, 0
                         , String.format(GeneralVariables.getStringFromResource(R.string.qsl_query_log_menu)
                                 , ft8Message.getCallsignFrom())).setActionView(view);
@@ -145,9 +145,9 @@ public class CallingListAdapter extends RecyclerView.Adapter<CallingListAdapter.
     }
 
     /**
-     * 删除消息
+     * Delete a message.
      *
-     * @param position 在列表中的位置
+     * @param position Position in the list
      */
     public void deleteMessage(int position) {
         if (position >= 0) {
@@ -163,7 +163,7 @@ public class CallingListAdapter extends RecyclerView.Adapter<CallingListAdapter.
     }
 
     /**
-     * 通过holder获取消息
+     * Get message by ViewHolder.
      *
      * @param holder holder
      * @return ft8message
@@ -178,21 +178,21 @@ public class CallingListAdapter extends RecyclerView.Adapter<CallingListAdapter.
     @SuppressLint("ResourceAsColor")
     @Override
     public void onBindViewHolder(@NonNull CallingListItemHolder holder, int position) {
-        holder.callListHolderConstraintLayout.setTag(position);//设置layout的tag，为了识别消息的定位
+        holder.callListHolderConstraintLayout.setTag(position);// Set layout tag to identify message position
         holder.ft8Message = ft8MessageArrayList.get(position);
-        holder.showMode = showMode;//确定是消息列表还是关注消息的列表
-        holder.isSyncFreq = mainViewModel.ft8TransmitSignal.isSynFrequency();//如果同频发射，就不显示呼叫接收者
+        holder.showMode = showMode;// Determine if this is the message list or the watched message list
+        holder.isSyncFreq = mainViewModel.ft8TransmitSignal.isSynFrequency();// If transmitting on same frequency, don't show call receiver
 
         holder.callingUtcTextView.setText(UtcTimer.getTimeHHMMSS(holder.ft8Message.utcTime));
-        //时序，包括颜色,
+        // Sequence, including color
         holder.callingListSequenceTextView.setText(holder.ft8Message.getSequence() == 0 ? "0" : "1");
         holder.isWeakSignalImageView.setVisibility(holder.ft8Message.isWeakSignal ? View.VISIBLE:View.INVISIBLE);
 
-        if (showMode==ShowMode.MY_CALLING) {//在呼叫界面
+        if (showMode==ShowMode.MY_CALLING) {// In the call view
             holder.callingListSequenceTextView.setTextColor(context.getColor(R.color.follow_call_text_color));
         }
 
-        //根据1分钟内的4个时序区分颜色
+        // Distinguish colors based on 4 time sequences within 1 minute
         switch (holder.ft8Message.getSequence4()) {
             case 0:
                 holder.callListHolderConstraintLayout.setBackgroundResource(R.drawable.calling_list_cell_0_style);
@@ -209,7 +209,7 @@ public class CallingListAdapter extends RecyclerView.Adapter<CallingListAdapter.
         }
 
         holder.callingListIdBTextView.setText(holder.ft8Message.getdB());
-        //时间偏移，如果超过1.0秒，-0.05秒，红色提示
+        // Time offset; if exceeds 1.0s or below -0.05s, show in red
         holder.callListDtTextView.setText(holder.ft8Message.getDt());
         if (holder.ft8Message.time_sec > 1.0f || holder.ft8Message.time_sec < -0.05) {
             holder.callListDtTextView.setTextColor(context.getResources().getColor(
@@ -222,15 +222,15 @@ public class CallingListAdapter extends RecyclerView.Adapter<CallingListAdapter.
 
         holder.callingListFreqTextView.setText(holder.ft8Message.getFreq_hz());
 
-        //查是不是通联过的呼号，获取是否存在holder.otherBandIsQso中
+        // Check if this callsign has been contacted before; store result in holder.otherBandIsQso
         setQueryHolderQSL_Callsign(holder);
 
-        //是否有与我呼号有关的消息
+        // Whether the message is related to my callsign
         if (holder.ft8Message.inMyCall()) {
             holder.callListMessageTextView.setTextColor(context.getResources().getColor(
                     R.color.message_in_my_call_text_color));
         } else if (holder.otherBandIsQso) {
-            //设置在别的波段通联过的消息颜色
+            // Set color for messages with QSOs on other bands
             holder.callListMessageTextView.setTextColor(context.getResources().getColor(
                     R.color.fromcall_is_qso_text_color));
         } else {
@@ -241,16 +241,16 @@ public class CallingListAdapter extends RecyclerView.Adapter<CallingListAdapter.
 
         holder.callListMessageTextView.setText(holder.ft8Message.getMessageText(true));
 
-        //载波频率
+        // Carrier frequency
         holder.bandItemTextView.setText(BaseRigOperation.getFrequencyStr(holder.ft8Message.band));
-        //计算距离
+        // Calculate distance
         holder.callingListDistTextView.setText(MaidenheadGrid.getDistStr(
                 GeneralVariables.getMyMaidenheadGrid()
                 , holder.ft8Message.getMaidenheadGrid(mainViewModel.databaseOpr)));
-        holder.callingListCallsignToTextView.setText("");//被呼叫者
-        holder.callingListCallsignFromTextView.setText("");//呼叫者
+        holder.callingListCallsignToTextView.setText("");// Callee
+        holder.callingListCallsignFromTextView.setText("");// Caller
 
-        //消息类型
+        // Message type
         holder.callingListCommandIInfoTextView.setText(holder.ft8Message.getCommandInfo());
         if (holder.ft8Message.i3 == 1 || holder.ft8Message.i3 == 2) {
             holder.callingListCommandIInfoTextView.setTextColor(context.getResources().getColor(
@@ -260,7 +260,7 @@ public class CallingListAdapter extends RecyclerView.Adapter<CallingListAdapter.
                     R.color.message_in_my_call_text_color));
         }
 
-        //设置是否CQ的颜色
+        // Set CQ color
         if (holder.ft8Message.checkIsCQ()) {
             holder.callListMessageTextView.setBackgroundResource(R.color.textview_cq_color);
             holder.ft8Message.toWhere = "";
@@ -281,17 +281,17 @@ public class CallingListAdapter extends RecyclerView.Adapter<CallingListAdapter.
             holder.callingListCallsignToTextView.setText("");
         }
 
-        //给没有通联过的分区打标记
+        // Mark zones that have not been contacted
         setToDxcc(holder);
         setFromDxcc(holder);
 
 
-        //查询呼号归属地，为防止占用太多运算资源，当from为空是再做查询的工作
+        // Query callsign location. To avoid excessive computation, only query when 'from' is empty.
 //        if (holder.ft8Message.fromWhere == null) {
-//            setQueryHolderCallsign(holder);//查询呼号归属地
+//            setQueryHolderCallsign(holder);// Query callsign location
 //        }
 
-        if (holder.ft8Message.freq_hz <= 0.01f) {//这是发射界面
+        if (holder.ft8Message.freq_hz <= 0.01f) {// This is the transmit view
             holder.callingListIdBTextView.setVisibility(View.GONE);
             holder.callListDtTextView.setVisibility(View.GONE);
             holder.callingListFreqTextView.setText("TX");
@@ -307,7 +307,7 @@ public class CallingListAdapter extends RecyclerView.Adapter<CallingListAdapter.
             holder.dxccFromImageView.setVisibility(View.GONE);
             holder.ituFromImageView.setVisibility(View.GONE);
             holder.cqFromImageView.setVisibility(View.GONE);
-        } else if (GeneralVariables.simpleCallItemMode){//简单列表模式
+        } else if (GeneralVariables.simpleCallItemMode){// Simple list mode
             holder.bandItemTextView.setVisibility(View.GONE);
             holder.callingListDistTextView.setVisibility(View.GONE);
             holder.callingListCommandIInfoTextView.setVisibility(View.GONE);
@@ -316,7 +316,7 @@ public class CallingListAdapter extends RecyclerView.Adapter<CallingListAdapter.
             holder.dxccToImageView.setVisibility(View.GONE);
             holder.ituToImageView.setVisibility(View.GONE);
             holder.cqToImageView.setVisibility(View.GONE);
-        }else {//标准列表模式
+        }else {// Standard list mode
             holder.callingListIdBTextView.setVisibility(View.VISIBLE);
             holder.callListDtTextView.setVisibility(View.VISIBLE);
             holder.bandItemTextView.setVisibility(View.VISIBLE);
@@ -369,13 +369,13 @@ public class CallingListAdapter extends RecyclerView.Adapter<CallingListAdapter.
         }
     }
 
-    //检查是不是通联过的呼号
+    // Check if the callsign has been contacted (QSO'd) before
     private void setQueryHolderQSL_Callsign(@NonNull CallingListItemHolder holder) {
-        //查是不是在本波段内通联成功过的呼号
-        if (GeneralVariables.checkQSLCallsign(holder.ft8Message.getCallsignFrom())) {//如果在数据库中，划线
+        // Check if this callsign has been successfully contacted on this band
+        if (GeneralVariables.checkQSLCallsign(holder.ft8Message.getCallsignFrom())) {// If in the database, strike through
             holder.callListMessageTextView.setPaintFlags(
                     holder.callListMessageTextView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-        } else {//如果不在数据库中，去掉划线
+        } else {// If not in the database, remove strike through
             holder.callListMessageTextView.setPaintFlags(
                     holder.callListMessageTextView.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
         }

@@ -1,6 +1,6 @@
 package com.bg7yoz.ft8cn.icom;
 /**
- * 控制流的基本类。
+ * Base class for control stream handling.
  *
  * @author BGY70Z
  * @date 2023-08-26
@@ -16,20 +16,20 @@ public class ControlUdp extends IcomUdpBase {
     private static final String TAG = "ControlUdp";
     public final String APP_NAME = "FT8CN";
 
-    //与采样率有关，每20ms发送的样本数12000/50=240=F0，实际字节数是（16bit），还要乘以2，也就是480字节
+    //Related to sample rate: samples per 20ms = 12000/50 = 240 = 0xF0; actual byte count (16-bit) is doubled = 480 bytes
 
 
-    public Timer tokenTimer;//续订令牌的时钟
+    public Timer tokenTimer;//Token renewal timer
 
     public String userName;
     public String password;
     public String rigName = "";
     public String audioName = "";
-    public byte[] rigMacAddress = new byte[6];//0xA8、0x90包中提供
+    public byte[] rigMacAddress = new byte[6];//Provided in 0xA8 and 0x90 packets
     public String connectionMode = "";
 
-    public boolean gotAuthOK = false;//token认证通过了
-    public boolean isAuthenticated = false;//登录成功
+    public boolean gotAuthOK = false;//Token authentication passed
+    public boolean isAuthenticated = false;//Login successful
     public boolean rigIsBusy = false;
 
     public IcomCivUdp civUdp;
@@ -49,35 +49,35 @@ public class ControlUdp extends IcomUdpBase {
 
     @Override
     public void onDataReceived(DatagramPacket packet, byte[] data) {
-        // 父类默认处理一下数据包：
-        // 控制包0x10（CMD_I_AM_HERE、CMD_RETRANSMIT），
-        // ping包0x15
-        // 变长包：RETRANSMIT包，type=IComPacketTypes.CMD_RETRANSMIT
+        // Parent class default packet handling:
+        // Control packet 0x10 (CMD_I_AM_HERE, CMD_RETRANSMIT),
+        // Ping packet 0x15
+        // Variable-length packets: RETRANSMIT packet, type=IComPacketTypes.CMD_RETRANSMIT
         super.onDataReceived(packet, data);
         switch (data.length) {
-            case IComPacketTypes.CONTROL_SIZE://在父类中已经实现0x04,0x01指令
+            case IComPacketTypes.CONTROL_SIZE://0x04 and 0x01 commands already handled in parent class
                 if (IComPacketTypes.ControlPacket.getType(data) == IComPacketTypes.CMD_I_AM_HERE) {
                     rigIp = packet.getAddress().getHostAddress();
                 }
-                //如果电台回复I'm ready,就发起login
+                //If the radio replies I'm ready, initiate login
                 if (IComPacketTypes.ControlPacket.getType(data) == IComPacketTypes.CMD_I_AM_READY) {
-                    sendLoginPacket();//电台准备好了，申请登录 0x80包
-                    startIdleTimer();//打开发送空包时钟
+                    sendLoginPacket();//Radio is ready, request login with 0x80 packet
+                    startIdleTimer();//Start idle packet timer
                 }
                 break;
-            case IComPacketTypes.TOKEN_SIZE://处理令牌的续订之类的事情
+            case IComPacketTypes.TOKEN_SIZE://Handle token renewal and related operations
                 onReceiveTokenPacket(data);
                 break;
-            case IComPacketTypes.STATUS_SIZE://0x50电台回复我它的参数：CivPort,AudioPort等
+            case IComPacketTypes.STATUS_SIZE://0x50 radio replies with its parameters: CivPort, AudioPort, etc.
                 onReceiveStatusPacket(data);
                 break;
-            case IComPacketTypes.LOGIN_RESPONSE_SIZE://0x60电台回复登录的请求
+            case IComPacketTypes.LOGIN_RESPONSE_SIZE://0x60 radio replies to login request
                 onReceiveLoginResponse(data);
                 break;
-            case IComPacketTypes.CONNINFO_SIZE://电台会回复2次0x90包，区别在于busy字段
+            case IComPacketTypes.CONNINFO_SIZE://Radio sends 0x90 packet twice; the difference is in the busy field
                 onReceiveConnInfoPacket(data);
                 break;
-            case IComPacketTypes.CAP_CAPABILITIES_SIZE://0xA8数据包,返回civ地址
+            case IComPacketTypes.CAP_CAPABILITIES_SIZE://0xA8 packet, returns CI-V address
                 byte[] audioCap = IComPacketTypes.CapCapabilitiesPacket.getRadioCapPacket(data, 0);
                 if (audioCap != null) {
                     civUdp.supportTX = IComPacketTypes.RadioCapPacket.getSupportTX(audioCap);
@@ -90,79 +90,80 @@ public class ControlUdp extends IcomUdpBase {
 
 
     /**
-     * 处理电台发送过来的connInfo（0x90）数据包，电台发送0x90包有两次，第一次busy=0,第二次busy=1。
-     * 在0x90数据包中取macAddress，电台名称
-     * 这部分留给IcomControlUdp和XieGuControlUdp来处理
-     * @param data 0x90数据包
+     * Handle connInfo (0x90) packet from the radio. The radio sends the 0x90 packet twice:
+     * first with busy=0, second with busy=1.
+     * Extract macAddress and radio name from the 0x90 packet.
+     * This is left for IcomControlUdp and XieGuControlUdp to implement.
+     * @param data 0x90 packet
      */
     public void onReceiveConnInfoPacket(byte[] data) {
     }
 
 
     /**
-     * 处理电台回复登录数据包
+     * Handle login response packet from the radio
      *
-     * @param data 0x60数据包
+     * @param data 0x60 packet
      */
     public void onReceiveLoginResponse(byte[] data) {
         if (IComPacketTypes.ControlPacket.getType(data) == 0x01) return;
         connectionMode = IComPacketTypes.LoginResponsePacket.getConnection(data);
         Log.d(TAG, "connection mode:" + connectionMode);
-        if (IComPacketTypes.LoginResponsePacket.authIsOK(data)) {//errorCode=0x00,认证成功
+        if (IComPacketTypes.LoginResponsePacket.authIsOK(data)) {//errorCode=0x00, authentication successful
             Log.d(TAG, "onReceiveLoginResponse: Login succeed!");
             if (!isAuthenticated) {
                 rigToken = IComPacketTypes.LoginResponsePacket.getToken(data);
                 Log.d(TAG, "onReceiveLoginResponse: send token confirm 0x02");
-                sendTokenPacket(IComPacketTypes.TOKEN_TYPE_CONFIRM);//发送令牌确认包 0x40
-                startTokenTimer();//启动令牌续订时钟
+                sendTokenPacket(IComPacketTypes.TOKEN_TYPE_CONFIRM);//Send token confirmation packet 0x40
+                startTokenTimer();//Start token renewal timer
                 isAuthenticated = true;
             }
         }
-        if (onStreamEvents != null) {//触发认证事件
+        if (onStreamEvents != null) {//Trigger authentication event
             onStreamEvents.OnLoginResponse(IComPacketTypes.LoginResponsePacket.authIsOK(data));
         }
     }
 
     /**
-     * 处理电台回复我的参数。0x50数据包
+     * Handle radio status parameters. 0x50 packet
      *
-     * @param data 0x50数据包
+     * @param data 0x50 packet
      */
     public void onReceiveStatusPacket(byte[] data) {
-        //if (this.authDone) return;//6100会频繁激活0x50包
+        //if (this.authDone) return;//6100 frequently triggers 0x50 packets
         if (IComPacketTypes.ControlPacket.getType(data) == 0x01) return;
         if (IComPacketTypes.StatusPacket.getAuthOK(data)
-                && IComPacketTypes.StatusPacket.getIsConnected(data)) {//令牌认证成功，且处于连接状态
+                && IComPacketTypes.StatusPacket.getIsConnected(data)) {//Token auth succeeded and connected
             audioUdp.rigPort = IComPacketTypes.StatusPacket.getRigAudioPort(data);
             audioUdp.rigIp = rigIp;
             civUdp.rigPort = IComPacketTypes.StatusPacket.getRigCivPort(data);
             civUdp.rigIp = rigIp;
             Log.e(TAG, String.format("onReceiveStatusPacket: Status packet 0x50: civRigPort:%d,audioRigPort:%d"
                     , civUdp.rigPort, audioUdp.rigPort));
-            //todo 6100与icom有差异
-            civUdp.startAreYouThereTimer();//civ端口启动连接电台
-            audioUdp.startAreYouThereTimer();//audio端口启动连接电台
-        }//else处理关闭连接？？？
+            //todo 6100 differs from iCom
+            civUdp.startAreYouThereTimer();//CI-V port starts connecting to radio
+            audioUdp.startAreYouThereTimer();//Audio port starts connecting to radio
+        }//else handle connection close???
     }
 
     /**
-     * 处理令牌数据包
+     * Handle token packet
      *
-     * @param data 0x40数据包
+     * @param data 0x40 packet
      */
     public void onReceiveTokenPacket(byte[] data) {
-        //看是不是续订令牌包
+        //Check if this is a token renewal packet
         if (IComPacketTypes.TokenPacket.getRequestType(data) == IComPacketTypes.TOKEN_TYPE_RENEWAL
                 && IComPacketTypes.TokenPacket.getRequestReply(data) == 0x02
                 && IComPacketTypes.ControlPacket.getType(data) != IComPacketTypes.CMD_RETRANSMIT) {
             int response = IComPacketTypes.TokenPacket.getResponse(data);
-            if (response == 0x0000) {//说明续订成功了
+            if (response == 0x0000) {//Renewal succeeded
                 gotAuthOK = true;
             } else if (response == 0xffffffff) {
                 remoteId = IComPacketTypes.ControlPacket.getSentId(data);
                 localToken = IComPacketTypes.TokenPacket.getTokRequest(data);
                 rigToken = IComPacketTypes.TokenPacket.getToken(data);
-                sendConnectionRequest();//申请连接
+                sendConnectionRequest();//Request connection
             } else {
                 Log.e(TAG, "Token renewal failed,unknow response");
             }
@@ -170,25 +171,25 @@ public class ControlUdp extends IcomUdpBase {
     }
 
     /**
-     * 发送civ指令
+     * Send CI-V command
      *
-     * @param data 指令
+     * @param data command
      */
     public void sendCivData(byte[] data) {
         civUdp.sendCivData(data);
     }
 
     /**
-     * 发送音频数据到电台
+     * Send audio data to the radio
      *
-     * @param data 数据
+     * @param data data
      */
     public void sendWaveData(float[] data) {
         audioUdp.sendTxAudioData(data);
     }
 
     /**
-     * 发送0x90数据包，向电台请求连接
+     * Send 0x90 packet to request connection from the radio
      */
     public void sendConnectionRequest() {
         sendTrackedPacket(IComPacketTypes.ConnInfoPacket.connectRequestPacket((short) 0
@@ -200,7 +201,7 @@ public class ControlUdp extends IcomUdpBase {
     }
 
     /**
-     * 发送登录数据包0x80包
+     * Send login packet (0x80 packet)
      */
     public void sendLoginPacket() {
         sendTrackedPacket(IComPacketTypes.LoginPacket.loginPacketData((short) 0
@@ -216,7 +217,7 @@ public class ControlUdp extends IcomUdpBase {
     }
 
     /**
-     * 启动令牌续订时钟
+     * Start token renewal timer
      */
     public void startTokenTimer() {
         stopTimer(tokenTimer);

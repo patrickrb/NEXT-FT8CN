@@ -14,7 +14,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 /**
- * 3代的指令，不同电台还有不同，频率长度981，991是9位，其它的长度是8位
+ * Gen-3 commands; different rigs vary. Frequency length for 981/991 is 9 digits, others are 8 digits.
  */
 public class YaesuDX10Rig extends BaseRig {
     private static final String TAG = "YaesuDX10Rig";
@@ -50,11 +50,11 @@ public class YaesuDX10Rig extends BaseRig {
     }
 
     /**
-     * 读取Meter RM;
+     * Read Meter RM;
      */
     private void readMeters() {
         if (getConnector() != null) {
-            clearBufferData();//清空一下缓存
+            clearBufferData();//clear buffer
             getConnector().sendData(Yaesu3RigConstant.setRead39Meters_ALC());
             getConnector().sendData(Yaesu3RigConstant.setRead39Meters_SWR());
         }
@@ -71,7 +71,7 @@ public class YaesuDX10Rig extends BaseRig {
             swrAlert = false;
         }
         if ((alc > Yaesu3RigConstant.alc_39_alert_max)
-                && GeneralVariables.alc_switch_on) {//网络模式下不警告ALC
+                && GeneralVariables.alc_switch_on) {//ALC alert
             if (!alcMaxAlert) {
                 alcMaxAlert = true;
                 ToastMessage.show(GeneralVariables.getStringFromResource(R.string.alc_high_alert));
@@ -83,7 +83,7 @@ public class YaesuDX10Rig extends BaseRig {
     }
 
     /**
-     * 清空缓存数据
+     * Clear buffer data
      */
     private void clearBufferData() {
         buffer.setLength(0);
@@ -94,7 +94,7 @@ public class YaesuDX10Rig extends BaseRig {
         super.setPTT(on);
         if (getConnector() != null) {
             switch (getControlMode()) {
-                case ControlMode.CAT://以CIV指令
+                case ControlMode.CAT://via CAT command
                     getConnector().setPttOn(Yaesu3RigConstant.setPTTState(on));
                     break;
                 case ControlMode.RTS:
@@ -133,15 +133,15 @@ public class YaesuDX10Rig extends BaseRig {
         if (!s.contains(";")) {
             buffer.append(s);
             if (buffer.length() > 1000) clearBufferData();
-            return;//说明数据还没接收完。
+            return;//data reception not yet complete.
         } else {
-            if (s.indexOf(";") > 0) {//说明接到结束的数据了，并且不是第一个字符是;
+            if (s.indexOf(";") > 0) {//received end-of-data, and delimiter is not the first character
                 buffer.append(s.substring(0, s.indexOf(";")));
             }
-            //开始分析数据
+            //begin parsing data
             Yaesu3Command yaesu3Command = Yaesu3Command.getCommand(buffer.toString());
-            clearBufferData();//清一下缓存
-            //要把剩下的数据放到缓存里
+            clearBufferData();//clear buffer
+            //put remaining data into buffer
             buffer.append(s.substring(s.indexOf(";") + 1));
 
             if (yaesu3Command == null) {
@@ -150,14 +150,14 @@ public class YaesuDX10Rig extends BaseRig {
             //if (yaesu3Command.getCommandID().equalsIgnoreCase("FA")
             //        || yaesu3Command.getCommandID().toLowerCase().equals("FB")) {
             //    long tempFreq=Yaesu3Command.getFrequency(yaesu3Command);
-            //    if (tempFreq!=0) {//如果tempFreq==0，说明频率不正常
+            //    if (tempFreq!=0) {//if tempFreq==0, frequency is invalid
             //        setFreq(Yaesu3Command.getFrequency(yaesu3Command));
             //   }
             //}
             if (yaesu3Command.getCommandID().equalsIgnoreCase("FA")
                     || yaesu3Command.getCommandID().equalsIgnoreCase("FB")) {
                 long tempFreq = Yaesu3Command.getFrequency(yaesu3Command);
-                if (tempFreq != 0) {//如果tempFreq==0，说明频率不正常
+                if (tempFreq != 0) {//if tempFreq==0, frequency is invalid
                     setFreq(Yaesu3Command.getFrequency(yaesu3Command));
                 }
             } else if (yaesu3Command.getCommandID().equalsIgnoreCase("RM")) {//METER
@@ -177,7 +177,7 @@ public class YaesuDX10Rig extends BaseRig {
     @Override
     public void readFreqFromRig() {
         if (getConnector() != null) {
-            clearBufferData();//清空一下缓存
+            clearBufferData();//clear buffer
 
             getConnector().sendData(Yaesu3RigConstant.setReadOperationFreq());
         }

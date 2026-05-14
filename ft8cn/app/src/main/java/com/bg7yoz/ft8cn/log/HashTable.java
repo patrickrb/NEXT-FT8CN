@@ -1,7 +1,7 @@
 package com.bg7yoz.ft8cn.log;
 /**
- * 用于记录SWL QSO所用的哈希表类型 ，因为要记录上方的呼号，所以要有2个String KEY，HashMap并不合适，
- * 这里采用谷歌的guava:31.1-jre库
+ * Hash table type used for recording SWL QSOs. Since the callsign above needs to be recorded,
+ * two String KEYs are required, making HashMap unsuitable. Google's guava:31.1-jre library is used here.
  *
  * BG7YOZ
  * 2023-03-20

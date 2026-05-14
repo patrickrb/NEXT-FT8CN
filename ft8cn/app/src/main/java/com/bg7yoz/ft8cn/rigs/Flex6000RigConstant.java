@@ -14,9 +14,9 @@ public class Flex6000RigConstant {
     public static final int DIGI_U= 0x07;
     public static final int DIGI_L= 0x09;
 
-    //PTT状态
+    //PTT state
 
-    //指令集
+    //command set
     private static final String PTT_ON = "ZZTX1;";
     private static final String PTT_OFF = "ZZTX0;";
     private static final String USB_DIGI = "ZZMD07;";
@@ -70,7 +70,7 @@ public class Flex6000RigConstant {
 
 
 
-    //设置成VFO模式
+    //set to VFO mode
     public static byte[] setVFOMode(){
         return SET_VFO.getBytes();
     }

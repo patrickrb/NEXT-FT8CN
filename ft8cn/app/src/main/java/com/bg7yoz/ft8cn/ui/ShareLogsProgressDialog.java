@@ -38,7 +38,7 @@ public class ShareLogsProgressDialog extends Dialog {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.share_file_progress_dialog);
-        setCancelable(false);//禁止点击旁边退出
+        setCancelable(false);//Prevent dismissal by tapping outside
         shareDataInfoTextView = findViewById(R.id.shareDataInfoTextView);
         shareProgressTextView = findViewById(R.id.shareProgressTextView);
         if (isImportMode){

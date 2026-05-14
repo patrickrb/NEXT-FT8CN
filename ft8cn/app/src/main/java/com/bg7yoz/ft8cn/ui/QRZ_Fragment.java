@@ -1,6 +1,6 @@
 package com.bg7yoz.ft8cn.ui;
 /**
- * 查QRZ的web View。
+ * QRZ lookup web view.
  * @author BGY70Z
  * @date 2023-03-20
  */
@@ -43,7 +43,7 @@ public class QRZ_Fragment extends Fragment {
                              Bundle savedInstanceState) {
         binding=FragmentQrzBinding.inflate(inflater, container, false);
         binding.qrzWebView.getSettings().setJavaScriptEnabled(true);
-        //binding.qrzWebView.getSettings().setDomStorageEnabled(true);       // 这个要加上
+        //binding.qrzWebView.getSettings().setDomStorageEnabled(true);       // This needs to be added
         binding.qrzWebView.getSettings().setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
         binding.qrzWebView.getSettings().setUseWideViewPort(true);
 

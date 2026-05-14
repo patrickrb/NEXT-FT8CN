@@ -1,7 +1,7 @@
 package com.bg7yoz.ft8cn.connector;
 /**
- * ICom网络方式的连接器。
- * 注：ICom网络方式的音频数据包是Int类型，需要转换成Float类型
+ * ICom network mode connector.
+ * Note: ICom network mode audio data packets are Int type and need to be converted to Float type.
  *
  * @author BGY70Z
  * @date 2023-08-19
@@ -28,7 +28,7 @@ public class IComWifiConnector extends WifiConnector{
             }
 
             @Override
-            public void onReceivedWaveData(byte[] data) {//接收音频数据事件，把音频数据转换成float格式的。
+            public void onReceivedWaveData(byte[] data) {//audio data received event; converts audio data to float format.
                 if (onWifiDataReceived!=null){
                     float[] waveFloat=new float[data.length/2];
                     for (int i = 0; i <waveFloat.length ; i++) {

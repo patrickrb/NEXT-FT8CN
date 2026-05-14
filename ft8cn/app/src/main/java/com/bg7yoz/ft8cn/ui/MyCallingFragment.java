@@ -1,6 +1,6 @@
 package com.bg7yoz.ft8cn.ui;
 /**
- * 呼叫界面。
+ * Calling interface.
  * @author BGY70Z
  * @date 2023-03-20
  */
@@ -63,31 +63,31 @@ public class MyCallingFragment extends Fragment {
 
 
     /**
-     * 马上对发起者呼叫
+     * Call the originator immediately
      *
-     * @param message 消息
+     * @param message message
      */
     //@RequiresApi(api = Build.VERSION_CODES.N)
     private void doCallNow(Ft8Message message) {
         mainViewModel.addFollowCallsign(message.getCallsignFrom());
         if (!mainViewModel.ft8TransmitSignal.isActivated()) {
             mainViewModel.ft8TransmitSignal.setActivated(true);
-            GeneralVariables.transmitMessages.add(message);//把消息添加到关注列表中
+            GeneralVariables.transmitMessages.add(message);//Add message to the watch list
         }
-        //呼叫发启者
+        //Call the originator
         mainViewModel.ft8TransmitSignal.setTransmit(message.getFromCallTransmitCallsign()
                 , 1, message.extraInfo);
         mainViewModel.ft8TransmitSignal.transmitNow();
 
-        GeneralVariables.resetLaunchSupervision();//复位自动监管
+        GeneralVariables.resetLaunchSupervision();//Reset automatic supervision
     }
 
 
     /**
-     * 菜单选项
+     * Menu options
      *
-     * @param item 菜单
-     * @return 是否选择
+     * @param item menu item
+     * @return whether selected
      */
     //@RequiresApi(api = Build.VERSION_CODES.N)
     @Override
@@ -99,10 +99,10 @@ public class MyCallingFragment extends Fragment {
         if (ft8Message == null) return super.onContextItemSelected(item);
         ;
 
-        GeneralVariables.resetLaunchSupervision();//复位自动监管
+        GeneralVariables.resetLaunchSupervision();//Reset automatic supervision
         switch (item.getItemId()) {
-            case 1://时序与发送者相反！！！
-                Log.d(TAG, "呼叫：" + ft8Message.getCallsignTo());
+            case 1://Sequence is opposite to the sender!!!
+                Log.d(TAG, "Call: " + ft8Message.getCallsignTo());
                 if (!mainViewModel.ft8TransmitSignal.isActivated()) {
                     mainViewModel.ft8TransmitSignal.setActivated(true);
                 }
@@ -112,7 +112,7 @@ public class MyCallingFragment extends Fragment {
                 break;
 
             case 3:
-                Log.d(TAG, "呼叫：" + ft8Message.getCallsignFrom());
+                Log.d(TAG, "Call: " + ft8Message.getCallsignFrom());
                 doCallNow(ft8Message);
                 //if (!mainViewModel.ft8TransmitSignal.isActivated()) {
                 //    mainViewModel.ft8TransmitSignal.setActivated(true);
@@ -122,29 +122,29 @@ public class MyCallingFragment extends Fragment {
                 //mainViewModel.ft8TransmitSignal.transmitNow();
                 break;
 
-            case 4://回复
-                Log.d(TAG, "回复：" + ft8Message.getCallsignFrom());
+            case 4://Reply
+                Log.d(TAG, "Reply: " + ft8Message.getCallsignFrom());
                 mainViewModel.addFollowCallsign(ft8Message.getCallsignFrom());
                 if (!mainViewModel.ft8TransmitSignal.isActivated()) {
                     mainViewModel.ft8TransmitSignal.setActivated(true);
-                    GeneralVariables.transmitMessages.add(ft8Message);//把消息添加到关注列表中
+                    GeneralVariables.transmitMessages.add(ft8Message);//Add message to the watch list
                 }
-                //呼叫发启者
+                //Call the originator
                 mainViewModel.ft8TransmitSignal.setTransmit(ft8Message.getFromCallTransmitCallsign()
                         , -1, ft8Message.extraInfo);
                 mainViewModel.ft8TransmitSignal.transmitNow();
                 break;
 
-            case 5://to 的QRZ
+            case 5://QRZ for "to"
                 showQrzFragment(ft8Message.getCallsignTo());
                 break;
-            case 6://from 的QRZ
+            case 6://QRZ for "from"
                 showQrzFragment(ft8Message.getCallsignFrom());
                 break;
-            case 7://查to的日志
+            case 7://View "to" log
                 navigateToLogFragment(ft8Message.getCallsignTo());
                 break;
-            case 8://查from的日志
+            case 8://View "from" log
                 navigateToLogFragment(ft8Message.getCallsignFrom());
                 break;
 
@@ -154,23 +154,23 @@ public class MyCallingFragment extends Fragment {
         return super.onContextItemSelected(item);
     }
     /**
-     * 跳转到日志查询界面
-     * @param callsign 呼号
+     * Navigate to the log query interface
+     * @param callsign callsign
      */
     private void navigateToLogFragment(String callsign){
-        mainViewModel.queryKey=callsign;//把呼号作为关键字提交
+        mainViewModel.queryKey=callsign;//Submit the callsign as a search keyword
         NavController navController = Navigation.findNavController(requireActivity()
                 , R.id.fragmentContainerView);
-        navController.navigate(R.id.action_menu_nav_mycalling_to_menu_nav_history);//跳转到日志
+        navController.navigate(R.id.action_menu_nav_mycalling_to_menu_nav_history);//Navigate to log
     }
     /**
-     * 查询QRZ信息
+     * Query QRZ information
      *
-     * @param callsign 呼号
+     * @param callsign callsign
      */
     private void showQrzFragment(String callsign) {
         NavHostFragment navHostFragment = (NavHostFragment) requireActivity().getSupportFragmentManager().findFragmentById(R.id.fragmentContainerView);
-        assert navHostFragment != null;//断言不为空
+        assert navHostFragment != null;//Assert not null
         Bundle bundle = new Bundle();
         bundle.putString(QRZ_Fragment.CALLSIGN_PARAM, callsign);
         navHostFragment.getNavController().navigate(R.id.QRZ_Fragment, bundle);
@@ -183,19 +183,19 @@ public class MyCallingFragment extends Fragment {
         mainViewModel = MainViewModel.getInstance(this);
         binding = FragmentMyCallingBinding.inflate(inflater, container, false);
 
-        //当横屏时显示频谱图
+        //Show spectrum view in landscape mode
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
             binding.messageSpectrumView.run(mainViewModel, this);
         }
 
 
-        //发射消息的列表
+        //Transmit message list
         functionOrderSpinnerAdapter = new FunctionOrderSpinnerAdapter(requireContext(), mainViewModel);
         binding.functionOrderSpinner.setAdapter(functionOrderSpinnerAdapter);
         functionOrderSpinnerAdapter.notifyDataSetChanged();
 
 
-        //关注的消息列表
+        //Watched message list
         transmitRecycleView = binding.transmitRecycleView;
         transmitCallListAdapter = new CallingListAdapter(this.getContext(), mainViewModel
                 , GeneralVariables.transmitMessages, CallingListAdapter.ShowMode.MY_CALLING);
@@ -206,19 +206,19 @@ public class MyCallingFragment extends Fragment {
         transmitCallListAdapter.notifyDataSetChanged();
 
 
-        //设置消息列表滑动，用于快速呼叫
+        //Set up message list swipe for quick calling
         initRecyclerViewAction();
-        //菜单
+        //Menu
         requireActivity().registerForContextMenu(transmitRecycleView);
 
-        //显示UTC时间
+        //Display UTC time
         mainViewModel.timerSec.observe(getViewLifecycleOwner(), new Observer<Long>() {
             @Override
             public void onChanged(Long aLong) {
                 binding.timerTextView.setText(UtcTimer.getTimeStr(aLong));
             }
         });
-        //显示发射频率
+        //Display transmit frequency
         GeneralVariables.mutableBaseFrequency.observe(getViewLifecycleOwner(), new Observer<Float>() {
             @SuppressLint("DefaultLocale")
             @Override
@@ -229,7 +229,7 @@ public class MyCallingFragment extends Fragment {
         });
 
 
-        //观察发射状态按钮的变化
+        //Observe transmit status button changes
         Observer<Boolean> transmittingObserver = new Observer<Boolean>() {
             @Override
             public void onChanged(Boolean aBoolean) {
@@ -237,7 +237,7 @@ public class MyCallingFragment extends Fragment {
                     binding.setTransmitImageButton.setImageResource(R.drawable.ic_baseline_send_red_48);
                     binding.setTransmitImageButton.setAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.view_blink));
                 } else {
-                    //录音对象也要处于启动状态才可以有发射的状态
+                    //The recorder must also be running to have transmit status
                     if (mainViewModel.ft8TransmitSignal.isActivated() && mainViewModel.hamRecorder.isRunning()) {
                         binding.setTransmitImageButton.setImageResource(R.drawable.ic_baseline_send_white_48);
                     } else {
@@ -246,7 +246,7 @@ public class MyCallingFragment extends Fragment {
                     binding.setTransmitImageButton.setAnimation(null);
                 }
 
-                //暂停播放按键
+                //Pause playback button
                 if (mainViewModel.ft8TransmitSignal.isTransmitting()) {
                     binding.pauseTransmittingImageButton.setImageResource(R.drawable.ic_baseline_pause_circle_outline_24);
                     binding.pauseTransmittingImageButton.setVisibility(View.VISIBLE);
@@ -256,20 +256,20 @@ public class MyCallingFragment extends Fragment {
                 }
             }
         };
-        //显示发射状态
+        //Display transmit status
         mainViewModel.ft8TransmitSignal.mutableIsTransmitting.observe(getViewLifecycleOwner(), transmittingObserver);
         mainViewModel.ft8TransmitSignal.mutableIsActivated.observe(getViewLifecycleOwner(), transmittingObserver);
 
-        //暂停按钮
+        //Pause button
         binding.pauseTransmittingImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 mainViewModel.ft8TransmitSignal.setTransmitting(false);
-                GeneralVariables.resetLaunchSupervision();//复位自动监管
+                GeneralVariables.resetLaunchSupervision();//Reset automatic supervision
             }
         });
 
-        //监视命令程序
+        //Monitor command sequence
         mainViewModel.ft8TransmitSignal.mutableFunctions.observe(getViewLifecycleOwner()
                 , new Observer<ArrayList<FunctionOfTransmit>>() {
                     @Override
@@ -278,7 +278,7 @@ public class MyCallingFragment extends Fragment {
                     }
                 });
 
-        //观察指令序号的变化
+        //Observe command sequence number changes
         mainViewModel.ft8TransmitSignal.mutableFunctionOrder.observe(getViewLifecycleOwner(), new Observer<Integer>() {
             @Override
             public void onChanged(Integer integer) {
@@ -290,7 +290,7 @@ public class MyCallingFragment extends Fragment {
             }
         });
 
-        //设置当指令序号被选择的事件
+        //Set event for when command sequence number is selected
         binding.functionOrderSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
@@ -306,7 +306,7 @@ public class MyCallingFragment extends Fragment {
         });
 
 
-        //显示当前目标呼号
+        //Display current target callsign
         mainViewModel.ft8TransmitSignal.mutableToCallsign.observe(getViewLifecycleOwner(), new Observer<TransmitCallsign>() {
             @Override
             public void onChanged(TransmitCallsign transmitCallsign) {
@@ -322,7 +322,7 @@ public class MyCallingFragment extends Fragment {
             }
         });
 
-        //显示当前发射的时序
+        //Display current transmit sequence
         mainViewModel.ft8TransmitSignal.mutableSequential.observe(getViewLifecycleOwner(), new Observer<Integer>() {
             @SuppressLint("DefaultLocale")
             @Override
@@ -333,21 +333,21 @@ public class MyCallingFragment extends Fragment {
             }
         });
 
-        //设置发射按钮
+        //Set up transmit button
         binding.setTransmitImageButton.setOnClickListener(new View.OnClickListener() {
             //@RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void onClick(View view) {
-                //如果
+                //If not activated
                 if (!mainViewModel.ft8TransmitSignal.isActivated()) {
                     mainViewModel.ft8TransmitSignal.restTransmitting();
                 }
                 mainViewModel.ft8TransmitSignal.setActivated(!mainViewModel.ft8TransmitSignal.isActivated());
-                GeneralVariables.resetLaunchSupervision();//复位自动监管
+                GeneralVariables.resetLaunchSupervision();//Reset automatic supervision
             }
         });
 
-        //观察传输消息列表的变化
+        //Observe transmit message list changes
         //mainViewModel.mutableTransmitMessages.observe(getViewLifecycleOwner(), new Observer<ArrayList<Ft8Message>>() {
         mainViewModel.mutableTransmitMessagesCount.observe(getViewLifecycleOwner(), new Observer<Integer>() {
             @SuppressLint("DefaultLocale")
@@ -363,7 +363,7 @@ public class MyCallingFragment extends Fragment {
                 //            GeneralVariables.transmitMessages.size() - count);
                 //}
 
-                //当列表下部稍微多出一些，自动上移
+                //Auto-scroll up when list bottom extends slightly beyond view
                 if (transmitRecycleView.computeVerticalScrollRange()
                         - transmitRecycleView.computeVerticalScrollExtent()
                         - transmitRecycleView.computeVerticalScrollOffset() < 300) {
@@ -372,7 +372,7 @@ public class MyCallingFragment extends Fragment {
             }
         });
 
-        //清除传输消息列表
+        //Clear transmit message list
         binding.clearMycallListImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -380,16 +380,16 @@ public class MyCallingFragment extends Fragment {
             }
         });
 
-        //复位到CQ按键
+        //Reset to CQ button
         binding.resetToCQImageView.setOnClickListener(new View.OnClickListener() {
             //@RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void onClick(View view) {
                 mainViewModel.ft8TransmitSignal.resetToCQ();
-                GeneralVariables.resetLaunchSupervision();//复位自动监管
+                GeneralVariables.resetLaunchSupervision();//Reset automatic supervision
             }
         });
-        //自由文本输入框的限定操作
+        //Free text input field restrictions
         binding.transFreeTextEdit.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -447,7 +447,7 @@ public class MyCallingFragment extends Fragment {
     }
 
     /**
-     * 设置列表滑动动作
+     * Set up list swipe actions
      */
     private void initRecyclerViewAction() {
         new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(ItemTouchHelper.ANIMATION_TYPE_DRAG
@@ -465,7 +465,7 @@ public class MyCallingFragment extends Fragment {
                 if (direction == ItemTouchHelper.START) {
                     Ft8Message message = transmitCallListAdapter.getMessageByViewHolder(viewHolder);
                     if (message != null) {
-                        //呼叫的目标不能是自己
+                        //Cannot call yourself
                         if (!message.getCallsignFrom().equals("<...>")
                                 //&& !message.getCallsignFrom().equals(GeneralVariables.myCallsign)
                                 && !GeneralVariables.checkIsMyCallsign(message.getCallsignFrom())
@@ -475,7 +475,7 @@ public class MyCallingFragment extends Fragment {
                     }
                     transmitCallListAdapter.notifyItemChanged(viewHolder.getAdapterPosition());
                 }
-                if (direction == ItemTouchHelper.END) {//删除
+                if (direction == ItemTouchHelper.END) {//Delete
                     transmitCallListAdapter.deleteMessage(viewHolder.getAdapterPosition());
                     transmitCallListAdapter.notifyItemRemoved(viewHolder.getAdapterPosition());
                 }
@@ -485,7 +485,7 @@ public class MyCallingFragment extends Fragment {
             @Override
             public void onChildDraw(@NonNull Canvas c, @NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
                 super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
-                //制作呼叫背景的图标显示
+                //Create call background icon display
                 Drawable callIcon = ContextCompat.getDrawable(requireActivity(), R.drawable.ic_baseline_send_red_48);
                 Drawable delIcon = ContextCompat.getDrawable(requireActivity(), R.drawable.log_item_delete_icon);
                 Drawable background = new ColorDrawable(Color.LTGRAY);
@@ -493,7 +493,7 @@ public class MyCallingFragment extends Fragment {
                 if (message == null) {
                     return;
                 }
-                if (message.getCallsignFrom().equals("<...>")) {//如果属于不能呼叫的消息，就不显示图标
+                if (message.getCallsignFrom().equals("<...>")) {//If the message cannot be called, don't show the icon
                     return;
                 }
                 Drawable icon;

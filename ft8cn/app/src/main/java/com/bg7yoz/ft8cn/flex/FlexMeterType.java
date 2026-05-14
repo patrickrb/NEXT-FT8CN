@@ -1,7 +1,7 @@
 package com.bg7yoz.ft8cn.flex;
 
 /**
- * meter的常用类型
+ * Common meter types
  * @author BGY70Z
  * @date 2023-03-20
  */

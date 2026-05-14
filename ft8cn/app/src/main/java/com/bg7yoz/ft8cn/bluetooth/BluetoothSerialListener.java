@@ -1,7 +1,7 @@
 package com.bg7yoz.ft8cn.bluetooth;
 
 /**
- * 蓝牙串口的回调接口
+ * Bluetooth serial port callback interface
  * BG7YOZ
  * 2023-03
  */

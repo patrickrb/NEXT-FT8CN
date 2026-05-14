@@ -1,6 +1,6 @@
 package com.bg7yoz.ft8cn.icom;
 /**
- * 处理ICom的CIV流。
+ * Handle ICom CI-V stream.
  * @author BGY70Z
  * @date 2023-03-20
  */
@@ -34,9 +34,9 @@ public class IcomCivUdp extends IcomUdpBase{
         if (data.length == IComPacketTypes.CONTROL_SIZE) {
             if (IComPacketTypes.ControlPacket.getType(data) == IComPacketTypes.CMD_I_AM_READY) {
                 Log.d(TAG, "onDataReceived: civ I am ready!!");
-                sendOpenClose(true);//打开连接
-                startIdleTimer();//打开发送空包时钟
-                startCivDataTimer();//启动civ看门狗
+                sendOpenClose(true);//Open connection
+                startIdleTimer();//Start idle packet timer
+                startCivDataTimer();//Start CI-V watchdog
 
             }
         } else {
@@ -46,7 +46,7 @@ public class IcomCivUdp extends IcomUdpBase{
             }
             if (IComPacketTypes.ControlPacket.getType(data) == IComPacketTypes.CMD_RETRANSMIT) {
                 Log.d(TAG, "onDataReceived: type=0x01"+IComPacketTypes.byteToStr(data) );
-                //lastReceived=System.currentTimeMillis();//更新一下最后接收数据的时间，让watchDog处理
+                //lastReceived=System.currentTimeMillis();//Update last data received time for watchdog handling
             }
 
         }
@@ -64,10 +64,10 @@ public class IcomCivUdp extends IcomUdpBase{
     public void sendOpenClose(boolean open){
         if (open) {
             sendTrackedPacket(IComPacketTypes.OpenClosePacket.toBytes((short) 0
-                    , localId, remoteId, civSeq,(byte) 0x04));//打开连接
+                    , localId, remoteId, civSeq,(byte) 0x04));//Open connection
         }else {
             sendTrackedPacket(IComPacketTypes.OpenClosePacket.toBytes((short) 0
-                    , localId, remoteId, civSeq,(byte) 0x00));//关闭连接
+                    , localId, remoteId, civSeq,(byte) 0x00));//Close connection
         }
         civSeq++;
     }

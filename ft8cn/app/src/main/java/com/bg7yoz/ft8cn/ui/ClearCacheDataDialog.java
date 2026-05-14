@@ -1,6 +1,6 @@
 package com.bg7yoz.ft8cn.ui;
 /**
- * 清除缓存的对话框。
+ * Clear cache data dialog.
  * @author BGY70Z
  * @date 2023-03-20
  */
@@ -54,7 +54,7 @@ public class ClearCacheDataDialog extends Dialog {
         return new TimerTask() {
             @Override
             public void run() {
-                //心跳动作
+                // Heartbeat action
                 //doHeartBeatEvent(onUtcTimer);
                 activity.runOnUiThread(new Runnable() {
                     @Override
@@ -109,7 +109,7 @@ public class ClearCacheDataDialog extends Dialog {
             }
             cacheHelpMessage.setText(msg.toString());
         }
-        //解码的消息
+        // Decoded messages
         if (cache_mode==CACHE_MODE.SWL_MSG){
             db.getMessageLogTotal(new OnAfterQueryFollowCallsigns() {
                 @Override
@@ -123,7 +123,7 @@ public class ClearCacheDataDialog extends Dialog {
                 }
             });
         }
-        //SWL QSO日志
+        // SWL QSO log
         if (cache_mode==CACHE_MODE.SWL_QSO){
             db.getSWLQsoLogTotal(new OnAfterQueryFollowCallsigns() {
                 @Override
@@ -155,14 +155,14 @@ public class ClearCacheDataDialog extends Dialog {
                 if (cache_mode == CACHE_MODE.FOLLOW_DATA) {
                     synchronized (GeneralVariables.followCallsign) {
                         GeneralVariables.followCallsign.clear();
-                        db.clearFollowCallsigns();//清除关注的呼号
+                        db.clearFollowCallsigns();// Clear watched callsigns
                     }
                 }
                 if (cache_mode==CACHE_MODE.SWL_MSG){
-                        db.clearLogCacheData();//清除解码的消息（SWLMessages表）
+                        db.clearLogCacheData();// Clear decoded messages (SWLMessages table)
                 }
                 if (cache_mode==CACHE_MODE.SWL_QSO){
-                    db.clearSWLQsoData();//清除SWL QSO日志
+                    db.clearSWLQsoData();// Clear SWL QSO log
                 }
 
                 dismiss();
@@ -199,7 +199,7 @@ public class ClearCacheDataDialog extends Dialog {
     public void show() {
         super.show();
         WindowManager.LayoutParams params = getWindow().getAttributes();
-        //设置对话框的大小，以百分比0.6
+        // Set dialog size as percentage (0.6)
         int height = getWindow().getWindowManager().getDefaultDisplay().getHeight();
         int width = getWindow().getWindowManager().getDefaultDisplay().getWidth();
         params.height = (int) (height * 0.6);

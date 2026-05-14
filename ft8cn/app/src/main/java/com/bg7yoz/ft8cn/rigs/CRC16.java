@@ -1,7 +1,7 @@
 package com.bg7yoz.ft8cn.rigs;
 
 /**
- * crc16-ccitt-false加密工具
+ * CRC16-CCITT-FALSE checksum utility
  *
  * @author BGY70Z
  * @date 2023-03-20
@@ -10,7 +10,7 @@ package com.bg7yoz.ft8cn.rigs;
 public class CRC16 {
 
     /**
-     * crc16-ccitt-false加/解密（四字节）
+     * CRC16-CCITT-FALSE encode/decode (four bytes)
      *
      * @param bytes
      * @return
@@ -20,9 +20,9 @@ public class CRC16 {
     }
 
     /**
-     * crc16-ccitt-false加/解密（四字节）
+     * CRC16-CCITT-FALSE encode/decode (four bytes)
      *
-     * @param bytes -字节数组
+     * @param bytes - byte array
      * @return
      */
     public static int crc16(byte[] bytes, int len) {
@@ -39,7 +39,7 @@ public class CRC16 {
     }
 
     /**
-     * crc16-ccitt-false加/解密（四字节）
+     * CRC16-CCITT-FALSE encode/decode (four bytes)
      *
      * @param bytes
      * @return
@@ -58,10 +58,10 @@ public class CRC16 {
     }
 
     /**
-     * crc16-ccitt-false加/解密
+     * CRC16-CCITT-FALSE encode/decode
      *
      * @param bytes
-     *            -字节数组
+     *            - byte array
      * @return
      */
     public static short crc16_short(byte[] bytes) {
@@ -69,12 +69,12 @@ public class CRC16 {
     }
 
     /**
-     * crc16-ccitt-false加/解密（计算从0位置开始的len长度）
+     * CRC16-CCITT-FALSE encode/decode (calculate from position 0 for len length)
      *
      * @param bytes
-     *            -字节数组
+     *            - byte array
      * @param len
-     *            -长度
+     *            - length
      * @return
      */
     public static short crc16_short(byte[] bytes, int len) {
@@ -82,7 +82,7 @@ public class CRC16 {
     }
 
     /**
-     * crc16-ccitt-false加/解密（两字节）
+     * CRC16-CCITT-FALSE encode/decode (two bytes)
      *
      * @param bytes
      * @return
