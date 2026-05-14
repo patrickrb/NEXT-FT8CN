@@ -2,6 +2,7 @@ package radio.ks3ckc.ft8us.ui.settings
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -38,6 +39,7 @@ fun OperatorCard(
     rigName: String = "--",
     antenna: String = "--",
     power: String = "--",
+    onClick: (() -> Unit)? = null,
 ) {
     val shape = RoundedCornerShape(12.dp)
     val initials = callsign
@@ -50,6 +52,7 @@ fun OperatorCard(
         modifier = modifier
             .fillMaxWidth()
             .clip(shape)
+            .then(if (onClick != null) Modifier.clickable(onClick = onClick) else Modifier)
             .background(
                 brush = Brush.linearGradient(
                     colors = listOf(
@@ -122,6 +125,13 @@ fun OperatorCard(
                         color = TextMuted,
                         fontSize = 13.sp,
                     )
+                    if (onClick != null) {
+                        Text(
+                            text = "Tap to edit",
+                            color = TextFaint,
+                            fontSize = 11.sp,
+                        )
+                    }
                 }
             }
 

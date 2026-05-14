@@ -1,29 +1,42 @@
 package radio.ks3ckc.ft8us.ui.settings
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
+import com.bg7yoz.ft8cn.Ft8Message
 import com.bg7yoz.ft8cn.GeneralVariables
 import com.bg7yoz.ft8cn.MainViewModel
 import com.bg7yoz.ft8cn.connector.ConnectMode
+import com.bg7yoz.ft8cn.ft8signal.FT8Package
 import com.bg7yoz.ft8cn.rigs.BaseRigOperation
 import radio.ks3ckc.ft8us.theme.*
 import radio.ks3ckc.ft8us.ui.components.GlassCard
@@ -60,8 +73,13 @@ fun SettingsScreen(
     var saveSWLMessage by remember { mutableStateOf(GeneralVariables.saveSWLMessage) }
     var saveSWL_QSO by remember { mutableStateOf(GeneralVariables.saveSWL_QSO) }
 
+    // Operator identity edit dialog state
+    var showEditOperator by remember { mutableStateOf(false) }
+    var callsignState by remember { mutableStateOf(GeneralVariables.myCallsign.orEmpty()) }
+    var gridState by remember { mutableStateOf(GeneralVariables.getMyMaidenheadGrid().orEmpty()) }
+
     // Derived display strings
-    val callsign = GeneralVariables.myCallsign.orEmpty()
+    val callsign = callsignState
     val grid = gridLive.orEmpty()
     val connectModeStr = ConnectMode.getModeStr(GeneralVariables.connectMode)
     val bandStr = BaseRigOperation.getFrequencyAllInfo(GeneralVariables.band)
@@ -75,6 +93,38 @@ fun SettingsScreen(
         mainViewModel.baseRig?.javaClass?.simpleName ?: "--"
     } else {
         "Not connected"
+    }
+
+    // -- Edit Operator Dialog --
+    if (showEditOperator) {
+        EditOperatorDialog(
+            initialCallsign = callsign,
+            initialGrid = grid,
+            onDismiss = { showEditOperator = false },
+            onSave = { newCallsign, newGrid ->
+                // Persist callsign
+                val trimmedCall = newCallsign.uppercase().trim()
+                callsignState = trimmedCall
+                GeneralVariables.myCallsign = trimmedCall
+                mainViewModel.databaseOpr.writeConfig("callsign", trimmedCall, null)
+                if (trimmedCall.isNotEmpty()) {
+                    Ft8Message.hashList.addHash(FT8Package.getHash22(trimmedCall).toLong(), trimmedCall)
+                    Ft8Message.hashList.addHash(FT8Package.getHash12(trimmedCall).toLong(), trimmedCall)
+                    Ft8Message.hashList.addHash(FT8Package.getHash10(trimmedCall).toLong(), trimmedCall)
+                }
+
+                // Persist grid (first 2 chars uppercase, rest lowercase per Maidenhead convention)
+                val formattedGrid = buildString {
+                    newGrid.trim().forEachIndexed { i, c ->
+                        append(if (i < 2) c.uppercaseChar() else c.lowercaseChar())
+                    }
+                }
+                GeneralVariables.setMyMaidenheadGrid(formattedGrid)
+                mainViewModel.databaseOpr.writeConfig("grid", formattedGrid, null)
+
+                showEditOperator = false
+            },
+        )
     }
 
     Column(
@@ -100,6 +150,7 @@ fun SettingsScreen(
                     grid = grid,
                     rigName = rigName,
                     modifier = Modifier.padding(bottom = 4.dp),
+                    onClick = { showEditOperator = true },
                 )
             }
 
@@ -355,4 +406,90 @@ private fun SectionDivider() {
         thickness = 0.5.dp,
         color = Border,
     )
+}
+
+/**
+ * Dialog for editing callsign and grid locator.
+ */
+@Composable
+private fun EditOperatorDialog(
+    initialCallsign: String,
+    initialGrid: String,
+    onDismiss: () -> Unit,
+    onSave: (callsign: String, grid: String) -> Unit,
+) {
+    var callsignInput by remember { mutableStateOf(TextFieldValue(initialCallsign)) }
+    var gridInput by remember { mutableStateOf(TextFieldValue(initialGrid)) }
+
+    val fieldColors = OutlinedTextFieldDefaults.colors(
+        focusedTextColor = TextPrimary,
+        unfocusedTextColor = TextPrimary,
+        cursorColor = Accent,
+        focusedBorderColor = Accent,
+        unfocusedBorderColor = BorderStrong,
+        focusedLabelColor = Accent,
+        unfocusedLabelColor = TextMuted,
+    )
+
+    Dialog(onDismissRequest = onDismiss) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clip(RoundedCornerShape(16.dp))
+                .background(BgSurface2)
+                .padding(24.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp),
+        ) {
+            Text(
+                text = "Edit Operator Identity",
+                color = TextPrimary,
+                fontWeight = FontWeight.SemiBold,
+                fontSize = 18.sp,
+            )
+
+            OutlinedTextField(
+                value = callsignInput,
+                onValueChange = { callsignInput = it },
+                label = { Text("Callsign") },
+                placeholder = { Text("e.g. W1AW", color = TextFaint) },
+                singleLine = true,
+                colors = fieldColors,
+                textStyle = TextStyle(
+                    fontFamily = GeistMonoFamily,
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Bold,
+                ),
+                modifier = Modifier.fillMaxWidth(),
+            )
+
+            OutlinedTextField(
+                value = gridInput,
+                onValueChange = { gridInput = it },
+                label = { Text("Grid Locator") },
+                placeholder = { Text("e.g. FN31pr", color = TextFaint) },
+                singleLine = true,
+                colors = fieldColors,
+                textStyle = TextStyle(
+                    fontFamily = GeistMonoFamily,
+                    fontSize = 16.sp,
+                ),
+                modifier = Modifier.fillMaxWidth(),
+            )
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.End,
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                TextButton(onClick = onDismiss) {
+                    Text("Cancel", color = TextMuted)
+                }
+                TextButton(
+                    onClick = { onSave(callsignInput.text, gridInput.text) },
+                ) {
+                    Text("Save", color = Accent, fontWeight = FontWeight.SemiBold)
+                }
+            }
+        }
+    }
 }

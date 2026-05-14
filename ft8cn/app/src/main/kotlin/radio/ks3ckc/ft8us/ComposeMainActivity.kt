@@ -3,6 +3,7 @@ package radio.ks3ckc.ft8us
 import android.Manifest
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
+import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.pm.PackageManager
@@ -218,16 +219,14 @@ class ComposeMainActivity : ComponentActivity() {
             addAction(BluetoothDevice.ACTION_ACL_CONNECTED)
             addAction(BluetoothDevice.ACTION_ACL_DISCONNECTED)
             addAction(AudioManager.ACTION_SCO_AUDIO_STATE_UPDATED)
-            addAction(AudioManager.EXTRA_SCO_AUDIO_PREVIOUS_STATE)
             addAction(AudioManager.ACTION_AUDIO_BECOMING_NOISY)
-            addAction(AudioManager.EXTRA_SCO_AUDIO_STATE)
             addAction(BluetoothAdapter.ACTION_CONNECTION_STATE_CHANGED)
-            addAction(BluetoothAdapter.EXTRA_CONNECTION_STATE)
-            addAction(BluetoothAdapter.EXTRA_STATE)
-            addAction("android.bluetooth.BluetoothAdapter.STATE_OFF")
-            addAction("android.bluetooth.BluetoothAdapter.STATE_ON")
         }
-        registerReceiver(bluetoothReceiver, filter)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            registerReceiver(bluetoothReceiver, filter, Context.RECEIVER_NOT_EXPORTED)
+        } else {
+            registerReceiver(bluetoothReceiver, filter)
+        }
     }
 
     private fun unregisterBluetoothReceiver() {
