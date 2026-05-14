@@ -239,6 +239,9 @@ public class FT8Package {
     }
 
     public static byte pack_r1_p1(String callsign) {
+        if (callsign == null || callsign.length() < 2) {
+            return 0;
+        }
         String s = callsign.substring(callsign.length() - 2);
         if (s.equals("/R") || s.equals("/P")) {
             return 1;
@@ -361,10 +364,8 @@ public class FT8Package {
             }
         }
 
-        if (c6.length() < 6) {// if length is less than 6, right-pad with spaces
-            for (int i = 0; i < 6 - c6.length() + 1; i++) {
-                c6 = c6 + " ";
-            }
+        while (c6.length() < 6) {// if length is less than 6, right-pad with spaces
+            c6 = c6 + " ";
         }
 
         return c6;

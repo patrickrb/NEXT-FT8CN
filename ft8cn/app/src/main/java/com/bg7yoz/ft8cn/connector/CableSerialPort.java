@@ -250,9 +250,15 @@ public class CableSerialPort {
             if (usbSerialPort != null) {
                 usbSerialPort.close();
             }
-        } catch (IOException ignored) {
+        } catch (IOException e) {
+            Log.w(TAG, "Error closing serial port: " + e.getMessage());
         }
         usbSerialPort = null;
+        try {
+            context.unregisterReceiver(broadcastReceiver);
+        } catch (IllegalArgumentException e) {
+            // Already unregistered
+        }
     }
 
     public void registerRigSerialPort(Context context) {
@@ -335,6 +341,7 @@ public class CableSerialPort {
     public static ArrayList<SerialPort> listSerialPorts(Context context) {
         ArrayList<SerialPort> serialPorts = new ArrayList<>();
         UsbManager usbManager = (UsbManager) context.getSystemService(Context.USB_SERVICE);
+        if (usbManager == null) return serialPorts;
 
         for (UsbDevice device : usbManager.getDeviceList().values()) {
             UsbSerialDriver driver = UsbSerialProber.getDefaultProber().probeDevice(device);

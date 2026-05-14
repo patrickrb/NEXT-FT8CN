@@ -157,11 +157,16 @@ class ComposeMainActivity : ComponentActivity() {
         val uri: Uri? = intent.data
         if (uri != null) {
             try {
+                val inputStream = baseContext.contentResolver.openInputStream(uri)
+                if (inputStream == null) {
+                    Log.e(TAG, "Failed to open input stream for URI: $uri")
+                    return
+                }
                 mainViewModel.mutableImportShareRunning.value = true
                 val importSharedLogs = ImportSharedLogs(mainViewModel)
-                Log.e(TAG, "Starting import...")
+                Log.d(TAG, "Starting import...")
                 importSharedLogs.doImport(
-                    baseContext.contentResolver.openInputStream(uri),
+                    inputStream,
                     object : OnShareLogEvents {
                         override fun onPreparing(info: String?) {
                             mainViewModel.mutableShareInfo.postValue(info)
@@ -262,6 +267,8 @@ class ComposeMainActivity : ComponentActivity() {
         mainViewModel.ft8TransmitSignal.isActivated = false
         mainViewModel.baseRig?.connector?.disconnect()
         mainViewModel.ft8SignalListener.stopListen()
+        mainViewModel.hamRecorder?.stopRecord()
+        mainViewModel.utcTimer?.delete()
         System.exit(0)
     }
 }

@@ -10,7 +10,7 @@ def currentTime = getCurrentTime()
 
 static def getCurrentTime() {
     DateFormat df = new SimpleDateFormat("yyyy-MM-dd")
-    return df.format(Calendar.getInstance(Locale.CHINA).getTime())
+    return df.format(Calendar.getInstance(Locale.US).getTime())
 }
 
 
@@ -96,7 +96,7 @@ dependencies {
     implementation 'androidx.navigation:navigation-ui:2.5.3'
     implementation 'com.google.android.gms:play-services-maps:18.1.0'
 
-    implementation 'com.google.guava:guava:31.1-jre'//Used for HashTable (multi-key HashMap)
+    implementation 'com.google.guava:guava:31.1-android'//Used for HashTable (multi-key HashMap)
 
     implementation files('src/libs/MPAndroidChartv_3.1.0.jar')
     implementation files('src/libs/commons-net-3.6.jar')////Used for time synchronization

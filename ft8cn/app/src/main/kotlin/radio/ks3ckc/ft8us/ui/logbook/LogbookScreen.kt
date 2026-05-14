@@ -125,7 +125,10 @@ fun LogbookScreen(mainViewModel: MainViewModel) {
     LaunchedEffect(Unit) {
         withContext(Dispatchers.IO) {
             try {
-                val db = mainViewModel.databaseOpr?.db ?: return@withContext
+                val db = mainViewModel.databaseOpr?.db ?: run {
+                    isLoading = false
+                    return@withContext
+                }
 
                 // Total QSOs
                 val totalInfo = suspendCancellableCoroutine { cont ->

@@ -195,6 +195,7 @@ public class ShareLogs {
                     }
                 }
                 String comment = cursor.getString(cursor.getColumnIndex("comment"));
+                if (comment == null) comment = "";
 
                 //<comment:15>Distance: 99 km <eor>
                 //When writing to the database, be sure to append " km"
@@ -218,6 +219,7 @@ public class ShareLogs {
                 ToastMessage.show(String.format(GeneralVariables
                         .getStringFromResource(R.string.write_file_error), e.getMessage()));
             }
+            cursor.close();
         }
 
         if (onGetShareLogs != null) {
@@ -226,8 +228,6 @@ public class ShareLogs {
                     , position));
         }
         Log.d(TAG, String.format("Wrote %d records", position));
-
-        cursor.close();
     }
 
     /**

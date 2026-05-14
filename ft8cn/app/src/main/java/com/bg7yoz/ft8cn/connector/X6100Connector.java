@@ -142,8 +142,12 @@ public class X6100Connector extends BaseRigConnector {
                     for (int i = 0; i < status.length; i++) {
                         if (status[i].startsWith("active_freq")){//Find the frequency status and set the frequency
                             String temp[]=status[i].split("=");
-                            if (baseRig != null) {
-                                baseRig.setFreq(Long.parseLong(temp[1].trim()));
+                            if (baseRig != null && temp.length > 1) {
+                                try {
+                                    baseRig.setFreq(Long.parseLong(temp[1].trim()));
+                                } catch (NumberFormatException e) {
+                                    Log.e(TAG, "Failed to parse frequency: " + temp[1]);
+                                }
                             }
                         }
                     }
@@ -160,15 +164,19 @@ public class X6100Connector extends BaseRigConnector {
             public void onConnectSuccess(RadioTcpClient tcpClient) {
                 ToastMessage.show(String.format(GeneralVariables.getStringFromResource(R.string.init_flex_operation)
                         ,xieguRadio.getModelName()));
-                new Thread(new Runnable() {//Using a thread here to prevent blocking the TCP object
+                Thread streamThread = new Thread(new Runnable() {//Using a thread here to prevent blocking the TCP object
                     @Override
                     public void run() {
-                        while (!streamIsOn) {//Wait for the radio to open the stream port
+                        long startTime = System.currentTimeMillis();
+                        long timeout = 30000; // 30 second timeout
+                        while (!streamIsOn && (System.currentTimeMillis() - startTime) < timeout) {//Wait for the radio to open the stream port
                             xieguRadio.commandOpenStream();//Set the UDP port
                             try {
                                 Thread.sleep(300);
                             } catch (InterruptedException e) {
-                                Log.e(TAG, Objects.requireNonNull(e.getMessage()));
+                                Log.w(TAG, "Stream open thread interrupted");
+                                Thread.currentThread().interrupt();
+                                break;
                             }
                             //todo Commands are frequently dropped here
                             xieguRadio.commandGetAudioInfo();//Read the 6100 playback parameters
@@ -176,8 +184,13 @@ public class X6100Connector extends BaseRigConnector {
                             xieguRadio.commandSubAllMeter();//Subscribe to meter stream data
                             //xieguRadio.commandSetTxPower(1);//Subscribe to meter stream data
                         }
+                        if (!streamIsOn) {
+                            Log.w(TAG, "Timed out waiting for stream port to open");
+                        }
                     }
-                }).start();
+                });
+                streamThread.setDaemon(true);
+                streamThread.start();
             }
 
             @Override
@@ -188,7 +201,7 @@ public class X6100Connector extends BaseRigConnector {
 
             @Override
             public void onConnectionClosed(RadioTcpClient tcpClient) {
-                if (baseRig.getOnRigStateChanged()!=null) {
+                if (baseRig != null && baseRig.getOnRigStateChanged()!=null) {
                     baseRig.getOnRigStateChanged().onDisconnected();
                 }
             }

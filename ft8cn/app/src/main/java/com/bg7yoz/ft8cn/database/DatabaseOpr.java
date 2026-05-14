@@ -173,11 +173,11 @@ public class DatabaseOpr extends SQLiteOpenHelper {
     private boolean checkTableExists(SQLiteDatabase db, String tableName) {
         Cursor cursor = db.rawQuery("select * from sqlite_master where type = 'table' and name = ?"
                 , new String[]{tableName});
-        if (cursor.moveToNext()) {
+        try {
+            return cursor.moveToNext();
+        } finally {
             cursor.close();
-            return true;
         }
-        return false;
     }
 
     /**
@@ -189,11 +189,11 @@ public class DatabaseOpr extends SQLiteOpenHelper {
     private boolean checkIndexExists(SQLiteDatabase db, String indexName) {
         Cursor cursor = db.rawQuery("select * from sqlite_master where type = 'index' and name = ?"
                 , new String[]{indexName});
-        if (cursor.moveToNext()) {
+        try {
+            return cursor.moveToNext();
+        } finally {
             cursor.close();
-            return true;
         }
-        return false;
     }
     private void deleteDxccPrefixEqual(SQLiteDatabase db) {
         db.execSQL("DELETE from dxcc_prefix where prefix LIKE \"=%\"");
