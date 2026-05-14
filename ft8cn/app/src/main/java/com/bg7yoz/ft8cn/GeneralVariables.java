@@ -71,9 +71,9 @@ public class GeneralVariables {
     //public static double maxDist = 0;//Maximum distance
 
     //Lists of already-contacted zones
-    public static final Map<String, String> dxccMap = new HashMap<>();
-    public static final Map<Integer, Integer> cqMap = new HashMap<>();
-    public static final Map<Integer, Integer> ituMap = new HashMap<>();
+    public static final Map<String, String> dxccMap = new ConcurrentHashMap<>();
+    public static final Map<Integer, Integer> cqMap = new ConcurrentHashMap<>();
+    public static final Map<Integer, Integer> ituMap = new ConcurrentHashMap<>();
 
     private static final Map<String, Integer> excludedCallsigns = new HashMap<>();
 
@@ -140,7 +140,7 @@ public class GeneralVariables {
     @SuppressLint("StaticFieldLeak")
     private static GeneralVariables generalVariables = null;
 
-    public static GeneralVariables getInstance() {
+    public static synchronized GeneralVariables getInstance() {
         if (generalVariables == null) {
             generalVariables = new GeneralVariables();
         }

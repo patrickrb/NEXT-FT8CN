@@ -31,6 +31,7 @@ import android.bluetooth.BluetoothProfile;
 import android.content.Context;
 import android.media.AudioManager;
 import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 
 import androidx.lifecycle.MutableLiveData;
@@ -531,7 +532,7 @@ public class MainViewModel extends ViewModel {
                     //|| msg.getCallsignTo().equals(GeneralVariables.myCallsign)
                     || GeneralVariables.checkIsMyCallsign(msg.getCallsignTo())
                     || GeneralVariables.callsignInFollow(msg.getCallsignFrom())
-                    || (GeneralVariables.callsignInFollow(msg.getCallsignTo()) && (msg.getCallsignTo() != null))
+                    || (msg.getCallsignTo() != null && GeneralVariables.callsignInFollow(msg.getCallsignTo()))
                     || (GeneralVariables.autoFollowCQ && msg.checkIsCQ())) {//is CQ and auto-follow CQ is enabled
                 //check if the callsign has not been previously contacted
                 msg.isQSL_Callsign = GeneralVariables.checkQSLCallsign(msg.getCallsignFrom());
@@ -637,7 +638,7 @@ public class MainViewModel extends ViewModel {
         baseRig.setUsbModeToRig();//set USB mode
 
         //delay 1 second before sending the second command to prevent XieGu X6100 disconnection issues
-        new Handler().postDelayed(new Runnable() {
+        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
             @Override
             public void run() {
                 baseRig.setFreq(GeneralVariables.band);//set frequency
@@ -693,7 +694,7 @@ public class MainViewModel extends ViewModel {
         connector.connect();
 
         //delay 1 second before setting mode, to prevent some rigs from not responding in time
-        new Handler().postDelayed(new Runnable() {
+        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
             @Override
             public void run() {
                 setOperationBand();//set carrier frequency
@@ -714,7 +715,7 @@ public class MainViewModel extends ViewModel {
         baseRig.setOnRigStateChanged(onRigStateChanged);
         baseRig.setConnector(connector);
 
-        new Handler().postDelayed(new Runnable() {//connection takes time, wait before setting frequency
+        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {//connection takes time, wait before setting frequency
             @Override
             public void run() {
                 setOperationBand();//set carrier frequency
@@ -758,7 +759,7 @@ public class MainViewModel extends ViewModel {
         baseRig.setOnRigStateChanged(onRigStateChanged);
         baseRig.setConnector(iComWifiConnector);
 
-        new Handler().postDelayed(new Runnable() {//connection takes time, wait before setting frequency
+        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {//connection takes time, wait before setting frequency
             @Override
             public void run() {
                 setOperationBand();//set carrier frequency
@@ -794,7 +795,7 @@ public class MainViewModel extends ViewModel {
         baseRig.setOnRigStateChanged(onRigStateChanged);
         baseRig.setConnector(flexConnector);
 //
-        new Handler().postDelayed(new Runnable() {//connection takes time, wait before setting frequency
+        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {//connection takes time, wait before setting frequency
             @Override
             public void run() {
                 setOperationBand();//set carrier frequency
@@ -842,7 +843,7 @@ public class MainViewModel extends ViewModel {
         baseRig.setOnRigStateChanged(onRigStateChanged);
         baseRig.setConnector(xieguConnector);
 
-        new Handler().postDelayed(new Runnable() {//connection takes time, wait before setting frequency
+        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {//connection takes time, wait before setting frequency
             @Override
             public void run() {
                 setOperationBand();//set carrier frequency

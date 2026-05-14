@@ -566,6 +566,7 @@ public class X6100Radio {
     public void closeAudio() {
         if (audioTrack != null) {
             audioTrack.stop();
+            audioTrack.release();
             audioTrack = null;
         }
     }

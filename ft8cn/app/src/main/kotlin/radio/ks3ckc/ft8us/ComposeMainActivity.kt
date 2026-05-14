@@ -251,12 +251,12 @@ class ComposeMainActivity : ComponentActivity() {
     override fun onBackPressed() {
         // Show exit confirmation
         android.app.AlertDialog.Builder(this)
-            .setMessage("Are you sure you want to exit FT8US?")
-            .setPositiveButton("Exit") { _, _ ->
+            .setMessage(getString(com.bg7yoz.ft8cn.R.string.exit_confirmation))
+            .setPositiveButton(getString(com.bg7yoz.ft8cn.R.string.exit)) { _, _ ->
                 mainViewModel.ft8TransmitSignal.isActivated = false
                 closeApp()
             }
-            .setNegativeButton("Cancel") { dialog, _ ->
+            .setNegativeButton(getString(com.bg7yoz.ft8cn.R.string.cancel)) { dialog, _ ->
                 dialog.dismiss()
             }
             .create()

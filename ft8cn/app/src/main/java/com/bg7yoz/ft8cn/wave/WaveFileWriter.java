@@ -79,10 +79,15 @@ public class WaveFileWriter {
 			}
 			bos.flush();
 			fos.flush();
-			bos.close();
-			fos.close();
 		} catch (Exception e) {
 			e.printStackTrace();
+		} finally {
+			try {
+				if (bos != null) bos.close();
+			} catch (Exception ignored) {}
+			try {
+				if (fos != null) fos.close();
+			} catch (Exception ignored) {}
 		}
 	}
 

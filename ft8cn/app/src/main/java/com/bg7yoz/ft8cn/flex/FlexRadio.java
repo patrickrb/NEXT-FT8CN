@@ -348,7 +348,7 @@ public class FlexRadio {
     public void closeAudio() {
         if (audioTrack != null) {
             audioTrack.stop();
-            //audioTrack.release();
+            audioTrack.release();
             audioTrack = null;
         }
     }

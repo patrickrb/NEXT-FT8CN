@@ -38,8 +38,8 @@ public class UtcTimer {
 
 
     private long utc;
-    public static int delay = 0;//total clock delay (milliseconds)
-    private boolean running = false;//determines whether to trigger cycle actions
+    public static volatile int delay = 0;//total clock delay (milliseconds)
+    private volatile boolean running = false;//determines whether to trigger cycle actions
 
     private final Timer secTimer = new Timer();
     private final Timer heartBeatTimer = new Timer();

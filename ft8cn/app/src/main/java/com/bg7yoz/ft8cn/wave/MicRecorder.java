@@ -32,7 +32,7 @@ public class MicRecorder {
     private UsbAudioDevice usbAudioDevice = null; // USB audio device
     private boolean useUsbAudio = false;
 
-    private boolean isRunning = false;//whether currently in recording state
+    private volatile boolean isRunning = false;//whether currently in recording state
     private OnDataListener onDataListener;
 
     public interface OnDataListener{
@@ -199,6 +199,14 @@ public class MicRecorder {
         isRunning = false;
         if (useUsbAudio && usbAudioDevice != null) {
             usbAudioDevice.stopCapture();
+        }
+        if (audioRecord != null) {
+            try {
+                audioRecord.release();
+            } catch (Exception e) {
+                Log.d(TAG, "Error releasing AudioRecord: " + e.getMessage());
+            }
+            audioRecord = null;
         }
     }
 

@@ -51,7 +51,7 @@ public class DatabaseOpr extends SQLiteOpenHelper {
     private SQLiteDatabase db;
 
 
-    public static DatabaseOpr getInstance(@Nullable Context context, @Nullable String databaseName) {
+    public static synchronized DatabaseOpr getInstance(@Nullable Context context, @Nullable String databaseName) {
         if (instance == null) {
             instance = new DatabaseOpr(context, databaseName, null, 15);
         }

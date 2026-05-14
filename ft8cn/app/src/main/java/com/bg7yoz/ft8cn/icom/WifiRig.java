@@ -85,6 +85,7 @@ public abstract class WifiRig {
     public void closeAudio() {
         if (audioTrack != null) {
             audioTrack.stop();
+            audioTrack.release();
             audioTrack = null;
         }
     }

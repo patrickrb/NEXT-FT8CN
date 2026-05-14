@@ -34,10 +34,11 @@ public class LogFileImport {
      */
     public LogFileImport(ImportTaskList.ImportTask task, String logFileName) throws IOException {
         importTask=task;
-        FileInputStream logFileStream = new FileInputStream(logFileName);
-        byte[] bytes = new byte[logFileStream.available()];
-        logFileStream.read(bytes);
-        fileContext = new String(bytes);
+        try (FileInputStream logFileStream = new FileInputStream(logFileName)) {
+            byte[] bytes = new byte[logFileStream.available()];
+            logFileStream.read(bytes);
+            fileContext = new String(bytes);
+        }
     }
 
     /**

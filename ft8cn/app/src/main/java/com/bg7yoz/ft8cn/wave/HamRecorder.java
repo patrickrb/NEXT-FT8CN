@@ -32,7 +32,7 @@ public class HamRecorder {
     private static final int audioFormat = AudioFormat.ENCODING_PCM_FLOAT; //quantization bit depth
 
     //private AudioRecord audioRecord = null;//AudioRecord object
-    private boolean isRunning = false;//whether currently in recording state
+    private volatile boolean isRunning = false;//whether currently in recording state
 
     private final ArrayList<VoiceDataMonitor> voiceDataMonitorList = new ArrayList<>();//listener callback list, data is retrieved in listener callbacks
     private OnVoiceMonitorChanged onVoiceMonitorChanged=null;

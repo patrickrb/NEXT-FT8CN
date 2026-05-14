@@ -13,6 +13,7 @@
         android:name="android.permission.BLUETOOTH"
         android:maxSdkVersion="30" />
     <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
+    <uses-permission android:name="android.permission.BLUETOOTH_SCAN" />
     <uses-permission
         android:name="android.permission.BLUETOOTH_ADMIN"
         android:maxSdkVersion="30" />
@@ -61,6 +62,14 @@
                 android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED"
                 android:resource="@xml/device_filter" />
         </activity>
+
+        <activity
+            android:name=".FAQActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".grid_tracker.GridTrackerMainActivity"
+            android:exported="false" />
 
         <service
             android:name=".bluetooth.BluetoothSerialService"

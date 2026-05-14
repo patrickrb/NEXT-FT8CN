@@ -153,6 +153,10 @@ public class ThirdPartyService {
             String url = address + "api/auth/"+ apiKey;
             Log.d(TAG, "URL: "+url);
             String result = sendGetRequest(url);
+            if (result == null) {
+                Log.d(TAG, "Cloudlog connection failed: no response");
+                return false;
+            }
             Log.d(TAG, result);
             if (!result.equals("<auth><status>Valid</status><rights>rw</rights></auth>")){
                 return false;
@@ -169,6 +173,10 @@ public class ThirdPartyService {
         try{
             String url = "https://logbook.qrz.com/api?KEY="+apiKey+"&ACTION=STATUS";
             String result = sendGetRequest(url);
+            if (result == null) {
+                Log.d(TAG, "QRZ connection failed: no response");
+                return false;
+            }
             HashMap<String,String> status = new HashMap<>();
             for (String s : result.split("&")) {
                 String[] split = s.split("=");
@@ -177,7 +185,7 @@ public class ThirdPartyService {
                 }
             }
             Log.d(TAG, status.toString());
-            if (!status.get("RESULT").equals("OK")){
+            if (!"OK".equals(status.get("RESULT"))){
                 return false;
             }
             return true;
