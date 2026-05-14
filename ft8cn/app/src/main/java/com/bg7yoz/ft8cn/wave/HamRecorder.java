@@ -142,6 +142,22 @@ public class HamRecorder {
     }
 
     /**
+     * Reinitialize the mic recorder to pick up newly connected USB audio devices.
+     * Re-wires the data listener after reinit.
+     */
+    public void reinitializeMicRecorder() {
+        micRecorder.reinitialize();
+        if (isMicRecord) {
+            micRecorder.setOnDataListener(new MicRecorder.OnDataListener() {
+                @Override
+                public void onDataReceived(float[] data, int len) {
+                    doOnWaveDataReceived(len, data);
+                }
+            });
+        }
+    }
+
+    /**
      * Method to retrieve recording data, implemented by adding a data monitor (VoiceDataMonitor).
      * Recording data is provided in the OnGetVoiceDataDone callback, triggered when the recording reaches the specified duration (milliseconds).
      * To get recording data, a monitor object is added to the recorder. Data is collected in the monitor's OnReceiveData callback.

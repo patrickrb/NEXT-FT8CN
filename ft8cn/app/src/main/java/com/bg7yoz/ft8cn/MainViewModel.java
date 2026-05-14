@@ -957,6 +957,16 @@ public class MainViewModel extends ViewModel {
 
 
     /**
+     * Reinitialize the audio input to pick up newly connected USB audio devices.
+     * Call this after a USB device attach event to switch to USB audio if available.
+     */
+    public void reinitializeAudioInput() {
+        if (hamRecorder != null) {
+            hamRecorder.reinitializeMicRecorder();
+        }
+    }
+
+    /**
      * Check whether the rig is connected. Two cases: rigBaseClass not created, or serial port connection failed.
      *
      * @return whether connected

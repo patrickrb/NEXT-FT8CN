@@ -18,9 +18,14 @@ import androidx.activity.OnBackPressedCallback
 import androidx.activity.compose.setContent
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import android.os.Handler
+import android.os.Looper
+import androidx.lifecycle.Observer
 import com.bg7yoz.ft8cn.GeneralVariables
 import com.bg7yoz.ft8cn.MainViewModel
 import com.bg7yoz.ft8cn.bluetooth.BluetoothStateBroadcastReceive
+import com.bg7yoz.ft8cn.connector.CableSerialPort
+import com.bg7yoz.ft8cn.connector.ConnectMode
 import com.bg7yoz.ft8cn.callsign.CallsignDatabase
 import com.bg7yoz.ft8cn.database.DatabaseOpr
 import com.bg7yoz.ft8cn.database.OnAfterQueryConfig
@@ -94,8 +99,22 @@ class ComposeMainActivity : ComponentActivity() {
         // Initialize data
         initData()
 
+        // Observe serial port changes for auto-connect (mirrors old MainActivity behavior)
+        mainViewModel.mutableSerialPorts.observe(
+            this,
+            Observer { ports ->
+                autoConnectUsbIfNeeded(ports)
+            },
+        )
+
         // List USB devices
         mainViewModel.getUsbDevice()
+
+        // Delayed audio reinit: handles USB audio device already physically connected
+        // but not ready during ViewModel construction
+        Handler(Looper.getMainLooper()).postDelayed({
+            mainViewModel.reinitializeAudioInput()
+        }, 2000)
 
         // Handle shared file import if needed
         if (mainViewModel.mutableImportShareRunning.value == true) {
@@ -227,6 +246,10 @@ class ComposeMainActivity : ComponentActivity() {
         super.onNewIntent(intent)
         if ("android.hardware.usb.action.USB_DEVICE_ATTACHED" == intent.action) {
             mainViewModel.getUsbDevice()
+            // Reinitialize audio input to pick up newly attached USB audio device
+            Handler(Looper.getMainLooper()).postDelayed({
+                mainViewModel.reinitializeAudioInput()
+            }, 1000)
         } else {
             setIntent(intent)
             doReceiveShareFile(intent)
@@ -262,6 +285,23 @@ class ComposeMainActivity : ComponentActivity() {
     override fun onDestroy() {
         unregisterBluetoothReceiver()
         super.onDestroy()
+    }
+
+    /**
+     * Auto-connect to USB serial rig when ports are detected, rig isn't already connected,
+     * and connect mode is USB Cable. If exactly one port is found, connect automatically.
+     */
+    private fun autoConnectUsbIfNeeded(ports: ArrayList<CableSerialPort.SerialPort>?) {
+        if (ports.isNullOrEmpty()) return
+        if (mainViewModel.isRigConnected()) return
+        if (GeneralVariables.connectMode != ConnectMode.USB_CABLE) return
+
+        if (ports.size == 1) {
+            Log.d(TAG, "Auto-connecting to single USB serial port")
+            mainViewModel.connectCableRig(applicationContext, ports[0])
+        } else {
+            Log.d(TAG, "Multiple USB serial ports detected (${ports.size}), waiting for user selection")
+        }
     }
 
     private fun closeApp() {

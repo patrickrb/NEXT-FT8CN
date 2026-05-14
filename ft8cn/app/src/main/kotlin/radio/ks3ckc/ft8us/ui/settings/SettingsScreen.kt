@@ -52,6 +52,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material3.CircularProgressIndicator
 import com.bg7yoz.ft8cn.GeneralVariables
 import com.bg7yoz.ft8cn.MainViewModel
+import com.bg7yoz.ft8cn.connector.CableSerialPort
 import com.bg7yoz.ft8cn.connector.ConnectMode
 import com.bg7yoz.ft8cn.database.ControlMode
 import com.bg7yoz.ft8cn.database.OperationBand
@@ -98,6 +99,10 @@ fun SettingsScreen(
     var enableQRZ by remember { mutableStateOf(GeneralVariables.enableQRZ) }
     var saveSWLMessage by remember { mutableStateOf(GeneralVariables.saveSWLMessage) }
     var saveSWL_QSO by remember { mutableStateOf(GeneralVariables.saveSWL_QSO) }
+
+    // Observe serial ports for USB Cable picker
+    val serialPorts by mainViewModel.mutableSerialPorts.observeAsState()
+    var showSerialPortPicker by remember { mutableStateOf(false) }
 
     // Dialog visibility state
     var showEditOperator by remember { mutableStateOf(false) }
@@ -203,10 +208,34 @@ fun SettingsScreen(
                                 LoginIcomRadioDialog(context, mainViewModel).show()
                         }
                     }
-                    // USB Cable: mode is set, no further dialog needed
+                    ConnectMode.USB_CABLE -> {
+                        mainViewModel.getUsbDevice()
+                        showSerialPortPicker = true
+                    }
                 }
             },
         )
+    }
+
+    // -- Serial Port Picker (USB Cable) --
+    if (showSerialPortPicker) {
+        val ports = serialPorts
+        if (ports.isNullOrEmpty()) {
+            InfoDialog(
+                title = "USB Cable",
+                body = "No USB serial devices detected. Please connect a USB cable to your radio and try again.",
+                onDismiss = { showSerialPortPicker = false },
+            )
+        } else {
+            SerialPortPickerDialog(
+                ports = ports,
+                onDismiss = { showSerialPortPicker = false },
+                onSelect = { port ->
+                    showSerialPortPicker = false
+                    mainViewModel.connectCableRig(context, port)
+                },
+            )
+        }
     }
 
     // -- Band & Frequency Picker --
@@ -1078,6 +1107,67 @@ private fun NumberInputDialog(
                     },
                 ) {
                     Text("Save", color = Accent, fontWeight = FontWeight.SemiBold)
+                }
+            }
+        }
+    }
+}
+
+/**
+ * Dialog for selecting a USB serial port to connect to a rig.
+ */
+@Composable
+private fun SerialPortPickerDialog(
+    ports: List<CableSerialPort.SerialPort>,
+    onDismiss: () -> Unit,
+    onSelect: (CableSerialPort.SerialPort) -> Unit,
+) {
+    Dialog(onDismissRequest = onDismiss) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clip(RoundedCornerShape(16.dp))
+                .background(BgSurface2)
+                .padding(vertical = 24.dp),
+        ) {
+            Text(
+                text = "Select Serial Port",
+                color = TextPrimary,
+                fontWeight = FontWeight.SemiBold,
+                fontSize = 18.sp,
+                modifier = Modifier.padding(horizontal = 24.dp),
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .heightIn(max = 360.dp),
+            ) {
+                itemsIndexed(ports) { _, port ->
+                    Text(
+                        text = port.information(),
+                        color = TextPrimary,
+                        fontSize = 14.sp,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable { onSelect(port) }
+                            .padding(horizontal = 24.dp, vertical = 12.dp),
+                    )
+                }
+            }
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 24.dp),
+                horizontalArrangement = Arrangement.End,
+            ) {
+                TextButton(onClick = onDismiss) {
+                    Text("Cancel", color = TextMuted)
                 }
             }
         }
