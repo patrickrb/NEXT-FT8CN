@@ -153,19 +153,22 @@ public class CallsignDatabase extends SQLiteOpenHelper {
                 "LIMIT 1";
 
         Cursor cursor = db.rawQuery(querySQL, new String[]{callsign.toUpperCase(), callsign.toUpperCase()});
-        if (cursor.moveToFirst()) {
-            callsignInfo = new CallsignInfo(callsign.toUpperCase()
-                    , cursor.getString(cursor.getColumnIndex("CountryNameEn"))
-                    , cursor.getString(cursor.getColumnIndex("CountryNameCN"))
-                    , cursor.getInt(cursor.getColumnIndex("CQZone"))
-                    , cursor.getInt(cursor.getColumnIndex("ITUZone"))
-                    , cursor.getString(cursor.getColumnIndex("Continent"))
-                    , cursor.getFloat(cursor.getColumnIndex("Latitude"))
-                    , cursor.getFloat(cursor.getColumnIndex("Longitude"))
-                    , cursor.getFloat(cursor.getColumnIndex("GMT_offset"))
-                    , cursor.getString(cursor.getColumnIndex("DXCC")));
+        try {
+            if (cursor.moveToFirst()) {
+                callsignInfo = new CallsignInfo(callsign.toUpperCase()
+                        , cursor.getString(cursor.getColumnIndex("CountryNameEn"))
+                        , cursor.getString(cursor.getColumnIndex("CountryNameCN"))
+                        , cursor.getInt(cursor.getColumnIndex("CQZone"))
+                        , cursor.getInt(cursor.getColumnIndex("ITUZone"))
+                        , cursor.getString(cursor.getColumnIndex("Continent"))
+                        , cursor.getFloat(cursor.getColumnIndex("Latitude"))
+                        , cursor.getFloat(cursor.getColumnIndex("Longitude"))
+                        , cursor.getFloat(cursor.getColumnIndex("GMT_offset"))
+                        , cursor.getString(cursor.getColumnIndex("DXCC")));
+            }
+        } finally {
+            cursor.close();
         }
-        cursor.close();
         return callsignInfo;
     }
 

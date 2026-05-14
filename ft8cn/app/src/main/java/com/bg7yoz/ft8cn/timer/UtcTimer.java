@@ -187,7 +187,7 @@ public class UtcTimer {
 
 
                 } catch (InterruptedException e) {
-                    e.printStackTrace();
+                    Thread.currentThread().interrupt();
                 }
             }
         };
@@ -226,6 +226,8 @@ public class UtcTimer {
     public void delete() {
         secTimer.cancel();
         heartBeatTimer.cancel();
+        cachedThreadPool.shutdownNow();
+        heartBeatThreadPool.shutdownNow();
     }
 
     /**
@@ -276,11 +278,10 @@ public class UtcTimer {
             @Override
             public void run() {
                 NTPUDPClient timeClient = new NTPUDPClient();
-                InetAddress inetAddress = null;
-                TimeInfo timeInfo = null;
+                timeClient.setDefaultTimeout(5000);
                 try {
-                    inetAddress = InetAddress.getByName("time.windows.com");
-                    timeInfo = timeClient.getTime(inetAddress);
+                    InetAddress inetAddress = InetAddress.getByName("time.windows.com");
+                    TimeInfo timeInfo = timeClient.getTime(inetAddress);
                     long serverTime = timeInfo.getMessage().getTransmitTimeStamp().getTime();
                     int trueDelay = (int) ((serverTime - System.currentTimeMillis()));
                     UtcTimer.delay = trueDelay % 15000;//delay per cycle
@@ -291,9 +292,9 @@ public class UtcTimer {
                     if (afterSyncTime != null) {
                         afterSyncTime.syncFailed(e);
                     }
+                } finally {
+                    timeClient.close();
                 }
-
-                //long localDeviceTime = timeInfo.getReturnTime();
 
             }
         }).start();

@@ -80,6 +80,7 @@ public class CountDbOpr {
             while (cursor.moveToNext()){
                 bands.add(cursor.getString(cursor.getColumnIndex("band")));
             }
+            cursor.close();
 
             for (String band:bands) {
 
@@ -143,21 +144,25 @@ public class CountDbOpr {
             Cursor cursor = db.rawQuery(querySQL,new String[]{grid});
             StringBuilder result=new StringBuilder();
             int breakLine=0;
-            while (cursor.moveToNext()){
-                 String call=cursor.getString(cursor.getColumnIndex("call"));
-                 String band=cursor.getString(cursor.getColumnIndex("band"));
-                 String freq=cursor.getString(cursor.getColumnIndex("freq"));
-                 //String qso_date=cursor.getString(cursor.getColumnIndex("qso_date"));
-                 //String time_on=cursor.getString(cursor.getColumnIndex("time_on"));
-                 String gridsquare=cursor.getString(cursor.getColumnIndex("gridsquare"));
+            try {
+                while (cursor.moveToNext()){
+                     String call=cursor.getString(cursor.getColumnIndex("call"));
+                     String band=cursor.getString(cursor.getColumnIndex("band"));
+                     String freq=cursor.getString(cursor.getColumnIndex("freq"));
+                     //String qso_date=cursor.getString(cursor.getColumnIndex("qso_date"));
+                     //String time_on=cursor.getString(cursor.getColumnIndex("time_on"));
+                     String gridsquare=cursor.getString(cursor.getColumnIndex("gridsquare"));
 
-                 //get the callsign location
-                CallsignInfo callsignInfo= GeneralVariables.callsignDatabase.getCallInfo(call);
+                     //get the callsign location
+                    CallsignInfo callsignInfo= GeneralVariables.callsignDatabase.getCallInfo(call);
 
-                 if (breakLine>0) result.append("\n");
-                 result.append(String.format("%s %s(%s) %s\n %s", call, freq, band
-                         ,gridsquare,callsignInfo.toString()));
-                 breakLine++;
+                     if (breakLine>0) result.append("\n");
+                     result.append(String.format("%s %s(%s) %s\n %s", call, freq, band
+                             ,gridsquare,callsignInfo != null ? callsignInfo.toString() : ""));
+                     breakLine++;
+                }
+            } finally {
+                cursor.close();
             }
             return  result.toString();
         }
@@ -330,6 +335,7 @@ public class CountDbOpr {
                         ,String.format(GeneralVariables.getStringFromResource(R.string.count_zone)
                                 ,cursor.getString(cursor.getColumnIndex("itu")))));
             }
+            cursor.close();
 
             if (afterCount!=null){
                 afterCount.countInformation(new CountInfo(""
@@ -398,6 +404,7 @@ public class CountDbOpr {
                         ,String.format(GeneralVariables.getStringFromResource(R.string.count_zone)
                                 ,cursor.getString(cursor.getColumnIndex("cqzone")))));
             }
+            cursor.close();
 
             if (afterCount!=null){
                 afterCount.countInformation(new CountInfo(""
@@ -473,6 +480,7 @@ public class CountDbOpr {
                 ,cursor.getString(cursor.getColumnIndex("dxccName"))));
                 successCount++;
             }
+            cursor.close();
 
             if (afterCount!=null){
                 afterCount.countInformation(new CountInfo(""
