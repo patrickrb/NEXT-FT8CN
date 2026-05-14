@@ -34,7 +34,7 @@ public class HamRecorder {
     //private AudioRecord audioRecord = null;//AudioRecord object
     private volatile boolean isRunning = false;//whether currently in recording state
 
-    private final ArrayList<VoiceDataMonitor> voiceDataMonitorList = new ArrayList<>();//listener callback list, data is retrieved in listener callbacks
+    private final java.util.concurrent.CopyOnWriteArrayList<VoiceDataMonitor> voiceDataMonitorList = new java.util.concurrent.CopyOnWriteArrayList<>();//listener callback list, data is retrieved in listener callbacks
     private OnVoiceMonitorChanged onVoiceMonitorChanged=null;
 
     private boolean isMicRecord=true;
@@ -129,7 +129,7 @@ public class HamRecorder {
      * Get the list of monitors
      * @return monitor list
      */
-    public ArrayList<VoiceDataMonitor> getVoiceDataMonitors(){
+    public java.util.List<VoiceDataMonitor> getVoiceDataMonitors(){
         return this.voiceDataMonitorList;
     }
 

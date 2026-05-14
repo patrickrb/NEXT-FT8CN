@@ -35,7 +35,7 @@ public class CallingListAdapter extends RecyclerView.Adapter<CallingListAdapter.
     public enum ShowMode{CALLING_LIST,MY_CALLING,TRACKER}
     private static final String TAG = "CallingListAdapter";
     private final MainViewModel mainViewModel;
-    private final ArrayList<Ft8Message> ft8MessageArrayList;
+    private final java.util.List<Ft8Message> ft8MessageArrayList;
     private final Context context;
 
     private final ShowMode showMode;
@@ -124,7 +124,7 @@ public class CallingListAdapter extends RecyclerView.Adapter<CallingListAdapter.
 
 
     public CallingListAdapter(Context context, MainViewModel mainViewModel
-            , ArrayList<Ft8Message> messages, ShowMode showMode) {
+            , java.util.List<Ft8Message> messages, ShowMode showMode) {
         this.mainViewModel = mainViewModel;
         this.context = context;
         this.showMode=showMode;

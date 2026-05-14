@@ -219,7 +219,7 @@ public class GeneralVariables {
 
     public static final ArrayList<String> followCallsign = new ArrayList<>();//Followed callsigns
 
-    public static ArrayList<Ft8Message> transmitMessages = new ArrayList<>();//List for the calling UI, followed entries
+    public static java.util.List<Ft8Message> transmitMessages = new java.util.concurrent.CopyOnWriteArrayList<>();//List for the calling UI, followed entries
 
     public static void setMyMaidenheadGrid(String grid) {
         myMaidenheadGrid = grid;
@@ -634,7 +634,7 @@ public class GeneralVariables {
         return result.toString();
     }
 
-    public static synchronized void deleteArrayListMore(ArrayList<Ft8Message> list) {
+    public static synchronized void deleteArrayListMore(java.util.List<Ft8Message> list) {
         if (list.size() > GeneralVariables.MESSAGE_COUNT) {
             while (list.size() > GeneralVariables.MESSAGE_COUNT) {
                 list.remove(0);

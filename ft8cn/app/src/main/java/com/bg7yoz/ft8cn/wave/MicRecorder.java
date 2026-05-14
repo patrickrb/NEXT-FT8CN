@@ -201,6 +201,18 @@ public class MicRecorder {
             usbAudioDevice.stopCapture();
         }
         if (audioRecord != null) {
+            // Wait briefly for the recording thread to exit its read() call
+            // before releasing the AudioRecord, to avoid IllegalStateException.
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException ignored) {}
+            try {
+                if (audioRecord.getRecordingState() == AudioRecord.RECORDSTATE_RECORDING) {
+                    audioRecord.stop();
+                }
+            } catch (Exception e) {
+                Log.d(TAG, "Error stopping AudioRecord: " + e.getMessage());
+            }
             try {
                 audioRecord.release();
             } catch (Exception e) {

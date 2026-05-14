@@ -145,7 +145,15 @@ private fun QsoSheetContent(
             Button(
                 onClick = {
                     mainViewModel.addFollowCallsign(callsign)
-                    mainViewModel.ft8TransmitSignal.setActivated(true)
+                    if (!mainViewModel.ft8TransmitSignal.isActivated) {
+                        mainViewModel.ft8TransmitSignal.setActivated(true)
+                        GeneralVariables.transmitMessages.add(message)
+                    }
+                    mainViewModel.ft8TransmitSignal.setTransmit(
+                        message.fromCallTransmitCallsign, 1, message.extraInfo
+                    )
+                    mainViewModel.ft8TransmitSignal.transmitNow()
+                    GeneralVariables.resetLaunchSupervision()
                     onDismiss()
                 },
                 modifier = Modifier

@@ -603,7 +603,7 @@ public class FT8TransmitSignal {
 
 
         messageEndTime = UtcTimer.getSystemTime();
-        if (onDoTransmitted != null) {// for saving QSO records
+        if (onTransmitSuccess != null) {// for saving QSO records
             onTransmitSuccess.doAfterTransmit(new QSLRecord(
                     messageStartTime,
                     messageEndTime,
