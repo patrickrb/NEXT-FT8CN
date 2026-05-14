@@ -1,6 +1,6 @@
 package com.bg7yoz.ft8cn.connector;
 /**
- * 用于蓝牙连接的Connector,继承于BaseRigConnector
+ * Connector for Bluetooth connections, inherits from BaseRigConnector
  *
  * @author BG7YOZ
  * @date 2023-03-20
@@ -149,7 +149,7 @@ public class BluetoothRigConnector extends BaseRigConnector implements ServiceCo
     public void sendCommand(byte[] data) {
         //Log.d(TAG, "sendCommand: "+BaseRig.byteToStr(data) );
         if (connected != Connected.True) {
-            Log.e(TAG, "sendCommand: 蓝牙没连接");
+            Log.e(TAG, "sendCommand: Bluetooth not connected");
             socketConnect();
             return;
         }
@@ -168,7 +168,7 @@ public class BluetoothRigConnector extends BaseRigConnector implements ServiceCo
 
     @Override
     public void setPttOn(byte[] command) {
-        sendData(command);//以CAT指令发送PTT
+        sendData(command);//Send PTT via CAT command
     }
 
     @Override

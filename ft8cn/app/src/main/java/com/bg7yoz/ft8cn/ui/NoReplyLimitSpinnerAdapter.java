@@ -1,6 +1,6 @@
 package com.bg7yoz.ft8cn.ui;
 /**
- * 未回答时间列表。
+ * No-reply limit list.
  * @author BGY70Z
  * @date 2023-03-20
  */

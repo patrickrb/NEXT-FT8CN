@@ -13,9 +13,9 @@ public class GuoHeRigConstant {
     public static final int DIGI = 0x07;
     public static final int PKT = 0x08;
 
-    //PTT状态
+    //PTT state
 
-    //指令集
+    //command set
 //    private static final byte[] PTT_ON = {(byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x08};
 //    private static final byte[] PTT_OFF = {(byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x88};
     private static final byte[] PTT_ON = {(byte) 0xA5, (byte) 0xA5, (byte) 0xA5, (byte) 0xA5, (byte) 0x04, (byte) 0x07, (byte) 0x00, (byte) 0x89, (byte) 0xCB};
@@ -70,8 +70,8 @@ public class GuoHeRigConstant {
     public static byte[] setOperationFreq(long freq) {
 
         byte[] data = new byte[]{(byte) 0xA5, (byte) 0xA5, (byte) 0xA5, (byte) 0xA5, (byte) 0x0b, (byte) 0x09
-                , (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00//频率VFOA
-                , (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00//频率VFOB
+                , (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00//frequency VFO A
+                , (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00//frequency VFO B
                 , (byte) 0x3B, (byte) 0x6B};
 
         data[6] = (byte)  ((0x0000000000ff000000 & freq) >> 24);

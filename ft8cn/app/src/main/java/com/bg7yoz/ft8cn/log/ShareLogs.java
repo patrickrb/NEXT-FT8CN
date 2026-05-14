@@ -61,14 +61,14 @@ public class ShareLogs {
     }
 
     /**
-     * 把日志数据写入到文件中，用于分享等处理
+     * Write log data to a file for sharing and other processing
      *
-     * @param db             数据库
-     * @param queryKey       关键词
-     * @param queryFilter    过滤条件
-     * @param adiFile        临时文件
-     * @param isSWL          是否是swl模式
-     * @param onGetShareLogs 回调
+     * @param db             database
+     * @param queryKey       keyword
+     * @param queryFilter    filter condition
+     * @param adiFile        temporary file
+     * @param isSWL          whether in SWL mode
+     * @param onGetShareLogs callback
      */
     @SuppressLint({"DefaultLocale", "Range"})
     private void downQSLTableToFile(SQLiteDatabase db, String queryKey, int queryFilter, File adiFile
@@ -197,7 +197,7 @@ public class ShareLogs {
                 String comment = cursor.getString(cursor.getColumnIndex("comment"));
 
                 //<comment:15>Distance: 99 km <eor>
-                //在写库的时候，一定要加" km"
+                //When writing to the database, be sure to append " km"
                 fileOutputStream.write(String.format("<comment:%d>%s <eor>\n"
                         , comment.length()
                         , comment).getBytes());
@@ -205,7 +205,7 @@ public class ShareLogs {
 
 
         } catch (IOException e) {
-            Log.e(TAG,String.format("写文件出错：%s",e.getMessage()));
+            Log.e(TAG,String.format("Error writing file: %s",e.getMessage()));
             ToastMessage.show(String.format(GeneralVariables
                     .getStringFromResource(R.string.write_file_error), e.getMessage()));
         } finally {
@@ -214,7 +214,7 @@ public class ShareLogs {
                     fileOutputStream.close();
                 }
             } catch (IOException e) {
-                Log.e(TAG, String.format("关闭写文件出错：%s", e.getMessage()));
+                Log.e(TAG, String.format("Error closing file writer: %s", e.getMessage()));
                 ToastMessage.show(String.format(GeneralVariables
                         .getStringFromResource(R.string.write_file_error), e.getMessage()));
             }
@@ -225,17 +225,17 @@ public class ShareLogs {
                     GeneralVariables.getStringFromResource(R.string.total_logs)
                     , position));
         }
-        Log.d(TAG, String.format("写入数据%d条", position));
+        Log.d(TAG, String.format("Wrote %d records", position));
 
         cursor.close();
     }
 
     /**
-     * 分享文件
+     * Share file
      *
      * @param context Context
-     * @param file    文件对象
-     * @param title   标题
+     * @param file    file object
+     * @param title   title
      */
     public void doShareLogs(Context context, File file, String title
             , SQLiteDatabase db, String queryKey, int queryFilter, File adiFile

@@ -12,12 +12,12 @@ import com.bg7yoz.ft8cn.ft8transmit.GenerateFT8;
 
 public class FlexNetworkRig extends BaseRig {
     private static final String TAG = "FlexNetworkRig";
-    private int commandSeq = 1;//指令的序列
+    private int commandSeq = 1;//command sequence number
     private FlexCommand flexCommand;
     private String commandStr;
 
-    //private final int ctrAddress=0xE0;//接收地址，默认0xE0;电台回复命令有时也可以是0x00
-    //private byte[] dataBuffer=new byte[0];//数据缓冲区
+    //private final int ctrAddress=0xE0;//receive address, default 0xE0; rig reply can also be 0x00
+    //private byte[] dataBuffer=new byte[0];//data buffer
     @SuppressLint("DefaultLocale")
     public void sendCommand(FlexCommand command, String cmdContent) {
         if (getConnector().isConnected()) {
@@ -57,7 +57,7 @@ public class FlexNetworkRig extends BaseRig {
     @Override
     public void setUsbModeToRig() {
         if (getConnector() != null) {
-            commandSliceSetMode(0, FlexRadio.FlexMode.DIGU);//设置操作模式
+            commandSliceSetMode(0, FlexRadio.FlexMode.DIGU);//set operating mode
         }
     }
 
@@ -88,7 +88,7 @@ public class FlexNetworkRig extends BaseRig {
 
         if (getConnector() != null) {
             float[] data = GenerateFT8.generateFt8(message, GeneralVariables.getBaseFrequency()
-                    , 24000);//flex音频的采样率是24000
+                    , 24000);//Flex audio sample rate is 24000
             if (data == null) {
                 setPTT(false);
                 return;

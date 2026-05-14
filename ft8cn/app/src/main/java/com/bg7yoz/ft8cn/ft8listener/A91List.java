@@ -19,8 +19,8 @@ public class A91List {
     }
     public static class A91{
         public byte[] a91 ;//= new byte[GenerateFT8.FTX_LDPC_K_BYTES];
-        public float time_sec = 0;//时间偏移(秒)
-        public float freq_hz = 0;//频率
+        public float time_sec = 0;// time offset (seconds)
+        public float freq_hz = 0;// frequency
 
         public A91(byte[] a91, float time_sec, float freq_hz) {
             this.a91 = a91;

@@ -1,6 +1,6 @@
 package com.bg7yoz.ft8cn.html;
 /**
- * Http服务内容的出框架。
+ * HTML content framework for the HTTP service.
  * @author BGY70Z
  * @date 2023-03-20
  */
@@ -101,7 +101,7 @@ public class HtmlContext {
                 "<tr><td class=\"default\" colspan=\"15\"><a href=/getCallsignQTH>"
                 +GeneralVariables.getStringFromResource(R.string.html_callsign_qth)+"</a></td></tr>" +
 
-                "<tr><td class=\"default\" colspan=\"15\"><a href=/QSOLogs>"//查询日志
+                "<tr><td class=\"default\" colspan=\"15\"><a href=/QSOLogs>"//Query logs
                 +GeneralVariables.getStringFromResource(R.string.html_query_logs)+"</a></td></tr>" +
 
                 "<tr><td class=\"default\" colspan=\"15\"><a href=/QSLTable>"
@@ -115,9 +115,9 @@ public class HtmlContext {
     }
 
     /**
-     * 生成表格的内容
+     * Generate table cell content
      * @param sb html
-     * @param s 内容
+     * @param s content
      * @return html
      */
     public static StringBuilder tableCell(StringBuilder sb, String... s){
@@ -129,9 +129,9 @@ public class HtmlContext {
     }
 
     /**
-     * 生成表格标题
+     * Generate table header cells
      * @param sb html
-     * @param s 标题
+     * @param s header titles
      * @return html
      */
     public static StringBuilder tableCellHeader(StringBuilder sb, String... s){
@@ -196,7 +196,7 @@ public class HtmlContext {
         StringBuilder result = new StringBuilder();
         HtmlContext.tableBegin(result,hasBorder,cellpadding,fullWidth).append("\n");
 
-        //写字段名
+        //Write column names
         HtmlContext.tableRowBegin(result);
         for (int i = 0; i < cursor.getColumnCount(); i++) {
             HtmlContext.tableCellHeader(result,cursor.getColumnName(i));

@@ -1,3 +1,3 @@
-载波频段，是指电台在发射时所使用的载波频段。载波频段，会记录到每一个通联的日志中。
-在CAT模式下，APP会自动设置电台的载波频段。
-在VOX模式下，只用于保存日志。
+Carrier band refers to the carrier frequency band used by the radio during transmission. The carrier band is recorded in every QSO log entry.
+In CAT mode, the app will automatically set the radio's carrier band.
+In VOX mode, it is only used for saving logs.

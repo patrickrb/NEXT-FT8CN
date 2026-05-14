@@ -1,6 +1,6 @@
 package com.bg7yoz.ft8cn.flex;
 /**
- * Flex的操作，命令使用TCP，数据流使用UDP。
+ * Flex radio operations: commands use TCP, data streams use UDP.
  * @author BGY70Z
  * @date 2023-03-20
  */
@@ -41,15 +41,15 @@ public class FlexRadio {
     public boolean isPttOn = false;
     public long streamTxId = 0x084000000;
 
-    public static int getStreamPort() {//获取用于流传输的UDP端口，防止重复，采用自增方式
+    public static int getStreamPort() {//Get UDP port for streaming, auto-increment to avoid duplicates
         return ++streamPort;
     }
 
-    //private int streamPort;//当前用于流传输的UDP端口，这个是本实例的端口
+    //private int streamPort;//Current UDP port for streaming, this instance's port
 
 
     /*********************
-     * 电台的基本信息，从discovery协议中获取
+     * Basic radio info, obtained from the discovery protocol
      *************************/
     private String discovery_protocol_version;//=3.0.0.2
     private String model;//=FLEX-6400
@@ -58,7 +58,7 @@ public class FlexRadio {
     private String nickname;//=FlexRADIO
     private String callsign;//=FlexRADIO
     private String ip = "";//=192.168.3.86
-    private int port = 4992;//=4992//用于控制电台的TCP端口
+    private int port = 4992;//=4992//TCP port for controlling the radio
     private String status;//=Available
     private String inUse_ip;//=192.168.3.5
     private String inUse_host;//=DESKTOP-RR564NK.local
@@ -79,17 +79,17 @@ public class FlexRadio {
     private String gui_client_stations;//=DESKTOP-RR564NK
     private String gui_client_handles;//=0x19EAFA02
 
-    private long lastSeen;//最后一次消息的时间
-    private boolean isAvailable = true;//电台是不是有效
+    private long lastSeen;//Time of last message
+    private boolean isAvailable = true;//Whether the radio is available
 
 
-    private int commandSeq = 1;//指令的序列
+    private int commandSeq = 1;//Command sequence number
     private FlexCommand flexCommand;
     private int handle = 0;
     private String commandStr;
 
 
-    private final StringBuilder buffer = new StringBuilder();//指令的缓存
+    private final StringBuilder buffer = new StringBuilder();//Command buffer
     private final RadioTcpClient tcpClient = new RadioTcpClient();
     private RadioUdpClient streamClient;
 
@@ -100,13 +100,13 @@ public class FlexRadio {
     private long panadapterStreamId = 0;
     private final HashSet<Long> streamIdSet = new HashSet<>();
 
-    //************************事件处理接口*******************************
-    private OnReceiveDataListener onReceiveDataListener;//当前接收到的数据事件
-    private OnTcpConnectStatus onTcpConnectStatus;//当TCP连接状态变化的事件
-    private OnReceiveStreamData onReceiveStreamData;//当接收到流数据后的处理事件
-    private OnCommandListener onCommandListener;//触发命令事件
-    private OnMessageListener onMessageListener;//触发消息事件
-    private OnStatusListener onStatusListener;//触发状态事件
+    //************************Event handler interfaces*******************************
+    private OnReceiveDataListener onReceiveDataListener;//Current data receive event
+    private OnTcpConnectStatus onTcpConnectStatus;//TCP connection status change event
+    private OnReceiveStreamData onReceiveStreamData;//Stream data receive event handler
+    private OnCommandListener onCommandListener;//Command event trigger
+    private OnMessageListener onMessageListener;//Message event trigger
+    private OnStatusListener onStatusListener;//Status event trigger
     //*****************************************************************
     private AudioTrack audioTrack = null;
 
@@ -124,11 +124,11 @@ public class FlexRadio {
     }
 
     /**
-     * 到参数列表中找指定的字符类型参数
+     * Find a specified string parameter in the parameter list
      *
-     * @param parameters 参数列表
-     * @param prefix     参数名前缀
-     * @return 参数
+     * @param parameters parameter list
+     * @param prefix     parameter name prefix
+     * @return parameter value
      */
     private String getParameterStr(String[] parameters, String prefix) {
         for (int i = 0; i < parameters.length; i++) {
@@ -136,17 +136,17 @@ public class FlexRadio {
                 return parameters[i].substring(prefix.length() + 1);
             }
         }
-        //如果没找到，返回空字符串
+        //If not found, return empty string
         return "";
 
     }
 
     /**
-     * 到参数列表中找指定的int类型参数
+     * Find a specified int parameter in the parameter list
      *
-     * @param parameters 参数列表
-     * @param prefix     参数名前缀
-     * @return 参数
+     * @param parameters parameter list
+     * @param prefix     parameter name prefix
+     * @return parameter value
      */
     private int getParameterInt(String[] parameters, String prefix) {
         for (int i = 0; i < parameters.length; i++) {
@@ -160,15 +160,15 @@ public class FlexRadio {
                 }
             }
         }
-        //如果没找到，返回0
+        //If not found, return 0
         return 0;
 
     }
 
     /**
-     * 从discovery协议中更新参数
+     * Update parameters from the discovery protocol
      *
-     * @param discoverStr 参数
+     * @param discoverStr parameters
      */
     public void update(String discoverStr) {
         String[] paras = discoverStr.split(" ");
@@ -202,10 +202,10 @@ public class FlexRadio {
     }
 
     /**
-     * 检查这个实例是否是同一个电台
+     * Check if this instance is the same radio
      *
-     * @param serialNum 电台序列号
-     * @return 是/否
+     * @param serialNum radio serial number
+     * @return true/false
      */
     public boolean isEqual(String serialNum) {
         return this.serial.equalsIgnoreCase(serialNum);
@@ -213,23 +213,23 @@ public class FlexRadio {
 
 
     /**
-     * 连接到控制电台
+     * Connect to the radio
      */
     public void connect() {
         this.connect(this.ip, this.port);
     }
 
     /**
-     * 连接控制到电台，TCP
+     * Connect to the radio via TCP
      *
-     * @param ip   地址
-     * @param port 端口
+     * @param ip   address
+     * @param port port
      */
     public void connect(String ip, int port) {
         if (tcpClient.isConnect()) {
             tcpClient.disconnect();
         }
-        //Tcp连接触发的事件
+        //Events triggered by TCP connection
         tcpClient.setOnDataReceiveListener(new RadioTcpClient.OnDataReceiveListener() {
             @Override
             public void onConnectSuccess() {
@@ -259,31 +259,31 @@ public class FlexRadio {
                 ToastMessage.show(GeneralVariables.getStringFromResource(R.string.tcp_connect_closed));
             }
         });
-        clearBufferData();//清除一下缓存的指令数据
-        tcpClient.connect(ip, port);//连接TCP
+        clearBufferData();//Clear buffered command data
+        tcpClient.connect(ip, port);//Connect TCP
 
-        //openStreamPort();//打开接收数据流的端口
+        //openStreamPort();//Open port for receiving data streams
     }
 
     /**
-     * 当接收到音频数据时的处理
+     * Handle received audio data
      *
-     * @param data 音频数据
+     * @param data audio data
      */
     private void doReceiveAudio(byte[] data) {
         if (onReceiveStreamData != null) {
             onReceiveStreamData.onReceiveAudio(data);
         }
-        if (audioTrack != null) {//如果音频播放已经打开，就写音频流数据
-            float[] sound = getFloatFromBytes(data);//长度是256个float
+        if (audioTrack != null) {//If audio playback is already open, write audio stream data
+            float[] sound = getFloatFromBytes(data);//Length is 256 floats
             audioTrack.write(sound, 0, sound.length, AudioTrack.WRITE_NON_BLOCKING);
         }
     }
 
     /**
-     * 当接收到IQ数据时的处理
+     * Handle received IQ data
      *
-     * @param data 数据
+     * @param data data
      */
     private void doReceiveIQ(byte[] data) {
         if (onReceiveStreamData != null) {
@@ -292,9 +292,9 @@ public class FlexRadio {
     }
 
     /**
-     * 当接收到FFT数据时的处理
+     * Handle received FFT data
      *
-     * @param vita 数据
+     * @param vita data
      */
     private void doReceiveFFT(VITA vita) {
         if (onReceiveStreamData != null) {
@@ -303,9 +303,9 @@ public class FlexRadio {
     }
 
     /**
-     * 当接收到仪表数据时的处理
+     * Handle received meter data
      *
-     * @param vita 数据
+     * @param vita data
      */
     private void doReceiveMeter(VITA vita) {
         if (onReceiveStreamData != null) {
@@ -314,9 +314,9 @@ public class FlexRadio {
     }
 
     /**
-     * 当接收到未知数据时的处理
+     * Handle received unknown data
      *
-     * @param data 数据
+     * @param data data
      */
     private void doReceiveUnKnow(byte[] data) {
         if (onReceiveStreamData != null) {
@@ -325,7 +325,7 @@ public class FlexRadio {
     }
 
     /**
-     * 打开音频，流方式。当收到音频流的时候，播放数据
+     * Open audio in streaming mode. Plays data when audio stream is received.
      */
     public void openAudio() {
         AudioAttributes attributes = new AudioAttributes.Builder()
@@ -343,7 +343,7 @@ public class FlexRadio {
     }
 
     /**
-     * 关闭音频
+     * Close audio
      */
     public void closeAudio() {
         if (audioTrack != null) {
@@ -358,7 +358,7 @@ public class FlexRadio {
     }
 
     /**
-     * 打开接收数据流的端口
+     * Open port for receiving data streams
      */
     public void openStreamPort() {
         if (streamClient != null) {
@@ -384,31 +384,31 @@ public class FlexRadio {
 
                 //Log.e(TAG, String.format("OnReceiveData: stream id:0x%x,class id:0x%x",vita.streamId,vita.classId) );
                 switch (vita.classId) {
-                    case VITA.FLEX_DAX_AUDIO_CLASS_ID://音频数据
+                    case VITA.FLEX_DAX_AUDIO_CLASS_ID://Audio data
                         //Log.e(TAG, String.format("FLEX_DAX_AUDIO_CLASS_ID stream id:0x%x",vita.streamId ));
                         doReceiveAudio(vita.payload);
                         break;
-                    case VITA.FLEX_DAX_IQ_CLASS_ID://IQ数据
+                    case VITA.FLEX_DAX_IQ_CLASS_ID://IQ data
                         doReceiveIQ(vita.payload);
                         break;
-                    case VITA.FLEX_FFT_CLASS_ID://频谱数据
+                    case VITA.FLEX_FFT_CLASS_ID://Spectrum data
                         doReceiveFFT(vita);
                         //Log.e(TAG, String.format("OnReceiveData: FFT:%d,STREAM ID:0x%x",vita.payload.length,vita.streamId));
                         break;
-                    case VITA.FLEX_METER_CLASS_ID://仪表数据
+                    case VITA.FLEX_METER_CLASS_ID://Meter data
                         //Log.e(TAG, String.format("FLEX_METER_CLASS_ID: stream id:0x%x",vita.streamId ));
                         doReceiveMeter(vita);
                         //Log.e(TAG, String.format("OnReceiveData: METER class id:0x%x,stream id:0x%x,length:%d\n%s"
                         //        ,vita.classId,vita.streamId,vita.payload.length,vita.showPayload() ));
                         break;
-                    default://未知类型的数据
+                    default://Unknown type data
                         doReceiveUnKnow(data);
                         break;
                 }
             }
         };
 
-        //此处要确定stream的udp端口
+        //Determine the stream UDP port here
         streamPort = getStreamPort();
         streamClient = new RadioUdpClient(streamPort);
         streamClient.setOnUdpEvents(onUdpEvents);
@@ -423,7 +423,7 @@ public class FlexRadio {
     }
 
     /**
-     * 关闭接收数据流的端口
+     * Close the port for receiving data streams
      */
     public synchronized void closeStreamPort() {
         if (streamClient != null) {
@@ -439,7 +439,7 @@ public class FlexRadio {
     }
 
     /**
-     * 断开与电台的连接
+     * Disconnect from the radio
      */
     public synchronized void disConnect() {
         if (tcpClient.isConnect()) {
@@ -448,13 +448,13 @@ public class FlexRadio {
     }
 
     /**
-     * flexRadio发射的采样率为24000采样率，还要把单声道改为立体声
-     * @param data 音频
+     * FlexRadio transmits at 24000 sample rate; also converts mono to stereo
+     * @param data audio
      */
     public void sendWaveData(float[] data) {
 
         float[] temp = new float[data.length * 2];
-        //转成立体声,24000采样率
+        //Convert to stereo, 24000 sample rate
         for (int i = 0; i < data.length; i++) {
             temp[i * 2] = data[i];
             temp[i * 2 + 1] = data[i];
@@ -464,7 +464,7 @@ public class FlexRadio {
         //port=4991;
         //streamTxId=0x084000001;
         // class id=0x00 00 1c 2d 53 4c 01 23????
-        //每5毫秒一个包？立体声，共256个float
+        //One packet every 5ms? Stereo, 256 floats total
         Log.e(TAG, String.format("sendWaveData: streamid:0x%x,ip:%s,port:%d",streamTxId,ip, port) );
         new Thread(new Runnable() {
             @Override
@@ -475,11 +475,11 @@ public class FlexRadio {
                 int count = 0;
                 int packetCount=0;
                 while (count<temp.length){
-                    long now = System.currentTimeMillis() - 1;//获取当前时间
+                    long now = System.currentTimeMillis() - 1;//Get current time
 
 
 
-                    float[] voice=new float[256];//因为是立体声，240*2
+                    float[] voice=new float[256];//Because it's stereo, 240*2
 
 
                     //for (int j = 0; j <3 ; j++) {
@@ -507,7 +507,7 @@ public class FlexRadio {
                         if (count>temp.length) break;
                     //}
                     while (isPttOn) {
-                        if (System.currentTimeMillis() - now >= 5) {//5毫秒一个周期,每个周期256个float。
+                        if (System.currentTimeMillis() - now >= 5) {//5ms per cycle, 256 floats per cycle
                             break;
                         }
                     }
@@ -518,9 +518,9 @@ public class FlexRadio {
                 }
 
 
-//                for (int i = 0; i < (temp.length / (24 * 2 * 40)); i++) {//40毫秒的数据量
+//                for (int i = 0; i < (temp.length / (24 * 2 * 40)); i++) {//40ms worth of data
 //                    if (!isPttOn) return;
-//                    long now = System.currentTimeMillis() - 1;//获取当前时间
+//                    long now = System.currentTimeMillis() - 1;//Get current time
 //
 //                    float[] voice = new float[24 * 2 * 10];
 //                    for (int j = 0; j < 24 * 2 *10; j++) {
@@ -538,7 +538,7 @@ public class FlexRadio {
 //                    }
 //
 //                    while (isPttOn) {
-//                        if (System.currentTimeMillis() - now >= 41) {//40毫秒一个周期,每个周期3个包，每个包64个float。
+//                        if (System.currentTimeMillis() - now >= 41) {//40ms per cycle, 3 packets per cycle, 64 floats per packet
 //                            break;
 //                        }
 //                    }
@@ -547,7 +547,7 @@ public class FlexRadio {
         }).start();
 
 
-        //设置发送音频包
+        //Set up audio packet sending
         //streamClient.sendData();
     }
     public static String byteToStr(byte[] data) {
@@ -566,9 +566,9 @@ public class FlexRadio {
         return s.toString();
     }
     /**
-     * 电台是否连接
+     * Whether the radio is connected
      *
-     * @return 是否
+     * @return true/false
      */
     public boolean isConnect() {
         return tcpClient.isConnect();
@@ -579,10 +579,10 @@ public class FlexRadio {
     }
 
     /**
-     * 制作命令，命令序号规则：后3位是命令的种类，序号除1000，是命令的真正序号
+     * Build a command. Sequence number rule: last 3 digits are the command type, sequence / 1000 is the actual sequence number
      *
-     * @param command    命令的种类
-     * @param cmdContent 命令的具体内容
+     * @param command    command type
+     * @param cmdContent specific command content
      */
     @SuppressLint("DefaultLocale")
     public void sendCommand(FlexCommand command, String cmdContent) {
@@ -597,39 +597,39 @@ public class FlexRadio {
     }
 
     /**
-     * 清空缓存数据
+     * Clear buffer data
      */
     private void clearBufferData() {
         buffer.setLength(0);
     }
 
     /**
-     * 当接收到数据时触发的事件，此处是TCP连接得到的数据
+     * Event triggered when data is received; this is data from the TCP connection
      *
-     * @param data 数据
+     * @param data data
      */
     private void onReceiveData(byte[] data) {
         String s = new String(data);
-        if (!s.contains("\n")) {//不包含换行符，说明命令行没有接受完。
+        if (!s.contains("\n")) {//No newline means the command line hasn't been fully received
             buffer.append(s);
-        } else {//说明已经有命令行了。可能不止一个哦。在此部分要触发OnReceiveLine
+        } else {//Command line(s) received. There may be more than one. Trigger OnReceiveLine here
             String[] commands = s.split("\n");
-            if (commands.length > 0) {//把收到数据的第一行，追加到之前接收的命令数据上
+            if (commands.length > 0) {//Append the first line of received data to previously received command data
                 buffer.append(commands[0]);
             }
 
-            //先把缓存中的数据触发出来
+            //First trigger the buffered data
             doReceiveLineEvent(buffer.toString());
             clearBufferData();
-            //从第二行开始触发，最后一行不触发，最后一行要看是不是换行结尾
+            //Trigger from the second line onwards; skip the last line, check if it ends with newline
             for (int i = 1; i < commands.length - 1; i++) {
                 doReceiveLineEvent(commands[i]);
             }
 
-            if (commands.length > 1) {//当数据是多行的时候，最后一行的处理
-                if (s.endsWith("\n")) {//如果是以换行结尾,或者缓冲区没满（接收完全了），就触发事件
+            if (commands.length > 1) {//When data is multi-line, handle the last line
+                if (s.endsWith("\n")) {//If it ends with newline or buffer isn't full (fully received), trigger event
                     doReceiveLineEvent(commands[commands.length - 1]);
-                } else {//如果不是以换行结尾，说明指令没有接收完全
+                } else {//If not ending with newline, the command hasn't been fully received
                     buffer.append(commands[commands.length - 1]);
                 }
             }
@@ -637,16 +637,16 @@ public class FlexRadio {
     }
 
     /**
-     * 当接收到数据行时，触发的事件。可以触发两种事件：
-     * 1.行数据事件onReceiveLineListener；
-     * 2.命令事件onCommandListener。
+     * Event triggered when a data line is received. Can trigger two types of events:
+     * 1. Line data event onReceiveLineListener
+     * 2. Command event onCommandListener
      *
-     * @param line 数据行
+     * @param line data line
      */
     private void doReceiveLineEvent(String line) {
 
         FlexResponse response = new FlexResponse(line);
-        //更新一下句柄
+        //Update the handle
         switch (response.responseStyle) {
             case VERSION:
                 this.version = response.version;
@@ -671,11 +671,11 @@ public class FlexRadio {
 
         if (response.responseStyle == FlexResponseStyle.RESPONSE) {
             if (getCommandStyleFromResponse(response) == FlexCommand.CLIENT_GUI) {
-                setClientIDFromResponse(response);//设置CLIENT ID
+                setClientIDFromResponse(response);//Set CLIENT ID
             }
         }
 
-        //是不是显示其它终端的状态信息
+        //Whether to show status info from other clients
         if (response.responseStyle == FlexResponseStyle.STATUS) {
             if (!allFlexRadioStatusEvent && (!(handle == response.handle || response.handle == 0))) {
                 return;
@@ -684,15 +684,15 @@ public class FlexRadio {
         }
 
         switch (response.responseStyle) {
-            case RESPONSE://当接收到的是指令的返回消息
-                doCommandResponse(response);//对一些指令返回的消息要处理一下。
+            case RESPONSE://When a command response is received
+                doCommandResponse(response);//Process some command response messages
                 break;
-            case STATUS://当接收到的是状态消息
+            case STATUS://When a status message is received
                 if (onStatusListener != null) {
                     onStatusListener.onStatus(response);
                 }
                 break;
-            case MESSAGE://当接收到的是消息
+            case MESSAGE://When a message is received
                 if (onMessageListener != null) {
                     onMessageListener.onMessage(response);
                     break;
@@ -701,9 +701,9 @@ public class FlexRadio {
     }
 
     /**
-     * 处理命令返回的消息，同时触发命令返回消息事件
+     * Process command response messages and trigger the command response event
      *
-     * @param response 返回消息
+     * @param response response message
      */
     private void doCommandResponse(FlexResponse response) {
         if (onCommandListener != null) {
@@ -738,15 +738,15 @@ public class FlexRadio {
     }
 
     /**
-     * 检查是不是 刚刚 离线，离线条件：5秒内没有收到电台的广播数据包
+     * Check if the radio just went offline. Offline condition: no broadcast packets received within 5 seconds
      *
-     * @return 是否
+     * @return true/false
      */
     public boolean isInvalidNow() {
-        if (isAvailable) {//如果标记在线，而大于5秒的时间没有收到数据包，就视为刚刚离线。
-            isAvailable = System.currentTimeMillis() - lastSeen < 1000 * 5;//小于5秒，就视为在线
+        if (isAvailable) {//If marked online but no packets received for more than 5 seconds, consider just went offline
+            isAvailable = System.currentTimeMillis() - lastSeen < 1000 * 5;//Less than 5 seconds means online
             return !isAvailable;
-        } else {//如果已经标记不在线了，就不是刚刚离弦的。
+        } else {//If already marked offline, then it didn't just go offline
             return false;
         }
     }
@@ -757,7 +757,7 @@ public class FlexRadio {
         return String.format("FlexRadio{version='%s', handle=%X}", version, handle);
     }
 
-    //**************封装FlexRadio各种指令*开始***********************
+    //**************FlexRadio command wrappers *START***********************
     public synchronized void commandClientDisconnect() {
         sendCommand(FlexCommand.CLIENT_DISCONNECT, "client disconnect");
     }
@@ -970,7 +970,7 @@ public class FlexRadio {
         sendCommand(FlexCommand.DISPLAY_PAN, String.format("display pan set 0x%X xpixels=%d", 0x40000000, x));
         sendCommand(FlexCommand.DISPLAY_PAN, String.format("display pan set 0x%X ypixels=%d", 0x40000000, y));
     }
-    //**************封装FlexRadio各种指令*结束***********************
+    //**************FlexRadio command wrappers *END***********************
 
     @Override
     protected void finalize() throws Throwable {
@@ -979,17 +979,17 @@ public class FlexRadio {
     }
 
 
-    //**************各种接口**********************
+    //**************Interfaces**********************
 
     /**
-     * 当TCP接收到数据
+     * When TCP data is received
      */
     public interface OnReceiveDataListener {
         void onDataReceive(byte[] data);
     }
 
     /**
-     * 当接收到指令回复
+     * When a command response is received
      */
     public interface OnCommandListener {
         void onResponse(FlexResponse response);
@@ -1004,7 +1004,7 @@ public class FlexRadio {
     }
 
     /**
-     * 当TCP连接状态变化
+     * When TCP connection status changes
      */
     public interface OnTcpConnectStatus {
         void onConnectSuccess(RadioTcpClient tcpClient);
@@ -1013,36 +1013,36 @@ public class FlexRadio {
     }
 
     /**
-     * 当接收到流数据时的事件
+     * Event when stream data is received
      */
     public interface OnReceiveStreamData {
-        void onReceiveAudio(byte[] data);//音频数据
+        void onReceiveAudio(byte[] data);//Audio data
 
-        void onReceiveIQ(byte[] data);//IQ数据
+        void onReceiveIQ(byte[] data);//IQ data
 
-        void onReceiveFFT(VITA vita);//频谱数据
+        void onReceiveFFT(VITA vita);//Spectrum data
 
-        void onReceiveMeter(VITA vita);//仪表数据
+        void onReceiveMeter(VITA vita);//Meter data
 
-        void onReceiveUnKnow(byte[] data);//未知数据
+        void onReceiveUnKnow(byte[] data);//Unknown data
     }
     //*******************************************
 
 
     /**
-     * 电台TCP回复数据的基础类
+     * Base class for radio TCP response data
      */
     public static class FlexResponse {
         private static final String TAG = "FlexResponse";
         public FlexResponseStyle responseStyle;
-        public String head;//消息头
-        public String content;//消息内容
-        public String exContent;//扩展潇潇兮，有的返回消息分为3段，取第3段消息
-        public String rawData;//原始数据
-        public int seq_number;//32位int,指令序号
-        public int handle;//句柄，32位，16进制
-        public String version;//版本信息
-        public int message_num;//消息号，32位，16进制。其中位24-25包含消息的严重性（0=信息，1=警告，2=错误，3=致命错误）
+        public String head;//Message header
+        public String content;//Message content
+        public String exContent;//Extended content; some response messages have 3 parts, this is the 3rd part
+        public String rawData;//Raw data
+        public int seq_number;//32-bit int, command sequence number
+        public int handle;//Handle, 32-bit, hexadecimal
+        public String version;//Version info
+        public int message_num;//Message number, 32-bit, hex. Bits 24-25 contain severity (0=info, 1=warning, 2=error, 3=fatal)
         public long daxStreamId = 0;
         public int daxTxStreamId = 0;
         public long panadapterStreamId = 0;
@@ -1063,7 +1063,7 @@ public class FlexRadio {
                     responseStyle = FlexResponseStyle.STATUS;
                     getHeadAndContent(line, "\\|");
                     try {
-                        this.handle = Integer.parseInt(head.substring(1), 16);//解析16进制
+                        this.handle = Integer.parseInt(head.substring(1), 16);//Parse hexadecimal
                     } catch (NumberFormatException e) {
                         e.printStackTrace();
                         Log.e(TAG, "FlexResponse status handle exception: " + e.getMessage());
@@ -1073,7 +1073,7 @@ public class FlexRadio {
                     responseStyle = FlexResponseStyle.RESPONSE;
                     getHeadAndContent(line, "\\|");
                     try {
-                        seq_number = Integer.parseInt(head.substring(1));//解析指令序号
+                        seq_number = Integer.parseInt(head.substring(1));//Parse command sequence number
                         flexCommand = FlexCommand.values()[seq_number % 1000];
                         switch (flexCommand) {
                             case STREAM_CREATE_DAX_RX:
@@ -1086,7 +1086,7 @@ public class FlexRadio {
                                 this.daxTxStreamId = getStreamId(line);
                                 break;
                         }
-                        resultValue = Integer.parseInt(content, 16);//取命令的返回值
+                        resultValue = Integer.parseInt(content, 16);//Get the command's return value
 
                     } catch (NumberFormatException e) {
                         e.printStackTrace();
@@ -1099,7 +1099,7 @@ public class FlexRadio {
                     content = line;
                     Log.e(TAG, "FlexResponse: handle:" + line.substring(1));
                     try {
-                        this.handle = Integer.parseInt(line.substring(1), 16);//解析16进制
+                        this.handle = Integer.parseInt(line.substring(1), 16);//Parse hexadecimal
                     } catch (NumberFormatException e) {
                         e.printStackTrace();
                         Log.e(TAG, "FlexResponse parseInt handle exception: " + e.getMessage());
@@ -1117,7 +1117,7 @@ public class FlexRadio {
                     getHeadAndContent(line, "\\|");
                     try {
                         //Log.e(TAG, "FlexResponse: "+line );
-                        this.message_num = Integer.parseInt(head.substring(2), 16);//消息号，32位，16进制
+                        this.message_num = Integer.parseInt(head.substring(2), 16);//Message number, 32-bit, hex
                     } catch (NumberFormatException e) {
                         e.printStackTrace();
                         Log.e(TAG, "FlexResponse parseInt message_num exception: " + e.getMessage());
@@ -1151,7 +1151,7 @@ public class FlexRadio {
             if (lines.length > 2) {
                 if (lines[1].equals("0")) {
                     try {
-                        return Integer.parseInt(lines[2], 16);//stream id，16进制
+                        return Integer.parseInt(lines[2], 16);//stream id, hexadecimal
                     } catch (NumberFormatException e) {
                         e.printStackTrace();
                         Log.e(TAG, "getDaxStreamId exception: " + e.getMessage());
@@ -1162,10 +1162,10 @@ public class FlexRadio {
         }
 
         /**
-         * 分割消息的头和内容，并分别负值给head和content
+         * Split the message into header and content, assigning them to head and content respectively
          *
-         * @param line  消息
-         * @param split 分隔符
+         * @param line  message
+         * @param split delimiter
          */
         private void getHeadAndContent(String line, String split) {
             String[] temp = line.split(split);
@@ -1199,7 +1199,7 @@ public class FlexRadio {
     }
 
 
-    // ********事件的Getter和Setter*********
+    // ********Event Getters and Setters*********
 
     public OnReceiveDataListener getOnReceiveDataListener() {
         return onReceiveDataListener;

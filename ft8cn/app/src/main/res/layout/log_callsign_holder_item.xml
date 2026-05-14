@@ -38,7 +38,7 @@
         app:layout_constraintBottom_toTopOf="@+id/guideline12"
         app:layout_constraintStart_toStartOf="@+id/guideline7"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="最近时间:2022-07-09 02:05:15" />
+        tools:text="Last time:2022-07-09 02:05:15" />
 
 
     <TextView
@@ -50,7 +50,7 @@
         app:layout_constraintBottom_toTopOf="@+id/guideline5"
         app:layout_constraintEnd_toStartOf="@+id/callsignQSLDistTextView"
         app:layout_constraintTop_toTopOf="@+id/guideline12"
-        tools:text="网格:OL50" />
+        tools:text="Grid:OL50" />
 
     <TextView
         android:id="@+id/callsignQSOModeTextView"
@@ -61,7 +61,7 @@
         app:layout_constraintEnd_toStartOf="@+id/callsignQSOGridTextView"
         app:layout_constraintStart_toEndOf="@+id/isQSLModeDistTextView"
         app:layout_constraintTop_toTopOf="@+id/guideline12"
-        tools:text="模式:FT8" />
+        tools:text="Mode:FT8" />
 
     <TextView
         android:id="@+id/callsignQSOWhereTextView"
@@ -71,7 +71,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/guideline5"
-        tools:text="中国黑龙江" />
+        tools:text="China Heilongjiang" />
 
     <TextView
         android:id="@+id/callsignQSLBandTextView"
@@ -83,7 +83,7 @@
         app:layout_constraintBottom_toTopOf="@+id/guideline12"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="频段:14.074Mhz (20m)" />
+        tools:text="Band:14.074MHz (20m)" />
 
 
     <TextView
@@ -94,7 +94,7 @@
         app:layout_constraintBottom_toTopOf="@+id/guideline5"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/guideline12"
-        tools:text="距离:12345公里" />
+        tools:text="Dist:12345km" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline7"
@@ -133,7 +133,7 @@
         app:layout_constraintEnd_toStartOf="@+id/guideline7"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/guideline5"
-        tools:text="已确认"/>
+        tools:text="Confirmed"/>
 
     <TextView
         android:id="@+id/isQSLModeDistTextView"
@@ -143,7 +143,7 @@
         app:layout_constraintBottom_toTopOf="@+id/guideline5"
         app:layout_constraintStart_toStartOf="@+id/guideline7"
         app:layout_constraintTop_toTopOf="@+id/guideline12"
-        tools:text="确认方式:手动确认" />
+        tools:text="Confirmation:Manual" />
 
     <TextView
         android:id="@+id/callsignDxccZoneTextView"

@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
-    <!-- 因需要录音和文件存储功能，所以需要申请录音和存储权限 -->
-    <uses-permission android:name="android.permission.RECORD_AUDIO" /> <!-- 存储数据权限 -->
+    <!-- Recording and file storage permissions are needed for audio recording and storage -->
+    <uses-permission android:name="android.permission.RECORD_AUDIO" /> <!-- Data storage permission -->
     <!-- <uses-permission -->
     <!-- android:name="android.permission.WRITE_EXTERNAL_STORAGE" -->
     <!-- tools:ignore="ScopedStorage" /> -->
-    <!-- 允许程序访问CellID或WiFi热点来获取粗略的位置 -->
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" /> <!-- 用于访问GPS定位 -->
+    <!-- Allow access to CellID or WiFi hotspots for coarse location -->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" /> <!-- For GPS location access -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission
@@ -50,7 +50,7 @@
             <intent-filter>
                 <action android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED" />
             </intent-filter>
-            <!-- 关联启动文件 -->
+            <!-- Associated launch files -->
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 

@@ -1,6 +1,6 @@
 package com.bg7yoz.ft8cn.ui;
 /**
- * 通联纪录的主界面。
+ * QSO log records main fragment.
  *
  * @author BGY70Z
  * @date 2023-03-20
@@ -63,9 +63,9 @@ public class LogFragment extends Fragment {
 
     private LogCallsignAdapter logCallsignAdapter;
     private LogQSLAdapter logQSLAdapter;
-    private boolean loading = false;//防止滑动触发多次查询
+    private boolean loading = false;// Prevent scroll from triggering multiple queries
     private int lastItemPosition;
-    private ShareLogsProgressDialog dialog = null;//生成共享log的对话框
+    private ShareLogsProgressDialog dialog = null;// Share log generation dialog
 
 
     public LogFragment() {
@@ -93,13 +93,13 @@ public class LogFragment extends Fragment {
         binding.logRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
 
 
-        setShowStyle();//设置显模式
+        setShowStyle();// Set display mode
 
 
-        initRecyclerViewAction();//设置列表滑动动作
+        initRecyclerViewAction();// Set up list scroll actions
 
 
-        //设置显示统计页面按钮
+        // Set statistics page button
         binding.countImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -117,7 +117,7 @@ public class LogFragment extends Fragment {
             }
         });
 
-        //输入条件监听
+        // Input condition listener
         binding.inputMycallEdit.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -136,7 +136,7 @@ public class LogFragment extends Fragment {
             }
         });
 
-        //过滤条件按钮
+        // Filter button
         binding.filterImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -144,7 +144,7 @@ public class LogFragment extends Fragment {
             }
         });
 
-        //导出按钮
+        // Export button
         binding.exportImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -162,7 +162,7 @@ public class LogFragment extends Fragment {
             }
         });
 
-        //分享日志按钮
+        // Share log button
         binding.shareLogImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -175,11 +175,11 @@ public class LogFragment extends Fragment {
             public void onClick(View view) {
                 mainViewModel.logListShowCallsign = !mainViewModel.logListShowCallsign;
                 setShowStyle();
-                queryByCallsign(binding.inputMycallEdit.getText().toString(), 0);//偏移量0，就是重新查询
+                queryByCallsign(binding.inputMycallEdit.getText().toString(), 0);// Offset 0 means re-query
             }
         });
 
-        //定位按钮的动作
+        // Location button action
         binding.locationInMapImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -190,7 +190,7 @@ public class LogFragment extends Fragment {
             }
         });
 
-        //判断生成共享log文件的工作线程还在，如果在，就显示对话框
+        // Check if the share log generation thread is still running; if so, show dialog
         if (Boolean.TRUE.equals(mainViewModel.mutableShareRunning.getValue())) {
             showShareDialog();
         }
@@ -200,7 +200,7 @@ public class LogFragment extends Fragment {
 
 
     /**
-     * 显示生成log的对话框
+     * Show the log generation dialog.
      */
     private void showShareDialog() {
         mainViewModel.mutableShareRunning.setValue(true);
@@ -216,11 +216,11 @@ public class LogFragment extends Fragment {
 
 
     /**
-     * 创建共享日志的数据文件
+     * Create shared log data file.
      */
     private void buildShareLogs() {
 
-        //先显示生成log的对话框
+        // First show the log generation dialog
         showShareDialog();
 
         new Thread(new Runnable() {
@@ -278,10 +278,10 @@ public class LogFragment extends Fragment {
     }
 
     /**
-     * 弹出菜单选项
+     * Context menu item selection handler.
      *
-     * @param item item
-     * @return item
+     * @param item Menu item
+     * @return Whether consumed
      */
     @Override
     public boolean onContextItemSelected(@NonNull MenuItem item) {
@@ -336,7 +336,7 @@ public class LogFragment extends Fragment {
     }
 
     /**
-     * 设置列表滑动动作
+     * Set up list scroll/swipe actions.
      */
     private void initRecyclerViewAction() {
 
@@ -384,7 +384,7 @@ public class LogFragment extends Fragment {
             @Override
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
                 if (direction == ItemTouchHelper.END) {
-                    //做一个是否删除确认对话框
+                    // Show a delete confirmation dialog
                     AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
                     builder.setIcon(null);
                     builder.setTitle(GeneralVariables.getStringFromResource(R.string.delete_confirmation));
@@ -393,7 +393,7 @@ public class LogFragment extends Fragment {
                             , new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
-                                    logQSLAdapter.deleteRecord(viewHolder.getAdapterPosition());//删除日志
+                                    logQSLAdapter.deleteRecord(viewHolder.getAdapterPosition());// Delete log entry
                                     logQSLAdapter.notifyItemRemoved(viewHolder.getAdapterPosition());
                                 }
                             });
@@ -420,7 +420,7 @@ public class LogFragment extends Fragment {
                 }
             }
 
-            //判断列表格式，呼号列表
+            // Determine list format; disable swipe for callsign list
             @Override
             public int getMovementFlags(@NonNull RecyclerView recyclerView
                     , @NonNull RecyclerView.ViewHolder viewHolder) {
@@ -433,7 +433,7 @@ public class LogFragment extends Fragment {
                 return makeMovementFlags(0, swipeFlag);
             }
 
-            //制作删除背景的图标显示
+            // Create delete/QSL background icon display
             final Drawable delIcon = ContextCompat.getDrawable(requireActivity()
                     , R.drawable.log_item_delete_icon);
             final Drawable qslIcon = ContextCompat.getDrawable(requireActivity()
@@ -487,7 +487,7 @@ public class LogFragment extends Fragment {
 
 
     /**
-     * 设置显示模式。通联的呼号和日志两种表现方式
+     * Set display mode: toggle between callsign list and QSO log list views.
      */
     @SuppressLint("NotifyDataSetChanged")
     private void setShowStyle() {
@@ -496,27 +496,27 @@ public class LogFragment extends Fragment {
             binding.logViewStyleimageButton.setImageResource(R.drawable.ic_baseline_assignment_ind_24);
             binding.logRecyclerView.setAdapter(logCallsignAdapter);
             logCallsignAdapter.notifyDataSetChanged();
-            binding.locationInMapImageButton.setVisibility(View.GONE);//隐藏定位按钮
+            binding.locationInMapImageButton.setVisibility(View.GONE);// Hide location button
         } else {
             binding.logViewStyleimageButton.setImageResource(R.drawable.ic_baseline_assignment_24);
             binding.logRecyclerView.setAdapter(logQSLAdapter);
             logQSLAdapter.notifyDataSetChanged();
-            binding.locationInMapImageButton.setVisibility(View.VISIBLE);//显示定位按钮
+            binding.locationInMapImageButton.setVisibility(View.VISIBLE);// Show location button
         }
 
     }
 
     /**
-     * 查询日志
+     * Query log records.
      *
-     * @param callsign 呼号
+     * @param callsign callsign to search for
      */
     private void queryByCallsign(String callsign, int offset) {
-        loading = true;//开始读数据
-        //分两种查询
+        loading = true;// Start loading data
+        // Two query modes
         if (mainViewModel.logListShowCallsign) {
-            if (offset == 0) {//说明是新增记录
-                logCallsignAdapter.clearRecords();//清空记录
+            if (offset == 0) {// New query, reset records
+                logCallsignAdapter.clearRecords();// Clear existing records
             }
 
             mainViewModel.databaseOpr.getQSLCallsignsByCallsign(false, offset, callsign, mainViewModel.queryFilter
@@ -533,7 +533,7 @@ public class LogFragment extends Fragment {
                         }
                     });
         } else {
-            if (offset == 0) {//说明是新增记录
+            if (offset == 0) {// New query, reset records
                 logQSLAdapter.clearRecords();
             }
             mainViewModel.databaseOpr.getQSLRecordByCallsign(false, offset, callsign, mainViewModel.queryFilter
@@ -555,25 +555,25 @@ public class LogFragment extends Fragment {
 
 
     /**
-     * 显示统计页面
+     * Show the statistics page.
      */
     private void showCountFragment() {
-        //用于Fragment的导航。
+        // Used for Fragment navigation.
         NavHostFragment navHostFragment = (NavHostFragment) requireActivity()
                 .getSupportFragmentManager().findFragmentById(R.id.fragmentContainerView);
-        assert navHostFragment != null;//断言不为空
+        assert navHostFragment != null;// Assert not null
         navHostFragment.getNavController().navigate(R.id.countFragment);
     }
 
     /**
-     * 显示QRZ查询界面
+     * Show the QRZ lookup interface.
      *
-     * @param callsign 呼号
+     * @param callsign callsign to look up
      */
     private void showQrzFragment(String callsign) {
         NavHostFragment navHostFragment = (NavHostFragment) requireActivity()
                 .getSupportFragmentManager().findFragmentById(R.id.fragmentContainerView);
-        assert navHostFragment != null;//断言不为空
+        assert navHostFragment != null;// Assert not null
         Bundle bundle = new Bundle();
         bundle.putString(QRZ_Fragment.CALLSIGN_PARAM, callsign);
         navHostFragment.getNavController().navigate(R.id.QRZ_Fragment, bundle);
@@ -581,9 +581,9 @@ public class LogFragment extends Fragment {
 
 
     /**
-     * 获取本机IP地址
+     * Get the local IP address.
      *
-     * @return IP 地址
+     * @return IP address
      */
     @Nullable
     private String getLocalIp() {
@@ -600,7 +600,7 @@ public class LogFragment extends Fragment {
 
     @Override
     public void onDestroy() {
-        //判断生成共享log线程是否还在工作，如果还在工作，要销毁对话框，防止出现not attached to window manager错误
+        // Check if the shared log generation thread is still running; if so, dismiss the dialog to prevent "not attached to window manager" error
         if (Boolean.TRUE.equals(mainViewModel.mutableShareRunning.getValue())) {
             if (dialog != null) {
                 dialog.dismiss();

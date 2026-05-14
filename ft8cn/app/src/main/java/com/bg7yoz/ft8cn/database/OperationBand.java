@@ -12,7 +12,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 
 /**
- * 用于读取可用的载波波段列表，文件保存在assets/bands.txt中
+ * Reads the list of available carrier bands, stored in assets/bands.txt
  * @author BGY70Z
  * @date 2023-03-20
  */
@@ -33,7 +33,7 @@ public class OperationBand {
     public static ArrayList<Band> bandList = new ArrayList<>();
     public OperationBand(Context context) {
         this.context = context;
-        //把波段数据导入到内存
+        //Load band data into memory
         getBandsFromFile();
     }
 
@@ -47,8 +47,8 @@ public class OperationBand {
     }
 
     /**
-     * 获取操作波段的数据，以列表的索引值查找，如果没有返回默认值14.074，20m
-     * @param index 索引
+     * Gets operating band data by list index; returns default value 14.074 MHz, 20m if not found
+     * @param index index
      * @return
      */
     public Band getBandByIndex(int index){
@@ -60,7 +60,7 @@ public class OperationBand {
     }
 
     /**
-     * 检查频率是不是在频率列表中，如果不在，把这个频率加到频段中
+     * Checks if the frequency is in the frequency list; if not, adds this frequency to the band list
      * @param freq
      * @return
      */
@@ -79,7 +79,7 @@ public class OperationBand {
         return result;
     }
     /**
-     * 从bands.txt文件中读出FT8信号列表。
+     * Reads the FT8 signal list from the bands.txt file.
      */
     public void getBandsFromFile(){
         AssetManager assetManager = context.getAssets();
@@ -96,7 +96,7 @@ public class OperationBand {
             inputStream.close();
         } catch (IOException e) {
             e.printStackTrace();
-            Log.e(TAG, "从波段列表文件提取数据出错："+e.getMessage() );
+            Log.e(TAG, "Error extracting data from band list file: "+e.getMessage() );
         }
     }
     public static String getBandInfo(int index){
@@ -108,10 +108,10 @@ public class OperationBand {
     }
 
     /**
-     * 从InputStream中读出字符串
-     * @param inputStream 输入流
-     * @param deLimited 每行数据的分隔符。
-     * @return String 返回字符串,如果失败，返回null
+     * Reads strings from an InputStream
+     * @param inputStream input stream
+     * @param deLimited delimiter for each line of data
+     * @return String returns a string, or null if it fails
      */
     public static String[] getLinesFromInputStream(InputStream inputStream, String deLimited) {
         try {

@@ -36,66 +36,66 @@ import java.util.TimerTask;
 
 public class X6100Radio {
     public enum XieguCommand {
-        UNKNOW,//未知指令
-        AUDIO,//音频指令
-        STREAM,//数据流指令
-        SUB,//订阅仪表
-        UNSUB,//取消订阅仪表
-        A91,//ft8符号
-        ATU,//自动天调
-        TUNE,//设置频率
-        MODE,//操作模式
-        PTT,//PTT操作
-        SET//设置操作
+        UNKNOW,//unknown command
+        AUDIO,//audio command
+        STREAM,//data stream command
+        SUB,//subscribe to meter
+        UNSUB,//unsubscribe from meter
+        A91,//FT8 symbol
+        ATU,//automatic antenna tuner
+        TUNE,//set frequency
+        MODE,//operating mode
+        PTT,//PTT operation
+        SET//settings operation
     }
 
     public enum XieguResponseStyle {
-        STATUS,//状态信息，S+HANDLE
-        RESPONSE,//命令的响应，R+客户端命令序列号
-        HANDLE,//电台给定的句柄，H+句柄（32位的16进制表示）
-        VERSION,//版本号，V+版本号
-        COMMAND,//发送命令，C+序列号|命令
-        UNKNOW//未知的回复类型
+        STATUS,//status information, S+HANDLE
+        RESPONSE,//command response, R+client command sequence number
+        HANDLE,//radio-assigned handle, H+handle (32-bit hex representation)
+        VERSION,//version number, V+version number
+        COMMAND,//send command, C+sequence number|command
+        UNKNOW//unknown response type
     }
 
     private static final String TAG = "X6100Radio";
     private static int lossCount = 0;
     private static int currentCount = -1;
 
-    private String modelName;//电台型号
-    private String version;//电台版本号
-    private String rig_ip;//电台的IP
-    private String mac;//mac地址
+    private String modelName;//radio model
+    private String version;//radio firmware version
+    private String rig_ip;//radio IP address
+    private String mac;//MAC address
     public boolean isPttOn = false;
-    private int control_port = 7002;//电台的控制端口
-    private int stream_port = 7003;//电台端流数据的端口
-    private int discovery_port = 7001;//发现协议的端口
-    private long lastSeen;//最后一次消息的时间
-    private boolean isAvailable = true;//电台是不是有效
-    private final StringBuilder buffer = new StringBuilder();//指令的缓存
+    private int control_port = 7002;//radio control port
+    private int stream_port = 7003;//radio stream data port
+    private int discovery_port = 7001;//discovery protocol port
+    private long lastSeen;//time of last message received
+    private boolean isAvailable = true;//whether the radio is available
+    private final StringBuilder buffer = new StringBuilder();//command buffer
     private final RadioTcpClient tcpClient = new RadioTcpClient();
     private RadioUdpClient streamClient;
-    private int commandSeq = 1;//指令的序列
+    private int commandSeq = 1;//command sequence number
     private XieguCommand xieguCommand;
     private int handle = 0;
     private String commandStr;
-    private int frames = 768;//每个周期的帧数
-    private int period = 64;//每个周期的时长，毫秒
+    private int frames = 768;//frames per cycle
+    private int period = 64;//duration per cycle in milliseconds
 
 
-    //************************事件处理接口*******************************
-    private OnReceiveDataListener onReceiveDataListener;//当前接收到的数据事件
-    private OnTcpConnectStatus onTcpConnectStatus;//当TCP连接状态变化的事件
-    private OnReceiveStreamData onReceiveStreamData;//当接收到流数据后的处理事件
-    private OnCommandListener onCommandListener;//触发命令事件
-    private OnStatusListener onStatusListener;//触发状态事件
+    //************************event handling interfaces*******************************
+    private OnReceiveDataListener onReceiveDataListener;//event for current received data
+    private OnTcpConnectStatus onTcpConnectStatus;//event for TCP connection status changes
+    private OnReceiveStreamData onReceiveStreamData;//event for processing received stream data
+    private OnCommandListener onCommandListener;//command trigger event
+    private OnStatusListener onStatusListener;//status trigger event
     //*****************************************************************
     private AudioTrack audioTrack = null;
 
 
-    ///******************用于仪表信息显示*************
-    public MutableLiveData<Long> mutablePing = new MutableLiveData<>();//ping值
-    public MutableLiveData<Integer> mutableLossPackets = new MutableLiveData<>();//丢失的包数量
+    ///******************for meter information display*************
+    public MutableLiveData<Long> mutablePing = new MutableLiveData<>();//ping value
+    public MutableLiveData<Integer> mutableLossPackets = new MutableLiveData<>();//number of lost packets
     public MutableLiveData<X6100Meters> mutableMeters = new MutableLiveData<>();
     private X6100Meters meters = new X6100Meters();
 
@@ -128,7 +128,7 @@ public class X6100Radio {
 
                     vita.packetCount = 0;
                     vita.packetSize = 7;
-                    vita.integerTimestamp = 0;//0是发送包，1是接收包
+                    vita.integerTimestamp = 0;//0 = outgoing packet, 1 = incoming packet
                     vita.fracTimeStamp = System.currentTimeMillis();
                     streamClient.sendData(vita.pingDataToVita(), rig_ip, stream_port);
 
@@ -140,7 +140,7 @@ public class X6100Radio {
     }
 
     /**
-     * 更新最后看到的时间
+     * Update the last seen time
      */
     public void updateLastSeen() {
         this.lastSeen = System.currentTimeMillis();
@@ -171,11 +171,11 @@ public class X6100Radio {
     }
 
     /**
-     * 到参数列表中找指定的字符类型参数
+     * Find a specified string parameter from the parameter list
      *
-     * @param parameters 参数列表
-     * @param prefix     参数名前缀
-     * @return 参数
+     * @param parameters parameter list
+     * @param prefix     parameter name prefix
+     * @return the parameter value
      */
     private String getParameterStr(String[] parameters, String prefix) {
         for (int i = 0; i < parameters.length; i++) {
@@ -183,16 +183,16 @@ public class X6100Radio {
                 return parameters[i].substring(prefix.length() + 1);
             }
         }
-        //如果没找到，返回空字符串
+        //if not found, return empty string
         return "";
     }
 
     /**
-     * 到参数列表中找指定的int类型参数
+     * Find a specified int parameter from the parameter list
      *
-     * @param parameters 参数列表
-     * @param prefix     参数名前缀
-     * @return 参数
+     * @param parameters parameter list
+     * @param prefix     parameter name prefix
+     * @return the parameter value
      */
     private int getParameterInt(String[] parameters, String prefix) {
         for (int i = 0; i < parameters.length; i++) {
@@ -206,21 +206,21 @@ public class X6100Radio {
                 }
             }
         }
-        //如果没找到，返回0
+        //if not found, return 0
         return 0;
 
     }
 
     /**
-     * 检查是不是 刚刚 离线，离线条件：5秒内没有收到电台的广播数据包
+     * Check if the radio just went offline. Offline condition: no broadcast data packet received from the radio within 5 seconds.
      *
-     * @return 是否
+     * @return whether just went offline
      */
     public boolean isInvalidNow() {
-        if (isAvailable) {//如果标记在线，而大于5秒的时间没有收到数据包，就视为刚刚离线。
-            isAvailable = System.currentTimeMillis() - lastSeen < 1000 * 5;//小于5秒，就视为在线
+        if (isAvailable) {//if marked as online but no data packet received for more than 5 seconds, consider it just went offline
+            isAvailable = System.currentTimeMillis() - lastSeen < 1000 * 5;//less than 5 seconds, consider online
             return !isAvailable;
-        } else {//如果已经标记不在线了，就不是刚刚离线的。
+        } else {//if already marked offline, it is not "just went offline"
             return false;
         }
     }
@@ -254,23 +254,23 @@ public class X6100Radio {
     }
 
     /**
-     * 连接到控制电台
+     * Connect to the radio for control
      */
     public void connect() {
         this.connect(this.rig_ip, this.control_port);
     }
 
     /**
-     * 连接控制到电台，TCP
+     * Connect to the radio via TCP for control
      *
-     * @param ip   地址
-     * @param port 端口
+     * @param ip   address
+     * @param port port
      */
     public void connect(String ip, int port) {
         if (tcpClient.isConnect()) {
             tcpClient.disconnect();
         }
-        //Tcp连接触发的事件
+        //events triggered by TCP connection
         tcpClient.setOnDataReceiveListener(new RadioTcpClient.OnDataReceiveListener() {
             @Override
             public void onConnectSuccess() {
@@ -288,7 +288,7 @@ public class X6100Radio {
 
             @Override
             public void onDataReceive(byte[] buffer) {
-                if (onReceiveDataListener != null) {//此处把数据传递给XieGu6100NetRig
+                if (onReceiveDataListener != null) {//pass data to XieGu6100NetRig here
                     onReceiveDataListener.onDataReceive(buffer);
                 }
                 onReceiveData(buffer);
@@ -303,13 +303,13 @@ public class X6100Radio {
                 }
             }
         });
-        clearBufferData();//清除一下缓存的指令数据
-        tcpClient.connect(ip, port);//连接TCP
+        clearBufferData();//clear cached command data
+        tcpClient.connect(ip, port);//connect TCP
 
     }
 
     /**
-     * 关闭接收数据流的端口
+     * Close the stream data receiving port
      */
     public synchronized void closeStreamPort() {
         if (streamClient != null) {
@@ -423,7 +423,7 @@ public class X6100Radio {
     }
 
     /**
-     * 打开接收数据流的端口
+     * Open the port for receiving data streams
      */
     public void openStreamPort() {
         if (streamClient != null) {
@@ -444,37 +444,37 @@ public class X6100Radio {
             @Override
             public void OnReceiveData(DatagramSocket socket, DatagramPacket packet, byte[] data) {
                 VITA vita = new VITA(data);
-                if (vita.classId64 == VITA.XIEGU_AUDIO_CLASS_ID) {//音频数据
+                if (vita.classId64 == VITA.XIEGU_AUDIO_CLASS_ID) {//audio data
 
-                    //判断数据包丢失情况
+                    //check for packet loss
                     int temp = lossCount;
-                    if (currentCount <= -1) {//初始化当前包的计数器
+                    if (currentCount <= -1) {//initialize current packet counter
                         currentCount = vita.packetCount;
                     }
-                    if (currentCount > vita.packetCount) {//说明丢失的数据包超过16个了
+                    if (currentCount > vita.packetCount) {//more than 16 packets were lost
                         lossCount = lossCount + vita.packetCount + 16 - currentCount - 1;
-                    } else if (currentCount < vita.packetCount) {//说明丢失的数据包少于16个
+                    } else if (currentCount < vita.packetCount) {//fewer than 16 packets were lost
                         lossCount = lossCount + vita.packetCount - currentCount - 1;
                     }
 
-                    currentCount = vita.packetCount;//复位包计数器
+                    currentCount = vita.packetCount;//reset packet counter
                     if (lossCount > temp) {
-                        Log.e(TAG, String.format("丢包数量:%d", lossCount));
+                        Log.e(TAG, String.format("Packet loss count: %d", lossCount));
                         for (int i = 0; i < (lossCount - temp); i++) {
-                            Log.d(TAG, String.format("补发数据,%d,size:%d", i, vita.payload.length));
-                            sendReceivedAudio(vita.payload);//把当前的数据补发给录音对象
+                            Log.d(TAG, String.format("Resending data, %d, size:%d", i, vita.payload.length));
+                            sendReceivedAudio(vita.payload);//resend current data to the recorder
                         }
                         mutableLossPackets.postValue(lossCount);
                     }
                     //copyVoiceData(vita.payload);//
-                    sendReceivedAudio(vita.payload);//把音频发给录音对象
-                    playReceiveAudio(vita.payload);//发送当前的音频数据
+                    sendReceivedAudio(vita.payload);//send audio to recorder
+                    playReceiveAudio(vita.payload);//play current audio data
 
-                } else if (vita.classId64 == XIEGU_PING_CLASS_ID//ping数据
+                } else if (vita.classId64 == XIEGU_PING_CLASS_ID//ping data
                         && vita.streamId == XIEGU_PING_Stream_Id
-                        && vita.integerTimestamp == 1) {//ping的回包
+                        && vita.integerTimestamp == 1) {//ping response packet
                     mutablePing.postValue(System.currentTimeMillis() - vita.fracTimeStamp);
-                } else if (vita.classId64 == XIEGU_METER_CLASS_ID//仪表数据
+                } else if (vita.classId64 == XIEGU_METER_CLASS_ID//meter data
                         && vita.streamId == XIEGU_METER_Stream_Id) {
                     new Thread(new Runnable() {
                         @Override
@@ -499,12 +499,12 @@ public class X6100Radio {
             }
         };
 
-        //此处要确定stream的udp端口
+        //determine the stream UDP port here
         streamClient = new RadioUdpClient(stream_port);
         streamClient.setOnUdpEvents(onUdpEvents);
         try {
             streamClient.setActivated(true);
-            pingTimer.schedule(pingTask(), 1000, 1000);//启动ping计时器
+            pingTimer.schedule(pingTask(), 1000, 1000);//start ping timer
 
         } catch (SocketException e) {
             ToastMessage.show(e.getMessage());
@@ -516,9 +516,9 @@ public class X6100Radio {
     }
 
     /**
-     * 当接收到音频数据后，发送给录音对象的操作
+     * Action to send received audio data to the recorder
      *
-     * @param data 音频数据
+     * @param data audio data
      */
     private void sendReceivedAudio(byte[] data) {
         if (onReceiveStreamData != null) {
@@ -527,18 +527,18 @@ public class X6100Radio {
     }
 
     /**
-     * 当接收到音频数据时的处理
+     * Process received audio data
      *
-     * @param data 音频数据
+     * @param data audio data
      */
     private void playReceiveAudio(byte[] data) {
-        if (audioTrack != null) {//如果音频播放已经打开，就写音频流数据
+        if (audioTrack != null) {//if audio playback is open, write audio stream data
             audioTrack.write(data, 0, data.length, AudioTrack.WRITE_NON_BLOCKING);
         }
     }
 
     /**
-     * 断开与电台的连接
+     * Disconnect from the radio
      */
     public synchronized void disConnect() {
         if (tcpClient.isConnect()) {
@@ -552,16 +552,16 @@ public class X6100Radio {
     }
 
     /**
-     * 电台是否连接
+     * Whether the radio is connected
      *
-     * @return 是否
+     * @return connection status
      */
     public boolean isConnect() {
         return tcpClient.isConnect();
     }
 
     /**
-     * 关闭音频
+     * Close audio
      */
     public void closeAudio() {
         if (audioTrack != null) {
@@ -572,13 +572,13 @@ public class X6100Radio {
 
 
     /**
-     * 当接收到数据时触发的事件，此处是TCP连接得到的数据
+     * Event triggered when data is received; this is data from the TCP connection
      *
-     * @param data 数据
+     * @param data the data
      */
     private void onReceiveData(byte[] data) {
 
-        if (data.length > 4) {//判断是不是老式的icom指令
+        if (data.length > 4) {//check if this is a legacy ICOM command
             if ((data[0] == (byte) 0xfe) && (data[1] == (byte) 0xfe)
                     && ((data[2] == (byte) 0xe0) || data[3] == (byte) 0xe0)) {
                 clearBufferData();
@@ -586,26 +586,26 @@ public class X6100Radio {
             }
         }
         String s = new String(data);
-        if (!s.contains("\n")) {//不包含换行符，说明命令行没有接受完。
+        if (!s.contains("\n")) {//no newline character, meaning the command line is not fully received
             buffer.append(s);
-        } else {//说明已经有命令行了。可能不止一个哦。在此部分要触发OnReceiveLine
+        } else {//command lines are present, possibly more than one. Trigger OnReceiveLine in this section
             String[] commands = s.split("\n");
-            if (commands.length > 0) {//把收到数据的第一行，追加到之前接收的命令数据上
+            if (commands.length > 0) {//append the first line of received data to previously received command data
                 buffer.append(commands[0]);
             }
 
-            //先把缓存中的数据触发出来
+            //first trigger the buffered data
             doReceiveLineEvent(buffer.toString());
             clearBufferData();
-            //从第二行开始触发，最后一行不触发，最后一行要看是不是换行结尾
+            //trigger from the second line; don't trigger the last line yet, check if it ends with a newline
             for (int i = 1; i < commands.length - 1; i++) {
                 doReceiveLineEvent(commands[i]);
             }
 
-            if (commands.length > 1) {//当数据是多行的时候，最后一行的处理
-                if (s.endsWith("\n")) {//如果是以换行结尾,或者缓冲区没满（接收完全了），就触发事件
+            if (commands.length > 1) {//when data is multi-line, handle the last line
+                if (s.endsWith("\n")) {//if it ends with a newline or buffer is not full (fully received), trigger event
                     doReceiveLineEvent(commands[commands.length - 1]);
-                } else {//如果不是以换行结尾，说明指令没有接收完全
+                } else {//if not ending with newline, the command is not fully received
                     buffer.append(commands[commands.length - 1]);
                 }
             }
@@ -614,16 +614,16 @@ public class X6100Radio {
 
 
     /**
-     * 当接收到数据行时，触发的事件。可以触发两种事件：
-     * 1.行数据事件onReceiveLineListener；
-     * 2.命令事件onCommandListener。
+     * Event triggered when a data line is received. Can trigger two types of events:
+     * 1. Line data event onReceiveLineListener
+     * 2. Command event onCommandListener
      * <p>
-     * //* @param line 数据行
+     * //* @param line the data line
      */
     private void doReceiveLineEvent(String line) {
 
         XieguResponse response = new XieguResponse(line);
-        //更新一下句柄
+        //update the handle
         switch (response.responseStyle) {
             case VERSION:
                 this.version = response.head.substring(1);
@@ -632,7 +632,7 @@ public class X6100Radio {
                 this.handle = Integer.parseInt(response.head.substring(1), 16);
                 break;
             case RESPONSE:
-                if (XieguCommand.AUDIO == response.xieguCommand) {//是音频指令回复的信息
+                if (XieguCommand.AUDIO == response.xieguCommand) {//response information for audio command
                     setAudioInfo(response.resultContent);
                 }
                 if (onCommandListener != null) {
@@ -641,15 +641,15 @@ public class X6100Radio {
                 break;
             case STATUS:
 
-                if (response.resultCode == 0) {//说明是电台状态变化了
+                if (response.resultCode == 0) {//radio status has changed
                     String status[] = response.resultContent.split(" ");
-                    for (int i = 0; i < status.length; i++) {//找出ptt的状体，设置ptt
-                        if (status[i].startsWith("ptt")) {//判断PTT
+                    for (int i = 0; i < status.length; i++) {//find PTT state and set PTT
+                        if (status[i].startsWith("ptt")) {//check PTT
                             String temp[] = status[i].split("=");
                             isPttOn = temp[1].equalsIgnoreCase("on");
                         }
 
-                        if (status[i].startsWith("play_volume")) {//判断PTT
+                        if (status[i].startsWith("play_volume")) {//check play volume
                             String temp[] = status[i].split("=");
                             float vol = Integer.parseInt(temp[1].trim()) * 1.0f / 100f;
                             GeneralVariables.volumePercent = vol;
@@ -667,9 +667,9 @@ public class X6100Radio {
     }
 
     /**
-     * 获取电台的音频信息
+     * Get the radio's audio information
      *
-     * @param result 返回信息
+     * @param result the returned information
      */
     private void setAudioInfo(String result) {
         String[] keys = result.split(" ");
@@ -686,10 +686,10 @@ public class X6100Radio {
     }
 
     /**
-     * 制作命令，命令序号规则：后3位是命令的种类，序号除1000，是命令的真正序号
+     * Build a command. Command sequence number rule: last 3 digits are the command type; sequence number divided by 1000 is the actual sequence number.
      *
-     * @param command    命令的种类
-     * @param cmdContent 命令的具体内容
+     * @param command    the command type
+     * @param cmdContent the command content
      */
     @SuppressLint("DefaultLocale")
     public void sendCommand(XieguCommand command, String cmdContent) {
@@ -712,16 +712,16 @@ public class X6100Radio {
     }
 
     /**
-     * 发射的采样率为12000采样率，单声道,16位
+     * Transmit sampling rate is 12000 Hz, mono, 16-bit
      *
-     * @param data 音频
+     * @param data audio data
      */
     public void sendWaveData(float[] data) {
         Log.d(TAG, String.format("send wav data,len:%d....", data.length));
         short[] temp = new short[data.length];
-        //传递过来的音频是LPCM,32 float，12000Hz
-        //x6100的音频格式是LPCM 16 Int，12000Hz
-        //要做一下浮点到16位int的转换
+        //incoming audio is LPCM, 32-bit float, 12000Hz
+        //X6100 audio format is LPCM 16-bit int, 12000Hz
+        //need to convert float to 16-bit int
         for (int i = 0; i < data.length; i++) {
             float x = data[i];
             if (x > 1.0)
@@ -748,8 +748,8 @@ public class X6100Radio {
             int count = 0;
             int a = 0;
             while (count < temp.length) {
-                long now = System.currentTimeMillis();//获取当前时间
-                Arrays.fill(payload, (short) 0);//数组清零
+                long now = System.currentTimeMillis();//get current time
+                Arrays.fill(payload, (short) 0);//clear array
 
                 if (!isPttOn) break;
                 if (data.length - count > frames) {
@@ -761,7 +761,7 @@ public class X6100Radio {
                 }
                 streamClient.sendData(vita.audioShortDataToVita(vita.packetCount, payload), rig_ip, stream_port);
                 while (isPttOn) {
-                    if (System.currentTimeMillis() - now >= period) {//64毫秒一个周期
+                    if (System.currentTimeMillis() - now >= period) {//64ms per cycle
                         break;
                     }
                 }
@@ -775,14 +775,14 @@ public class X6100Radio {
     }
 
     /**
-     * 清空缓存数据
+     * Clear buffered data
      */
     private void clearBufferData() {
         buffer.setLength(0);
     }
 
     /**
-     * 打开音频，流方式。当收到音频流的时候，播放数据
+     * Open audio in streaming mode. Play data when audio stream is received.
      */
     public void openAudio() {
         AudioAttributes attributes = new AudioAttributes.Builder()
@@ -795,7 +795,7 @@ public class X6100Radio {
         int mySession = 0;
         audioTrack = new AudioTrack(attributes, myFormat
                 //, 12000 * 4, AudioTrack.MODE_STREAM
-                , 768 * 2 * 4, AudioTrack.MODE_STREAM//x6100一个声音周期是64毫秒，共计768*2个字节
+                , 768 * 2 * 4, AudioTrack.MODE_STREAM//X6100 audio cycle is 64ms, totaling 768*2 bytes
                 , mySession);
         audioTrack.play();
     }
@@ -841,17 +841,17 @@ public class X6100Radio {
     }
 
 
-//**************各种接口**********************
+//**************various interfaces**********************
 
     /**
-     * 当TCP接收到数据
+     * When TCP data is received
      */
     public interface OnReceiveDataListener {
         void onDataReceive(byte[] data);
     }
 
     /**
-     * 当TCP连接状态变化
+     * When TCP connection status changes
      */
     public interface OnTcpConnectStatus {
         void onConnectSuccess(RadioTcpClient tcpClient);
@@ -862,22 +862,22 @@ public class X6100Radio {
     }
 
     /**
-     * 当接收到流数据时的事件
+     * Event when stream data is received
      */
     public interface OnReceiveStreamData {
-        void onReceiveAudio(byte[] data);//音频数据
+        void onReceiveAudio(byte[] data);//audio data
 
-        void onReceiveIQ(byte[] data);//IQ数据
+        void onReceiveIQ(byte[] data);//IQ data
 
-        void onReceiveFFT(VITA vita);//频谱数据
+        void onReceiveFFT(VITA vita);//spectrum data
 
-        void onReceiveMeter(X6100Meters meters);//仪表数据
+        void onReceiveMeter(X6100Meters meters);//meter data
 
-        void onReceiveUnKnow(byte[] data);//未知数据
+        void onReceiveUnKnow(byte[] data);//unknown data
     }
 
     /**
-     * 当接收到指令回复
+     * When a command response is received
      */
     public interface OnCommandListener {
         void onResponse(XieguResponse response);
@@ -890,16 +890,16 @@ public class X6100Radio {
 
 
     /**
-     * 电台TCP回复数据的基础类
+     * Base class for radio TCP response data
      */
     public static class XieguResponse {
         private static final String TAG = "XieguResponse";
         public XieguResponseStyle responseStyle;
-        public String head;//消息头
-        public int resultCode;//消息代码
-        public String resultContent;//扩展消息，有的返回消息分为3段，取第3段消息
-        public String rawData;//原始数据
-        public int seq_number;//32位int,指令序号
+        public String head;//message header
+        public int resultCode;//message code
+        public String resultContent;//extended message; some response messages are split into 3 parts, this is the 3rd part
+        public String rawData;//raw data
+        public int seq_number;//32-bit int, command sequence number
 
         public XieguCommand xieguCommand = XieguCommand.UNKNOW;
 
@@ -915,14 +915,14 @@ public class X6100Radio {
             switch (header) {
                 case 'S':
                     responseStyle = XieguResponseStyle.STATUS;
-                    getHeadAndContent(line, "\\|");//获取指令的头、值、内容
+                    getHeadAndContent(line, "\\|");//get the command's header, value, and content
 
                     break;
                 case 'R':
                     responseStyle = RESPONSE;
                     getHeadAndContent(line, "\\|");
                     try {
-                        seq_number = Integer.parseInt(head.substring(1));//解析指令序号
+                        seq_number = Integer.parseInt(head.substring(1));//parse command sequence number
                         xieguCommand = XieguCommand.values()[seq_number % 1000];
                     } catch (NumberFormatException e) {
                         e.printStackTrace();
@@ -951,10 +951,10 @@ public class X6100Radio {
 
 
         /**
-         * 分割消息的头和内容，并分别负值给head和content
+         * Split the message into header and content, assigning them to head and content respectively
          *
-         * @param line  消息
-         * @param split 分隔符
+         * @param line  the message
+         * @param split the delimiter
          */
         private void getHeadAndContent(String line, String split) {
             String[] temp = line.split(split);

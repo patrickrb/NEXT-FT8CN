@@ -1,7 +1,7 @@
 package com.bg7yoz.ft8cn.database;
 
 /**
- * 配置信息读取完毕的回调
+ * Callback after configuration info has been read
  * @author BGY70Z
  * @date 2023-03-20
  */

@@ -1,6 +1,6 @@
 package com.bg7yoz.ft8cn.ft8transmit;
 /**
- * 生成FT8音频信号的类。音频数据是32位的浮点数组。
+ * Class for generating FT8 audio signals. Audio data is a 32-bit float array.
  * @author BGY70Z
  * @date 2023-03-20
  */
@@ -24,12 +24,12 @@ public class GenerateFT8 {
     private static final int Ft8num_samples = 15 * 12000;
     private static final float M_PI = 3.14159265358979323846f;
 
-    public static final int num_tones = FT8_NN;//符号数量：FT8是79个，FT4是105个。
-    public static final float symbol_period = FT8_SYMBOL_PERIOD;//FT8_SYMBOL_PERIOD=0.160f
-    private static final float symbol_bt = FT8_SYMBOL_BT;//FT8_SYMBOL_BT=2.0f
-    private static final float slot_time = FT8_SLOT_TIME;//FT8_SLOT_TIME=15f
-    //public static int sample_rate = 48000;//采样率
-    //public static int sample_rate = 12000;//采样率
+    public static final int num_tones = FT8_NN;// number of symbols: FT8 is 79, FT4 is 105
+    public static final float symbol_period = FT8_SYMBOL_PERIOD;// FT8_SYMBOL_PERIOD=0.160f
+    private static final float symbol_bt = FT8_SYMBOL_BT;// FT8_SYMBOL_BT=2.0f
+    private static final float slot_time = FT8_SLOT_TIME;// FT8_SLOT_TIME=15f
+    //public static int sample_rate = 48000;// sample rate
+    //public static int sample_rate = 12000;// sample rate
 
 
     static {
@@ -41,25 +41,25 @@ public class GenerateFT8 {
         String substring = callsign.substring(callsign.length() - 2);
         if (substring.equals("/P")) {
             if (callsign.length() <= 8) {
-                return 2;//i3=2消息
+                return 2;// i3=2 message
             } else {
-                return 4;//说明时非标准呼号
+                return 4;// non-standard callsign
             }
         }
         if (substring.equals("/R")) {
             if (callsign.length() <= 8) {
-                return 1;//i3=2消息
+                return 1;// i3=1 message
             } else {
-                return 4;//说明时非标准呼号
+                return 4;// non-standard callsign
             }
         }
-        if (callsign.contains("/")) {//除了/P /R以外，其余的都是非标准呼号
+        if (callsign.contains("/")) {// except /P and /R, all others are non-standard callsigns
             return 4;
         }
-        if (callsign.length() > 6) {//呼号大于6位，也是非标准呼号
+        if (callsign.length() > 6) {// callsign longer than 6 characters is also non-standard
             return 4;
         }
-        if (callsign.length() == 0) {//没有呼号，就是自由文本
+        if (callsign.length() == 0) {// no callsign means free text
             return 0;
         }
         return 1;
@@ -86,10 +86,10 @@ public class GenerateFT8 {
 
 
     /**
-     * 检查是不是标准呼号
+     * Check if it is a standard callsign.
      *
-     * @param callsign 呼号
-     * @return 是不是
+     * @param callsign callsign
+     * @return true/false
      */
     public static boolean checkIsStandardCallsign(String callsign) {
         String temp;
@@ -98,17 +98,17 @@ public class GenerateFT8 {
         }else {
             temp=callsign;
         }
-        //FT8的认定：标准业余呼号由一个或两个字符的前缀组成，其中至少一个必须是字母，后跟一个十进制数字和最多三个字母的后缀。
+        // FT8 definition: a standard amateur callsign consists of a one or two character prefix (at least one must be a letter), followed by a decimal digit and up to three letter suffix.
         return temp.matches("[A-Z0-9]?[A-Z0-9][0-9][A-Z][A-Z0-9]?[A-Z]?");
 
 
     }
 
     /**
-     * 检查是不是信号报告
+     * Check if it is a signal report.
      *
-     * @param extraInfo 扩展消息
-     * @return 是不是
+     * @param extraInfo extra info
+     * @return true/false
      */
     private static boolean checkIsReport(String extraInfo) {
         if (extraInfo.equals("73") || extraInfo.equals("RRR")
@@ -127,31 +127,31 @@ public class GenerateFT8 {
             ToastMessage.show(GeneralVariables.getStringFromResource(R.string.callsign_error));
             return null;
         }
-        // 首先，将文本数据打包为二进制消息,共12个字节
+        // first, pack the text data into a binary message, 12 bytes total
         byte[] packed = new byte[FTX_LDPC_K_BYTES];
-        //把"<>"去掉
+        // strip "<>" characters
         msg.callsignTo = msg.callsignTo.replace("<", "").replace(">", "");
         msg.callsignFrom = msg.callsignFrom.replace("<", "").replace(">", "");
         if (hasModifier) {
-            msg.modifier = GeneralVariables.toModifier;//修饰符
+            msg.modifier = GeneralVariables.toModifier;// modifier
         }else {
             msg.modifier="";
         }
 
 
-        //判定用非标准呼号i3=4的条件：
-        //1.FROMCALL为非标准呼号 ，且 符合2或3
-        //2.扩展消息时 网格、RR73,RRR,73
-        //3.CQ,QRZ,DE
+        // conditions for using non-standard callsign i3=4:
+        // 1. FROMCALL is a non-standard callsign, and satisfies 2 or 3
+        // 2. extra info is grid, RR73, RRR, 73
+        // 3. CQ, QRZ, DE
 
 
 
-        if (msg.i3 != 0) {//目前只支持i3=1,i3=2,i3=4,i3=0 && n3=0
+        if (msg.i3 != 0) {// currently only supports i3=1, i3=2, i3=4, i3=0 && n3=0
             if (!checkIsStandardCallsign(msg.callsignFrom)
                     && (!checkIsReport(msg.extraInfo) || msg.checkIsCQ())) {
                 msg.i3 = 4;
             //} else if (msg.callsignFrom.endsWith("/P")||(msg.callsignTo.endsWith("/P"))) {
-            } else if (msg.callsignFrom.endsWith("/P")//如果目标有/P后缀，则以目标呼号为准。如果目标没有/P后缀，则以发送方是否有/P后缀为准
+            } else if (msg.callsignFrom.endsWith("/P")// if the target has a /P suffix, use the target callsign; if not, use the sender's /P suffix
                     ||(msg.callsignTo.endsWith("/P")&&(!msg.callsignFrom.endsWith("/P")))) {
                 msg.i3 = 2;
             } else {
@@ -161,7 +161,7 @@ public class GenerateFT8 {
 
         if (msg.i3 == 1 || msg.i3 == 2) {
             packed = FT8Package.generatePack77_i1(msg);
-        } else if (msg.i3 == 4) {//说明是非标准呼号
+        } else if (msg.i3 == 4) {// non-standard callsign
             packed = FT8Package.generatePack77_i4(msg);
         } else {
             packFreeTextTo77(msg.getMessageText(), packed);
@@ -171,11 +171,11 @@ public class GenerateFT8 {
     }
 
     /**
-     * 生成FT8信号
-     * @param msg 消息
-     * @param frequency 频率
-     * @param sample_rate 采样率
-     * @param hasModifier 是否有修饰符
+     * Generate FT8 signal.
+     * @param msg message
+     * @param frequency frequency
+     * @param sample_rate sample rate
+     * @param hasModifier whether it has a modifier
      * @return
      */
     public static float[] generateFt8(Ft8Message msg, float frequency,int sample_rate,boolean hasModifier) {
@@ -183,29 +183,29 @@ public class GenerateFT8 {
 //            ToastMessage.show(GeneralVariables.getStringFromResource(R.string.callsign_error));
 //            return null;
 //        }
-//        // 首先，将文本数据打包为二进制消息,共12个字节
+//        // first, pack the text data into a binary message, 12 bytes total
 //        byte[] packed = new byte[FTX_LDPC_K_BYTES];
-//        //把"<>"去掉
+//        // strip "<>" characters
 //        msg.callsignTo = msg.callsignTo.replace("<", "").replace(">", "");
 //        msg.callsignFrom = msg.callsignFrom.replace("<", "").replace(">", "");
 //        if (hasModifier) {
-//            msg.modifier = GeneralVariables.toModifier;//修饰符
+//            msg.modifier = GeneralVariables.toModifier;// modifier
 //        }else {
 //            msg.modifier="";
 //        }
 
-        //判定用非标准呼号i3=4的条件：
-        //1.FROMCALL为非标准呼号 ，且 符合2或3
-        //2.扩展消息时 网格、RR73,RRR,73
-        //3.CQ,QRZ,DE
+        // conditions for using non-standard callsign i3=4:
+        // 1. FROMCALL is a non-standard callsign, and satisfies 2 or 3
+        // 2. extra info is grid, RR73, RRR, 73
+        // 3. CQ, QRZ, DE
 
 
 
-//        if (msg.i3 != 0) {//目前只支持i3=1,i3=2,i3=4,i3=0 && n3=0
+//        if (msg.i3 != 0) {// currently only supports i3=1, i3=2, i3=4, i3=0 && n3=0
 //            if (!checkIsStandardCallsign(msg.callsignFrom)
 //                    && (!checkIsReport(msg.extraInfo) || msg.checkIsCQ())) {
 //                msg.i3 = 4;
-//            } else if (msg.callsignFrom.endsWith("/P")||(msg.callsignTo.endsWith("/P"))) {
+//            } else if (msg.callsignFrom.endsWith("/P") || (msg.callsignTo.endsWith("/P"))) {
 //                msg.i3 = 2;
 //            } else {
 //                msg.i3 = 1;
@@ -214,7 +214,7 @@ public class GenerateFT8 {
 //
 //        if (msg.i3 == 1 || msg.i3 == 2) {
 //            packed = FT8Package.generatePack77_i1(msg);
-//        } else if (msg.i3 == 4) {//说明是非标准呼号
+//        } else if (msg.i3 == 4) {// non-standard callsign
 //            packed = FT8Package.generatePack77_i4(msg);
 //        } else {
 //            packFreeTextTo77(msg.getMessageText(), packed);
@@ -226,28 +226,28 @@ public class GenerateFT8 {
     }
 
     public static float[] generateFt8ByA91(byte[] a91, float frequency,int sample_rate){
-        byte[] tones = new byte[num_tones]; // 79音调（符号）数组
-        //此处是12个字节（91+7）/8，可以使用a91生成音频
+        byte[] tones = new byte[num_tones]; // 79-tone (symbol) array
+        // here is 12 bytes (91+7)/8, a91 can be used to generate audio
         ft8_encode(a91, tones);
 
-        // 第三，将FSK音调转换为音频信号b
+        // third, convert FSK tones to audio signal
 
 
-        int num_samples = (int) (0.5f + num_tones * symbol_period * sample_rate); // 数据信号中的采样数0.5+79*0.16*12000
+        int num_samples = (int) (0.5f + num_tones * symbol_period * sample_rate); // number of samples in the data signal: 0.5+79*0.16*12000
 
 
         float[] signal = new float[num_samples];
 
-        //Ft8num_sampleFT8声音的总采样数，不是字节数。15*12000
-        //for (int i = 0; i < Ft8num_samples; i++)//把数据全部静音。
-        for (int i = 0; i < num_samples; i++)//把数据全部静音。
+        // Ft8num_sample is the total number of FT8 audio samples, not bytes. 15*12000
+        //for (int i = 0; i < Ft8num_samples; i++)// silence all data
+        for (int i = 0; i < num_samples; i++)// silence all data
         {
             signal[i] = 0;
         }
 
-        // 用79个字节符号，生成FT8音频
+        // generate FT8 audio from 79 byte symbols
         synth_gfsk(tones, num_tones, frequency, symbol_bt, symbol_period, sample_rate, signal, 0);
-//        for (int i = 0; i < num_samples; i++)//把数据全部静音。
+//        for (int i = 0; i < num_samples; i++)//silence all data
 //        {
 //            if (signal[i]>1.0||signal[i]<-1.0){
 //                Log.e(TAG, "generateFt8: "+signal[i] );

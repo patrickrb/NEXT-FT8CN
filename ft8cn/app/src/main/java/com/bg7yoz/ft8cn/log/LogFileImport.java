@@ -10,11 +10,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
- * 日志文件导入。
- * 构建方法需要日志文件名，此处的文件是由NanoHTTPd的session中的post过来的。
- * getFileContext是获取全部文件内容。
- * getLogBody是获取日志文件中全部的原始记录内容，也就是全部以<eoh>后面的数据
- * getLogRecords是获取拆解后的全部记录列表，记录是以HashMap方式保存的，其中HashMap的Key是字段名（大写），value是实际的值
+ * Log file import.
+ * The constructor requires a log file name; the file here is posted from NanoHTTPd's session.
+ * getFileContext returns the entire file content.
+ * getLogBody returns all raw record content from the log file, i.e., all data after the &lt;eoh&gt; tag.
+ * getLogRecords returns a list of all parsed records stored as HashMaps, where the Key is the field name (uppercase) and the value is the actual value.
  *
  * @author BGY70Z
  * @date 2023-03-20
@@ -27,10 +27,10 @@ public class LogFileImport {
     private ImportTaskList.ImportTask importTask;
 
     /**
-     * 构建函数，需要文件名，如果在读取文件时出错，会回抛异常
+     * Constructor; requires a file name. If an error occurs while reading the file, the exception is rethrown.
      *
-     * @param logFileName 日志文件名
-     * @throws IOException 回抛异常
+     * @param logFileName log file name
+     * @throws IOException rethrown exception
      */
     public LogFileImport(ImportTaskList.ImportTask task, String logFileName) throws IOException {
         importTask=task;
@@ -41,9 +41,9 @@ public class LogFileImport {
     }
 
     /**
-     * 获取日志文件的全部内容
+     * Get the entire content of the log file
      *
-     * @return 全部文本
+     * @return full text
      */
     public String getFileContext() {
         return fileContext;
@@ -59,40 +59,40 @@ public class LogFileImport {
     }
 
     /**
-     * 获取日志文件中全部的记录，每条记录是以HashMap保存的。HashMap的Key是字段名（大写），Value是值。
+     * Gets all records from the log file. Each record is stored as a HashMap where the Key is the field name (uppercase) and the Value is the value.
      *
-     * @return 记录列表。ArrayList
+     * @return Record list. ArrayList
      */
     public ArrayList<HashMap<String, String>> getLogRecords() {
-        String[] temp = getLogBody().split("[<][Ee][Oo][Rr][>]");//拆解出每个记录的原始内容
+        String[] temp = getLogBody().split("[<][Ee][Oo][Rr][>]");//Extract the raw content of each record
         ArrayList<HashMap<String, String>> records = new ArrayList<>();
-        int count=0;//解析计数器
-        for (String s : temp) {//对每一个原始记录内容做拆解
+        int count=0;//Parsing counter
+        for (String s : temp) {//Parse each raw record content
             count++;
             if (!s.contains("<")) {
                 continue;
-            }//说明没有标签，不做拆解
+            }//No tags found, skip parsing
             try {
-                HashMap<String, String> record = new HashMap<>();//创建一个记录
-                String[] fields = s.split("<");//拆解记录的每一个字段
+                HashMap<String, String> record = new HashMap<>();//Create a record
+                String[] fields = s.split("<");//Split each field of the record
 
-                for (String field : fields) {//对每一个原始记录做拆解
+                for (String field : fields) {//Parse each raw record
 
-                    if (field.length() > 1) {//如果是可拆解的
-                        String[] values = field.split(">");//拆解记录的字段名和值
+                    if (field.length() > 1) {//If it can be parsed
+                        String[] values = field.split(">");//Split field name and value
 
-                        if (values.length > 1) {//如果是可拆解的
-                            if (values[0].contains(":")) {//拆解字段名和字段的长度，冒号前的字段名，后面是长度
+                        if (values.length > 1) {//If it can be parsed
+                            if (values[0].contains(":")) {//Split field name and field length; field name before colon, length after
                                 String[] ttt = values[0].split(":");
                                 if (ttt.length > 1) {
-                                    String name = ttt[0];//字段名
-                                    int valueLen = Integer.parseInt(ttt[1]);//字段长度
+                                    String name = ttt[0];//Field name
+                                    int valueLen = Integer.parseInt(ttt[1]);//Field length
                                     if (valueLen > 0) {
                                         if (values[1].length() < valueLen) {
                                             valueLen = values[1].length() - 1;
                                         }
-                                        String value = values[1].substring(0, valueLen);//字段值
-                                        record.put(name.toUpperCase(), value);//保存字段,key要大写
+                                        String value = values[1].substring(0, valueLen);//Field value
+                                        record.put(name.toUpperCase(), value);//Save field, key must be uppercase
                                     }
                                 }
 
@@ -100,9 +100,9 @@ public class LogFileImport {
                         }
                     }
                 }
-                records.add(record);//保存记录
+                records.add(record);//Save record
             }catch (Exception e){
-                errorLines.put(count,s.replace("<","&lt;"));//把错误的内容保存下来。
+                errorLines.put(count,s.replace("<","&lt;"));//Save the erroneous content.
                 importTask.readErrorCount=errorLines.size();
             }
         }

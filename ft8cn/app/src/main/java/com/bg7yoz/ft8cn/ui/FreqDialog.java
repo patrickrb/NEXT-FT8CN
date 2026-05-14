@@ -1,6 +1,6 @@
 package com.bg7yoz.ft8cn.ui;
 /**
- * 快速切换频率的对话框。
+ * Quick frequency switching dialog.
  * @author BGY70Z
  * @date 2023-03-20
  */
@@ -67,7 +67,7 @@ public class FreqDialog extends Dialog {
     public void show() {
         super.show();
         WindowManager.LayoutParams params = getWindow().getAttributes();
-        //设置对话框的大小，以百分比0.6
+        // Set dialog size as percentage (0.6)
         int height=getWindow().getWindowManager().getDefaultDisplay().getHeight();
         int width=getWindow().getWindowManager().getDefaultDisplay().getWidth();
         params.height = (int) (height * 0.6);
@@ -110,14 +110,14 @@ public class FreqDialog extends Dialog {
                    GeneralVariables.bandListIndex = OperationBand.getIndexByFreq(holder.band);
                    GeneralVariables.band = holder.band;
 
-                   mainViewModel.databaseOpr.getAllQSLCallsigns();//通联成功的呼号读出来
+                   mainViewModel.databaseOpr.getAllQSLCallsigns();// Load successfully contacted callsigns
                    mainViewModel.databaseOpr.writeConfig("bandFreq"
                            , String.valueOf(GeneralVariables.band)
                            , null);
-                   if (GeneralVariables.controlMode == ControlMode.CAT//CAT、RTS、DTR模式下控制电台
+                   if (GeneralVariables.controlMode == ControlMode.CAT// Control rig in CAT/RTS/DTR mode
                            || GeneralVariables.controlMode == ControlMode.RTS
                            || GeneralVariables.controlMode == ControlMode.DTR) {
-                       //如果在CAT、RTS模式下，修改电台的频率
+                       // If in CAT/RTS mode, change the rig frequency
                        mainViewModel.setOperationBand();
                    }
                    dismiss();

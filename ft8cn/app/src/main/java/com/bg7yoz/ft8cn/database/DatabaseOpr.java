@@ -1,8 +1,8 @@
 package com.bg7yoz.ft8cn.database;
 /**
- * 用于数据库操作的类。绝大多数的操作都是采用异步方式（于HTTP有关的除外）。
- * 数据库已经经历的多个版本，所以有onUpgrade方法。
- * 配置信息也保存在数据库中
+ * Class for database operations. Most operations are asynchronous (except HTTP-related ones).
+ * The database has gone through multiple versions, hence the onUpgrade method.
+ * Configuration info is also stored in the database.
  *
  * @author BGY70Z
  * @date 2023-03-20
@@ -63,67 +63,67 @@ public class DatabaseOpr extends SQLiteOpenHelper {
         super(context, name, factory, version);
         this.context = context;
 
-        //链接数据库，如果实体库不存在，就会调用onCreate方法，在onCreate方法中初始化数据库
+        //Connect to database; if the physical database doesn't exist, onCreate will be called to initialize it
         db = this.getWritableDatabase();
     }
 
     /**
-     * 当实体数据库不存在时，会调用该方法。可在这个地方创建数据，并添加文件
+     * Called when the physical database does not exist. Create data and add files here.
      *
-     * @param sqLiteDatabase 需要连接的数据库
+     * @param sqLiteDatabase the database to connect to
      */
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
         Log.d(TAG, "Create database.");
-        db = sqLiteDatabase;//把数据库链接保存下来
-        createTables(sqLiteDatabase);//创建数据表
-        //创建通联日志表
+        db = sqLiteDatabase;//Save the database connection
+        createTables(sqLiteDatabase);//Create data tables
+        //Create QSO log table
         createQSLTable(sqLiteDatabase);
 
-        //创建DXCC表
+        //Create DXCC tables
         createDxccTables(sqLiteDatabase);
 
-        //创建ITU表
+        //Create ITU tables
         createItuTables(sqLiteDatabase);
 
-        //创建CQZONE表
+        //Create CQ Zone tables
         createCqZoneTables(sqLiteDatabase);
 
-        //创建呼号与网格对应关系表
+        //Create callsign-to-grid mapping table
         createCallsignQTHTables(sqLiteDatabase);
 
-        //创建SWL相关的表
+        //Create SWL-related tables
         createSWLTables(sqLiteDatabase);
 
-        //创建索引
+        //Create indexes
         createIndex(sqLiteDatabase);
 
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
-        //创建通联日志表 版本2
+        //Create QSO log table version 2
         createQSLTable(sqLiteDatabase);
 
-        //创建DXCC表
+        //Create DXCC tables
         createDxccTables(sqLiteDatabase);
 
-        //创建ITU表
+        //Create ITU tables
         createItuTables(sqLiteDatabase);
 
-        //创建CQZONE表
+        //Create CQ Zone tables
         createCqZoneTables(sqLiteDatabase);
 
-        //创建呼号与网格对应关系表
+        //Create callsign-to-grid mapping table
         createCallsignQTHTables(sqLiteDatabase);
 
-        //创建SWL相关的表
+        //Create SWL-related tables
         createSWLTables(sqLiteDatabase);
 
-        //创建索引
+        //Create indexes
         createIndex(sqLiteDatabase);
 
-        //删除DXCC呼号列表中的等号
+        //Delete equals signs from DXCC callsign list
         //deleteDxccPrefixEqual(sqLiteDatabase);
     }
 
@@ -134,11 +134,11 @@ public class DatabaseOpr extends SQLiteOpenHelper {
 
     private void createTables(SQLiteDatabase sqLiteDatabase) {
         try {
-            //创建配置信息表
+            //Create configuration table
             sqLiteDatabase.execSQL("CREATE TABLE config (KeyName TEXT,Value TEXT,\n" +
                     "id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT)");
 
-            //创建关注的呼号表,UNIQUE是指内容不重复，insert OR IGNORE  into
+            //Create followed callsigns table. UNIQUE means no duplicates; use INSERT OR IGNORE INTO
             sqLiteDatabase.execSQL("CREATE TABLE followCallsigns (callsign  TEXT UNIQUE)");
 
         } catch (Exception e) {
@@ -147,12 +147,12 @@ public class DatabaseOpr extends SQLiteOpenHelper {
     }
 
     /**
-     * 给表添加列
+     * Add a column to a table
      *
-     * @param db        数据库
-     * @param tableName 表名
-     * @param fieldName 列名
-     * @param sql       列的语句
+     * @param db        database
+     * @param tableName table name
+     * @param fieldName column name
+     * @param sql       column definition SQL
      */
     private void alterTable(SQLiteDatabase db, String tableName, String fieldName, String sql) {
         Cursor cursor = db.rawQuery("select * from sqlite_master where name=? and sql like ?"
@@ -164,11 +164,11 @@ public class DatabaseOpr extends SQLiteOpenHelper {
     }
 
     /**
-     * 检查表是不是存在
+     * Check if a table exists
      *
-     * @param db        数据库
-     * @param tableName 表名
-     * @return 是否存在
+     * @param db        database
+     * @param tableName table name
+     * @return whether it exists
      */
     private boolean checkTableExists(SQLiteDatabase db, String tableName) {
         Cursor cursor = db.rawQuery("select * from sqlite_master where type = 'table' and name = ?"
@@ -181,7 +181,7 @@ public class DatabaseOpr extends SQLiteOpenHelper {
     }
 
     /**
-     * 检查索引是不是存在
+     * Check if an index exists
      * @param db
      * @param indexName
      * @return
@@ -200,7 +200,7 @@ public class DatabaseOpr extends SQLiteOpenHelper {
     }
 
     /**
-     * 创建通联日志表
+     * Create QSO log table
      */
     private void createQSLTable(SQLiteDatabase sqLiteDatabase) {
         if (checkTableExists(sqLiteDatabase, "QSLTable")) {
@@ -214,8 +214,8 @@ public class DatabaseOpr extends SQLiteOpenHelper {
         } else {
             sqLiteDatabase.execSQL("CREATE TABLE QSLTable (\n" +
                     "id INTEGER PRIMARY KEY AUTOINCREMENT,\n" +
-                    "isQSL INTEGER DEFAULT 0,\n" +//是否确认QSL
-                    "isLotW_import INTEGER DEFAULT 0,\n" +//是否是lotw导入
+                    "isQSL INTEGER DEFAULT 0,\n" +//Whether QSL is confirmed
+                    "isLotW_import INTEGER DEFAULT 0,\n" +//Whether it's a LoTW import
                     "isLotW_QSL INTEGER DEFAULT 0,\n" +
 
 
@@ -278,7 +278,7 @@ public class DatabaseOpr extends SQLiteOpenHelper {
 
 
     /**
-     * 创建与DXCC有关的数据表：dxccList,dxcc_prefix,dxcc_grid
+     * Create DXCC-related data tables: dxccList, dxcc_prefix, dxcc_grid
      */
     private void createDxccTables(SQLiteDatabase sqLiteDatabase) {
         if (!checkTableExists(sqLiteDatabase, "dxccList")) {
@@ -310,7 +310,7 @@ public class DatabaseOpr extends SQLiteOpenHelper {
                     ");");
 
 
-            //把DXCC对应表数据导入到数据库中
+            //Import DXCC mapping table data into the database
             new Thread(new Runnable() {
                 @Override
                 public void run() {
@@ -325,9 +325,9 @@ public class DatabaseOpr extends SQLiteOpenHelper {
     }
 
     /**
-     * 把ITU分区的对应表导入数据库
+     * Import ITU zone mapping table into the database
      *
-     * @param sqLiteDatabase 数据库
+     * @param sqLiteDatabase database
      */
     private void createItuTables(SQLiteDatabase sqLiteDatabase) {
         if (!checkTableExists(sqLiteDatabase, "ituList")) {
@@ -354,7 +354,7 @@ public class DatabaseOpr extends SQLiteOpenHelper {
     }
 
     /**
-     * 创建呼号与网格对应关系表
+     * Create callsign-to-grid mapping table
      *
      * @param sqLiteDatabase db
      */
@@ -414,8 +414,8 @@ public class DatabaseOpr extends SQLiteOpenHelper {
 
 
     /**
-     * 创建索引，以提高导入速度
-     * @param sqLiteDatabase 数据库
+     * Create indexes to improve import speed
+     * @param sqLiteDatabase database
      */
     private void createIndex(SQLiteDatabase sqLiteDatabase) {
         if (!checkIndexExists(sqLiteDatabase, "QslCallsigns_callsign_IDX")) {
@@ -539,10 +539,10 @@ public class DatabaseOpr extends SQLiteOpenHelper {
 
 
     /**
-     * 把呼号和网格对应关系写入表中
+     * Write callsign-to-grid mapping into the table
      *
-     * @param callsign 呼号
-     * @param grid     网格
+     * @param callsign callsign
+     * @param grid     grid
      */
     public void addCallsignQTH(String callsign, String grid) {
         if (grid.trim().length() < 4) return;
@@ -550,7 +550,7 @@ public class DatabaseOpr extends SQLiteOpenHelper {
         Log.d(TAG, String.format("addCallsignQTH: callsign:%s,grid:%s", callsign, grid));
     }
 
-    //查询配置信息。
+    //Query configuration info.
     public void getConfigByKey(String KeyName, OnAfterQueryConfig onAfterQueryConfig) {
         new QueryConfig(db, KeyName, onAfterQueryConfig).execute();
     }
@@ -560,7 +560,7 @@ public class DatabaseOpr extends SQLiteOpenHelper {
     }
 
     /**
-     * 写配置信息，异步操作
+     * Write configuration info, async operation
      */
     public void writeConfig(String KeyName, String Value, OnAfterWriteConfig onAfterWriteConfig) {
         Log.d(TAG, "writeConfig: Value:" + Value);
@@ -572,25 +572,25 @@ public class DatabaseOpr extends SQLiteOpenHelper {
     }
 
     /**
-     * 读取关注的呼号列表
+     * Read the list of followed callsigns
      *
-     * @param onAffterQueryFollowCallsigns 回调函数
+     * @param onAffterQueryFollowCallsigns callback function
      */
     public void getFollowCallsigns(OnAfterQueryFollowCallsigns onAffterQueryFollowCallsigns) {
         new GetFollowCallSigns(db, onAffterQueryFollowCallsigns).execute();
     }
 
     /**
-     * 查询SWL MESSAGE各BAND的数量
-     * @param onAfterQueryFollowCallsigns 回调
+     * Query SWL MESSAGE count per band
+     * @param onAfterQueryFollowCallsigns callback
      */
     public void getMessageLogTotal(OnAfterQueryFollowCallsigns onAfterQueryFollowCallsigns) {
         new GetMessageLogTotal(db, onAfterQueryFollowCallsigns).execute();
     }
 
     /**
-     * 查询SWL QSO的在各个月的数量
-     * @param onAfterQueryFollowCallsigns 回调
+     * Query SWL QSO count per month
+     * @param onAfterQueryFollowCallsigns callback
      */
     public void getSWLQsoLogTotal(OnAfterQueryFollowCallsigns onAfterQueryFollowCallsigns) {
         new GetSWLQsoTotal(db, onAfterQueryFollowCallsigns).execute();
@@ -598,16 +598,16 @@ public class DatabaseOpr extends SQLiteOpenHelper {
 
 
     /**
-     * 向数据库中添加关注的呼号
+     * Add a followed callsign to the database
      *
-     * @param callsign 呼号
+     * @param callsign callsign
      */
     public void addFollowCallsign(String callsign) {
         new AddFollowCallSign(db, callsign).execute();
     }
 
     /**
-     * 清空关注的呼号
+     * Clear all followed callsigns
      */
     public void clearFollowCallsigns() {
         new Thread(new Runnable() {
@@ -619,7 +619,7 @@ public class DatabaseOpr extends SQLiteOpenHelper {
     }
 
     /**
-     * 删除通联的日志
+     * Delete QSO log cache data
      */
     public void clearLogCacheData() {
         new Thread(new Runnable() {
@@ -631,7 +631,7 @@ public class DatabaseOpr extends SQLiteOpenHelper {
     }
 
     /**
-     * 删除SWL QSO日志
+     * Delete SWL QSO logs
      */
     public void clearSWLQsoData() {
         new Thread(new Runnable() {
@@ -642,34 +642,34 @@ public class DatabaseOpr extends SQLiteOpenHelper {
         }).start();
     }
     /**
-     * 把通联成功的日志和呼号写到数据库中
+     * Write successful QSO log and callsign to the database
      *
-     * @param qslRecord 通联记录
+     * @param qslRecord QSO record
      */
     public void addQSL_Callsign(QSLRecord qslRecord) {
         new AddQSL_Info(this, qslRecord).execute();
     }
 
     /**
-     * 把SWL的QSO保存到数据库，SWL的QSO标准：至少要有双方的信号报告。不包含自己的呼号。
-     * @param qslRecord 通联日志记录
+     * Save SWL QSO to the database. SWL QSO criteria: must have signal reports from both parties; does not include own callsign.
+     * @param qslRecord QSO log record
      */
     public void addSWL_QSO(QSLRecord qslRecord) {
         new Add_SWL_QSO_Info(this, qslRecord).execute();
     }
 
-    //删除数据库中关注的呼号
+    //Delete a followed callsign from the database
     public void deleteFollowCallsign(String callsign) {
         new DeleteFollowCallsign(db, callsign).execute();
     }
 
-    //获取所有配置参数
+    //Get all configuration parameters
     public void getAllConfigParameter(OnAfterQueryConfig onAfterQueryConfig) {
         new GetAllConfigParameter(db, onAfterQueryConfig).execute();
     }
 
     /**
-     * 查询全部成功通联的呼号，能通联的频率为条件
+     * Query all successfully contacted callsigns, filtered by QSO frequency
      */
     public void getAllQSLCallsigns() {
         new LoadAllQSLCallsigns(db).execute();
@@ -677,58 +677,58 @@ public class DatabaseOpr extends SQLiteOpenHelper {
 
 
     /**
-     * 按呼号查找QSL的呼号记录
+     * Find QSL callsign records by callsign
      *
-     * @param callsign           呼号
-     * @param onQueryQSLCallsign 回调
+     * @param callsign           callsign
+     * @param onQueryQSLCallsign callback
      */
     public void getQSLCallsignsByCallsign(boolean showAll,int offset,String callsign, int filter, OnQueryQSLCallsign onQueryQSLCallsign) {
         new GetQLSCallsignByCallsign(showAll,offset,db, callsign, filter, onQueryQSLCallsign).execute();
     }
 
     /**
-     * 查询已经QSO的网格，这个主要用在GridTracker上
-     * 可以知道哪些网格是QSO，哪些是QSL
+     * Query grids that have been QSO'd. Mainly used in GridTracker
+     * to determine which grids are QSO and which are QSL.
      *
-     * @param onGetQsoGrids 当查询结束之后的事件。
+     * @param onGetQsoGrids event after the query completes
      */
     public void getQsoGridQuery(OnGetQsoGrids onGetQsoGrids) {
         new GetQsoGrids(db, onGetQsoGrids).execute();
     }
 
     /**
-     * 按呼号查询QSL记录
+     * Query QSL records by callsign
      *
-     * @param callsign                 呼号
-     * @param onQueryQSLRecordCallsign 回调
+     * @param callsign                 callsign
+     * @param onQueryQSLRecordCallsign callback
      */
     public void getQSLRecordByCallsign(boolean showAll,int offset,String callsign, int filter, OnQueryQSLRecordCallsign onQueryQSLRecordCallsign) {
         new GetQSLByCallsign(showAll,offset,db, callsign, filter, onQueryQSLRecordCallsign).execute();
     }
 
     /**
-     * 删除通联呼号
+     * Delete QSO callsign
      *
-     * @param id id号
+     * @param id ID
      */
     public void deleteQSLCallsign(int id) {
         new DeleteQSLCallsignByID(db, id).execute();
     }
 
     /**
-     * 删除日志
+     * Delete log entry
      *
-     * @param id id号
+     * @param id ID
      */
     public void deleteQSLByID(int id) {
         new DeleteQSLByID(db, id).execute();
     }
 
     /**
-     * 修改日志的手工确认
+     * Set manual QSL confirmation for a log entry
      *
-     * @param isQSL 是否确认
-     * @param id    ID号
+     * @param isQSL whether confirmed
+     * @param id    ID
      */
     public void setQSLTableIsQSL(boolean isQSL, int id) {
         new SetQSLTableIsQSL(db, id, isQSL).execute();
@@ -739,9 +739,9 @@ public class DatabaseOpr extends SQLiteOpenHelper {
     }
 
     /**
-     * 到数据库中查呼号和网格的对应关系，查出后，会把数据写入到GeneralVariables的callsignAndGrids中
+     * Look up callsign-to-grid mapping in the database; results are written to GeneralVariables.callsignAndGrids
      *
-     * @param callsign 呼号
+     * @param callsign callsign
      */
     public void getCallsignQTH(String callsign) {
         new GetCallsignQTH(db).execute(callsign);
@@ -749,7 +749,7 @@ public class DatabaseOpr extends SQLiteOpenHelper {
 
 
 //    /**
-//     * 写字符串到文件
+//     * Write string to file
 //     * @param file
 //     * @param data
 //     */
@@ -759,22 +759,22 @@ public class DatabaseOpr extends SQLiteOpenHelper {
 //            fileOutputStream = new FileOutputStream(file, true);
 //            fileOutputStream.write(data.getBytes());
 //        } catch (IOException e) {
-//            Log.e(TAG, String.format("写文件出错：%s", e.getMessage()));
+//            Log.e(TAG, String.format("Error writing file: %s", e.getMessage()));
 //        } finally {
 //            try {
 //                if (fileOutputStream != null) {
 //                    fileOutputStream.close();
 //                }
 //            } catch (IOException e) {
-//                Log.e(TAG, String.format("关闭写文件出错：%s", e.getMessage()));
+//                Log.e(TAG, String.format("Error closing file: %s", e.getMessage()));
 //            }
 //        }
 //    }
 
 //    /**
-//     * 把日志数据写入到文件中，用于分享等处理
-//     * @param cursor 游标
-//     * @param isSWL 是否是swl模式
+//     * Write log data to file for sharing and other purposes
+//     * @param cursor cursor
+//     * @param isSWL whether in SWL mode
 //     */
 //    @SuppressLint({"DefaultLocale", "Range"})
 //    public void downQSLTableToFile(File adiFile, Cursor cursor, boolean isSWL){
@@ -884,21 +884,21 @@ public class DatabaseOpr extends SQLiteOpenHelper {
 //            String comment = cursor.getString(cursor.getColumnIndex("comment"));
 //
 //            //<comment:15>Distance: 99 km <eor>
-//            //在写库的时候，一定要加" km"
+//            //When writing to db, must append " km"
 //            writeStrToFile(adiFile,String.format("<comment:%d>%s <eor>\n"
 //                    , comment.length()
 //                    , comment));
 //        }
-//        Log.e(TAG,String.format("写入数据%d条",count));
+//        Log.e(TAG,String.format("Wrote %d records",count));
 //
 //        cursor.close();
 //    }
 
     /**
-     * 生成ADIF文本内容
-     * @param cursor 游标
-     * @param isSWL 是否是swl模式
-     * @return ADIF文本内容
+     * Generate ADIF text content
+     * @param cursor cursor
+     * @param isSWL whether in SWL mode
+     * @return ADIF text content
      */
     @SuppressLint({"Range", "DefaultLocale"})
     public String downQSLTable(Cursor cursor, boolean isSWL) {
@@ -1008,7 +1008,7 @@ public class DatabaseOpr extends SQLiteOpenHelper {
             String comment = cursor.getString(cursor.getColumnIndex("comment"));
 
             //<comment:15>Distance: 99 km <eor>
-            //在写库的时候，一定要加" km"
+            //When writing to db, must append " km"
             logStr.append(String.format("<comment:%d>%s <eor>\n"
                     , comment.length()
                     , comment));
@@ -1019,7 +1019,7 @@ public class DatabaseOpr extends SQLiteOpenHelper {
     }
 
     /**
-     * 把已经通联的DXCC分区列出来
+     * List DXCC zones that have been contacted
      */
     @SuppressLint("Range")
     public void getQslDxccToMap() {
@@ -1028,9 +1028,9 @@ public class DatabaseOpr extends SQLiteOpenHelper {
             public void run() {
                 String querySQL;
                 Cursor cursor;
-                Log.d(TAG, "run: 开始导入分区...");
+                Log.d(TAG, "run: starting zone import...");
 
-                //导入已经通联的dxcc
+                //Import contacted DXCC zones
                 querySQL = "SELECT DISTINCT dl.pp FROM   dxcc_grid dg\n" +
                         "inner join  QSLTable q\n" +
                         "on  dg.grid =UPPER(SUBSTR(q.gridsquare,1,4))  LEFT JOIN dxccList dl on dg.dxcc =dl.dxcc";
@@ -1040,7 +1040,7 @@ public class DatabaseOpr extends SQLiteOpenHelper {
                 }
                 cursor.close();
 
-                //导入已经通联的CQ分区
+                //Import contacted CQ zones
                 querySQL = "SELECT DISTINCT  cl.cqzone  as cq FROM   cqzoneList cl\n" +
                         "inner join  QSLTable q\n" +
                         "on  cl.grid =UPPER(SUBSTR(q.gridsquare,1,4)) ";
@@ -1050,7 +1050,7 @@ public class DatabaseOpr extends SQLiteOpenHelper {
                 }
                 cursor.close();
 
-                //导入已经通联的itu分区
+                //Import contacted ITU zones
                 querySQL = "SELECT DISTINCT il.itu   FROM   ituList il\n" +
                         "inner join  QSLTable q\n" +
                         "on  il.grid =UPPER(SUBSTR(q.gridsquare,1,4))";
@@ -1060,7 +1060,7 @@ public class DatabaseOpr extends SQLiteOpenHelper {
                 }
                 cursor.close();
 
-                Log.d(TAG, "run: 分区导入完毕...");
+                Log.d(TAG, "run: zone import complete...");
             }
         }).start();
 
@@ -1068,16 +1068,16 @@ public class DatabaseOpr extends SQLiteOpenHelper {
 
 
     /**
-     * 检查通联的呼号是不是存在，如果存在，返回TRUE，并且更新isLotW_QSL，
+     * Check if the QSO callsign exists; if it does, return TRUE and update isLotW_QSL
      *
-     * @param record 记录
-     * @return 是否存在
+     * @param record record
+     * @return whether it exists
      */
     @SuppressLint("Range")
     public boolean checkQSLCallsign(QSLRecord record) {
         QSLRecord newRecord = record;
         newRecord.id = -1;
-        //检查是不是已经存在呼号了
+        //Check if the callsign already exists
         String querySQL = "select * from QslCallsigns WHERE (callsign=?)" +
                 "and (startTime=?) and(finishTime=?)" +
                 "and(mode=?)";
@@ -1094,7 +1094,7 @@ public class DatabaseOpr extends SQLiteOpenHelper {
             newRecord.id = cursor.getLong(cursor.getColumnIndex("ID"));
         }
         cursor.close();
-//        if (newRecord.id != -1) {//说明已经存在记录了
+//        if (newRecord.id != -1) {//Record already exists
 //            querySQL = "UPDATE   QslCallsigns set isLotW_QSL=? WHERE ID=?";
 //            db.execSQL(querySQL, new Object[]{newRecord.isLotW_QSL ? "1" : "0", newRecord.id});
 //        }
@@ -1105,7 +1105,7 @@ public class DatabaseOpr extends SQLiteOpenHelper {
     public boolean checkIsQSL(QSLRecord record) {
         QSLRecord newRecord = record;
         newRecord.id = -1;
-        //检查是不是已经存在日志记录了
+        //Check if the log record already exists
         String querySQL = "select * from QSLTable WHERE (call=?)" +
                 "and (qso_date=?) and(time_on=?)" +
                 "and(mode=?)";
@@ -1123,7 +1123,7 @@ public class DatabaseOpr extends SQLiteOpenHelper {
         }
         cursor.close();
 
-//        if (newRecord.id != -1) {//说明已经存在记录了
+//        if (newRecord.id != -1) {//Record already exists
 //            querySQL = "UPDATE   QSLTable set isLotW_QSL=? WHERE ID=?";
 //            db.execSQL(querySQL, new Object[]{newRecord.isLotW_QSL ? "1" : "0", newRecord.id});
 //        }
@@ -1134,21 +1134,21 @@ public class DatabaseOpr extends SQLiteOpenHelper {
     public boolean doInsertQSLData(QSLRecord record,AfterInsertQSLData afterInsertQSLData) {
         if (record.getToCallsign() == null) {
             if (afterInsertQSLData!=null){
-                afterInsertQSLData.doAfterInsert(true,true);//说明是无效的QSL
+                afterInsertQSLData.doAfterInsert(true,true);//Invalid QSL
             }
             return false;
         }
 
         String querySQL;
-        if (!checkQSLCallsign(record)) {//如果不存在记录，就添加
+        if (!checkQSLCallsign(record)) {//If record doesn't exist, add it
             querySQL = "INSERT INTO  QslCallsigns (callsign" +
                     ",isQSL,isLotW_import,isLotW_QSL" +
                     ",startTime,finishTime,mode,grid,band,band_i)" +
                     "values(?,?,?,?,?,?,?,?,?,?)";
             db.execSQL(querySQL, new Object[]{record.getToCallsign()
-                    , record.isQSL ? 1 : 0//是否手工确认
-                    , record.isLotW_import ? 1 : 0//是否lotw导入
-                    , record.isLotW_QSL ? 1 : 0//是否lotw确认
+                    , record.isQSL ? 1 : 0//Whether manually confirmed
+                    , record.isLotW_import ? 1 : 0//Whether LoTW import
+                    , record.isLotW_QSL ? 1 : 0//Whether LoTW confirmed
                     , record.getStartTime()
                     , record.getEndTime()
                     , record.getMode()
@@ -1185,7 +1185,7 @@ public class DatabaseOpr extends SQLiteOpenHelper {
         }
 
 
-        if (!checkIsQSL(record)) {//如果不存在日志数据就添加
+        if (!checkIsQSL(record)) {//If log data doesn't exist, add it
             querySQL = "INSERT INTO QSLTable(call, isQSL,isLotW_import,isLotW_QSL,gridsquare, mode, rst_sent, rst_rcvd, qso_date, " +
                     "time_on, qso_date_off, time_off, band, freq, station_callsign, my_gridsquare," +
                     "comment)VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
@@ -1203,13 +1203,13 @@ public class DatabaseOpr extends SQLiteOpenHelper {
 
                     , record.getQso_date_off()
                     , record.getTime_off()
-                    , record.getBandLength()//波长//RigOperationConstant.getMeterFromFreq(qslRecord.getBandFreq())
+                    , record.getBandLength()//band length//RigOperationConstant.getMeterFromFreq(qslRecord.getBandFreq())
                     , BaseRigOperation.getFrequencyFloat(record.getBandFreq())
                     , record.getMyCallsign()
                     , record.getMyMaidenGrid()
                     , record.getComment()});
             if (afterInsertQSLData!=null){
-                afterInsertQSLData.doAfterInsert(false,true);//说明是新的QSL
+                afterInsertQSLData.doAfterInsert(false,true);//New QSL
             }
 
         } else {
@@ -1271,7 +1271,7 @@ public class DatabaseOpr extends SQLiteOpenHelper {
             }
 
             if (afterInsertQSLData!=null){
-                afterInsertQSLData.doAfterInsert(false,false);//说明已经存在，需要更新的QSL
+                afterInsertQSLData.doAfterInsert(false,false);//Already exists, QSL needs updating
             }
         }
         return true;
@@ -1279,7 +1279,7 @@ public class DatabaseOpr extends SQLiteOpenHelper {
 
 
     /**
-     * 查询配置信息的类
+     * Class for querying configuration info
      */
     static class QueryConfig extends AsyncTask<Void, Void, Void> {
         private final SQLiteDatabase db;
@@ -1357,7 +1357,7 @@ public class DatabaseOpr extends SQLiteOpenHelper {
     }
 
     /**
-     * 写配置信息的类
+     * Class for writing configuration info
      */
     static class WriteConfig extends AsyncTask<Void, Void, Void> {
         private final SQLiteDatabase db;
@@ -1387,7 +1387,7 @@ public class DatabaseOpr extends SQLiteOpenHelper {
     }
 
     /**
-     * 把消息写到数据库
+     * Write messages to the database
      */
     static class WriteMessages extends AsyncTask<Void, Void, Void> {
         private final SQLiteDatabase db;
@@ -1403,7 +1403,7 @@ public class DatabaseOpr extends SQLiteOpenHelper {
             String sql = "INSERT INTO SWLMessages(I3,N3,Protocol,UTC,SNR,TIME_SEC,FREQ,CALL_FROM" +
                     ",CALL_TO,EXTRAL,REPORT,BAND)\n" +
                     "VALUES(?,?,?,?,?,?,?,?,?,?,?,?)";
-            for (Ft8Message message : messages) {//只对与我有关的消息做保存
+            for (Ft8Message message : messages) {//Only save messages related to me
                 db.execSQL(sql, new Object[]{message.i3, message.n3, "FT8"
                         ,UtcTimer.getDatetimeYYYYMMDD_HHMMSS(message.utcTime)
                         , message.snr, message.time_sec, Math.round(message.freq_hz)
@@ -1416,7 +1416,7 @@ public class DatabaseOpr extends SQLiteOpenHelper {
     }
 
     /**
-     * 把关注的呼号写到数据库
+     * Write followed callsigns to the database
      */
     static class AddFollowCallSign extends AsyncTask<Void, Void, Void> {
         private final SQLiteDatabase db;
@@ -1437,8 +1437,8 @@ public class DatabaseOpr extends SQLiteOpenHelper {
     }
 
     /**
-     * 向呼号网格对应表中写数据，AsyncTask中的String，是多参数，以数组形式给doInBackground
-     * 所以，写入数据第一个元素是呼号，第二个是网格
+     * Write data to the callsign-grid mapping table. AsyncTask String params are multi-param, passed as array to doInBackground.
+     * First element is callsign, second is grid.
      */
     static class AddCallsignQTH extends AsyncTask<String, Void, Void> {
         private final SQLiteDatabase db;
@@ -1469,7 +1469,7 @@ public class DatabaseOpr extends SQLiteOpenHelper {
         @Override
         protected Void doInBackground(Void... voids) {
             String querySQL;
-            //删除之前重复的记录
+            //Delete duplicate records first
             querySQL = "DELETE FROM  SWLQSOTable where ([call]=?) and (station_callsign=?) and (qso_date=?) and(time_on=?) and (freq=?)";
             databaseOpr.db.execSQL(querySQL, new String[]{
                              qslRecord.getToCallsign()
@@ -1478,7 +1478,7 @@ public class DatabaseOpr extends SQLiteOpenHelper {
                             , qslRecord.getTime_on()
                             , BaseRigOperation.getFrequencyFloat(qslRecord.getBandFreq())
                     });
-            //添加记录
+            //Add record
             querySQL = "INSERT INTO SWLQSOTable([call], gridsquare, mode, rst_sent, rst_rcvd, qso_date, " +
                     "time_on, qso_date_off, time_off, band, freq, station_callsign, my_gridsquare,operator,comment)\n" +
                     "VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
@@ -1493,11 +1493,11 @@ public class DatabaseOpr extends SQLiteOpenHelper {
 
                     , qslRecord.getQso_date_off()
                     , qslRecord.getTime_off()
-                    , qslRecord.getBandLength()//波长//RigOperationConstant.getMeterFromFreq(qslRecord.getBandFreq())
+                    , qslRecord.getBandLength()//band length//RigOperationConstant.getMeterFromFreq(qslRecord.getBandFreq())
                     , BaseRigOperation.getFrequencyFloat(qslRecord.getBandFreq())
                     , qslRecord.getMyCallsign()
                     , qslRecord.getMyMaidenGrid()
-                    , GeneralVariables.myCallsign//我的呼号，不是双方的呼号
+                    , GeneralVariables.myCallsign//My callsign, not the other party's callsign
                     , qslRecord.getComment()});
 
 
@@ -1507,7 +1507,7 @@ public class DatabaseOpr extends SQLiteOpenHelper {
     }
 
     /**
-     * 把QSL成功的呼号写到库中
+     * Write successfully QSL'd callsigns to the database
      */
     static class AddQSL_Info extends AsyncTask<Void, Void, Void> {
         //private final SQLiteDatabase db;
@@ -1523,14 +1523,14 @@ public class DatabaseOpr extends SQLiteOpenHelper {
         @SuppressLint("Range")
         @Override
         protected Void doInBackground(Void... voids) {
-            databaseOpr.doInsertQSLData(qslRecord,null);//添加日志和通联成功的呼号
+            databaseOpr.doInsertQSLData(qslRecord,null);//Insert log and successfully contacted callsign
             return null;
         }
     }
 
 
     /**
-     * 从数据库中删除关注的呼号
+     * Delete a followed callsign from the database
      */
     static class DeleteFollowCallsign extends AsyncTask<Void, Void, Void> {
         private final SQLiteDatabase db;
@@ -1551,7 +1551,7 @@ public class DatabaseOpr extends SQLiteOpenHelper {
     }
 
     /**
-     * 向呼号与网格对应关系表中查网格，参数是呼号
+     * Look up grid from the callsign-grid mapping table; parameter is callsign
      */
     static class GetCallsignQTH extends AsyncTask<String, Void, Void> {
         private final SQLiteDatabase db;
@@ -1596,8 +1596,8 @@ public class DatabaseOpr extends SQLiteOpenHelper {
             callsigns.add("---------------------------------------");
             int sum = 0;
             while (cursor.moveToNext()) {
-                long s = cursor.getLong(cursor.getColumnIndex("BAND")); //获取频段
-                int total = cursor.getInt(cursor.getColumnIndex("c")); //获取数量
+                long s = cursor.getLong(cursor.getColumnIndex("BAND")); //Get band
+                int total = cursor.getInt(cursor.getColumnIndex("c")); //Get count
                 callsigns.add(String.format("%.3fMHz \t %d", s / 1000000f, total));
                 sum = sum + total;
             }
@@ -1632,8 +1632,8 @@ public class DatabaseOpr extends SQLiteOpenHelper {
             callsigns.add("---------------------------------------");
             int sum = 0;
             while (cursor.moveToNext()) {
-                String date = cursor.getString(cursor.getColumnIndex("t")); //获取频段
-                int total = cursor.getInt(cursor.getColumnIndex("c")); //获取数量
+                String date = cursor.getString(cursor.getColumnIndex("t")); //Get date
+                int total = cursor.getInt(cursor.getColumnIndex("c")); //Get count
                 callsigns.add(String.format("%s \t %d ", date, total));
                 sum = sum + total;
             }
@@ -1649,7 +1649,7 @@ public class DatabaseOpr extends SQLiteOpenHelper {
 
 
     /**
-     * 从数据库中获取关注的呼号类
+     * Get followed callsigns from the database
      */
     static class GetFollowCallSigns extends AsyncTask<Void, Void, Void> {
         private final SQLiteDatabase db;
@@ -1667,7 +1667,7 @@ public class DatabaseOpr extends SQLiteOpenHelper {
             ArrayList<String> callsigns = new ArrayList<>();
             while (cursor.moveToNext()) {
                 @SuppressLint("Range")
-                String s = cursor.getString(cursor.getColumnIndex("callsign")); //获取第一列的值,第一列的索引从0开始
+                String s = cursor.getString(cursor.getColumnIndex("callsign")); //Get the first column value (index starts at 0)
                 if (s != null) {
                     callsigns.add(s);
                 }
@@ -1804,8 +1804,8 @@ public class DatabaseOpr extends SQLiteOpenHelper {
                 record.setTime_off(String.format("%s-%s"
                         , cursor.getString(cursor.getColumnIndex("qso_date_off"))
                         , cursor.getString(cursor.getColumnIndex("time_off"))));
-                record.setBand(cursor.getString(cursor.getColumnIndex("band")));//波长
-                record.setFreq(cursor.getString(cursor.getColumnIndex("freq")));//频率
+                record.setBand(cursor.getString(cursor.getColumnIndex("band")));//Band wavelength
+                record.setFreq(cursor.getString(cursor.getColumnIndex("freq")));//Frequency
                 record.setStation_callsign(cursor.getString(cursor.getColumnIndex("station_callsign")));
                 record.setMy_gridsquare(cursor.getString(cursor.getColumnIndex("my_gridsquare")));
                 record.setComment(cursor.getString(cursor.getColumnIndex("comment")));
@@ -1820,7 +1820,7 @@ public class DatabaseOpr extends SQLiteOpenHelper {
     }
 
     /**
-     * 通过呼号查询联通成功的呼号
+     * Query successfully contacted callsigns by callsign
      */
     static class GetQLSCallsignByCallsign extends AsyncTask<Void, Void, Void> {
         SQLiteDatabase db;
@@ -1893,14 +1893,14 @@ public class DatabaseOpr extends SQLiteOpenHelper {
 
 
     /**
-     * 获取通联过的呼号
+     * Get all previously contacted callsigns
      */
     @SuppressLint("DefaultLocale")
     static class GetAllQSLCallsign {
         public static void get(SQLiteDatabase db) {
 
             //String querySQL = "select distinct [call] from QSLTable where freq=?";
-            //改为以波长BAND取通联过的呼号
+            //Changed to get contacted callsigns by band wavelength
             String querySQL = "select distinct [call] from QSLTable where band=?";
             Cursor cursor = db.rawQuery(querySQL, new String[]{
                     BaseRigOperation.getMeterFromFreq(GeneralVariables.band)});
@@ -1935,7 +1935,7 @@ public class DatabaseOpr extends SQLiteOpenHelper {
 
 
     /**
-     * 通过ID删除通联呼号
+     * Delete a contacted callsign by ID
      */
     static class DeleteQSLCallsignByID extends AsyncTask<Void, Void, Void> {
         private final SQLiteDatabase db;
@@ -1956,7 +1956,7 @@ public class DatabaseOpr extends SQLiteOpenHelper {
 
 
     /**
-     * 通过ID删除日志
+     * Delete a log entry by ID
      */
     static class DeleteQSLByID extends AsyncTask<Void, Void, Void> {
         private final SQLiteDatabase db;
@@ -1993,7 +1993,7 @@ public class DatabaseOpr extends SQLiteOpenHelper {
     }
 
     /**
-     * 设置日志手工确认
+     * Set manual QSL confirmation for a log entry
      */
     static class SetQSLTableIsQSL extends AsyncTask<Void, Void, Void> {
         private final SQLiteDatabase db;
@@ -2015,7 +2015,7 @@ public class DatabaseOpr extends SQLiteOpenHelper {
 
 
     /**
-     * 查询全部通联成功的呼号，以通联时的频段为条件
+     * Query all successfully contacted callsigns, filtered by the operating band
      */
     static class LoadAllQSLCallsigns extends AsyncTask<Void, Void, Void> {
         private final SQLiteDatabase db;
@@ -2026,7 +2026,7 @@ public class DatabaseOpr extends SQLiteOpenHelper {
 
         @Override
         protected Void doInBackground(Void... voids) {
-            GetAllQSLCallsign.get(db);//获取通联过的呼号
+            GetAllQSLCallsign.get(db);//Get previously contacted callsigns
             return null;
         }
     }
@@ -2099,7 +2099,7 @@ public class DatabaseOpr extends SQLiteOpenHelper {
                     GeneralVariables.synFrequency = !(result.equals("") || result.equals("0"));
                 }
                 if (name.equalsIgnoreCase("transDelay")) {
-                    if (result.matches("^\\d{1,4}$")) {//正则表达式，1-4位长度的数字
+                    if (result.matches("^\\d{1,4}$")) {//Regex: 1-4 digit number
                         GeneralVariables.transmitDelay = Integer.parseInt(result);
                     } else {
                         GeneralVariables.transmitDelay = FT8Common.FT8_TRANSMIT_DELAY;
@@ -2124,68 +2124,68 @@ public class DatabaseOpr extends SQLiteOpenHelper {
                 if (name.equalsIgnoreCase("ctrMode")) {
                     GeneralVariables.controlMode = result.equals("") ? ControlMode.VOX : Integer.parseInt(result);
                 }
-                if (name.equalsIgnoreCase("model")) {//电台型号
+                if (name.equalsIgnoreCase("model")) {//Radio model
                     GeneralVariables.modelNo = result.equals("") ? 0 : Integer.parseInt(result);
                 }
-                if (name.equalsIgnoreCase("instruction")) {//指令集
+                if (name.equalsIgnoreCase("instruction")) {//Instruction set
                     GeneralVariables.instructionSet = result.equals("") ? 0 : Integer.parseInt(result);
                 }
-                if (name.equalsIgnoreCase("launchSupervision")) {//发射监管
+                if (name.equalsIgnoreCase("launchSupervision")) {//Transmit supervision
                     GeneralVariables.launchSupervision = result.equals("") ?
                             GeneralVariables.DEFAULT_LAUNCH_SUPERVISION : Integer.parseInt(result);
                 }
                 if (name.equalsIgnoreCase("noReplyLimit")) {//
                     GeneralVariables.noReplyLimit = result.equals("") ? 0 : Integer.parseInt(result);
                 }
-                if (name.equalsIgnoreCase("autoFollowCQ")) {//自动关注CQ
+                if (name.equalsIgnoreCase("autoFollowCQ")) {//Auto-follow CQ
                     GeneralVariables.autoFollowCQ = (result.equals("") || result.equals("1"));
                 }
-                if (name.equalsIgnoreCase("autoCallFollow")) {//自动呼叫关注
+                if (name.equalsIgnoreCase("autoCallFollow")) {//Auto-call followed stations
                     GeneralVariables.autoCallFollow = (result.equals("") || result.equals("1"));
                 }
-                if (name.equalsIgnoreCase("pttDelay")) {//ptt延时设置
+                if (name.equalsIgnoreCase("pttDelay")) {//PTT delay setting
                     GeneralVariables.pttDelay = result.equals("") ? 100 : Integer.parseInt(result);
                 }
-                if (name.equalsIgnoreCase("icomIp")) {//IcomIp地址
+                if (name.equalsIgnoreCase("icomIp")) {//ICOM IP address
                     GeneralVariables.icomIp = result.equals("") ? "255.255.255.255" : result;
                 }
-                if (name.equalsIgnoreCase("icomPort")) {//Icom端口
+                if (name.equalsIgnoreCase("icomPort")) {//ICOM port
                     GeneralVariables.icomUdpPort = result.equals("") ? 50001 : Integer.parseInt(result);
                 }
-                if (name.equalsIgnoreCase("icomUserName")) {//Icom用户名
+                if (name.equalsIgnoreCase("icomUserName")) {//ICOM username
                     GeneralVariables.icomUserName = result.equals("") ? "ic705" : result;
                 }
-                if (name.equalsIgnoreCase("icomPassword")) {//Icom密码
+                if (name.equalsIgnoreCase("icomPassword")) {//ICOM password
                     GeneralVariables.icomPassword = result;
                 }
-                if (name.equalsIgnoreCase("volumeValue")) {//输出音量大小
+                if (name.equalsIgnoreCase("volumeValue")) {//Output volume level
                     GeneralVariables.volumePercent = result.equals("") ? 1.0f : Float.parseFloat(result) / 100f;
                 }
-                if (name.equalsIgnoreCase("excludedCallsigns")) {//排除的呼号
+                if (name.equalsIgnoreCase("excludedCallsigns")) {//Excluded callsigns
                     GeneralVariables.addExcludedCallsigns(result);
                 }
-                if (name.equalsIgnoreCase("flexMaxRfPower")) {//指令集
+                if (name.equalsIgnoreCase("flexMaxRfPower")) {//Flex max RF power
                     GeneralVariables.flexMaxRfPower = result.equals("") ? 10 : Integer.parseInt(result);
                 }
-                if (name.equalsIgnoreCase("flexMaxTunePower")) {//指令集
+                if (name.equalsIgnoreCase("flexMaxTunePower")) {//Flex max tune power
                     GeneralVariables.flexMaxTunePower = result.equals("") ? 10 : Integer.parseInt(result);
                 }
-                if (name.equalsIgnoreCase("saveSWL")) {//保存解码信息
+                if (name.equalsIgnoreCase("saveSWL")) {//Save decoded messages
                     GeneralVariables.saveSWLMessage = result.equals("1");
                 }
-                if (name.equalsIgnoreCase("saveSWLQSO")) {//保存解码信息
+                if (name.equalsIgnoreCase("saveSWLQSO")) {//Save SWL QSO data
                     GeneralVariables.saveSWL_QSO = result.equals("1");
                 }
-                if (name.equalsIgnoreCase("audioBits")) {//输出音频是否32位浮点
+                if (name.equalsIgnoreCase("audioBits")) {//Output audio 32-bit float
                     GeneralVariables.audioOutput32Bit = result.equals("1");
                 }
-                if (name.equalsIgnoreCase("audioRate")) {//输出音频是否32位浮点
+                if (name.equalsIgnoreCase("audioRate")) {//Output audio sample rate
                     GeneralVariables.audioSampleRate =Integer.parseInt( result);
                 }
-                if (name.equalsIgnoreCase("audioInputDevice")) {//音频输入设备ID
+                if (name.equalsIgnoreCase("audioInputDevice")) {//Audio input device ID
                     GeneralVariables.audioInputDeviceId = result.equals("") ? 0 : Integer.parseInt(result);
                 }
-                if (name.equalsIgnoreCase("audioOutputDevice")) {//音频输出设备ID
+                if (name.equalsIgnoreCase("audioOutputDevice")) {//Audio output device ID
                     GeneralVariables.audioOutputDeviceId = result.equals("") ? 0 : Integer.parseInt(result);
                 }
                 if (name.equalsIgnoreCase("usbAudioInputVid")) {
@@ -2200,16 +2200,16 @@ public class DatabaseOpr extends SQLiteOpenHelper {
                 if (name.equalsIgnoreCase("usbAudioOutputPid")) {
                     GeneralVariables.usbAudioOutputProductId = result.equals("") ? 0 : Integer.parseInt(result);
                 }
-                if (name.equalsIgnoreCase("deepMode")) {//是不是深度解码模式
+                if (name.equalsIgnoreCase("deepMode")) {//Deep decode mode
                     GeneralVariables.deepDecodeMode =result.equals("1");
                 }
-                if (name.equalsIgnoreCase("dataBits")) {//串口数据位
+                if (name.equalsIgnoreCase("dataBits")) {//Serial data bits
                     GeneralVariables.serialDataBits =Integer.parseInt(result);
                 }
-                if (name.equalsIgnoreCase("stopBits")) {//串口停止位
+                if (name.equalsIgnoreCase("stopBits")) {//Serial stop bits
                     GeneralVariables.serialStopBits =Integer.parseInt(result);
                 }
-                if (name.equalsIgnoreCase("parityBits")) {//串口校验位
+                if (name.equalsIgnoreCase("parityBits")) {//Serial parity bits
                     GeneralVariables.serialParity =Integer.parseInt(result);
                 }
 
@@ -2246,7 +2246,7 @@ public class DatabaseOpr extends SQLiteOpenHelper {
 
             cursor.close();
 
-            GetAllQSLCallsign.get(db);//获取通联过的呼号
+            GetAllQSLCallsign.get(db);//Get previously contacted callsigns
 
             if (onAfterQueryConfig != null) {
                 onAfterQueryConfig.doOnAfterQueryConfig(null, null);

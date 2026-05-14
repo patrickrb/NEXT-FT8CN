@@ -1,7 +1,7 @@
 package com.bg7yoz.ft8cn.flex;
 
 /**
- * 用于区分Flex各命令的枚举
+ * Enum for distinguishing Flex commands
  * @author BGY70Z
  * @date 2023-03-20
  */

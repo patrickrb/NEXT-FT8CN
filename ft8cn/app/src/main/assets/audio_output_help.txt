@@ -1,5 +1,5 @@
-关于音频输出设置
+About Audio Output Settings
 
-采样位深：也称采样精度，FT8CN只有16位整型和32位浮点可选。采样位数是表示声音强度量化后的精细程度，它的数值越大，波动幅度的分辨率也就越高，所发出声音的能力越强。
+Sample bit depth: Also called sample precision. FT8CN offers 16-bit integer and 32-bit float options. The sample bit depth represents the precision of sound intensity quantization - higher values provide greater resolution in amplitude and stronger sound output capability.
 
-采样率：也称取样频率, 指每秒钟取得声音样本的次数。采样频率越高，声音的质量也就越好，但占的资源也多。
+Sample rate: Also called sampling frequency, it refers to the number of sound samples taken per second. Higher sampling frequencies produce better sound quality but consume more resources.

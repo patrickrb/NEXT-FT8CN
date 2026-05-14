@@ -1,7 +1,7 @@
 package com.bg7yoz.ft8cn.wave;
 /**
- * 写WAVE文件的头。
- * 已经弃用。FT8CN不做音频文件的操作。
+ * Write the WAV file header.
+ * Deprecated. FT8CN no longer performs audio file operations.
  * @author BGY70Z
  * @date 2023-03-20
  */
@@ -18,7 +18,7 @@ public class WriteWavHeader {
     private final int channels;
     private final int totalAudioLen;
     private final int longSampleRate;
-    String TAG = "HamAudioRecorder";//调试用标志
+    String TAG = "HamAudioRecorder";//debug tag
 
     public WriteWavHeader( int totalAudioLen, int longSampleRate, int channels, int samplesBits) {
         if (samplesBits == AudioFormat.ENCODING_PCM_16BIT)
@@ -36,7 +36,7 @@ public class WriteWavHeader {
     }
 
     private byte[] makeWaveHeader(){
-        int file_size = totalAudioLen + 44 - 8;//文件大小，刨除前面RIFF和file_size
+        int file_size = totalAudioLen + 44 - 8;//file size, excluding the preceding RIFF and file_size fields
         byte[] header = new byte[44];
         header[0] = 'R'; // RIFF/WAVE header
         header[1] = 'I';
@@ -58,9 +58,9 @@ public class WriteWavHeader {
         header[17] = 0;
         header[18] = 0;
         header[19] = 0;
-        header[20] = 1; // format = 1表示PCM编码
+        header[20] = 1; // format = 1 indicates PCM encoding
         header[21] = 0;
-        header[22] = (byte) channels;//1为单声道，2是双声道
+        header[22] = (byte) channels;//1 = mono, 2 = stereo
         header[23] = 0;
         header[24] = (byte) (longSampleRate & 0xff);
         header[25] = (byte) ((longSampleRate >> 8) & 0xff);
@@ -72,21 +72,21 @@ public class WriteWavHeader {
         header[30] = (byte) ((samplesBits >> 16) & 0xff);
         header[31] = (byte) ((samplesBits >> 24) & 0xff);
 
-        //2字节数据块长度(每个样本的字节数=通道数*每次采样得到的样本位数/8)
+        //2-byte block length (bytes per sample = channels * bits per sample / 8)
         if (samplesBits==AudioFormat.ENCODING_PCM_16BIT) {
             header[32] = (byte) (channels * samplesBits);
             header[33] = 0;
-            header[34] = 16; // 每个采样点的位数
+            header[34] = 16; // bits per sample
             header[35] = 0;
         }else if (samplesBits==AudioFormat.ENCODING_PCM_8BIT){
             header[32] = (byte) (channels );
             header[33] = 0;
-            header[34] = 8; // 每个采样点的位数
+            header[34] = 8; // bits per sample
             header[35] = 0;
         }else {
             header[32] = (byte) (channels * samplesBits / 8);
             header[33] = 0;
-            header[34] = (byte) samplesBits; //每个采样点的位数
+            header[34] = (byte) samplesBits; //bits per sample
             header[35] = 0;
         }
 
@@ -95,7 +95,7 @@ public class WriteWavHeader {
         header[37] = 'a';
         header[38] = 't';
         header[39] = 'a';
-        //pcm音频数据大小
+        //PCM audio data size
         header[40] = (byte) (totalAudioLen & 0xff);
         header[41] = (byte) ((totalAudioLen >> 8) & 0xff);
         header[42] = (byte) ((totalAudioLen >> 16) & 0xff);
@@ -108,7 +108,7 @@ public class WriteWavHeader {
         try {
             dos.write(makeWaveHeader());
         } catch (IOException e) {
-            Log.e(TAG, String.format("创建wav文件头（WriteWavHeader）错误！%s", e.getMessage()));
+            Log.e(TAG, String.format("Error creating WAV file header (WriteWavHeader)! %s", e.getMessage()));
         }
 
     }
@@ -120,7 +120,7 @@ public class WriteWavHeader {
             raf.write(makeWaveHeader());
             raf.close();
         } catch (IOException e) {
-            Log.e(TAG, String.format("修改wav文件头（modifyHeader）错误！%s", e.getMessage()));
+            Log.e(TAG, String.format("Error modifying WAV file header (modifyHeader)! %s", e.getMessage()));
         }
 
     }

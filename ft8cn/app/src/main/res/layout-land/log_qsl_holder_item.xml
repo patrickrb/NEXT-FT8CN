@@ -54,7 +54,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/guideline7"
         app:layout_constraintTop_toTopOf="@+id/guideline12"
-        tools:text="网格:OL54" />
+        tools:text="Grid:OL54" />
 
     <TextView
         android:id="@+id/logIsQSLTextView"
@@ -65,7 +65,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="@+id/guideline7"
         app:layout_constraintTop_toTopOf="@+id/guideline12"
-        tools:text="已确认" />
+        tools:text="Confirmed" />
 
     <TextView
         android:id="@+id/logQSLWhereTextView"
@@ -77,7 +77,7 @@
         app:layout_constraintBottom_toBottomOf="@+id/logQSOcCommentTextView"
         app:layout_constraintEnd_toStartOf="@+id/logQSOcCommentTextView"
         app:layout_constraintTop_toTopOf="@+id/logQSOcCommentTextView"
-        tools:text="中国黑龙江" />
+        tools:text="China Heilongjiang" />
 
 
     <TextView
@@ -89,7 +89,7 @@
         app:layout_constraintBottom_toTopOf="@+id/guideline12"
         app:layout_constraintStart_toStartOf="@+id/guideline7"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="起始时间:20220709 020515" />
+        tools:text="Start time:20220709 020515" />
 
 
     <TextView
@@ -101,7 +101,7 @@
         app:layout_constraintBottom_toBottomOf="@+id/logQSOStartTimeTextView"
         app:layout_constraintStart_toEndOf="@+id/logQSOStartTimeTextView"
         app:layout_constraintTop_toTopOf="@+id/logQSOStartTimeTextView"
-        tools:text="结束时间:20220709 020515" />
+        tools:text="End time:20220709 020515" />
 
     <TextView
         android:id="@+id/logQSOGridTextView"
@@ -113,7 +113,7 @@
         app:layout_constraintBottom_toTopOf="@+id/guideline12"
         app:layout_constraintEnd_toStartOf="@+id/guideline7"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="网格:OL50" />
+        tools:text="Grid:OL50" />
 
     <TextView
         android:id="@+id/logQSOModeTextView"
@@ -125,7 +125,7 @@
         app:layout_constraintEnd_toStartOf="@+id/logQSLWhereTextView"
         app:layout_constraintStart_toEndOf="@+id/logQSOSendTextView"
         app:layout_constraintTop_toTopOf="@+id/logQSOSendTextView"
-        tools:text="模式:FT8" />
+        tools:text="Mode:FT8" />
 
 
     <TextView
@@ -137,7 +137,7 @@
         app:layout_constraintBottom_toBottomOf="@+id/logIsQSLTextView"
         app:layout_constraintStart_toEndOf="@+id/logIsQSLTextView"
         app:layout_constraintTop_toTopOf="@+id/logIsQSLTextView"
-        tools:text="接收报告:-13" />
+        tools:text="Rcvd report:-13" />
 
     <TextView
         android:id="@+id/logQSOSendTextView"
@@ -148,7 +148,7 @@
         app:layout_constraintBottom_toBottomOf="@+id/logQSOReceiveTextView"
         app:layout_constraintStart_toEndOf="@+id/logQSOReceiveTextView"
         app:layout_constraintTop_toTopOf="@+id/logQSOReceiveTextView"
-        tools:text="发送报告:-20" />
+        tools:text="Sent report:-20" />
 
     <TextView
         android:id="@+id/logQSOcCommentTextView"
@@ -169,7 +169,7 @@
         app:layout_constraintBottom_toTopOf="@+id/guideline12"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="波长:20m" />
+        tools:text="Band:20m" />
 
 
     <TextView
@@ -182,7 +182,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/logQSLBandTextView"
         app:layout_constraintTop_toTopOf="@+id/logQSLBandTextView"
-        tools:text="频率:14.75000" />
+        tools:text="Freq:14.75000" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline7"

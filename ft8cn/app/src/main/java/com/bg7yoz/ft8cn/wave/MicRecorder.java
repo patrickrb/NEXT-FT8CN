@@ -1,6 +1,6 @@
 package com.bg7yoz.ft8cn.wave;
 /**
- * 使用Mic录音的操作。
+ * Operations for recording using the microphone.
  * @author BGY70Z
  * @date 2023-03-20
  */
@@ -22,17 +22,17 @@ import com.bg7yoz.ft8cn.ui.ToastMessage;
 
 public class MicRecorder {
     private static final String TAG = "MicRecorder";
-    private int bufferSize = 0;//最小缓冲区大小
-    private static final int sampleRateInHz = 12000;//采样率
-    private static final int channelConfig = AudioFormat.CHANNEL_IN_MONO; //单声道
-    //private static final int audioFormat = AudioFormat.ENCODING_PCM_16BIT; //量化位数
-    private static final int audioFormat = AudioFormat.ENCODING_PCM_FLOAT; //量化位数
+    private int bufferSize = 0;//minimum buffer size
+    private static final int sampleRateInHz = 12000;//sampling rate
+    private static final int channelConfig = AudioFormat.CHANNEL_IN_MONO; //mono
+    //private static final int audioFormat = AudioFormat.ENCODING_PCM_16BIT; //quantization bit depth
+    private static final int audioFormat = AudioFormat.ENCODING_PCM_FLOAT; //quantization bit depth
 
-    private AudioRecord audioRecord = null;//AudioRecord对象
-    private UsbAudioDevice usbAudioDevice = null; // USB音频设备
+    private AudioRecord audioRecord = null;//AudioRecord object
+    private UsbAudioDevice usbAudioDevice = null; // USB audio device
     private boolean useUsbAudio = false;
 
-    private boolean isRunning = false;//是否处于录音的状态。
+    private boolean isRunning = false;//whether currently in recording state
     private OnDataListener onDataListener;
 
     public interface OnDataListener{
@@ -54,13 +54,13 @@ public class MicRecorder {
             Log.w(TAG, "USB audio device not available, falling back to default");
         }
 
-        //计算最小缓冲区
+        //calculate minimum buffer size
         bufferSize = AudioRecord.getMinBufferSize(sampleRateInHz, channelConfig, audioFormat);
 //        audioRecord = new AudioRecord(MediaRecorder.AudioSource.MIC, sampleRateInHz
         audioRecord = new AudioRecord(MediaRecorder.AudioSource.DEFAULT, sampleRateInHz
-                , channelConfig, audioFormat, bufferSize);//创建AudioRecorder对象
+                , channelConfig, audioFormat, bufferSize);//create AudioRecorder object
 
-        //设置首选输入设备
+        //set preferred input device
         if (GeneralVariables.audioInputDeviceId > 0) {
             AudioDeviceInfo deviceInfo = findAudioDeviceById(
                     GeneralVariables.audioInputDeviceId, AudioManager.GET_DEVICES_INPUTS);
@@ -113,7 +113,7 @@ public class MicRecorder {
     }
 
     /**
-     * 根据设备ID查找AudioDeviceInfo
+     * Find AudioDeviceInfo by device ID
      */
     private AudioDeviceInfo findAudioDeviceById(int deviceId, int deviceType) {
         Context context = GeneralVariables.getMainContext();
@@ -154,7 +154,7 @@ public class MicRecorder {
     private void startAudioRecordCapture() {
         float[] buffer = new float[bufferSize];
         try {
-            audioRecord.startRecording();//开始录音
+            audioRecord.startRecording();//start recording
         }catch (Exception e){
             ToastMessage.show(String.format(GeneralVariables.getStringFromResource(
                     R.string.recorder_cannot_record),e.getMessage()));
@@ -165,14 +165,14 @@ public class MicRecorder {
             @Override
             public void run() {
                 while (isRunning) {
-                    //判断是否处于录音状态，state!=3，说明没有处于录音的状态
+                    //check if in recording state; state!=3 means not in recording state
                     if (audioRecord.getRecordingState() != AudioRecord.RECORDSTATE_RECORDING) {
                         isRunning = false;
-                        Log.d(TAG, String.format("录音失败，状态码：%d", audioRecord.getRecordingState()));
+                        Log.d(TAG, String.format("Recording failed, state code: %d", audioRecord.getRecordingState()));
                         break;
                     }
 
-                    //读录音的数据
+                    //read recording data
                     int bufferReadResult = audioRecord.read(buffer, 0, bufferSize,AudioRecord.READ_BLOCKING);
 
                     if (onDataListener!=null){
@@ -181,7 +181,7 @@ public class MicRecorder {
                 }
                 try {
                     if (audioRecord.getRecordingState() == AudioRecord.RECORDSTATE_RECORDING) {
-                        audioRecord.stop();//停止录音
+                        audioRecord.stop();//stop recording
                     }
                 }catch (Exception e){
                     ToastMessage.show(String.format(GeneralVariables.getStringFromResource(
@@ -193,7 +193,7 @@ public class MicRecorder {
     }
 
     /**
-     * 停止录音。当录音停止后，监听列表中的监听器全部删除。
+     * Stop recording. When recording stops, all monitors in the listener list are removed.
      */
     public void stopRecord() {
         isRunning = false;

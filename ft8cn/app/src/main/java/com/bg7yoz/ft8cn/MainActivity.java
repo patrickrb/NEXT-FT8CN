@@ -1,12 +1,12 @@
 package com.bg7yoz.ft8cn;
 /**
- * FT8CN程序的主Activity。本APP采用Fragment框架实现，每个Fragment实现不同的功能。
+ * Main Activity of the FT8CN application. This app uses the Fragment framework, with each Fragment implementing different functionality.
  * ----2022.5.6-----
- * 主要完成以下功能：
- * 1.生成MainViewModel实例。MainViewModel是用于整个生存周期，用于录音、解析等功能。
- * 2.录音、存储的权限申请。
- * 3.实现Fragment的导航管理。
- * 4.USB串口连接后的提示
+ * Main features:
+ * 1. Create MainViewModel instance. MainViewModel persists for the entire lifecycle, handling recording, decoding, etc.
+ * 2. Request permissions for recording and storage.
+ * 3. Implement Fragment navigation management.
+ * 4. Prompt after USB serial port connection.
  *
  * @author BG7YOZ
  * @date 2022.5.6
@@ -82,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
     private MainActivityBinding binding;
     private FloatView floatView;
 
-    private ShareLogsProgressDialog dialog = null;//生成共享log的对话框
+    private ShareLogsProgressDialog dialog = null;//dialog for generating shared log
 
 
     String[] permissions = new String[]{Manifest.permission.RECORD_AUDIO
@@ -113,38 +113,30 @@ public class MainActivity extends AppCompatActivity {
         }
 
         checkPermission();
-        //全屏
+        //fullscreen
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN
                 , WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
-        //禁止休眠
+        //prevent sleep
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
                 , WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         super.onCreate(savedInstanceState);
         GeneralVariables.getInstance().setMainContext(getApplicationContext());
 
-        //判断是不是简体中文
-        GeneralVariables.isTraditionalChinese =
-                getResources().getConfiguration().locale.getDisplayCountry().equals("中國");
-
-        //确定是不是中国、香港、澳门、台湾
-        GeneralVariables.isChina = (getResources().getConfiguration().locale
-                .getLanguage().toUpperCase().startsWith("ZH"));
-
         mainViewModel = MainViewModel.getInstance(this);
         binding = MainActivityBinding.inflate(getLayoutInflater());
-        binding.initDataLayout.setVisibility(View.VISIBLE);//显示LOG页面
+        binding.initDataLayout.setVisibility(View.VISIBLE);//show the LOG page
         setContentView(binding.getRoot());
 
 
         ToastMessage.getInstance();
-        registerBluetoothReceiver();//注册蓝牙动作改变的广播
+        registerBluetoothReceiver();//register Bluetooth state change broadcast
         if (mainViewModel.isBTConnected()) {
             mainViewModel.setBlueToothOn();
         }
 
 
-        //观察DEBUG信息
+        //observe DEBUG messages
         GeneralVariables.mutableDebugMessage.observe(this, new Observer<String>() {
             @Override
             public void onChanged(String s) {
@@ -174,7 +166,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
-        //观察时钟的变化，显示进度条
+        //observe timer changes, display progress bar
         mainViewModel.timerSec.observe(this, new Observer<Long>() {
             @Override
             public void onChanged(Long aLong) {
@@ -188,25 +180,25 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        //添加点击发射消息提示窗口点击关闭动作
+        //add click-to-close action for the transmit message notification window
         binding.transmittingLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 binding.transmittingLayout.setVisibility(View.GONE);
             }
         });
-        //清空缓存中的文件
+        //clear cached files
         //deleteFolderFile(this.getCacheDir().getPath());
 
         //Log.e(TAG, this.getCacheDir().getPath());
 
-        //用于Fragment的导航。
+        //For Fragment navigation.
         NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.fragmentContainerView);
-        assert navHostFragment != null;//断言不为空
+        assert navHostFragment != null;//assert not null
         navController = navHostFragment.getNavController();
 
         NavigationUI.setupWithNavController(binding.navView, navController);
-        //此处增加回调是因为当APP主动navigation后，无法回到解码的界面
+        //Added this callback because after the app actively navigates, it cannot return to the decode view
         binding.navView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -230,16 +222,16 @@ public class MainActivity extends AppCompatActivity {
 
             InitFloatView();
         }
-        //初始化数据
+        //initialize data
         InitData();
 
 
-        //观察是不是flex radio
+        //observe whether it's a Flex radio
         mainViewModel.mutableIsFlexRadio.observe(this, new Observer<Boolean>() {
             @Override
             public void onChanged(Boolean aBoolean) {
                 if (aBoolean) {
-                    //添加flex配置按钮
+                    //add Flex configuration button
                     floatView.addButton(R.id.flex_radio, "flex_radio", R.drawable.flex_icon
                             , new View.OnClickListener() {
                                 @Override
@@ -247,18 +239,18 @@ public class MainActivity extends AppCompatActivity {
                                     navController.navigate(R.id.flexRadioInfoFragment);
                                 }
                             });
-                } else {//删除flex配置按钮
+                } else {//remove Flex configuration button
                     floatView.deleteButtonByName("flex_radio");
                 }
             }
         });
 
-        //观察是不是xiegu radio
+        //observe whether it's a XieGu radio
         mainViewModel.mutableIsXieguRadio.observe(this, new Observer<Boolean>() {
             @Override
             public void onChanged(Boolean aBoolean) {
                 if (aBoolean) {
-                    //添加xiegu配置按钮
+                    //add XieGu configuration button
                     floatView.addButton(R.id.xiegu_radio, "xiegu_radio", R.drawable.xiegulogo32
                             , new View.OnClickListener() {
                                 @Override
@@ -266,13 +258,13 @@ public class MainActivity extends AppCompatActivity {
                                     navController.navigate(R.id.xieguInfoFragment);
                                 }
                             });
-                } else {//删除xiegu配置按钮
+                } else {//remove XieGu configuration button
                     floatView.deleteButtonByName("xiegu_radio");
                 }
             }
         });
 
-        //关闭串口设备列表按钮
+        //close serial port device list button
         binding.closeSelectSerialPortImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -280,7 +272,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        //观察串口设备列表的变化
+        //observe changes to the serial port device list
         mainViewModel.mutableSerialPorts.observe(this, new Observer<ArrayList<CableSerialPort.SerialPort>>() {
             @Override
             public void onChanged(ArrayList<CableSerialPort.SerialPort> serialPorts) {
@@ -288,14 +280,14 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        //列USB设备列表
+        //list USB devices
         mainViewModel.getUsbDevice();
 
 
-        //设置发射消息框的动画
+        //set animation for the transmit message box
         binding.transmittingMessageTextView.setAnimation(AnimationUtils.loadAnimation(this
                 , R.anim.view_blink));
-        //观察发射的状态
+        //observe transmit state
         mainViewModel.ft8TransmitSignal.mutableIsTransmitting.observe(this,
                 new Observer<Boolean>() {
                     @Override
@@ -308,7 +300,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
 
-        //观察发射内容的变化
+        //observe transmit content changes
         mainViewModel.ft8TransmitSignal.mutableTransmittingMessage.observe(this,
                 new Observer<String>() {
                     @Override
@@ -317,11 +309,11 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
 
-        //判断导入共享log文件的工作线程还在，如果在，就显示对话框
+        //check if the shared log import worker thread is still running; if so, show the dialog
         if (Boolean.TRUE.equals(mainViewModel.mutableImportShareRunning.getValue())) {
             showShareDialog();
         }else {
-            //读取共享的文件
+            //read the shared file
             doReceiveShareFile(getIntent());
         }
 
@@ -329,7 +321,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     /**
-     * 接收共享文件
+     * Receive shared file.
      * @param intent intent
      */
     private void doReceiveShareFile(Intent intent) {
@@ -337,12 +329,12 @@ public class MainActivity extends AppCompatActivity {
 
         if (uri != null) {
             ImportSharedLogs importSharedLogs = null;
-            //先显示导入log的对话框
+            //first show the log import dialog
             showShareDialog();
             try {
 
                 importSharedLogs = new ImportSharedLogs(mainViewModel);
-                Log.e(TAG,"开始导入。。。");
+                Log.e(TAG,"Starting import...");
                 mainViewModel.mutableImportShareRunning.setValue(true);
                 importSharedLogs.doImport(getBaseContext().getContentResolver().openInputStream(uri)
                         ,new OnShareLogEvents() {
@@ -380,17 +372,17 @@ public class MainActivity extends AppCompatActivity {
                 });
             } catch (IOException e) {
                 mainViewModel.mutableImportShareRunning.postValue(false);
-                Log.e(TAG,String.format("错误：%s",e.getMessage()));
+                Log.e(TAG,String.format("Error: %s",e.getMessage()));
                 ToastMessage.show(e.getMessage());
             }
         } else {
-            Log.e(TAG, "读文件类型时，文件没有找到。");
+            Log.e(TAG, "File not found when reading file type.");
         }
     }
 
 
     /**
-     * 添加浮动按钮
+     * Add floating buttons.
      */
 
     private void InitFloatView() {
@@ -401,7 +393,7 @@ public class MainActivity extends AppCompatActivity {
         floatView.setFloatBoard(FloatView.FLOAT_BOARD.RIGHT);
 
         floatView.setButtonBackgroundResourceId(R.drawable.float_button_style);
-        //动态添加按钮，建议使用静态的ID，静态ID在VALUES/FLOAT_BUTTON_IDS.XML中设置
+        //dynamically add buttons; recommend using static IDs defined in VALUES/FLOAT_BUTTON_IDS.XML
         floatView.addButton(R.id.float_nav, "float_nav", R.drawable.ic_baseline_fullscreen_24
                 , new View.OnClickListener() {
                     @Override
@@ -435,7 +427,7 @@ public class MainActivity extends AppCompatActivity {
                         new SetVolumeDialog(binding.container.getContext(), mainViewModel).show();
                     }
                 });
-        //打开网格追踪
+        //open grid tracker
         floatView.addButton(R.id.grid_tracker, "grid_tracker", R.drawable.ic_baseline_grid_tracker_24
                 , new View.OnClickListener() {
                     @Override
@@ -458,19 +450,19 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * 初始化一些数据
+     * Initialize data.
      */
     private void InitData() {
-        if (mainViewModel.configIsLoaded) return;//如果数据已经读取一遍了，就不用再读取了。
+        if (mainViewModel.configIsLoaded) return;//if data has already been loaded, no need to load again.
 
-        //读取波段数据
+        //load band data
         if (mainViewModel.operationBand == null) {
             mainViewModel.operationBand = OperationBand.getInstance(getBaseContext());
         }
 
         mainViewModel.databaseOpr.getQslDxccToMap();
 
-        //获取所有的配置参数
+        //get all configuration parameters
         mainViewModel.databaseOpr.getAllConfigParameter(new OnAfterQueryConfig() {
             @Override
             public void doOnBeforeQueryConfig(String KeyName) {
@@ -480,21 +472,21 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void doOnAfterQueryConfig(String KeyName, String Value) {
                 mainViewModel.configIsLoaded = true;
-                //此处梅登海德已经通过数据库得到了，但是如果GPS能获取到，还是用GPS的
+                //Maidenhead grid was already obtained from the database, but if GPS can provide it, use GPS instead
                 String grid = MaidenheadGrid.getMyMaidenheadGrid(getApplicationContext());
-                if (!grid.equals("")) {//说明获取到了GPS数据
+                if (!grid.equals("")) {//GPS data was obtained
                     GeneralVariables.setMyMaidenheadGrid(grid);
-                    //写到数据库中
+                    //write to database
                     mainViewModel.databaseOpr.writeConfig("grid", grid, null);
                 }
 
                 mainViewModel.ft8TransmitSignal.setTimer_sec(GeneralVariables.transmitDelay);
-                //如果呼号、网格为空，就进入设置界面
+                //if callsign or grid is empty, navigate to the settings page
                 if (GeneralVariables.getMyMaidenheadGrid().equals("")
                         || GeneralVariables.myCallsign.equals("")) {
                     runOnUiThread(new Runnable() {
                         @Override
-                        public void run() {//导航到设置页面
+                        public void run() {//navigate to settings page
                             navController.navigate(R.id.menu_nav_config);
                         }
                     });
@@ -502,11 +494,11 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        //把历史中通联成功的呼号与网格的对应关系
+        //load the callsign-to-grid mapping from historical successful QSOs
         new DatabaseOpr.GetCallsignMapGrid(mainViewModel.databaseOpr.getDb()).execute();
 
         mainViewModel.getFollowCallsignsFromDataBase();
-        //打开呼号位置信息的数据库，目前是以内存数据库方式。
+        //open the callsign location database; currently using in-memory database.
         if (GeneralVariables.callsignDatabase == null) {
             GeneralVariables.callsignDatabase = CallsignDatabase.getInstance(getBaseContext(), null, 1);
         }
@@ -514,7 +506,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     /**
-     * 显示生成log的对话框
+     * Show the log generation dialog.
      */
     private void showShareDialog() {
         dialog = new ShareLogsProgressDialog(
@@ -529,29 +521,29 @@ public class MainActivity extends AppCompatActivity {
 
 
     /**
-     * 检查权限
+     * Check permissions.
      */
     private void checkPermission() {
         mPermissionList.clear();
 
-        //判断哪些权限未授予
+        //determine which permissions have not been granted
         for (String permission : permissions) {
             if (ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED) {
                 mPermissionList.add(permission);
             }
         }
 
-        //判断是否为空
-        if (!mPermissionList.isEmpty()) {//请求权限方法
-            String[] permissions = mPermissionList.toArray(new String[mPermissionList.size()]);//将List转为数组
+        //check if empty
+        if (!mPermissionList.isEmpty()) {//request permissions
+            String[] permissions = mPermissionList.toArray(new String[mPermissionList.size()]);//convert List to array
             ActivityCompat.requestPermissions(MainActivity.this, permissions, PERMISSION_REQUEST);
         }
     }
 
 
     /**
-     * 响应授权
-     * 这里不管用户是否拒绝，都进入首页，不再重复申请权限
+     * Handle permission response.
+     * Regardless of whether the user denies permission, proceed to the home page without repeatedly requesting permissions.
      */
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -563,12 +555,12 @@ public class MainActivity extends AppCompatActivity {
 
 
     /**
-     * 显示串口设备列表
+     * Display serial port device list.
      */
     public void setSelectUsbDevice() {
         ArrayList<CableSerialPort.SerialPort> ports = mainViewModel.mutableSerialPorts.getValue();
         binding.selectSerialPortLinearLayout.removeAllViews();
-        for (int i = 0; i < ports.size(); i++) {//动态添加串口设备列表
+        for (int i = 0; i < ports.size(); i++) {//dynamically add serial port device list
             View layout = LayoutInflater.from(getApplicationContext())
                     .inflate(R.layout.select_serial_port_list_view_item, null);
             layout.setId(i);
@@ -578,32 +570,32 @@ public class MainActivity extends AppCompatActivity {
             layout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    //连接电台并做电台的频率设置等操作
+                    //connect to the rig and configure frequency settings
                     mainViewModel.connectCableRig(getApplicationContext(), ports.get(view.getId()));
                     binding.selectSerialPortLayout.setVisibility(View.GONE);
                 }
             });
         }
 
-        //选择串口设备弹框
+        //serial port device selection popup
         if ((ports.size() >= 1) && (!mainViewModel.isRigConnected())) {
             binding.selectSerialPortLayout.setVisibility(View.VISIBLE);
-        } else {//说明没有可以识别的驱动，不显示设备弹框
+        } else {//no recognized driver found; don't show device popup
             binding.selectSerialPortLayout.setVisibility(View.GONE);
         }
     }
 
 //    /**
-//     * 删除指定文件夹中的所有文件
+//     * Delete all files in the specified folder.
 //     *
-//     * @param filePath 指定的文件夹
+//     * @param filePath The specified folder
 //     */
 //    public static void deleteFolderFile(String filePath) {
 //        try {
-//            File file = new File(filePath);//获取SD卡指定路径
-//            File[] files = file.listFiles();//获取SD卡指定路径下的文件或者文件夹
+//            File file = new File(filePath);//get the specified SD card path
+//            File[] files = file.listFiles();//get files or folders at the specified SD card path
 //            for (int i = 0; i < files.length; i++) {
-//                if (files[i].isFile()) {//如果是文件直接删除
+//                if (files[i].isFile()) {//if it's a file, delete directly
 //                    File tempFile = new File(files[i].getPath());
 //                    tempFile.delete();
 //                }
@@ -637,7 +629,7 @@ public class MainActivity extends AppCompatActivity {
                 //animationEnd = true;
                 binding.initDataLayout.setVisibility(View.GONE);
                 binding.utcProgressBar.setVisibility(View.VISIBLE);
-                InitFloatView();//显示浮窗
+                InitFloatView();//show floating window
                 //binding.floatView.setVisibility(View.VISIBLE);
             }
 
@@ -656,13 +648,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    //此方法只有在android:launchMode="singleTask"模式下起作用
+    //This method only works in android:launchMode="singleTask" mode
     @Override
     protected void onNewIntent(Intent intent) {
         if ("android.hardware.usb.action.USB_DEVICE_ATTACHED".equals(intent.getAction())) {
             mainViewModel.getUsbDevice();
         }else {
-            setIntent(intent);//因为处于单例模式，所以要更新一下intent
+            setIntent(intent);//since we're in singleTask mode, we need to update the intent
             doReceiveShareFile(getIntent());
         }
         super.onNewIntent(intent);
@@ -671,7 +663,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        if (navController.getGraph().getStartDestination() == navController.getCurrentDestination().getId()) {//说明是到最后一个页面了
+        if (navController.getGraph().getStartDestination() == navController.getCurrentDestination().getId()) {//this is the last page
             AlertDialog.Builder builder = new AlertDialog.Builder(this)
                     .setMessage(getString(R.string.exit_confirmation))
                     .setPositiveButton(getString(R.string.exit)
@@ -681,7 +673,7 @@ public class MainActivity extends AppCompatActivity {
                                     if (mainViewModel.ft8TransmitSignal.isActivated()) {
                                         mainViewModel.ft8TransmitSignal.setActivated(false);
                                     }
-                                    closeThisApp();//退出APP
+                                    closeThisApp();//exit the app
                                 }
                             }).setNegativeButton(getString(R.string.cancel)
                             , new DialogInterface.OnClickListener() {
@@ -692,7 +684,7 @@ public class MainActivity extends AppCompatActivity {
                             });
             builder.create().show();
 
-        } else {//退出activity堆栈
+        } else {//pop the activity stack
             navController.navigateUp();
             //setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR);
         }
@@ -713,7 +705,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     /**
-     * 注册蓝牙动作广播
+     * Register Bluetooth action broadcast.
      */
     private void registerBluetoothReceiver() {
         if (mReceive == null) {
@@ -736,7 +728,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * 注销蓝牙动作广播
+     * Unregister Bluetooth action broadcast.
      */
     private void unregisterBluetoothReceiver() {
         if (mReceive != null) {
@@ -748,7 +740,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         unregisterBluetoothReceiver();
-        //保证屏幕方向切换后，不会因为对话框导致闪退
+        //ensure screen orientation changes don't cause crashes due to dialog
         if (Boolean.TRUE.equals(mainViewModel.mutableImportShareRunning.getValue())) {
             if (dialog != null) {
                 dialog.dismiss();

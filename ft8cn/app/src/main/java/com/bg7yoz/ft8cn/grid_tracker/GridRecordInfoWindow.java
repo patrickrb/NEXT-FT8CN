@@ -1,6 +1,6 @@
 package com.bg7yoz.ft8cn.grid_tracker;
 /**
- * 通联日志的提示窗口。
+ * Info popup window for QSO log records.
  * @author BGY70Z
  * @date 2023-03-20
  */

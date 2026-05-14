@@ -1,6 +1,6 @@
 package com.bg7yoz.ft8cn.ui;
 /**
- * 设置信号输出强度的对话框。
+ * Dialog for setting signal output level.
  * @author BGY70Z
  * @date 2023-03-20
  */
@@ -43,7 +43,7 @@ public class SetVolumeDialog extends Dialog {
         volumeSeekBar = (SeekBar) findViewById(R.id.volumeSeekBar);
         volumeProgress=(VolumeProgress) findViewById(R.id.volumeProgress);
         volumeProgress.setAlarmValue(1.1f);
-        volumeProgress.setValueColor(getContext().getColor(R.color.volume_progress_value));//白色
+        volumeProgress.setValueColor(getContext().getColor(R.color.volume_progress_value));//White
         setVolumeText(GeneralVariables.volumePercent);
         volumeSeekBar.setProgress((int) (GeneralVariables.volumePercent*100));
 
@@ -91,9 +91,9 @@ public class SetVolumeDialog extends Dialog {
     }
 
     /**
-     * 把配置信息写到数据库
+     * Write configuration to the database
      *
-     * @param Value 值
+     * @param Value value
      */
     private void writeConfig(String Value) {
         mainViewModel.databaseOpr.writeConfig("volumeValue", Value, null);
@@ -103,7 +103,7 @@ public class SetVolumeDialog extends Dialog {
     public void show() {
         super.show();
         WindowManager.LayoutParams params = getWindow().getAttributes();
-        //设置对话框的大小，以百分比0.6
+        //Set dialog size as a percentage
         int height = getWindow().getWindowManager().getDefaultDisplay().getHeight();
         int width = getWindow().getWindowManager().getDefaultDisplay().getWidth();
         if (width > height) {

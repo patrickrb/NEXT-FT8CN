@@ -14,7 +14,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 /**
- * YAESU的部分电台，回送的数据不是连续的，所以，要做一个缓冲区，接受5字节长度。满了就复位。或发送指令时，就复位。
+ * Some YAESU rigs send data non-continuously, so a buffer is needed to receive 5-byte blocks. Resets when full or when sending a command.
  */
 public class Yaesu2Rig extends BaseRig {
     private static final String TAG = "Yaesu2Rig";
@@ -55,7 +55,7 @@ public class Yaesu2Rig extends BaseRig {
 
         if (getConnector() != null) {
             switch (getControlMode()) {
-                case ControlMode.CAT://以CIV指令
+                case ControlMode.CAT://via CAT command
                     getConnector().setPttOn(Yaesu2RigConstant.setPTTState(on));
                     break;
                 case ControlMode.RTS:
@@ -91,9 +91,9 @@ public class Yaesu2Rig extends BaseRig {
 
     @Override
     public void onReceiveData(byte[] data) {
-        //YAESU 817的指令，返回频率是5字节的，METER是2字节的。
-        //Meter是2字节的，第一字节高位功率，0-A，低位ALC 0-9,第二字节高位驻波比，0-C，0为高驻波，低位音频输入0-8
-        if (data.length == 5) {//频率
+        //YAESU 817 commands: frequency response is 5 bytes, METER is 2 bytes.
+        //Meter is 2 bytes: first byte high nibble=power 0-A, low nibble=ALC 0-9; second byte high nibble=SWR 0-C (0=high SWR), low nibble=audio input 0-8
+        if (data.length == 5) {//frequency
             long freq = Yaesu2Command.getFrequency(data);
             if (freq > -1) {
                 setFreq(freq);
@@ -107,7 +107,7 @@ public class Yaesu2Rig extends BaseRig {
     }
 
     /**
-     * 读取Meter RM;
+     * Read Meter RM;
      */
     private void readMeters() {
         if (getConnector() != null) {
@@ -126,7 +126,7 @@ public class Yaesu2Rig extends BaseRig {
             swrAlert = false;
         }
         if ((alc >= Yaesu2RigConstant.alc_817_alert_max)
-                && GeneralVariables.alc_switch_on) {//网络模式下不警告ALC
+                && GeneralVariables.alc_switch_on) {//ALC alert
             if (!alcMaxAlert) {
                 alcMaxAlert = true;
                 ToastMessage.show(GeneralVariables.getStringFromResource(R.string.alc_high_alert));
@@ -140,7 +140,7 @@ public class Yaesu2Rig extends BaseRig {
     @Override
     public void readFreqFromRig() {
         if (getConnector() != null) {
-            //clearBuffer();//清除一下缓冲区
+            //clearBuffer();//clear buffer
             getConnector().sendData(Yaesu2RigConstant.setReadOperationFreq());
         }
     }

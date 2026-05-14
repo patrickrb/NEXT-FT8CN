@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
-// VITA 形成的发现消息解析器的枚举定义
+// Enum definitions for the VITA discovery message parser
 //enum VitaTokens {
 //    nullToken ,
 //    ipToken,
@@ -23,10 +23,10 @@ import java.util.TimerTask;
 //    statusToken,
 //};
 /**
- * RadioFactory 当前发现的所有收音机。
- * RadioFactory: 实例化这个类来创建一个 Radio Factory，它将为网络上发现的无线电维护FlexRadio列表flexRadios。
+ * RadioFactory: All currently discovered radios.
+ * Instantiate this class to create a Radio Factory that maintains the FlexRadio list (flexRadios) for radios discovered on the network.
  *
- * 通过Upd协议，在4992端口的广播数据中获取vita协议数据，并解析出序列号，用于更新电台列表flexRadios。
+ * Uses UDP protocol to receive VITA protocol data from broadcast on port 4992, parsing serial numbers to update the radio list flexRadios.
  * @author BGY70Z
  * @date 2023-03-20
  */
@@ -43,8 +43,8 @@ public class FlexRadioFactory {
     public ArrayList<FlexRadio> flexRadios=new ArrayList<>();
 
     /**
-     * 获取电台列表实例
-     * @return 电台列表实例
+     * Get the radio list instance
+     * @return radio list instance
      */
     public static FlexRadioFactory getInstance(){
         if (instance==null){
@@ -62,7 +62,7 @@ public class FlexRadioFactory {
             @Override
             public void OnReceiveData(DatagramSocket socket, DatagramPacket packet, byte[] data) {
                 VITA vita = new VITA(data);
-                if (vita.isAvailable//如果数据包有效，且classId=0x534CFFFF,StreamId=0x800，更新电台列表
+                if (vita.isAvailable//If packet is valid and classId=0x534CFFFF, StreamId=0x800, update the radio list
                         &&vita.informationClassCode==VITA.FLEX_CLASS_ID
                         &&vita.packetClassCode==VITA.VS_Discovery
                         &&vita.streamId==VITA.FLEX_Discovery_stream_ID){
@@ -85,12 +85,12 @@ public class FlexRadioFactory {
             refreshTask=new TimerTask() {
                 @Override
                 public void run() {
-                    Log.e(TAG, "run: 检查离线" );
+                    Log.e(TAG, "run: checking offline" );
                     checkOffLineRadios();
                 }
             };
             refreshTimer=new Timer();
-            refreshTimer.schedule(refreshTask, 1000, 1000);//检查电台列表中的电台是否在线（每一秒）
+            refreshTimer.schedule(refreshTask, 1000, 1000);//Check if radios in the list are online (every second)
         }
     }
     public void cancelRefreshTimer(){
@@ -103,9 +103,9 @@ public class FlexRadioFactory {
     }
 
     /**
-     * 从数据中查找电台的序列号
-     * @param s 数据
-     * @return 序列号
+     * Find the radio's serial number from the data
+     * @param s data
+     * @return serial number
      */
     private String getSerialNum(String s){
         String[] strings=s.split(" ");
@@ -118,9 +118,9 @@ public class FlexRadioFactory {
     }
 
     /**
-     * 在电台列表中查找有没有指定序列号的电台
-     * @param serial 序列号
-     * @return 电台实例
+     * Search for a radio with the specified serial number in the radio list
+     * @param serial serial number
+     * @return radio instance
      */
     public FlexRadio checkFlexRadioBySerial(String serial){
         for (FlexRadio radio:flexRadios) {
@@ -147,7 +147,7 @@ public class FlexRadioFactory {
     }
 
     /**
-     * 检查电台是不是离线，如果离线，触发离线事件
+     * Check if a radio is offline; if so, trigger the offline event
      */
     private void checkOffLineRadios(){
         for (FlexRadio radio:flexRadios) {
@@ -175,7 +175,7 @@ public class FlexRadioFactory {
 
 
     /**
-     * 电台列表变化的接口
+     * Interface for radio list change events
      */
     public static interface OnFlexRadioEvents{
         void OnFlexRadioAdded(FlexRadio flexRadio);

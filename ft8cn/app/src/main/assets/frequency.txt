@@ -1,4 +1,4 @@
-发射FT8信号的频率是指在当前波段上，发出的声音频率，频率范围一般是10-3000赫兹之间。
-同频发射：是指声音频率使用您呼叫目标的频率。此时默认频率值无效。
-异频发射：是指您的声音频率使用设定的默认频率。在异频发射模式下，您也可以在频谱界面中通过触摸瀑布图修改默认频率。
-关于发射频率，为了防止您的发射频率与其他友台的频率重叠，建议在频谱中观察一下当前所接收到的信号的频率情况，然后选择与接收的各信号不重叠的频率。
+The FT8 signal transmission frequency refers to the audio frequency produced on the current band, typically ranging between 10-3000 Hz.
+Same-frequency transmission: The audio frequency uses the frequency of your call target. In this case, the default frequency value is ignored.
+Split-frequency transmission: Your audio frequency uses the set default frequency. In split-frequency mode, you can also change the default frequency by tapping on the waterfall display in the spectrum view.
+Regarding transmission frequency: To prevent your transmission frequency from overlapping with other stations, it is recommended to observe the frequencies of currently received signals on the spectrum, then choose a frequency that does not overlap with any received signals.

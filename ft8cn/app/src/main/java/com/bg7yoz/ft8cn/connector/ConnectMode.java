@@ -1,7 +1,7 @@
 package com.bg7yoz.ft8cn.connector;
 
 /**
- * 连接的模式
+ * Connection mode constants
  * @author BGY70Z
  * @date 2023-03-20
  */

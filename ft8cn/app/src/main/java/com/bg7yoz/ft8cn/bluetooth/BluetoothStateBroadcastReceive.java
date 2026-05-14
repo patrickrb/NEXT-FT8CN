@@ -1,6 +1,6 @@
 package com.bg7yoz.ft8cn.bluetooth;
 /**
- * 蓝牙状态广播类。连接、断开、变化
+ * Bluetooth state broadcast class. Handles connection, disconnection, and state changes.
  * @writer bg7yoz
  * @date 2022-07-22
  */

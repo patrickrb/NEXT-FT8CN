@@ -14,7 +14,7 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 /**
- * 蓝牙串口有关的服务
+ * Bluetooth serial port service
  * BG7YOZ
  * 2023-03
  */

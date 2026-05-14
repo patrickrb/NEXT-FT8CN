@@ -20,22 +20,22 @@ public class Yaesu3RigConstant {
     public static final int AM_N = 0x0D;
 
 
-    public static final int swr_39_alert_max=125;//相当于3.0
-    public static final int alc_39_alert_max=125;//超过，在表上显示红色
-    //PTT状态
+    public static final int swr_39_alert_max=125;//equivalent to 3.0
+    public static final int alc_39_alert_max=125;//shows red on meter when exceeded
+    //PTT state
 
-    //指令集
+    //command set
     private static final String PTT_ON = "MX1;";
     private static final String PTT_OFF = "MX0;";
     private static final String USB_MODE = "MD02;";
     private static final String USB_MODE_DATA = "MD09;";
     private static final String DATA_U_MODE = "MD0C;";
     private static final String READ_FREQ = "FA;";
-    private static final String READ_39METER_ALC = "RM4;";//38,39的指令都是一样的
-    private static final String READ_39METER_SWR = "RM6;";//38,39的指令都是一样的
+    private static final String READ_39METER_ALC = "RM4;";//commands for 38 and 39 are the same
+    private static final String READ_39METER_SWR = "RM6;";//commands for 38 and 39 are the same
 
-    private static final String TX_ON = "TX1;";//用于FT450 ptt
-    private static final String TX_OFF = "TX0;";//用于FT450 ptt
+    private static final String TX_ON = "TX1;";//for FT450 PTT
+    private static final String TX_OFF = "TX0;";//for FT450 PTT
 
 
 
@@ -84,8 +84,8 @@ public class Yaesu3RigConstant {
         }
 
     }
-    //针对YAESU 450的发射指令
-    public static byte[] setPTT_TX_On(boolean on) {//用于FT450
+    //transmit command for YAESU 450
+    public static byte[] setPTT_TX_On(boolean on) {//for FT450
         if (on) {
             return TX_ON.getBytes();
         } else {
@@ -105,7 +105,7 @@ public class Yaesu3RigConstant {
     }
 
     @SuppressLint("DefaultLocale")
-    public static byte[] setOperationFreq11Byte(long freq) {//用于KENWOOD TS590
+    public static byte[] setOperationFreq11Byte(long freq) {//for KENWOOD TS590
         return String.format("FA%011d;",freq).getBytes();
     }
 

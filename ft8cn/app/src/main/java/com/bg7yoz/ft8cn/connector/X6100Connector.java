@@ -25,7 +25,7 @@ import java.io.IOException;
 import java.util.Objects;
 
 /**
- * 网络连接方式连接xiegu ft8cns
+ * Network connector for Xiegu FT8CNs
  * @author BGY70Z
  * @date 2023-12-01
  */
@@ -67,9 +67,9 @@ public class X6100Connector extends BaseRigConnector {
     }
 
     /**
-     * 把原始的声音数据转换成16位的数组数据。
-     * @param buffer 原始的声音数据(8位)
-     * @return 返回16位的int格式数组
+     * Convert raw audio data to 16-bit array data.
+     * @param buffer raw audio data (8-bit)
+     * @return 16-bit int format array
      */
     private float[] byteDataToFloatData(byte[] buffer){
         float[] data=new float[buffer.length /2];
@@ -112,19 +112,19 @@ public class X6100Connector extends BaseRigConnector {
         });
 
 
-        //当有命令返回值时的事件
+        //Event when a command response is received
         xieguRadio.setOnCommandListener(new X6100Radio.OnCommandListener() {
             @Override
             public void onResponse(X6100Radio.XieguResponse response) {
                 Log.d(TAG, String.format("onResponse(%s): %s"
                         ,response.xieguCommand.toString(),response.rawData ));
                 if (response.xieguCommand == X6100Radio.XieguCommand.STREAM){
-                   if (response.resultContent.toUpperCase().contains("PORT=")){//说明流端口打开了
+                   if (response.resultContent.toUpperCase().contains("PORT=")){//Indicates the stream port is open
                         streamIsOn =true;
                    }
                 }
 
-                if (response.resultCode!=0) {//只显示失败的命令
+                if (response.resultCode!=0) {//Only show failed commands
                     ToastMessage.show(response.resultContent);
                     Log.e(TAG, "onResponse: "+response.resultContent);
                 }
@@ -132,15 +132,15 @@ public class X6100Connector extends BaseRigConnector {
             }
         });
 
-        //当有状态信息接收到时
+        //Event when status information is received
         xieguRadio.setOnStatusListener(new X6100Radio.OnStatusListener() {
             @Override
             public void onStatus(X6100Radio.XieguResponse response) {
-                //显示状态消息
-                if (response.resultCode == 0){//说明是电台状态变化了
+                //Display status messages
+                if (response.resultCode == 0){//Indicates the radio status has changed
                     String status[] = response.resultContent.split(" ");
                     for (int i = 0; i < status.length; i++) {
-                        if (status[i].startsWith("active_freq")){//找出频率状态，设置频率
+                        if (status[i].startsWith("active_freq")){//Find the frequency status and set the frequency
                             String temp[]=status[i].split("=");
                             if (baseRig != null) {
                                 baseRig.setFreq(Long.parseLong(temp[1].trim()));
@@ -160,21 +160,21 @@ public class X6100Connector extends BaseRigConnector {
             public void onConnectSuccess(RadioTcpClient tcpClient) {
                 ToastMessage.show(String.format(GeneralVariables.getStringFromResource(R.string.init_flex_operation)
                         ,xieguRadio.getModelName()));
-                new Thread(new Runnable() {//此处使用线程方式，是防止tcp对象阻塞
+                new Thread(new Runnable() {//Using a thread here to prevent blocking the TCP object
                     @Override
                     public void run() {
-                        while (!streamIsOn) {//等待电台打开流端口
-                            xieguRadio.commandOpenStream();//设置UDP端口
+                        while (!streamIsOn) {//Wait for the radio to open the stream port
+                            xieguRadio.commandOpenStream();//Set the UDP port
                             try {
                                 Thread.sleep(300);
                             } catch (InterruptedException e) {
                                 Log.e(TAG, Objects.requireNonNull(e.getMessage()));
                             }
-                            //todo 此处经常丢命令
-                            xieguRadio.commandGetAudioInfo();//读取6100播放的参数
-                            //xieguRadio.commandSubGetMeter();//查阅仪表索引编号
-                            xieguRadio.commandSubAllMeter();//订阅仪表流数据
-                            //xieguRadio.commandSetTxPower(1);//订阅仪表流数据
+                            //todo Commands are frequently dropped here
+                            xieguRadio.commandGetAudioInfo();//Read the 6100 playback parameters
+                            //xieguRadio.commandSubGetMeter();//Query meter index numbers
+                            xieguRadio.commandSubAllMeter();//Subscribe to meter stream data
+                            //xieguRadio.commandSetTxPower(1);//Subscribe to meter stream data
                         }
                     }
                 }).start();
@@ -223,11 +223,11 @@ public class X6100Connector extends BaseRigConnector {
         maxTXPower=power;
         mutableMaxTxPower.postValue(maxTXPower);
         GeneralVariables.flexMaxRfPower=power;
-        xieguRadio.commandSetTxPower(power);//设置发射功率
+        xieguRadio.commandSetTxPower(power);//Set transmit power
 
     }
 
-    //传送a91数据包的方式
+    //Method for sending A91 data packets
     @Override
     public void sendFt8A91(byte[] a91,float baseFreq){
         Log.d(TAG,String.format("A91:%s", BaseRig.byteToStr(a91)));

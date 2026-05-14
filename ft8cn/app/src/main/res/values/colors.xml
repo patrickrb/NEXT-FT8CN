@@ -139,19 +139,19 @@
     <color name="help_dialog_text_color">#E1BEE7</color>
 
 
-<!--    编辑框外部窗体-->
+<!--    Edit box outer frame-->
     <color name="edit_layout_background_stroke">#977A7878</color>
     <color name="edit_layout_background_gradient_start">#E9E9E9</color>
     <color name="edit_layout_background_gradient_end">#FFFFFFFF</color>
 
-<!--    选择串口背景色-->
+<!--    Serial port selection background color-->
     <color name="select_serial_port_layout_background_gradient_start">#DC414141</color>
     <color name="select_serial_port_layout_background_gradient_end">#DC414141</color>
 
-    <!--    选择串口值背景色-->
+    <!--    Serial port value background color-->
     <color name="select_serial_port_item_gradient_start">#DC414141</color>
     <color name="select_serial_port_item_background_gradient_end">#DC414141</color>
-<!--   欢迎界面的背景色 -->
+<!--   Welcome screen background color -->
     <color name="welcome_layout_ground_color">#EDEDED</color>
     <color name="welcome_layout_text_color">#535353</color>
     <color name="welcome_logo_text_color">#FF6200EE</color>

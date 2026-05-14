@@ -1,6 +1,6 @@
 package com.bg7yoz.ft8cn.icom;
 /**
- * WIFI模式下iCom电台操作。
+ * WiFi mode iCom radio operations.
  *
  * @author BGY70Z
  * @date 2023-03-20
@@ -53,13 +53,13 @@ public abstract class WifiRig {
     public abstract void sendWaveData(float[] data);
 
     /**
-     * 关闭各种连接，以及音频
+     * Close all connections and audio
      */
     public abstract void close();
 
 
     /**
-     * 打开音频，流方式。当收到音频流的时候，播放数据
+     * Open audio in streaming mode. Play data when audio stream is received
      */
     public void openAudio() {
         if (audioTrack != null) closeAudio();
@@ -80,7 +80,7 @@ public abstract class WifiRig {
     }
 
     /**
-     * 关闭音频
+     * Close audio
      */
     public void closeAudio() {
         if (audioTrack != null) {

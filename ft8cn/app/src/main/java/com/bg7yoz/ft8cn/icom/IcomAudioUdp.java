@@ -1,6 +1,6 @@
 package com.bg7yoz.ft8cn.icom;
 /**
- * 处理ICom的音频流，继承至AudioUdp。
+ * Handle ICom audio stream, extends AudioUdp.
  * @author BGY70Z
  * @date 2023-08-26
  */
@@ -28,9 +28,9 @@ public class IcomAudioUdp extends AudioUdp {
         if (audioData==null) return;
 
         short[] temp=new short[audioData.length];
-        //传递过来的音频是LPCM,32 float，12000Hz
-        //iCOM的音频格式是LPCM 16 Int，12000Hz
-        //要做一下浮点到16位int的转换
+        //Incoming audio is LPCM, 32-bit float, 12000Hz
+        //iCOM audio format is LPCM 16-bit Int, 12000Hz
+        //Need to convert from float to 16-bit int
         for (int i = 0; i < audioData.length; i++) {
             float x = audioData[i];
             if (x > 1.0)
@@ -44,7 +44,7 @@ public class IcomAudioUdp extends AudioUdp {
     }
     private static class DoTXAudioRunnable implements Runnable{
         IcomAudioUdp icomAudioUdp;
-        short[] audioData;//传递过来的音频是LPCM 16bit Int,12000hz
+        short[] audioData;//Incoming audio is LPCM 16-bit Int, 12000Hz
 
         public DoTXAudioRunnable(IcomAudioUdp icomAudioUdp) {
             this.icomAudioUdp = icomAudioUdp;
@@ -54,38 +54,38 @@ public class IcomAudioUdp extends AudioUdp {
         public void run() {
             if (audioData==null) return;
 
-            final int partialLen = IComPacketTypes.TX_BUFFER_SIZE * 2;//数据包的长度
-            //要转换一下到BYTE,小端模式
+            final int partialLen = IComPacketTypes.TX_BUFFER_SIZE * 2;//Packet data length
+            //Convert to BYTE, little-endian
 
-            //byte[] data = new byte[audioData.length * 2 + partialLen * 4];//多出一点空声音放在前后各20ms*2共80ms
-            //先播放，是给出空的声音，for i 循环，做了一个判断，是给前面的空声音，for j循环，做得判断，是让后面发送空声音
+            //byte[] data = new byte[audioData.length * 2 + partialLen * 4];//Extra silence padding: 20ms*2 = 80ms total before and after
+            //Play silence first before audio; the for-i loop handles leading silence, the for-j loop handles trailing silence
             byte[] audioPacket = new byte[partialLen];
-            for (int i = 0; i < (audioData.length / IComPacketTypes.TX_BUFFER_SIZE) + 8; i++) {//多出6个周期，前面3个，后面3个多
+            for (int i = 0; i < (audioData.length / IComPacketTypes.TX_BUFFER_SIZE) + 8; i++) {//6 extra cycles: 3 before, 3 after
                 if (!icomAudioUdp.isPttOn) break;
-                long now = System.currentTimeMillis() - 1;//获取当前时间
+                long now = System.currentTimeMillis() - 1;//Get current time
 
                 icomAudioUdp.sendTrackedPacket(IComPacketTypes.AudioPacket.getTxAudioPacket(audioPacket
                         , (short) 0, icomAudioUdp.localId, icomAudioUdp.remoteId, icomAudioUdp.innerSeq));
                 icomAudioUdp.innerSeq++;
 
                 Arrays.fill(audioPacket,(byte)0x00);
-                if (i>=3) {//让前两个空数据发送出去
+                if (i>=3) {//Let the first two empty packets be sent out
                     for (int j = 0; j < IComPacketTypes.TX_BUFFER_SIZE; j++) {
                         if ((i-3) * IComPacketTypes.TX_BUFFER_SIZE + j < audioData.length) {
                             System.arraycopy(IComPacketTypes.shortToBigEndian((short)
                                             (audioData[(i-3) * IComPacketTypes.TX_BUFFER_SIZE + j]
-                                                    * GeneralVariables.volumePercent))//乘以信号量的比率
+                                                    * GeneralVariables.volumePercent))//Multiply by volume ratio
                                     , 0, audioPacket, j * 2, 2);
                         }
                     }
                 }
                 while (icomAudioUdp.isPttOn) {
-                    if (System.currentTimeMillis() - now >= 21) {//20毫秒一个周期
+                    if (System.currentTimeMillis() - now >= 21) {//20ms per cycle
                         break;
                     }
                 }
             }
-            Log.d(TAG, "run: 音频发送完毕！！" );
+            Log.d(TAG, "run: Audio transmission complete!!" );
             Thread.currentThread().interrupt();
         }
 
@@ -95,7 +95,7 @@ public class IcomAudioUdp extends AudioUdp {
     @Override
     public void onDataReceived(DatagramPacket packet, byte[] data) {
         super.onDataReceived(packet, data);
-        //接收到的是12000采样率的数据
+        //Received data is at 12000Hz sample rate
         if (!IComPacketTypes.AudioPacket.isAudioPacket(data)) return;
         byte[] audioData = IComPacketTypes.AudioPacket.getAudioData(data);
         if (onStreamEvents != null) {

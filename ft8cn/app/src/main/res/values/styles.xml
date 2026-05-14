@@ -3,43 +3,43 @@
 
 
     <style name="HelpDialog" parent="android:style/Theme.Dialog">
-        <!--背景颜色及和透明程度-->
+        <!-- Background color and transparency -->
         <item name="android:windowBackground">@android:color/transparent</item>
-        <!--是否去除标题 -->
+        <!-- Whether to remove the title -->
         <item name="android:windowNoTitle">true</item>
-        <!--是否去除边框-->
+        <!-- Whether to remove the border -->
         <item name="android:windowFrame">@null</item>
-        <!--是否浮现在activity之上-->
+        <!-- Whether to float above the activity -->
         <item name="android:windowIsFloating">true</item>
-        <!--是否模糊-->
+        <!-- Whether to dim the background -->
         <item name="android:backgroundDimEnabled">true</item>
     </style>
 
     <style name="InitDataDialog" parent="android:style/Theme.Dialog">
-        <!--背景颜色及和透明程度-->
+        <!-- Background color and transparency -->
         <item name="android:windowBackground">@android:color/transparent</item>
-        <!--是否去除标题 -->
+        <!-- Whether to remove the title -->
         <item name="android:windowNoTitle">true</item>
-        <!--是否去除边框-->
+        <!-- Whether to remove the border -->
         <item name="android:windowFrame">@null</item>
-        <!--是否浮现在activity之上-->
+        <!-- Whether to float above the activity -->
         <item name="android:windowIsFloating">true</item>
-        <!--是否模糊-->
+        <!-- Whether to dim the background -->
         <item name="android:backgroundDimEnabled">true</item>
     </style>
 
     <style name="ShareProgressDialog" parent="android:style/Theme.Material.Dialog">
-        <!--背景颜色及和透明程度-->
+        <!-- Background color and transparency -->
         <item name="android:windowBackground">@android:color/transparent</item>
-        <!--是否去除标题 -->
+        <!-- Whether to remove the title -->
         <item name="android:windowNoTitle">true</item>
-        <!--是否去除边框-->
+        <!-- Whether to remove the border -->
         <item name="android:windowFrame">@null</item>
-        <!--是否浮现在activity之上-->
+        <!-- Whether to float above the activity -->
         <item name="android:windowIsFloating">true</item>
-        <!--是否模糊-->
+        <!-- Whether to dim the background -->
         <item name="android:backgroundDimEnabled">true</item>
-        <!--窗口的宽度-->
+        <!-- Window width -->
         <item name="android:windowMinWidthMajor">80%</item>
         <item name="android:windowMinWidthMinor">80%</item>
     </style>

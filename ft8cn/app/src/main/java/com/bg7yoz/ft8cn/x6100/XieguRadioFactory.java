@@ -1,10 +1,10 @@
 package com.bg7yoz.ft8cn.x6100;
 
 /**
- * XieguRadioFactory 当前发现的所有收音机。
- * RadioFactory: 实例化这个类来创建一个 Radio Factory，通过它发现在相同局域网内地协谷电台。
+ * XieguRadioFactory - all currently discovered radios.
+ * RadioFactory: Instantiate this class to create a Radio Factory that discovers Xiegu radios on the same LAN.
  *
- * 通过Upd协议，在7001端口的广播数据中获取vita协议数据，并解析电台信息。
+ * Receives VITA protocol data from UDP broadcast on port 7001 and parses radio information.
  *
  * @author BGY70Z
  * @date 2023-11-29
@@ -42,8 +42,8 @@ public class XieguRadioFactory {
     public ArrayList<X6100Radio> xieguRadios=new ArrayList<>();
 
     /**
-     * 获取电台列表实例
-     * @return 电台列表实例
+     * Get the radio list instance
+     * @return radio list instance
      */
     public static XieguRadioFactory getInstance(){
         if (instance==null){
@@ -64,10 +64,10 @@ public class XieguRadioFactory {
             public void OnReceiveData(DatagramSocket socket, DatagramPacket packet, byte[] data) {
                 VITA vita = new VITA(data);
 
-                if (vita.isAvailable//如果数据包有效
+                if (vita.isAvailable//If the data packet is valid
                         &&vita.classId64 == VITA.XIEGU_Discovery_Class_Id
                         &&vita.streamId==VITA.XIEGU_Discovery_Stream_Id){
-                    InetAddress address = packet.getAddress();//获取ip地址
+                    InetAddress address = packet.getAddress();//Get IP address
                     updateXieguRadioList(new String(vita.payload),address.getHostAddress());
                 }
             }
@@ -87,12 +87,12 @@ public class XieguRadioFactory {
             refreshTask=new TimerTask() {
                 @Override
                 public void run() {
-                    Log.e(TAG, "run: 检查离线" );
+                    Log.e(TAG, "run: checking offline status" );
                     checkOffLineRadios();
                 }
             };
             refreshTimer=new Timer();
-            refreshTimer.schedule(refreshTask, 1000, 1000);//检查电台列表中的电台是否在线（每一秒）
+            refreshTimer.schedule(refreshTask, 1000, 1000);//Check if radios in the list are online (every second)
         }
     }
     public void cancelRefreshTimer(){
@@ -105,9 +105,9 @@ public class XieguRadioFactory {
     }
 
     /**
-     * 从数据中查找电台的MAC地址
-     * @param s 数据
-     * @return mac地址
+     * Find the radio's MAC address from the data
+     * @param s data
+     * @return MAC address
      */
     private String getMacAddress(String s){
         String[] strings=s.split(" ");
@@ -120,9 +120,9 @@ public class XieguRadioFactory {
     }
 
     /**
-     * 在电台列表中查找有没有指定MAC的电台
-     * @param mac MAC地址
-     * @return 电台实例
+     * Find a radio with the specified MAC in the radio list
+     * @param mac MAC address
+     * @return radio instance
      */
     public X6100Radio checkXieguRadioByMac(String mac){
         for (X6100Radio radio:xieguRadios) {
@@ -149,7 +149,7 @@ public class XieguRadioFactory {
     }
 
     /**
-     * 检查电台是不是离线，如果离线，触发离线事件
+     * Check if a radio is offline; if so, trigger the offline event
      */
     private void checkOffLineRadios(){
         for (X6100Radio radio:xieguRadios) {
@@ -177,7 +177,7 @@ public class XieguRadioFactory {
 
 
     /**
-     * 电台列表变化的接口
+     * Interface for radio list change events
      */
     public static interface OnXieguRadioEvents{
         void onXieguRadioAdded(X6100Radio flexRadio);

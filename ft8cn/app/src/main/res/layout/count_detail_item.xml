@@ -27,7 +27,7 @@
         app:layout_constraintEnd_toStartOf="@+id/guideline24"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="内容" />
+        tools:text="Content" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline24"
@@ -48,6 +48,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/guideline24"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="值" />
+        tools:text="Value" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

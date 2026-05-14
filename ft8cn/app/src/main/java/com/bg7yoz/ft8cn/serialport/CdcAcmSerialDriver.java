@@ -337,7 +337,7 @@ public class CdcAcmSerialDriver implements UsbSerialDriver {
                     UsbId.RASPBERRY_PI_PICO_MICROPYTHON,
                 });
 
-        //国赫1带的USB口
+        //GuoHe 1's USB port
         supportedDevices.put(UsbId.VENDOR_GUOHE1,
                 new int[] {
                         UsbId.PID_GUOHE1,
@@ -351,7 +351,7 @@ public class CdcAcmSerialDriver implements UsbSerialDriver {
                         UsbId.ICOM_USB_SERIAL_CONTROL
                 });
         supportedDevices.put(UsbId.VENDOR_QINHENG, new int[]{
-                UsbId.XIEGU_X6100,//协谷X6100
+                UsbId.XIEGU_X6100,//Xiegu X6100
         });
         return supportedDevices;
     }

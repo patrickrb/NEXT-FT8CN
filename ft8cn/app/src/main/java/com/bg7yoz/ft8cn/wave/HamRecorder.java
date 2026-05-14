@@ -13,10 +13,11 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 /**
- * 录音类。通过AudioRecord对象来实现录音。
- * HamRecorder录音的数据通过监听类GetVoiceData来实现。HamRecorder实例中有一个监听器列表onGetVoiceList。
- * 当有录音数据后，HamRecorder会触发监听器列表中各监听器的OnReceiveData回调。
- * 制作此类的目的，是防止FT8各录音时序因录音启动时间的问题，造成重叠创建录音对象或录音的时长达不到一个时序的时长（15秒）
+ * Recording class. Implements audio recording via the AudioRecord object.
+ * HamRecorder retrieves recording data through the listener class GetVoiceData. The HamRecorder instance has a listener list onGetVoiceList.
+ * When recording data is available, HamRecorder triggers the OnReceiveData callback for each listener in the list.
+ * The purpose of this class is to prevent FT8 recording timing issues caused by recording startup delays,
+ * which could lead to overlapping AudioRecord instances or recordings shorter than a full cycle (15 seconds).
  * <p>
  * @author BG7YOZ
  * @date 2022-05-31
@@ -24,16 +25,16 @@ import java.util.ArrayList;
 
 public class HamRecorder {
     private static final String TAG = "HamRecorder";
-    //private int bufferSize = 0;//最小缓冲区大小
-    private static final int sampleRateInHz = 12000;//采样率
-    private static final int channelConfig = AudioFormat.CHANNEL_IN_MONO; //单声道
-    //private static final int audioFormat = AudioFormat.ENCODING_PCM_16BIT; //量化位数
-    private static final int audioFormat = AudioFormat.ENCODING_PCM_FLOAT; //量化位数
+    //private int bufferSize = 0;//minimum buffer size
+    private static final int sampleRateInHz = 12000;//sampling rate
+    private static final int channelConfig = AudioFormat.CHANNEL_IN_MONO; //mono
+    //private static final int audioFormat = AudioFormat.ENCODING_PCM_16BIT; //quantization bit depth
+    private static final int audioFormat = AudioFormat.ENCODING_PCM_FLOAT; //quantization bit depth
 
-    //private AudioRecord audioRecord = null;//AudioRecord对象
-    private boolean isRunning = false;//是否处于录音的状态。
+    //private AudioRecord audioRecord = null;//AudioRecord object
+    private boolean isRunning = false;//whether currently in recording state
 
-    private final ArrayList<VoiceDataMonitor> voiceDataMonitorList = new ArrayList<>();//监听回调列表，在监听回调中获取数据。
+    private final ArrayList<VoiceDataMonitor> voiceDataMonitorList = new ArrayList<>();//listener callback list, data is retrieved in listener callbacks
     private OnVoiceMonitorChanged onVoiceMonitorChanged=null;
 
     private boolean isMicRecord=true;
@@ -55,14 +56,14 @@ public class HamRecorder {
     }
 
     /**
-     * 当接收到音频数据，所要处理的事情
-     * @param bufferLen 数据的长度
-     * @param buffer 数据缓冲区
+     * Actions to perform when audio data is received
+     * @param bufferLen length of the data
+     * @param buffer data buffer
      */
     public void doOnWaveDataReceived(int bufferLen,float[] buffer){
         if (!isRunning) return;
         for (int i = 0; i < voiceDataMonitorList.size(); i++) {
-            //逐个监听器调用回调，把数据提供给回调函数
+            //invoke each listener's callback, providing data to the callback function
             if (voiceDataMonitorList.get(i)!=null) {
                 voiceDataMonitorList.get(i).onHamRecord.OnReceiveData(buffer, bufferLen);
             }
@@ -73,22 +74,23 @@ public class HamRecorder {
 
 
     /**
-     * 是否处于录音状态
+     * Whether currently in recording state
      *
-     * @return boolean，是否处于录音状态
+     * @return boolean, whether currently in recording state
      */
     public boolean isRunning() {
         return isRunning;
     }
 
     /**
-     * 开始录音，此方法使设备一直处于录音状态，录音数据的获取通过监听器类GetVoiceData来实现。
-     * 录音对象在读取到数据（audioRecord.read）后，把监听器列表中的所有监听器的OnReceiveData回调都调用一次。
-     * 录音的状态在isRecording中。
+     * Start recording. This method keeps the device in a continuous recording state.
+     * Recording data is retrieved through the listener class GetVoiceData.
+     * After the recording object reads data (audioRecord.read), it invokes the OnReceiveData callback for all listeners in the list.
+     * The recording state is tracked in isRecording.
      */
     @SuppressLint("MissingPermission")
     public void startRecord() {
-        if (isMicRecord){//如果是用MIC采集声音
+        if (isMicRecord){//if using MIC for audio capture
             micRecorder.start();
             micRecorder.setOnDataListener(new MicRecorder.OnDataListener() {
                 @Override
@@ -107,8 +109,8 @@ public class HamRecorder {
         }
     }
     /**
-     * 删除数据监听器
-     * @param monitor 数据监听器
+     * Delete a data monitor
+     * @param monitor the data monitor
      */
     public void deleteVoiceDataMonitor(VoiceDataMonitor monitor) {
         voiceDataMonitorList.remove(monitor);
@@ -116,23 +118,23 @@ public class HamRecorder {
     }
 
     /**
-     * 获取监听器的数量
-     * @return 返回数量
+     * Get the number of monitors
+     * @return the count
      */
     public int getVoiceMonitorCount(){
         return voiceDataMonitorList.size();
     }
 
     /**
-     * 获取监听器的列表
-     * @return 监听器列表
+     * Get the list of monitors
+     * @return monitor list
      */
     public ArrayList<VoiceDataMonitor> getVoiceDataMonitors(){
         return this.voiceDataMonitorList;
     }
 
     /**
-     * 停止录音。当录音停止后，监听列表中的监听器全部删除。
+     * Stop recording. When recording stops, all monitors in the listener list are removed.
      */
     public void stopRecord() {
         micRecorder.stopRecord();
@@ -140,24 +142,24 @@ public class HamRecorder {
     }
 
     /**
-     * 获取录音数据的方法，通过加载数据监听器（VoiceDataMonitor）的方法实现。
-     * 录音数据在OnGetVoiceDataDone回调中，当录音达到指定的时长（毫秒）触发。
-     * 获取录音，是给录音对象加载一个监听器对象，在监听器的OnReceiveData回调中获取数据，当数据达到预期的数量时，
-     * 触发OnGetVoiceDataDone回调。该回调动作在另一个线程中，要注意UI的处理。
-     * 监听有两种模式：一次性、循环。
-     * 一次性：获取数据后，此监听器自动删除，不再触发。
-     * 循环，监听器始终存在，获取数据后，重新复位数据，进入下一次监听状态。直到录音停止，监听器才被删除。
-     * duration毫秒
+     * Method to retrieve recording data, implemented by adding a data monitor (VoiceDataMonitor).
+     * Recording data is provided in the OnGetVoiceDataDone callback, triggered when the recording reaches the specified duration (milliseconds).
+     * To get recording data, a monitor object is added to the recorder. Data is collected in the monitor's OnReceiveData callback.
+     * When the expected amount of data is reached, the OnGetVoiceDataDone callback is triggered. This callback runs in a separate thread, so be careful with UI handling.
+     * There are two monitoring modes: one-shot and looping.
+     * One-shot: after data is obtained, the monitor is automatically removed and will not trigger again.
+     * Looping: the monitor persists; after data is obtained, the data is reset and enters the next monitoring state. The monitor is only removed when recording stops.
+     * duration in milliseconds
      *
-     * @param duration         录音数据的时长（毫秒）
-     * @param afterDoneRemove  获取录音后是否删除监听器，false：循环获取录音数据。
-     * @param getVoiceDataDone 当录音数据达到指定的时长后，触发此回调
+     * @param duration         recording data duration (milliseconds)
+     * @param afterDoneRemove  whether to remove the monitor after obtaining data; false: loop to continuously obtain recording data
+     * @param getVoiceDataDone callback triggered when recording data reaches the specified duration
      */
     public VoiceDataMonitor getVoiceData(int duration, boolean afterDoneRemove, OnGetVoiceDataDone getVoiceDataDone) {
         if (isRunning) {
             VoiceDataMonitor dataMonitor = new VoiceDataMonitor(duration, this
                     , afterDoneRemove, getVoiceDataDone);
-            dataMonitor.voiceDataMonitor = dataMonitor;//用于监听器删除自己用。
+            dataMonitor.voiceDataMonitor = dataMonitor;//used for the monitor to remove itself
             voiceDataMonitorList.add(dataMonitor);
             doDataMonitorChanged();
             return dataMonitor;
@@ -167,62 +169,63 @@ public class HamRecorder {
     }
 
     /**
-     * 监听器类，用于录音数据的获取。
-     * 当监听类，需要设定录音的时长（毫秒），当达到指定的时长后，会产生一个OnGetVoiceDataDone回调，在此回调中，可以获得
-     * 该时长的录音数据。可以设定此监听是一次性的（afterDoneRemove=true）,还是循环往复的（afterDoneRemove=false）。
-     * 一次性的，就是监听达到指定时长后，就不继续监听了，录音实例会把该监听删除。
-     * 循环往复，就是监听到指定时长后，复位，继续重新监听。此模式方便形成波表数据。
+     * Monitor class for retrieving recording data.
+     * This monitor requires setting the recording duration (milliseconds). When the specified duration is reached,
+     * an OnGetVoiceDataDone callback is produced, from which the recording data for that duration can be obtained.
+     * The monitor can be set as one-shot (afterDoneRemove=true) or looping (afterDoneRemove=false).
+     * One-shot: the monitor stops listening after reaching the specified duration, and the recorder removes it.
+     * Looping: after reaching the specified duration, it resets and continues monitoring. This mode is convenient for generating waveform table data.
      */
     static class VoiceDataMonitor {
         private final String TAG = "GetVoiceData";
-        private final float[] voiceData;//录音数据。大小由时长、采样率、采样位决定的。
-        private int dataCount;//计数器，当前数据的获取量
+        private final float[] voiceData;//recording data. Size is determined by duration, sampling rate, and bit depth.
+        private int dataCount;//counter, current amount of data acquired
 
-        //onHamRecord是当录音对象有数据时触发的回调，通过该回调填充voiceData缓冲区，当缓冲区满时，触发OnGetVoiceDataDone回调。
+        //onHamRecord is the callback triggered when the recorder has data; it fills the voiceData buffer, and when the buffer is full, triggers the OnGetVoiceDataDone callback.
         public OnHamRecord onHamRecord;
-        //getVoiceData是本监听器的地址，用于在录音对象的监听列表中删除本监听器。
-        // 在GetVoiceData构建后，注意！！！一定要对该变量赋值！否则无法删除本监听器。
+        //getVoiceData is the address of this monitor, used to remove this monitor from the recorder's listener list.
+        // After constructing GetVoiceData, IMPORTANT!!! this variable must be assigned! Otherwise this monitor cannot be removed.
         public VoiceDataMonitor voiceDataMonitor = null;
 
         /**
-         * 监听类，用于录音数据的获取
-         * GetVoiceData类的构建方法。此类是用于添加到录音类HamRecorder中onGetVoiceList，当有录音数据返回时，产生回调。
-         * 此类的目的就是录音时，可以有多个对象从录音中获取数据，而不产生冲突。
+         * Monitor class for retrieving recording data.
+         * Constructor for GetVoiceData class. This class is added to the HamRecorder's onGetVoiceList to produce callbacks when recording data is available.
+         * The purpose of this class is to allow multiple objects to retrieve data from the recording without conflict.
          *
-         * @param duration           获取录音数据的时长（毫秒）。
-         * @param hamRecorder        录音类的实例。方便删除本监听器等操作。
-         * @param afterDoneRemove    当达到录音的时长后，是否移除本监听实例，true：移除，false：不移除，循环监听
-         * @param onGetVoiceDataDone 达到录音的时长后，触发此回调。为了防止占用太多录音的时间，此回调在另一个线程。
+         * @param duration           duration of recording data to acquire (milliseconds)
+         * @param hamRecorder        instance of the recorder class, for operations like removing this monitor
+         * @param afterDoneRemove    whether to remove this monitor instance after reaching the recording duration; true: remove, false: do not remove, loop monitoring
+         * @param onGetVoiceDataDone callback triggered after reaching the recording duration. To avoid taking too much recording time, this callback runs in a separate thread.
          */
         public VoiceDataMonitor(int duration, HamRecorder hamRecorder, boolean afterDoneRemove
                 , OnGetVoiceDataDone onGetVoiceDataDone) {
-            //时长，毫秒
-            //宿主对象，方便用词对象调用删除数据获取动作列表中的本实例
+            //duration in milliseconds
+            //host object, for conveniently calling operations to remove this instance from the data acquisition action list
 
-            dataCount = 0;//当前的数据获取量
-            //生成预期大小中的数据缓冲区。
-            //因为是16Bit采样，所以byte*2。
+            dataCount = 0;//current amount of data acquired
+            //generate data buffer of expected size
+            //because it is 16-bit sampling, so byte*2
             //voiceData = new byte[duration * HamRecorder.sampleRateInHz * 2 / 1000];
             voiceData = new float[duration * HamRecorder.sampleRateInHz  / 1000];
 
-            //当有录音数据时触发的回调函数。
+            //callback function triggered when recording data is available
             onHamRecord = new OnHamRecord() {
                 @Override
                 public void OnReceiveData(float[] data, int size) {
-                    int remainingSize = size+dataCount-voiceData.length;//如果大于0,就是剩余的数据量，
+                    int remainingSize = size+dataCount-voiceData.length;//if greater than 0, this is the remaining data amount
 
                     for (int i = 0; (i < size) && (dataCount < voiceData.length); i++) {
-                            voiceData[dataCount] = data[i];//把录音缓冲区的数据搬运到本监听器中来
+                            voiceData[dataCount] = data[i];//copy data from recording buffer to this monitor
                             dataCount++;
                     }
 
-                    if (dataCount >= (voiceData.length)) {//当数据量达到所需要的。发起回调。
+                    if (dataCount >= (voiceData.length)) {//when data amount reaches the required amount, trigger callback
                         onGetVoiceDataDone.onGetDone(voiceData);
-                        if (afterDoneRemove) {//如果是一次性的获取数据，则在录音对象中的监听列表中删除此监听回调。
+                        if (afterDoneRemove) {//if this is a one-shot data acquisition, remove this monitor callback from the recorder's listener list
                             hamRecorder.deleteVoiceDataMonitor(voiceDataMonitor);
                         } else {
-                            dataCount = 0;//如果是循环录音，则复位计数器。
-                            if (remainingSize>0) {//把剩余的数据补发到后续事件上
+                            dataCount = 0;//if looping recording, reset the counter
+                            if (remainingSize>0) {//forward remaining data to subsequent events
                                 float[] remainingData = new float[remainingSize];
                                 System.arraycopy(data, size - remainingSize, remainingData, 0, remainingSize);
                                 OnReceiveData(remainingData,remainingSize);
@@ -237,41 +240,41 @@ public class HamRecorder {
     }
 
     /**
-     * 类方法，把数据保存到文件中去，是临时文件名。
-     * @param data 数据
-     * @return 返回生成的临时文件名。
+     * Class method to save data to a file with a temporary filename.
+     * @param data the data
+     * @return the generated temporary filename
      */
     public static String saveDataToFile(byte[] data) {
         String audioFileName = null;
         File recordingFile;
         try {
-            //生成临时文件名
+            //generate temporary filename
             recordingFile = File.createTempFile("Audio", ".wav", null);
             audioFileName = recordingFile.getPath();
 
-            //数据流文件
+            //data stream file
             DataOutputStream dos = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(audioFileName)));
-            //写Wav文件头
+            //write WAV file header
             new WriteWavHeader(data.length, sampleRateInHz, channelConfig, audioFormat).writeHeader(dos);
             for (int i = 0; i < data.length; i++) {
                 dos.write(data[i]);
             }
-            Log.d(TAG, String.format("生成文件结束(%d字节，%.2f秒)，文件：%s", data.length + 44
+            Log.d(TAG, String.format("File generation complete (%d bytes, %.2f seconds), file: %s", data.length + 44
                     , ((float) data.length / 2 / sampleRateInHz), audioFileName));
-            dos.close();//关闭文件流
+            dos.close();//close file stream
 
 
         } catch (IOException e) {
-            Log.e(TAG, String.format("生成临时文件出错！%s", e.getMessage()));
+            Log.e(TAG, String.format("Error generating temporary file! %s", e.getMessage()));
         }
 
         return audioFileName;
     }
 
     /**
-     * 把原始的声音数据转换成16位的数组数据。
-     * @param buffer 原始的声音数据(8位)
-     * @return 返回16位的int格式数组
+     * Convert raw audio data to 16-bit array data.
+     * @param buffer raw audio data (8-bit)
+     * @return 16-bit int format array
      */
     public static int[] byteDataTo16BitData(byte[] buffer){
         int[] data=new int[buffer.length /2];
@@ -283,9 +286,9 @@ public class HamRecorder {
     }
 
     /**
-     * 把原始的声音数据转换成浮点数组数据
-     * @param bytes 原始的声音数据（float）
-     * @return 转换成float数组
+     * Convert raw audio data to float array data
+     * @param bytes raw audio data (float)
+     * @return converted float array
      */
     public static float[] getFloatFromBytes(byte[] bytes) {
         float[] floats = new float[bytes.length / 4];

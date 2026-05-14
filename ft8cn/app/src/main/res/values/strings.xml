@@ -102,10 +102,10 @@
     <string name="rtty_ru_msg">RTTY RU</string>>
 
 
-    <!--   配置栏-->
+    <!--   Settings bar-->
     <string name="offset_time_sec">%.1f Secs</string>>
 
-    <!--   频谱图-->
+    <!--   Spectrum chart-->
     <string name="decoding_takes_milliseconds">Decoded : %d ms</string>>
     <string name="sound_frequency_is_set_to">The sound frequency is %d Hz</string>>
     <string name="de_noise">DeNoise</string>
@@ -113,27 +113,27 @@
     <string name="markMessage">Show Msg</string>
     <string name="unMarkMessage">Hide Msg</string>
 
-    <!--   选择蓝牙设备对话框-->
+    <!--   Select Bluetooth device dialog-->
     <string name="select_bluetooth_device">Select Bluetooth device : %s</string>
 
-    <!--   PTT延迟毫秒数-->
+    <!--   PTT delay in milliseconds-->
     <string name="milliseconds">%d ms</string>
-    <!--   不回复次数-->
+    <!--   No-reply count-->
     <string name="ignore">Ignore</string>
     <string name="times">%d calls</string>
 
-    <!--   呼叫栏-->
+    <!--   Calling bar-->
     <string name="sound_frequency_is">Freq : %.0f Hz</string>
     <string name="target_callsign">Target : %s</string>
     <string name="transmission_sequence">Sequential : %d</string>
     <string name="message_count">Messages(%d)</string>
 
-    <!--   日志导出栏栏-->
+    <!--   Log export bar-->
     <string name="export_info">Please use the web browser of other devices to export from the background under the same LAN as this device.\nEnter the URL in the browser:\nhttp://%s:%d</string>
-    <!--   发射监管-->
+    <!--   TX watchdog-->
     <string name="minutes">%d Mins</string>
 
-    <!--   发射监管-->
+    <!--   TX watchdog-->
     <string name="freq_syn">Lockd TX=RX</string>
     <string name="freq_asyn">Tx/Rx Split</string>
     <string name="auto_follow_cq">Auto track CQ</string>
@@ -141,22 +141,22 @@
     <string name="automatic_call_following">Auto call tracked</string>
     <string name="do_not_call_the_following_callsign">No call tracked</string>
 
-    <!--   解码栏-->
+    <!--   Decode bar-->
     <string name="message_count_count">Messages(%d/%d)</string>
     <string name="average_offset_seconds">Offset Avg : %.2f Sec</string>
     <string name="my_grid">Grid : %s</string>
 
-    <!--   解码列表-->
+    <!--   Decode list-->
     <string name="tracking_receiver">Tracking receiver %s(%s)</string>
     <string name="calling_receiver">Call receiver %s(%s)</string>
     <string name="reply_to">Reply %s(%s)</string>
     <string name="tracking">Tracking %s(%s)</string>
     <string name="calling">Call %s(%s)</string>
 
-    <!--   网格距离计算-->
+    <!--   Grid distance calculation-->
     <string name="distance">%.0f km</string>
 
-    <!--   日志列表-->
+    <!--   Log list-->
     <string name="confirmed">Confirmed</string>
     <string name="unconfirmed">Unconfirmed</string>
     <string name="lotw_confirmation">LoTW confirmed</string>
@@ -169,7 +169,7 @@
     <string name="log_cancel_confirmation">Cancel confirmation (%s)</string>
     <string name="log_manual_confirmation">Manual confirmation (%s)</string>
 
-    <!--   QSL日志列表-->
+    <!--   QSL log list-->
     <string name="qsl_grid">Grid:%s</string>
     <string name="qsl_start_time">Start time : %s</string>
     <string name="qsl_end_time">End time : %s</string>
@@ -223,7 +223,7 @@
     <string name="html_qsl_band">Band</string>
     <string name="html_qsl_freq">Freq</string>
     <string name="html_qsl_manual_confirmation">Manually confirmed</string>
-    <string name="html_qsl_lotw_confirmation">LoTW确认</string>
+    <string name="html_qsl_lotw_confirmation">LoTW confirmed</string>
     <string name="html_qsl_data_source">Data source</string>
     <string name="html_qsl_import_data_from_external">From external</string>
     <string name="html_qsl_native_data">Native</string>

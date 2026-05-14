@@ -1,6 +1,6 @@
 package com.bg7yoz.ft8cn.callsign;
 /**
- * 用于呼号归属地查询的数据库操作，数据库采用内存方式。来源是CTY.DAT
+ * Database operations for callsign location lookup; uses an in-memory database. Data source is CTY.DAT.
  * @author BG7YOZ
  * 2023-03-20
  */
@@ -43,7 +43,7 @@ public class CallsignDatabase extends SQLiteOpenHelper {
         super(context, name, factory, version);
         this.context = context;
 
-        //链接数据库，如果实体库不存在，就会调用onCreate方法，在onCreate方法中初始化数据库
+        // Connect to the database; if the physical database does not exist, onCreate will be called to initialize it
         db = this.getWritableDatabase();
     }
 
@@ -52,16 +52,16 @@ public class CallsignDatabase extends SQLiteOpenHelper {
     }
 
     /**
-     * 当实体数据库不存在时，会调用该方法。可在这个地方创建数据，并添加文件
+     * Called when the physical database does not exist. Creates tables and imports data here.
      *
-     * @param sqLiteDatabase 需要连接的数据库
+     * @param sqLiteDatabase the database to connect to
      */
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
         Log.d(TAG, "Create database.");
-        db = sqLiteDatabase;//把数据库链接保存下来
-        createTables();//创建数据表
-        new InitDatabase(context, db).execute();//导入数据
+        db = sqLiteDatabase; // Save the database connection
+        createTables(); // Create database tables
+        new InitDatabase(context, db).execute(); // Import data
     }
 
     @Override
@@ -96,7 +96,7 @@ public class CallsignDatabase extends SQLiteOpenHelper {
         }
     }
 
-    //查呼号的归属地
+    // Look up the callsign's location
     public void getCallsignInformation(String callsign, OnAfterQueryCallsignLocation afterQueryCallsignLocation) {
         new QueryCallsignInformation(db, callsign, afterQueryCallsignLocation).execute();
     }
@@ -106,31 +106,27 @@ public class CallsignDatabase extends SQLiteOpenHelper {
     }
 
     /**
-     * 更新消息中的位置及经纬度信息
+     * Update location and latitude/longitude information in messages.
      *
-     * @param ft8Messages 消息列表
+     * @param ft8Messages the message list
      */
     public static synchronized void getMessagesLocation(SQLiteDatabase db, ArrayList<Ft8Message> ft8Messages ) {
         if (ft8Messages==null) return;
-        ArrayList<Ft8Message> messages = new ArrayList<>(ft8Messages);//防止线程访问冲突
+        ArrayList<Ft8Message> messages = new ArrayList<>(ft8Messages); // Prevent thread access conflicts
 
         for (Ft8Message msg : messages) {
-            if (msg.i3==0&&msg.n3==0) continue;//如果是自由文本，就不查了
+            if (msg.i3==0&&msg.n3==0) continue; // Skip free-text messages
             CallsignInfo fromCallsignInfo = getCallsignInfo(db,
                     msg.callsignFrom.replace("<","").replace(">",""));
             if (fromCallsignInfo != null) {
                     msg.fromDxcc = !GeneralVariables.getDxccByPrefix(fromCallsignInfo.DXCC);
                     msg.fromItu = !GeneralVariables.getItuZoneById(fromCallsignInfo.ITUZone);
                     msg.fromCq = !GeneralVariables.getCqZoneById(fromCallsignInfo.CQZone);
-                    if (GeneralVariables.isChina) {
-                        msg.fromWhere = fromCallsignInfo.CountryNameCN;
-                    } else {
-                        msg.fromWhere = fromCallsignInfo.CountryNameEn;
-                    }
+                    msg.fromWhere = fromCallsignInfo.CountryNameEn;
                     msg.fromLatLng = new LatLng(fromCallsignInfo.Latitude, fromCallsignInfo.Longitude * -1);
             }
 
-            if (msg.checkIsCQ() || msg.getCallsignTo().contains("...")) {//CQ就不查了
+            if (msg.checkIsCQ() || msg.getCallsignTo().contains("...")) { // Skip CQ messages
                 continue;
             }
 
@@ -141,11 +137,7 @@ public class CallsignDatabase extends SQLiteOpenHelper {
                 msg.toItu = !GeneralVariables.getItuZoneById(toCallsignInfo.ITUZone);
                 msg.toCq = !GeneralVariables.getCqZoneById(toCallsignInfo.CQZone);
 
-                if (GeneralVariables.isChina) {
-                    msg.toWhere = toCallsignInfo.CountryNameCN;
-                } else {
-                    msg.toWhere = toCallsignInfo.CountryNameEn;
-                }
+                msg.toWhere = toCallsignInfo.CountryNameEn;
                 msg.toLatLng = new LatLng(toCallsignInfo.Latitude, toCallsignInfo.Longitude*-1);
             }
         }
@@ -236,7 +228,7 @@ public class CallsignDatabase extends SQLiteOpenHelper {
 
         @Override
         protected Void doInBackground(Void... voids) {
-            Log.d(TAG, "开始导入呼号位置数据...");
+            Log.d(TAG, "Starting callsign location data import...");
             String insertCountriesSQL = "INSERT INTO countries (id,CountryNameEn,CountryNameCN,CQZone" +
                     ",ITUZone,Continent,Latitude,Longitude,GMT_offset,DXCC)\n" +
                     "VALUES(?,?,?,?,?,?,?,?,?,?)";
@@ -246,9 +238,9 @@ public class CallsignDatabase extends SQLiteOpenHelper {
             ContentValues values = new ContentValues();
             for (int i = 0; i < callsignInfos.size(); i++) {
                 try {
-                    //把国家和地区数据写进表中，id用于关联呼号
+                    // Write country and region data into the table; id is used to associate with callsigns
                     db.execSQL(insertCountriesSQL, new Object[]{
-                            i,//id号
+                            i, // ID number
                             callsignInfos.get(i).CountryNameEn,
                             callsignInfos.get(i).CountryNameCN,
                             callsignInfos.get(i).CQZone,
@@ -269,10 +261,10 @@ public class CallsignDatabase extends SQLiteOpenHelper {
                     }
 
                 } catch (Exception e) {
-                    Log.e(TAG, "错误：" + e.getMessage());
+                    Log.e(TAG, "Error: " + e.getMessage());
                 }
             }
-            Log.d(TAG, "呼号位置数据导入完毕！");
+            Log.d(TAG, "Callsign location data import complete!");
             return null;
         }
     }

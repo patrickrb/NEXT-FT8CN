@@ -31,7 +31,7 @@ android {
 
         externalNativeBuild {
             cmake {
-                cppFlags '-JENABLE_XOM=false'//关闭XOM，
+                cppFlags '-JENABLE_XOM=false'//Disable XOM
 
             }
         }
@@ -82,13 +82,13 @@ dependencies {
     implementation 'androidx.navigation:navigation-ui:2.5.3'
     implementation 'com.google.android.gms:play-services-maps:18.1.0'
 
-    implementation 'com.google.guava:guava:31.1-jre'//用于HashTable（多key的HashMap）
+    implementation 'com.google.guava:guava:31.1-jre'//Used for HashTable (multi-key HashMap)
 
 
 
     implementation files('src/libs/MPAndroidChartv_3.1.0.jar')
-    implementation files('src/libs/commons-net-3.6.jar')////用于时间同步
+    implementation files('src/libs/commons-net-3.6.jar')////Used for time synchronization
     implementation files('src/libs/nanohttpd-2.2.0.jar')
-    implementation files('src/libs/osmdroid-android-6.1.14.aar')//地图控件
+    implementation files('src/libs/osmdroid-android-6.1.14.aar')//Map widget
 
 }

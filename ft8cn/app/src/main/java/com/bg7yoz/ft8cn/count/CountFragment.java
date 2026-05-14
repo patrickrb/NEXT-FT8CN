@@ -1,6 +1,6 @@
 package com.bg7yoz.ft8cn.count;
 /**
- * 通联日志的统计界面
+ * QSO log statistics interface.
  *
  * @author BGY70Z
  * @date 2023-03-20

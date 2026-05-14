@@ -1,6 +1,6 @@
 package com.bg7yoz.ft8cn.flex;
 /**
- * 简单的udp封装，用于数据流的操作
+ * Simple UDP wrapper for data stream operations
  * @author BGY70Z
  * @date 2023-03-20
  */
@@ -73,8 +73,8 @@ public class RadioUdpClient {
 
     public synchronized void  setActivated(boolean activated) throws SocketException {
         this.activated = activated;
-        if (activated) {//通过activated判断是否结束接收线程，并清空sendSocket指针
-            sendSocket = new DatagramSocket(null);//绑定的端口号随机
+        if (activated) {//Use activated flag to determine whether to end receive thread and clear sendSocket pointer
+            sendSocket = new DatagramSocket(null);//Bind to a random port
             sendSocket.bind(new InetSocketAddress(port));
             receiveData();
         }else {

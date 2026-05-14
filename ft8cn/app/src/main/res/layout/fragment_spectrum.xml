@@ -107,7 +107,7 @@
             app:layout_constraintEnd_toStartOf="@+id/showMessageSwitch"
             app:layout_constraintStart_toEndOf="@+id/deNoiseSwitch"
             tools:ignore="TextContrastCheck"
-            tools:text="解码耗时500毫秒" />
+            tools:text="Decode time 500ms" />
 
         <TextView
             android:id="@+id/freqBandTextView"
@@ -121,7 +121,7 @@
             app:layout_constraintBottom_toBottomOf="@+id/timersTextView"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/columnarView"
-            tools:text="波特率设置" />
+            tools:text="Baud rate setting" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -11,6 +11,6 @@
         android:endColor="@color/power_progress_value"
         android:type="linear" />
 
-    <!-- 圆角 -->
+    <!-- Rounded corners -->
     <corners android:radius="10dp" />
 </shape>

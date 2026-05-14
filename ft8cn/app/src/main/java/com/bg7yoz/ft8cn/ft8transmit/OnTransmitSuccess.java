@@ -1,6 +1,6 @@
 package com.bg7yoz.ft8cn.ft8transmit;
 /**
- * 发射结束后的回调
+ * Callback after transmit completes.
  * @author BGY70Z
  * @date 2023-03-20
  */

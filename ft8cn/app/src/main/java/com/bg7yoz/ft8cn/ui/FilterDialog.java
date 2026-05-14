@@ -1,6 +1,6 @@
 package com.bg7yoz.ft8cn.ui;
 /**
- * 日志查询的过滤对话框。
+ * Log query filter dialog.
  * @author BGY70Z
  * @date 2023-03-20
  */
@@ -65,7 +65,7 @@ public class FilterDialog extends Dialog {
     public void show() {
         super.show();
         WindowManager.LayoutParams params = getWindow().getAttributes();
-        //设置对话框的大小，以百分比0.6
+        // Set dialog size as percentage (0.6)
         int height=getWindow().getWindowManager().getDefaultDisplay().getHeight();
         int width=getWindow().getWindowManager().getDefaultDisplay().getWidth();
         params.height = (int) (height * 0.6);
@@ -79,13 +79,13 @@ public class FilterDialog extends Dialog {
         getWindow().setAttributes(params);
         switch (mainViewModel.queryFilter){
             case 1:
-                filterIsQslButton.setChecked(true);//只显示QSL的
+                filterIsQslButton.setChecked(true);// Show only QSL'd
                 break;
             case 2:
-                filterNoneQslButton.setChecked(true);//只显示没有QSL的
+                filterNoneQslButton.setChecked(true);// Show only non-QSL'd
                 break;
             default:
-                filterAllButton.setChecked(true);//显示全部
+                filterAllButton.setChecked(true);// Show all
         }
     }
 

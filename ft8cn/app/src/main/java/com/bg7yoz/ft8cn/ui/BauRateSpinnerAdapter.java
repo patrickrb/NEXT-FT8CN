@@ -1,6 +1,6 @@
 package com.bg7yoz.ft8cn.ui;
 /**
- * 波特率列表界面
+ * Baud rate list UI adapter.
  * @author BGY70Z
  * @date 2023-03-20
  */

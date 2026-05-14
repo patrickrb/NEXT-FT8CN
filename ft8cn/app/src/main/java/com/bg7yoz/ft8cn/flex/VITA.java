@@ -1,6 +1,6 @@
 package com.bg7yoz.ft8cn.flex;
 /**
- * VITA49协议的简单解包和封包操作。此库停止维护，将使用VITA49.java替换此库。
+ * Simple unpacking and packing operations for the VITA49 protocol. This library is no longer maintained; VITA49.java will replace it.
  *
  * @author BGY70Z
  * @date 2023-03-20
@@ -26,7 +26,7 @@ import java.nio.ByteBuffer;
 public class VITA {
     private static final String TAG = "VITA";
 
-    // 最小有效的VITA包长度
+    // Minimum valid VITA packet length
     private static final int VITAmin = 28;
 
     public static final int FRS_OUI = 0x12cd;
@@ -51,7 +51,7 @@ public class VITA {
     public static final int VS_DAX_Audio = 0x03e3;
     public static final int VS_Discovery = 0xffff;
 
-    //与x6100有关的id信息
+    //ID info related to x6100
     public  static final long XIEGU_Discovery_Class_Id = 0x005849454755FFFFL;
     public  static final int XIEGU_Discovery_Stream_Id = 0x00000800;
     public static final long XIEGU_AUDIO_CLASS_ID = 0x00584945475500A1L;
@@ -63,32 +63,32 @@ public class VITA {
 
 
     private byte[] buffer;
-    public boolean streamIdPresent;//是否有流字符
+    public boolean streamIdPresent;//Whether stream identifier is present
     public VitaPacketType packetType;
-    public boolean classIdPresent;//指示数据包中是否包含类标识符（类ID）字段
-    public boolean trailerPresent;//指示数据包是否包含尾部。
-    public VitaTSI tsi;//时间戳的类型。
-    public VitaTSF tsf;//时间戳小数部分类型
-    public int packetCount;//包计数器，可以对连续的IF data packet进行计数，这些packet具有相同的Stream  Identifier 和packet type。
-    public int packetSize;//表示有多少32bit数在IF Data packet 里面
-    public int streamId;//流ID，32位
-    //时间戳共有两部分，小数部分和整数部分，整数部分以秒为分辨率，32位，小数部分64位。
-    public int integerTimestamp;//u_int32，long是64位的
+    public boolean classIdPresent;//Indicates whether the packet contains a class identifier (class ID) field
+    public boolean trailerPresent;//Indicates whether the packet contains a trailer
+    public VitaTSI tsi;//Timestamp type
+    public VitaTSF tsf;//Fractional timestamp type
+    public int packetCount;//Packet counter for consecutive IF data packets with the same Stream Identifier and packet type
+    public int packetSize;//Number of 32-bit words in the IF Data packet
+    public int streamId;//Stream ID, 32-bit
+    //Timestamp has two parts: fractional and integer. Integer part has second resolution, 32-bit; fractional part is 64-bit.
+    public int integerTimestamp;//u_int32, long is 64-bit
     public long fracTimeStamp;
     public long oui;
-    public int informationClassCode;//无用了，用classId代替
-    public int packetClassCode;//无用了，用classId代替
-    public int classId;//FLEX应该是0x534CFFF，是informationClassCode与packetClassCode合并的
+    public int informationClassCode;//Deprecated, replaced by classId
+    public int packetClassCode;//Deprecated, replaced by classId
+    public int classId;//For FLEX this should be 0x534CFFF, combining informationClassCode and packetClassCode
     public long classId64;
 
     public byte[] payload = null;
     public long trailer;
-    public boolean isAvailable = false;//电台对象是否有效。
+    public boolean isAvailable = false;//Whether the radio object is valid
 
     /**
-     * 设置vita数据包的头部
-     * @param packet 数据包
-     * @return 数据包
+     * Set the VITA packet header
+     * @param packet data packet
+     * @return data packet
      */
     public byte[] setVitaPacketHeader(byte[] packet){
         if (packet.length < 28) return packet;
@@ -101,8 +101,8 @@ public class VITA {
         packet[1] |= (byte) (tsi.ordinal() << 6);//TSI
         packet[1] |= (byte) (tsf.ordinal() << 4);//TSF
 
-        packet[2] = (byte) ((packetSize & 0xff00 ) >> 8 & 0xff);//packetSize 1（高8位）
-        packet[3] = (byte) (packetSize & 0xff);//packetSize 2（低8位）
+        packet[2] = (byte) ((packetSize & 0xff00 ) >> 8 & 0xff);//packetSize 1 (high 8 bits)
+        packet[3] = (byte) (packetSize & 0xff);//packetSize 2 (low 8 bits)
 
         //-----Stream Identifier--No.2 word----
         packet[4] = (byte) (((streamId & 0x00ff000000) >> 24) & 0xff);
@@ -148,16 +148,16 @@ public class VITA {
     }
 
     /**
-     * 生成音频流的VITA数据包
+     * Generate a VITA packet for audio stream
      *
-     * @param count 包计数器
-     * @param payload 音频流数据
-     * @return vita数据包
+     * @param count packet counter
+     * @param payload audio stream data
+     * @return VITA data packet
      */
     public byte[] audioShortDataToVita(int count, short[] payload){
         packetType = VitaPacketType.EXT_DATA_WITH_STREAM;
         classIdPresent = true;
-        trailerPresent = false;//没有尾巴
+        trailerPresent = false;//No trailer
         tsi = VitaTSI.TSI_OTHER;//
         tsf = VitaTSF.TSF_SAMPLE_COUNT;
         this.packetCount = count;
@@ -177,8 +177,8 @@ public class VITA {
 //        result[1] |= (byte) (tsi.ordinal() << 6);//TSI
 //        result[1] |= (byte) (tsf.ordinal() << 4);//TSF
 //
-//        result[2] = (byte) ((packetSize & 0xff00 ) >> 8 & 0xff);//packetSize 1（高8位）
-//        result[3] = (byte) (packetSize & 0xff);//packetSize 2（低8位）
+//        result[2] = (byte) ((packetSize & 0xff00 ) >> 8 & 0xff);//packetSize 1 (high 8 bits)
+//        result[3] = (byte) (packetSize & 0xff);//packetSize 2 (low 8 bits)
 //
 //        //-----Stream Identifier--No.2 word----
 //        result[4] = (byte) (((streamId & 0x00ff000000) >> 24) & 0xff);
@@ -225,15 +225,15 @@ public class VITA {
 
 
     /**
-     * 生成音频流的VITA数据包，id应当是电台create stream是赋给的
-     * @param data 音频流数据
-     * @return vita数据包
+     * Generate a VITA packet for audio stream; ID should be assigned by the radio's create stream
+     * @param data audio stream data
+     * @return VITA data packet
      */
     public byte[] audioFloatDataToVita(int count, float[] data) {
-        byte[] result = new byte[data.length * 4 + 28];//一个float占用4个字节，28字节是包头的长度7个word
+        byte[] result = new byte[data.length * 4 + 28];//One float takes 4 bytes, 28 bytes is the header length (7 words)
         packetType = VitaPacketType.EXT_DATA_WITH_STREAM;
         classIdPresent = true;
-        trailerPresent = false;//没有尾巴
+        trailerPresent = false;//No trailer
         tsi = VitaTSI.TSI_OTHER;//
         tsf = VitaTSF.TSF_SAMPLE_COUNT;
         this.packetCount = count;
@@ -251,8 +251,8 @@ public class VITA {
         result[1] |= (byte) (tsi.ordinal() << 6);//TSI
         result[1] |= (byte) (tsf.ordinal() << 4);//TSF
 
-        result[2] = (byte) ((packetSize & 0xff00 ) >> 8 & 0xff);//packetSize 1（高8位）
-        result[3] = (byte) (packetSize & 0xff);//packetSize 2（低8位）
+        result[2] = (byte) ((packetSize & 0xff00 ) >> 8 & 0xff);//packetSize 1 (high 8 bits)
+        result[3] = (byte) (packetSize & 0xff);//packetSize 2 (low 8 bits)
 
         //-----Stream Identifier--No.2 word----
         result[4] = (byte) (((streamId & 0x00ff000000) >> 24) & 0xff);
@@ -292,7 +292,7 @@ public class VITA {
 
 
         for (int i = 0; i < data.length; i++) {
-            byte[] bytes = ByteBuffer.allocate(4).putFloat(data[i]).array();//float转byte[]
+            byte[] bytes = ByteBuffer.allocate(4).putFloat(data[i]).array();//float to byte[]
             result[i * 4 + 28] = bytes[0];
             result[i * 4 + 29] = bytes[1];
             result[i * 4 + 30] = bytes[2];
@@ -327,32 +327,32 @@ public class VITA {
 
     public VITA(byte[] data) {
         this.buffer = data;
-        //如果包的长度太小，或包为空，就退出计算
+        //If the packet length is too small or the packet is null, exit
         if (data == null) return;
         if (data.length < VITAmin) return;
 
-        isAvailable = true;//数据长度达到28个字节，说明是有效的。
+        isAvailable = true;//Data length reaches 28 bytes, indicating it is valid
         packetType = VitaPacketType.values()[(data[0] >> 4) & 0x0f];
-        classIdPresent = (data[0] & 0x8) == 0x8;//指示数据包中是否包含类标识符（类ID）字段
-        trailerPresent = (data[0] & 0x4) == 0x4;//指示数据包是否包含尾部。
-        tsi = VitaTSI.values()[(data[1] >> 6) & 0x3];//如果有时间戳的话指示时间戳的整数部分是啥类型的
+        classIdPresent = (data[0] & 0x8) == 0x8;//Indicates whether the packet contains a class identifier (class ID) field
+        trailerPresent = (data[0] & 0x4) == 0x4;//Indicates whether the packet contains a trailer
+        tsi = VitaTSI.values()[(data[1] >> 6) & 0x3];//If timestamp exists, indicates the type of the integer part
         tsf = VitaTSF.values()[(data[1] >> 4) & 0x3];
         packetCount = data[1] & 0x0f;
         packetSize = ((((int) data[2]) & 0x00ff) << 8) | ((int) data[3]) & 0x00ff;
 
-        int offset = 4;//定位
-        //检查是否有流字符
+        int offset = 4;//Position
+        //Check for stream identifier
         streamIdPresent = packetType == VitaPacketType.IF_DATA_WITH_STREAM
                 || packetType == VitaPacketType.EXT_DATA_WITH_STREAM;
 
-        if (streamIdPresent) {//是否有流ID,获取流ID，32位
+        if (streamIdPresent) {//If stream ID exists, get stream ID, 32-bit
             streamId = ((((int) data[offset]) & 0x00ff) << 24) | ((((int) data[offset + 1]) & 0x00ff) << 16)
                     | ((((int) data[offset + 2]) & 0x00ff) << 8) | ((int) data[offset + 3]) & 0x00ff;
             offset += 4;
         }
 
         if (classIdPresent) {
-            //只取24位，前8位保留
+            //Only take 24 bits, first 8 bits are reserved
             oui = ((((int) data[offset + 1]) & 0x00ff) << 16)
                     | ((((int) data[offset + 2]) & 0x00ff) << 8) | ((int) data[offset + 3]) & 0x00ff;
 
@@ -374,17 +374,17 @@ public class VITA {
         }
         //Log.e(TAG, "VITA: "+String.format("id: 0x%x, classIdPresent:0x%x,packetSize:%d",streamId,classId,packetSize) );
 
-        //获取时间戳,以秒为单位的时间戳，32位。
-        //时间戳共有两部分，小数部分和整数部分，整数部分以秒为分辨率，32位， 主要传递UTC时间或者 GPS 时间，
-        //小数部分主要有三种，一种是sample-count ，以采样周期为最小分辨率，一种是real-time以ps为最小单位，第三种是以任意选择的时间进行累加得出的，前面两种时间戳可以直接与整数部分叠加，第三种则不能保证与整数部分保持恒定关系，前两种与整数部分叠加来操作的可以在覆盖的时间范围为年
-        //小数部分的时间戳共有64位，小数部分可以在没有整数部分的情况下使用，
-        //所有的时间带来都是在以一个采样数据为该reference-point 时间
-        if (tsi != VitaTSI.TSI_NONE) {//32位,
+        //Get timestamp in seconds, 32-bit.
+        //Timestamp has two parts: fractional and integer. Integer part has second resolution, 32-bit, mainly for UTC or GPS time.
+        //Fractional part has three types: sample-count (minimum resolution is sampling period), real-time (minimum unit is ps), and free-running count. The first two can be directly added to the integer part; the third cannot guarantee a constant relationship with the integer part. The first two can cover a time range of years.
+        //Fractional timestamp is 64-bit and can be used without the integer part.
+        //All timestamps reference a single sample data point.
+        if (tsi != VitaTSI.TSI_NONE) {//32-bit
             integerTimestamp = ((((int) data[offset]) & 0x00ff) << 24) | ((((int) data[offset + 1]) & 0x00ff) << 16)
                     | ((((int) data[offset + 2]) & 0x00ff) << 8) | ((int) data[offset + 3]) & 0x00ff;
             offset += 4;
         }
-        //获取时间戳的小数部分，64位。
+        //Get the fractional part of the timestamp, 64-bit
         if (tsf != VitaTSF.TSF_NONE) {
             fracTimeStamp = ((((long) data[offset]) & 0x00ff) << 56) | ((((long) data[offset + 1]) & 0x00ff) << 48)
                     | ((((long) data[offset + 2]) & 0x00ff) << 40) | ((((long) data[offset + 3]) & 0x00ff) << 32)
@@ -396,7 +396,7 @@ public class VITA {
 
         //Log.e(TAG, String.format("VITA: data length:%d,offset:%d",data.length,offset) );
         if (offset < data.length) {
-            payload = new byte[data.length - offset - (trailerPresent ? 2 : 0)];//如果有尾部，就减去一个word的位置
+            payload = new byte[data.length - offset - (trailerPresent ? 2 : 0)];//If there is a trailer, subtract one word position
             System.arraycopy(data, offset, payload, 0, payload.length);
         }
         if (trailerPresent) {
@@ -405,9 +405,9 @@ public class VITA {
     }
 
     /**
-     * 获取payload的长度，如果没有数据，payload长度为0；
+     * Get the payload length; returns 0 if there is no data
      *
-     * @return payload长度
+     * @return payload length
      */
     public int getPayloadLength() {
         if (buffer == null) {
@@ -418,7 +418,7 @@ public class VITA {
     }
 
     /**
-     * 显示扩展数据
+     * Display extended data
      *
      * @return string
      */
@@ -439,35 +439,35 @@ public class VITA {
     }
 
     /**
-     * 显示VITA 49的包头信息
+     * Display VITA 49 packet header info
      *
      * @return string
      */
     @SuppressLint("DefaultLocale")
     public String showHeadStr() {
-        return String.format("包类型(packetType): %s\n" +
-                        "包数量(packetCount): %d\n" +
-                        "包大小(packetSize): %d\n" +
-                        "是否有流ID(streamIdPresent): %s\n" +
-                        "流ID(streamId): 0x%X\n" +
-                        "是否有类ID(classIdPresent): %s\n" +
-                        "类ID(classId): 0x%X\n" +
-                        "类高位(informationClassCode): 0x%X\n" +
-                        "类低位(packetClassCode): 0x%X\n" +
-                        "公司标识码(oui): 0x%X\n" +
-                        "时间戳类型(tsi): %s\n" +
-                        "时间戳整数部分(integerTimestamp):0x%X\n" +
-                        "时间戳小数部分类型(tsf): %s\n" +
-                        "时间戳小数部分值(fracTimeStamp): 0x%X\n" +
-                        "负载长度(payloadLength): %d\n" +
-                        "是否有尾部(trailerPresent): %s\n"
+        return String.format("packetType: %s\n" +
+                        "packetCount: %d\n" +
+                        "packetSize: %d\n" +
+                        "streamIdPresent: %s\n" +
+                        "streamId: 0x%X\n" +
+                        "classIdPresent: %s\n" +
+                        "classId: 0x%X\n" +
+                        "informationClassCode: 0x%X\n" +
+                        "packetClassCode: 0x%X\n" +
+                        "oui: 0x%X\n" +
+                        "tsi: %s\n" +
+                        "integerTimestamp: 0x%X\n" +
+                        "tsf: %s\n" +
+                        "fracTimeStamp: 0x%X\n" +
+                        "payloadLength: %d\n" +
+                        "trailerPresent: %s\n"
 
                 , packetType.toString()
                 , packetCount
                 , packetSize
-                , streamIdPresent ? "是" : "否"
+                , streamIdPresent ? "Yes" : "No"
                 , streamId
-                , classIdPresent ? "是" : "否"
+                , classIdPresent ? "Yes" : "No"
                 , classId
                 , informationClassCode
                 , packetClassCode
@@ -477,19 +477,19 @@ public class VITA {
                 , tsf.toString()
                 , fracTimeStamp
                 , (payload == null ? 0 : payload.length)
-                , trailerPresent ? "是" : "否"
+                , trailerPresent ? "Yes" : "No"
         );
     }
 
     /**
-     * 显示VITA 49 包数据
+     * Display VITA 49 packet data
      *
      * @return string
      */
     @SuppressLint("DefaultLocale")
     @Override
     public String toString() {
-        return String.format("%s负载(payload):\n%s\n"
+        return String.format("%spayload:\n%s\n"
                 , showHeadStr()
                 , (payload == null ? "" : new String(payload))
         );
@@ -509,10 +509,10 @@ public class VITA {
 
 
     /**
-     * 把字节转换成short，做小端模式转换
+     * Convert bytes to short with little-endian conversion
      *
-     * @param data 字节数据
-     * @param  start 起始位置
+     * @param data byte data
+     * @param  start start position
      * @return short
      */
     public static short readShortDataBigEnd(byte[] data, int start) {
@@ -522,10 +522,10 @@ public class VITA {
     }
 
     /**
-     * 把字节转换成short，不做小端转换！！
+     * Convert bytes to short without little-endian conversion
      *
-     * @param data 字节数据
-     * @param  start 起始位置
+     * @param data byte data
+     * @param  start start position
      * @return short
      */
     public static short readShortData(byte[] data, int start) {

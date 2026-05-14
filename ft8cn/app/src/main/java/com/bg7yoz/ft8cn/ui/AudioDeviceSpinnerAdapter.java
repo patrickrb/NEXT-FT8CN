@@ -17,8 +17,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 音频设备选择列表适配器，用于输入/输出设备的Spinner。
- * 同时列出AudioManager识别的设备和通过UsbManager发现的USB音频设备。
+ * Audio device selection list adapter for input/output device Spinners.
+ * Lists both AudioManager-recognized devices and USB audio devices discovered via UsbManager.
  */
 public class AudioDeviceSpinnerAdapter extends BaseAdapter {
     private final Context mContext;
@@ -31,8 +31,8 @@ public class AudioDeviceSpinnerAdapter extends BaseAdapter {
     private final List<UsbAudioDevice.UsbAudioDeviceInfo> usbAudioDeviceList = new ArrayList<>();
 
     /**
-     * @param context    上下文
-     * @param deviceType AudioManager.GET_DEVICES_INPUTS 或 AudioManager.GET_DEVICES_OUTPUTS
+     * @param context    context
+     * @param deviceType AudioManager.GET_DEVICES_INPUTS or AudioManager.GET_DEVICES_OUTPUTS
      */
     public AudioDeviceSpinnerAdapter(Context context, int deviceType) {
         mContext = context;
@@ -42,7 +42,7 @@ public class AudioDeviceSpinnerAdapter extends BaseAdapter {
     }
 
     /**
-     * 重新枚举音频设备（AudioManager + USB）
+     * Re-enumerate audio devices (AudioManager + USB)
      */
     public void refreshDevices() {
         audioDeviceList.clear();
@@ -120,10 +120,10 @@ public class AudioDeviceSpinnerAdapter extends BaseAdapter {
     }
 
     /**
-     * 获取指定位置的设备ID。
-     * 正数 = AudioManager设备ID
-     * 0 = 默认
-     * -1 = USB音频设备
+     * Get the device ID at the specified position.
+     * Positive = AudioManager device ID
+     * 0 = Default
+     * -1 = USB audio device
      */
     public int getDeviceId(int position) {
         if (position == 0) return 0;
@@ -150,7 +150,7 @@ public class AudioDeviceSpinnerAdapter extends BaseAdapter {
     }
 
     /**
-     * 根据设备ID获取在列表中的位置。
+     * Get the list position for a given device ID.
      * deviceId == 0 → 0 (Default)
      * deviceId > 0 → search AudioManager devices
      * deviceId == -1 → search USB audio devices by VID:PID

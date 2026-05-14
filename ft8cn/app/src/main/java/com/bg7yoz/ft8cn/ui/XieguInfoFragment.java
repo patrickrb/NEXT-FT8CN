@@ -56,7 +56,7 @@ public class XieguInfoFragment extends Fragment {
             xieguRadio = connector.getXieguRadio();
             binding.xieguInfoTextView.setText(xieguRadio.getModelName());
 
-            //ping 值
+            //Ping value
             xieguRadio.mutablePing.observe(getViewLifecycleOwner(), new Observer<Long>() {
                 @Override
                 public void onChanged(Long aLong) {
@@ -65,7 +65,7 @@ public class XieguInfoFragment extends Fragment {
                                     , aLong));
                 }
             });
-            //丢包数量
+            //Packet loss count
             xieguRadio.mutableLossPackets.observe(getViewLifecycleOwner(), new Observer<Integer>() {
                 @Override
                 public void onChanged(Integer integer) {
@@ -100,13 +100,13 @@ public class XieguInfoFragment extends Fragment {
         binding.xieguSMeterRulerView.initLabels("S.Po", "dBm"
                 , new String[]{"0", "1", "2", "3", "4", "5", "6", "7", "8", "9"}
                 , new String[]{"+20", "+40", "+60"});
-        //6100的swr,分为4段，1～1.5，1.5～2.0，2.0～3.0，3.0～无穷大（实际值是25.5）
+        //X6100 SWR, divided into 4 segments: 1~1.5, 1.5~2.0, 2.0~3.0, 3.0~infinity (actual value is 25.5)
         binding.xieguSwrMeterRulerView.initVal(1f, 3f, 25.5f, 4, 4);
         binding.xieguSwrMeterRulerView.initLabels("SWR", ""
                 , new String[]{"1", "1.5", "2", "2.5", "3"}
                 , new String[]{"", "", "", "∞"});
 
-        //ALC值的原始值（0～255）在127±50都是最佳线性度范围，转换到0～120的线性范围就是36.17到83.19
+        //ALC raw value (0~255) has optimal linearity range at 127+/-50, converted to 0~120 linear range is 36.17 to 83.19
         binding.xieguAlcMeterRulerView.initVal(0f, 100f, 120f, 8, 2);
         binding.xieguAlcMeterRulerView.initLabels("ALC", ""
                 , new String[]{"0", "10", "20", "30", "40", "50", "60","70","80"}

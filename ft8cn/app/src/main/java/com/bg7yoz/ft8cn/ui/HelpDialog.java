@@ -1,6 +1,6 @@
 package com.bg7yoz.ft8cn.ui;
 /**
- * 帮助信息的对话框。
+ * Help information dialog.
  * @author BGY70Z
  * @date 2023-03-20
  */
@@ -47,7 +47,7 @@ public class HelpDialog extends Dialog {
         return new TimerTask() {
             @Override
             public void run() {
-                //心跳动作
+                // Heartbeat action
                 //doHeartBeatEvent(onUtcTimer);
                 activity.runOnUiThread(new Runnable() {
                     @Override
@@ -140,7 +140,7 @@ public class HelpDialog extends Dialog {
     public void show() {
         super.show();
         WindowManager.LayoutParams params = getWindow().getAttributes();
-        //设置对话框的大小，以百分比0.6
+        // Set dialog size as percentage (0.6)
         int height=getWindow().getWindowManager().getDefaultDisplay().getHeight();
         int width=getWindow().getWindowManager().getDefaultDisplay().getWidth();
         params.height = (int) (height * 0.6);

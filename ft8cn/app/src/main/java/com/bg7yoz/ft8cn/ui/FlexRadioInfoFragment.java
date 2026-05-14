@@ -1,6 +1,6 @@
 package com.bg7yoz.ft8cn.ui;
 /**
- * flexRadio的仪表界面。
+ * FlexRadio meter panel fragment.
  * @author BGY70Z
  * @date 2023-03-20
  */

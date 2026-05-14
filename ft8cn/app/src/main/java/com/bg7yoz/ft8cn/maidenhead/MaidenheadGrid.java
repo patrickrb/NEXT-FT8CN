@@ -1,6 +1,6 @@
 package com.bg7yoz.ft8cn.maidenhead;
 /**
- * 梅登海德网格的处理。包括经纬度换算、距离计算。
+ * Maidenhead grid processing. Includes latitude/longitude conversion and distance calculation.
  * @author BGY70Z
  * @date 2023-03-20
  */
@@ -18,18 +18,18 @@ import java.util.List;
 
 public class MaidenheadGrid {
     private static final String TAG = "MaidenheadGrid";
-    private static final double EARTH_RADIUS = 6371393; // 平均半径,单位：m；不是赤道半径。赤道为6378左右
+    private static final double EARTH_RADIUS = 6371393; // Mean radius in meters; not the equatorial radius, which is about 6378 km
 
     /**
-     * 计算梅登海德网格的经纬度，4字符或6字符。如果网格数据不正确，返回null。如果是四字符的，尾部加ll,取中间的位置。
+     * Calculate latitude/longitude from a 4-character or 6-character Maidenhead grid. Returns null if grid data is invalid. For 4-character grids, 'll' is appended to use the center position.
      *
-     * @param grid 梅登海德网格数据
-     * @return LatLng 返回经纬度，如果数据不正确，返回null
+     * @param grid Maidenhead grid data
+     * @return LatLng latitude/longitude, or null if data is invalid
      */
     public static LatLng gridToLatLng(String grid) {
         if (grid==null) return null;
         if (grid.length()==0) return null;
-        //判断是不是符合梅登海德网格的规则
+        //Check if it conforms to Maidenhead grid rules
         if (grid.length() != 2&&grid.length() != 4 && grid.length() != 6) {
             return null;
         }
@@ -38,7 +38,7 @@ public class MaidenheadGrid {
         double x=0;
         double y=0;
         double z=0;
-        //纬度
+        //Latitude
         double lat=0;
         if (grid.length()==2){
             x=grid.toUpperCase().getBytes()[1]-'A'+0.5f;
@@ -59,7 +59,7 @@ public class MaidenheadGrid {
         }
         lat=x+y+z-90;
 
-        //经度
+        //Longitude
         x=0;
         y=0;
         z=0;
@@ -81,8 +81,8 @@ public class MaidenheadGrid {
             z=z*(2/18f);
         }
         lng=x+y+z-180;
-        if (lat>85) lat=85;//防止在地图上越界
-        if (lat<-85) lat=-85;//防止在地图上越界
+        if (lat>85) lat=85;//Prevent going out of bounds on the map
+        if (lat<-85) lat=-85;//Prevent going out of bounds on the map
 
 
         return new LatLng(lat,lng);
@@ -101,7 +101,7 @@ public class MaidenheadGrid {
         }
         LatLng[] latLngs = new LatLng[4];
 
-        //纬度1
+        //Latitude 1
         double x;
         double y = 0;
         double z = 0;
@@ -123,7 +123,7 @@ public class MaidenheadGrid {
             lat1=85.0;
         }
 
-        //纬度2
+        //Latitude 2
         x = 0;
         y = 0;
         z = 0;
@@ -152,7 +152,7 @@ public class MaidenheadGrid {
         }
 
 
-        //经度1
+        //Longitude 1
         x=0;y=0;z=0;
         double lng1;
         x=grid.toUpperCase().getBytes()[0]-'A';
@@ -168,7 +168,7 @@ public class MaidenheadGrid {
         }
         lng1=x+y+z-180;
 
-        //经度2
+        //Longitude 2
         x=0;y=0;z=0;
         double lng2;
         if (grid.length()==2){
@@ -200,87 +200,87 @@ public class MaidenheadGrid {
     }
 
     /**
-     * 此函数根据纬度计算 6 字符 Maidenhead网格。
-     * 经纬度采用 NMEA 格式。换句话说，西经和南纬度为负数。它们被指定为double类型
+     * This function calculates a 6-character Maidenhead grid from latitude/longitude.
+     * Latitude/longitude use NMEA format. In other words, west longitude and south latitude are negative. They are specified as double type.
      *
-     * @param location 经纬度
-     * @return String 梅登海德字符
+     * @param location latitude/longitude
+     * @return String Maidenhead grid string
      */
     public static String getGridSquare(LatLng location) {
-        double tempNumber;//用于中间计算
-        int index;//确定要显示的字符
+        double tempNumber;//For intermediate calculation
+        int index;//Determines the character to display
         double _long = location.longitude;
         double _lat = location.latitude;
         StringBuilder buff = new StringBuilder();
 
         /*
-         *	计算第一对两个字符
+         *	Calculate the first pair of two characters
          */
-        _long += 180;                    // 从太平洋中部开始
-        tempNumber = _long / 20;            // 每个主要正方形都是 20 度宽
-        index = (int) tempNumber;            // 大写字母的索引
-        buff.append(String.valueOf((char) (index + 'A')));  // 设置第一个字符
-        _long = _long - (index * 20);            // 第 2 步的剩余部分
+        _long += 180;                    // Start from the middle of the Pacific
+        tempNumber = _long / 20;            // Each major square is 20 degrees wide
+        index = (int) tempNumber;            // Index for uppercase letter
+        buff.append(String.valueOf((char) (index + 'A')));  // Set the first character
+        _long = _long - (index * 20);            // Remainder for step 2
 
-        _lat += 90;                    //从南极开始 180 度
-        tempNumber = _lat / 10;                // 每个大正方形高 10 度
-        index = (int) tempNumber;            // 大写字母的索引
-        buff.append(String.valueOf((char) (index + 'A')));//设置第二个字符
-        _lat = _lat - (index * 10);            // 第 2 步的剩余部分
+        _lat += 90;                    // Start from the South Pole, 180 degrees
+        tempNumber = _lat / 10;                // Each major square is 10 degrees tall
+        index = (int) tempNumber;            // Index for uppercase letter
+        buff.append(String.valueOf((char) (index + 'A')));//Set the second character
+        _lat = _lat - (index * 10);            // Remainder for step 2
 
         /*
-         *	现在是第二对两数字：
+         *	Now the second pair of two digits:
          */
-        tempNumber = _long / 2;                // 步骤 1 的余数除以 2
-        index = (int) tempNumber;            // 数字索引
-        buff.append(String.valueOf((char) (index + '0')));//设置第三个字符
-        _long = _long - (index * 2);            //第 3 步的剩余部分
+        tempNumber = _long / 2;                // Remainder from step 1 divided by 2
+        index = (int) tempNumber;            // Digit index
+        buff.append(String.valueOf((char) (index + '0')));//Set the third character
+        _long = _long - (index * 2);            // Remainder for step 3
 
-        tempNumber = _lat;                // 步骤 1 的余数除以 1
-        index = (int) tempNumber;            // 数字索引
-        buff.append(String.valueOf((char) (index + '0')));//设置第四个字符
-        _lat = _lat - index;                //第 3 步的剩余部分
+        tempNumber = _lat;                // Remainder from step 1 divided by 1
+        index = (int) tempNumber;            // Digit index
+        buff.append(String.valueOf((char) (index + '0')));//Set the fourth character
+        _lat = _lat - index;                // Remainder for step 3
 
         /*
-         *现在是第三对两个小写字符：
+         * Now the third pair of two lowercase characters:
          */
-        tempNumber = _long / 0.083333;            //步骤 2 的余数除以 0.083333
-        index = (int) tempNumber;            // 小写字母的索引
-        buff.append(String.valueOf((char) (index + 'a')));//设置第五个字符
+        tempNumber = _long / 0.083333;            // Remainder from step 2 divided by 0.083333
+        index = (int) tempNumber;            // Index for lowercase letter
+        buff.append(String.valueOf((char) (index + 'a')));//Set the fifth character
 
-        tempNumber = _lat / 0.0416665;            // 步骤 2 的余数除以 0.0416665
-        index = (int) tempNumber;            // 小写字母的索引
-        buff.append(String.valueOf((char) (index + 'a')));//设置第五个字符
+        tempNumber = _lat / 0.0416665;            // Remainder from step 2 divided by 0.0416665
+        index = (int) tempNumber;            // Index for lowercase letter
+        buff.append(String.valueOf((char) (index + 'a')));//Set the sixth character
 
         return buff.toString().substring(0, 4);
     }
 
     /**
-     * 计算经纬度之间的距离
+     * Calculate distance between two latitude/longitude points
      *
-     * @param latLng1 经纬度
-     * @param latLng2 经纬度
-     * @return 距离，公里。
+     * @param latLng1 latitude/longitude
+     * @param latLng2 latitude/longitude
+     * @return distance in kilometers
      */
     public static double getDist(LatLng latLng1, LatLng latLng2) {
-        double radiansAX = Math.toRadians(latLng1.longitude); // A经弧度
-        double radiansAY = Math.toRadians(latLng1.latitude); // A纬弧度
-        double radiansBX = Math.toRadians(latLng2.longitude); // B经弧度
-        double radiansBY = Math.toRadians(latLng2.latitude); // B纬弧度
+        double radiansAX = Math.toRadians(latLng1.longitude); // A longitude in radians
+        double radiansAY = Math.toRadians(latLng1.latitude); // A latitude in radians
+        double radiansBX = Math.toRadians(latLng2.longitude); // B longitude in radians
+        double radiansBY = Math.toRadians(latLng2.latitude); // B latitude in radians
 
-        // 公式中“cosβ1cosβ2cos（α1-α2）+sinβ1sinβ2”的部分，得到∠AOB的cos值
+        // The formula part "cos(b1)*cos(b2)*cos(a1-a2)+sin(b1)*sin(b2)" gives the cos value of angle AOB
         double cos = Math.cos(radiansAY) * Math.cos(radiansBY) * Math.cos(radiansAX - radiansBX)
                 + Math.sin(radiansAY) * Math.sin(radiansBY);
-        double acos = Math.acos(cos); // 反余弦值
-        return EARTH_RADIUS * acos / 1000; // 最终结果km
+        double acos = Math.acos(cos); // Arccosine value
+        return EARTH_RADIUS * acos / 1000; // Final result in km
     }
 
     /**
-     * 计算梅登海德网格之间的距离
+     * Calculate distance between two Maidenhead grids
      *
-     * @param mGrid1 梅登海德网格
-     * @param mGrid2 梅登海德网格2
-     * @return double 两个网格之间的距离
+     * @param mGrid1 Maidenhead grid 1
+     * @param mGrid2 Maidenhead grid 2
+     * @return double distance between the two grids
      */
     public static double getDist(String mGrid1, String mGrid2) {
         LatLng latLng1 = gridToLatLng(mGrid1);
@@ -293,11 +293,11 @@ public class MaidenheadGrid {
     }
 
     /**
-     * 计算两个网格之间的距离
+     * Calculate distance between two grids
      *
-     * @param mGrid1 网格
-     * @param mGrid2 网格
-     * @return 距离
+     * @param mGrid1 grid
+     * @param mGrid2 grid
+     * @return distance
      */
     @SuppressLint("DefaultLocale")
     public static String getDistStr(String mGrid1, String mGrid2) {
@@ -314,11 +314,11 @@ public class MaidenheadGrid {
     }
 
     /**
-     * 计算两个网格之间的距离，以英文显示公里数
+     * Calculate distance between two grids, displaying kilometers in English
      *
-     * @param mGrid1 网格
-     * @param mGrid2 网格
-     * @return 距离
+     * @param mGrid1 grid
+     * @param mGrid2 grid
+     * @return distance
      */
     @SuppressLint("DefaultLocale")
     public static String getDistStrEN(String mGrid1, String mGrid2) {
@@ -331,19 +331,19 @@ public class MaidenheadGrid {
     }
 
     /**
-     * 获取本设备的经纬度
+     * Get the latitude/longitude of this device
      *
      * @param context context
-     * @return 经纬度
+     * @return latitude/longitude
      */
     public static LatLng getLocalLocation(Context context) {
-        // 获取位置服务
+        // Get location service
         String serviceName = Context.LOCATION_SERVICE;
-        // 调用getSystemService()方法来获取LocationManager对象
+        // Call getSystemService() to obtain the LocationManager object
         LocationManager locationManager = (LocationManager) context.getSystemService(serviceName);
-        // 指定LocationManager的定位方法
+        // Specify LocationManager's positioning method
         //String provider = LocationManager.GPS_PROVIDER;
-        // 调用getLastKnownLocation()方法获取当前的位置信息
+        // Call getLastKnownLocation() to get the current location information
 
         List<String> providers = locationManager.getProviders(true);
         Location location = null;
@@ -367,10 +367,10 @@ public class MaidenheadGrid {
 
 
     /**
-     * 获取本机的梅登海德网格数据。需要定位的权限。
+     * Get the Maidenhead grid data for this device. Requires location permission.
      *
      * @param context context
-     * @return String 返回6字符的梅登海德网格。
+     * @return String 6-character Maidenhead grid.
      */
     public static String getMyMaidenheadGrid(Context context) {
         LatLng latLng = getLocalLocation(context);
@@ -378,16 +378,16 @@ public class MaidenheadGrid {
         if (latLng != null) {
             return getGridSquare(latLng);
         } else {
-            //ToastMessage.show("无法定位，请确认是否有定位的权限。");
+            //ToastMessage.show("Unable to locate. Please confirm you have location permissions.");
             return "";
         }
     }
 
     /**
-     * 检查是不是梅登海德网格。如果不是返回false。
+     * Check if the string is a valid Maidenhead grid. Returns false if not.
      *
-     * @param s 梅登海德网格
-     * @return boolean 是否是梅登海德网格。
+     * @param s Maidenhead grid string
+     * @return boolean whether it is a valid Maidenhead grid.
      */
     public static boolean checkMaidenhead(String s) {
         if (s.length() != 4 && s.length() != 6) {

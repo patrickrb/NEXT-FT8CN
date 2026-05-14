@@ -1,6 +1,6 @@
 package com.bg7yoz.ft8cn;
 /**
- * 常用变量。关于mainContext有内存泄漏的风险，以后解决。
+ * Common variables. There is a memory leak risk with mainContext; to be addressed later.
  * mainContext
  */
 
@@ -31,33 +31,33 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class GeneralVariables {
     private static final String TAG = "GeneralVariables";
-    public static String VERSION = BuildConfig.VERSION_NAME;//版本号"0.62（Beta 4）";
-    public static String BUILD_DATE = BuildConfig.apkBuildTime;//编译的时间
-    public static int MESSAGE_COUNT = 3000;//消息的最大缓存数量
-    public static boolean saveSWLMessage = false;//保存解码消息开关
-    public static boolean saveSWL_QSO = false;//保存解码消息消息中的QSO开关
-    public static boolean enableCloudlog = false;//是否启用Cloudlog自动同步
-    public static boolean enableQRZ = false;//是否启用qrz自动同步
+    public static String VERSION = BuildConfig.VERSION_NAME;//Version number "0.62 (Beta 4)";
+    public static String BUILD_DATE = BuildConfig.apkBuildTime;//Build time
+    public static int MESSAGE_COUNT = 3000;//Maximum message cache count
+    public static boolean saveSWLMessage = false;//Save decoded messages switch
+    public static boolean saveSWL_QSO = false;//Save QSOs from decoded messages switch
+    public static boolean enableCloudlog = false;//Whether Cloudlog auto-sync is enabled
+    public static boolean enableQRZ = false;//Whether QRZ auto-sync is enabled
 
-    public static boolean deepDecodeMode = false;//是否开启深度解码
+    public static boolean deepDecodeMode = false;//Whether deep decode mode is enabled
 
-    public static boolean audioOutput32Bit = true;//音频输出类型true=float,false=int16
-    public static int audioSampleRate = 12000;//发射音频的采样率
+    public static boolean audioOutput32Bit = true;//Audio output type: true=float, false=int16
+    public static int audioSampleRate = 12000;//Transmit audio sample rate
 
-    public static int audioInputDeviceId = 0;//音频输入设备ID，0=系统默认，-1=USB音频
-    public static int audioOutputDeviceId = 0;//音频输出设备ID，0=系统默认，-1=USB音频
+    public static int audioInputDeviceId = 0;//Audio input device ID, 0=system default, -1=USB audio
+    public static int audioOutputDeviceId = 0;//Audio output device ID, 0=system default, -1=USB audio
 
-    // USB音频设备的VID/PID，用于在重启后重新查找设备
+    // USB audio device VID/PID, used to re-find the device after restart
     public static int usbAudioInputVendorId = 0;
     public static int usbAudioInputProductId = 0;
     public static int usbAudioOutputVendorId = 0;
     public static int usbAudioOutputProductId = 0;
 
     public static MutableLiveData<Float> mutableVolumePercent = new MutableLiveData<>();
-    public static float volumePercent = 0.5f;//播放音频的音量,是百分比
+    public static float volumePercent = 0.5f;//Audio playback volume, as a percentage
 
-    public static int flexMaxRfPower = 10;//flex电台的最大发射功率
-    public static int flexMaxTunePower = 10;//flex电台的最大调谐功率
+    public static int flexMaxRfPower = 10;//Flex radio max transmit power
+    public static int flexMaxTunePower = 10;//Flex radio max tune power
 
     private Context mainContext;
     public static CallsignDatabase callsignDatabase = null;
@@ -66,11 +66,11 @@ public class GeneralVariables {
         mainContext = context;
     }
 
-    public static boolean isChina = true;//语言是不是中国
-    public static boolean isTraditionalChinese = true;//语言是不是繁体中文
-    //public static double maxDist = 0;//最远距离
+    public static boolean isChina = false;//Whether the language is Chinese
+    public static boolean isTraditionalChinese = false;//Whether the language is Traditional Chinese
+    //public static double maxDist = 0;//Maximum distance
 
-    //各已经通联的分区列表
+    //Lists of already-contacted zones
     public static final Map<String, String> dxccMap = new HashMap<>();
     public static final Map<Integer, Integer> cqMap = new HashMap<>();
     public static final Map<Integer, Integer> ituMap = new HashMap<>();
@@ -78,9 +78,9 @@ public class GeneralVariables {
     private static final Map<String, Integer> excludedCallsigns = new HashMap<>();
 
     /**
-     * 添加排除的字头
+     * Add excluded callsign prefixes
      *
-     * @param callsigns 呼号
+     * @param callsigns callsigns
      */
     public static synchronized void addExcludedCallsigns(String callsigns) {
         excludedCallsigns.clear();
@@ -95,10 +95,10 @@ public class GeneralVariables {
     }
 
     /**
-     * 查找是否含有排除的字头
+     * Check if a callsign matches an excluded prefix
      *
-     * @param callsign 呼号
-     * @return 是否
+     * @param callsign callsign
+     * @return whether it matches
      */
     public static synchronized boolean checkIsExcludeCallsign(String callsign) {
         Iterator<String> iterator = excludedCallsigns.keySet().iterator();
@@ -112,9 +112,9 @@ public class GeneralVariables {
     }
 
     /**
-     * 获取排除呼号前缀的列表
+     * Get the list of excluded callsign prefixes
      *
-     * @return 列表
+     * @return the list as a string
      */
     public static synchronized String getExcludeCallsigns() {
         StringBuilder calls = new StringBuilder();
@@ -133,10 +133,10 @@ public class GeneralVariables {
     }
 
 
-    //通联记录列表，包括成功与不成功的
+    //QSO record list, including both successful and unsuccessful
     public static QslRecordList qslRecordList = new QslRecordList();
 
-    //此处有内存泄露警告，但Application Context不应该会内存泄露，所以注释掉
+    //Memory leak warning here, but Application Context should not leak, so suppressed
     @SuppressLint("StaticFieldLeak")
     private static GeneralVariables generalVariables = null;
 
@@ -153,73 +153,73 @@ public class GeneralVariables {
 
 
     public static MutableLiveData<String> mutableDebugMessage = new MutableLiveData<>();
-    public static int QUERY_FREQ_TIMEOUT = 2000;//轮询频率变化的时间间隔。2秒
-    public static int START_QUERY_FREQ_DELAY = 2000;//开始轮询频率的时间延迟
+    public static int QUERY_FREQ_TIMEOUT = 2000;//Frequency polling interval, 2 seconds
+    public static int START_QUERY_FREQ_DELAY = 2000;//Delay before starting frequency polling
 
-    public static final int DEFAULT_LAUNCH_SUPERVISION = 10 * 60 * 1000;//发射监管默认值,10分钟
+    public static final int DEFAULT_LAUNCH_SUPERVISION = 10 * 60 * 1000;//Transmit supervision default, 10 minutes
     private static String myMaidenheadGrid = "";
     public static MutableLiveData<String> mutableMyMaidenheadGrid = new MutableLiveData<>();
 
-    public static int connectMode = ConnectMode.USB_CABLE;//连接方式USB==0,BLUE_TOOTH==1
+    public static int connectMode = ConnectMode.USB_CABLE;//Connection mode: USB==0, BLUE_TOOTH==1
 
-    //public static String bluetoothDeviceAddress=null;//可以用于连接的蓝牙设备地址
+    //public static String bluetoothDeviceAddress=null;//Bluetooth device address available for connection
 
 
-    //用于记录呼号于网格的对应关系 todo---应当把此处列表也放到后台追踪信息里
+    //Records callsign-to-grid mapping. todo---should also add this list to background tracking info
     //public static ArrayList<CallsignMaidenheadGrid> callsignMaidenheadGrids=new ArrayList<>();
     public static final Map<String, String> callsignAndGrids = new ConcurrentHashMap<>();
     //private static final Map<String,String> callsignAndGrids=new HashMap<>();
 
-    public static String myCallsign = "";//我的呼号
-    public static String toModifier = "";//呼叫的修饰符
-    private static float baseFrequency = 1000;//声音频率
+    public static String myCallsign = "";//My callsign
+    public static String toModifier = "";//Call modifier
+    private static float baseFrequency = 1000;//Audio frequency
 
-    public static boolean simpleCallItemMode = false;//紧凑型消息
+    public static boolean simpleCallItemMode = false;//Compact message mode
 
-    public static boolean swr_switch_on = true;//swr告警开关
-    public static boolean alc_switch_on = true;//alc告警开关
+    public static boolean swr_switch_on = true;//SWR alarm switch
+    public static boolean alc_switch_on = true;//ALC alarm switch
 
     public static MutableLiveData<Float> mutableBaseFrequency = new MutableLiveData<>();
-    public static String cloudlogServerAddress = "";//cloudlog的服务器地址
-    public static String cloudlogApiKey = "";//cloudlog的APIKEY
-    public static String cloudlogStationID = "";//cloudlog的站点ID
-    public static String qrzApiKey = ""; //qrz的key
-    public static boolean synFrequency = false;//同频发射
-    public static int transmitDelay = 500;//发射延迟时间，这个时间也是给上一个周期的解码时间
-    public static int pttDelay = 100;//PTT的响应时间，在给电台PTT指令后，一般电台会有一个响应时间，此处默认是100毫秒
-    public static int civAddress = 0xa4;//civ地址
-    public static int baudRate = 19200;//波特率
-    public static long band = 14074000;//载波频段
-    public static int serialDataBits = 8;//默认是8
-    public static int serialParity = 0;//UsbSerialPort.PARITY_NONE默认是0，即：无
-    public static int serialStopBits = 1;//停止位的对应关系：1=1,2=3,3=1.5
-    public static int instructionSet = 0;//指令集，0:icom，1:yaesu 2 代，2:yaesu 3代。
-    public static int bandListIndex = -1;//电台波段的索引值
-    public static MutableLiveData<Integer> mutableBandChange = new MutableLiveData<>();//波段索引值变化
+    public static String cloudlogServerAddress = "";//Cloudlog server address
+    public static String cloudlogApiKey = "";//Cloudlog API key
+    public static String cloudlogStationID = "";//Cloudlog station ID
+    public static String qrzApiKey = ""; //QRZ API key
+    public static boolean synFrequency = false;//Same-frequency transmit
+    public static int transmitDelay = 500;//Transmit delay; also allows decoding time for the previous cycle
+    public static int pttDelay = 100;//PTT response time; radios typically need some response time after PTT command, default 100ms
+    public static int civAddress = 0xa4;//CI-V address
+    public static int baudRate = 19200;//Baud rate
+    public static long band = 14074000;//Carrier frequency band
+    public static int serialDataBits = 8;//Default is 8
+    public static int serialParity = 0;//UsbSerialPort.PARITY_NONE, default is 0 (none)
+    public static int serialStopBits = 1;//Stop bits mapping: 1=1, 2=3, 3=1.5
+    public static int instructionSet = 0;//Instruction set: 0=ICOM, 1=Yaesu gen 2, 2=Yaesu gen 3
+    public static int bandListIndex = -1;//Radio band index value
+    public static MutableLiveData<Integer> mutableBandChange = new MutableLiveData<>();//Band index change
     public static int controlMode = ControlMode.VOX;
     public static int modelNo = 0;
-    public static int launchSupervision = DEFAULT_LAUNCH_SUPERVISION;//发射监管
-    public static long launchSupervisionStart = UtcTimer.getSystemTime();//自动发射的起始时间
-    public static int noReplyLimit = 0;//呼叫无回应次数0==忽略
+    public static int launchSupervision = DEFAULT_LAUNCH_SUPERVISION;//Transmit supervision
+    public static long launchSupervisionStart = UtcTimer.getSystemTime();//Auto-transmit start time
+    public static int noReplyLimit = 0;//No-reply count limit; 0==ignore
 
-    public static int noReplyCount = 0;//没有回应的次数
+    public static int noReplyCount = 0;//Number of times with no reply
 
-    //下面4个参数是ICOM网络方式连接的参数
+    //The following 4 parameters are for ICOM network connection
     public static String icomIp = "255.255.255.255";
     public static int icomUdpPort = 50001;
     public static String icomUserName = "ic705";
     public static String icomPassword = "";
 
 
-    public static boolean autoFollowCQ = true;//自动关注CQ
-    public static boolean autoCallFollow = true;//自动呼叫关注的呼号
-    public static ArrayList<String> QSL_Callsign_list = new ArrayList<>();//QSL成功的呼号
-    public static ArrayList<String> QSL_Callsign_list_other_band = new ArrayList<>();//在其它波段QSL成功的呼号
+    public static boolean autoFollowCQ = true;//Auto-follow CQ
+    public static boolean autoCallFollow = true;//Auto-call followed callsigns
+    public static ArrayList<String> QSL_Callsign_list = new ArrayList<>();//Successfully QSL'd callsigns
+    public static ArrayList<String> QSL_Callsign_list_other_band = new ArrayList<>();//Successfully QSL'd callsigns on other bands
 
 
-    public static final ArrayList<String> followCallsign = new ArrayList<>();//关注的呼号
+    public static final ArrayList<String> followCallsign = new ArrayList<>();//Followed callsigns
 
-    public static ArrayList<Ft8Message> transmitMessages = new ArrayList<>();//放在呼叫界面，关注的列表
+    public static ArrayList<Ft8Message> transmitMessages = new ArrayList<>();//List for the calling UI, followed entries
 
     public static void setMyMaidenheadGrid(String grid) {
         myMaidenheadGrid = grid;
@@ -274,29 +274,29 @@ public class GeneralVariables {
     }
 
     /**
-     * 查有没有通联成功的呼号
+     * Check if a callsign has been successfully contacted
      *
-     * @param callsign 呼号
-     * @return 是否存在
+     * @param callsign callsign
+     * @return whether it exists
      */
     public static boolean checkQSLCallsign(String callsign) {
         return QSL_Callsign_list.contains(callsign);
     }
 
     /**
-     * 查别的波段有没有通联成功的呼号
+     * Check if a callsign has been successfully contacted on other bands
      *
-     * @param callsign 呼号
-     * @return 是否存在
+     * @param callsign callsign
+     * @return whether it exists
      */
     public static boolean checkQSLCallsign_OtherBand(String callsign) {
         return QSL_Callsign_list_other_band.contains(callsign);
     }
 
     /**
-     * 检查呼号中是不是含有我的呼号
+     * Check if a callsign contains my callsign
      *
-     * @param callsign 呼号
+     * @param callsign callsign
      * @return boolean
      */
     static public boolean checkIsMyCallsign(String callsign) {
@@ -306,9 +306,9 @@ public class GeneralVariables {
     }
 
     /**
-     * 对于复合呼号，获取去掉前缀或后缀的呼号
+     * For compound callsigns, get the callsign with prefix or suffix removed
      *
-     * @return 呼号
+     * @return callsign
      */
     static public String getShortCallsign(String callsign) {
         if (callsign.contains("/")) {
@@ -328,19 +328,19 @@ public class GeneralVariables {
     }
 
     /**
-     * 查该呼号是不是在关注的呼号列表中
+     * Check if the callsign is in the followed callsign list.
      *
-     * @param callsign 呼号
-     * @return 是否存在
+     * @param callsign Callsign
+     * @return Whether it exists
      */
     public static boolean callsignInFollow(String callsign) {
         return followCallsign.contains(callsign);
     }
 
     /**
-     * 向通联成功的呼号列表添加
+     * Add to the list of successfully contacted callsigns.
      *
-     * @param callsign 呼号
+     * @param callsign Callsign
      */
     public static void addQSLCallsign(String callsign) {
         if (!checkQSLCallsign(callsign)) {
@@ -356,31 +356,31 @@ public class GeneralVariables {
     }
 
     /**
-     * 自动程序运行起始时间
+     * Auto-procedure run start time.
      */
     public static void resetLaunchSupervision() {
         launchSupervisionStart = UtcTimer.getSystemTime();
     }
 
     /**
-     * 或取自动程序的运行时长
+     * Get the auto-procedure run duration.
      *
-     * @return 毫秒
+     * @return Milliseconds
      */
     public static int launchSupervisionCount() {
         return (int) (UtcTimer.getSystemTime() - launchSupervisionStart);
     }
 
     public static boolean isLaunchSupervisionTimeout() {
-        if (launchSupervision == 0) return false;//0是不监管
+        if (launchSupervision == 0) return false;//0 means no supervision
         return launchSupervisionCount() > launchSupervision;
     }
 
     /**
-     * 从extraInfo中查消息顺序
+     * Get message sequence from extraInfo.
      *
-     * @param extraInfo 消息中的扩展内容
-     * @return 返回消息序号
+     * @param extraInfo Extended content in the message
+     * @return Returns message sequence number
      */
     public static int checkFunOrderByExtraInfo(String extraInfo) {
         if (checkFun5(extraInfo)) return 5;
@@ -392,10 +392,10 @@ public class GeneralVariables {
     }
 
     /**
-     * 检查消息的序号，如果解析不出来，就-1
+     * Check message sequence number; returns -1 if parsing fails.
      *
-     * @param message 消息
-     * @return 消息序号
+     * @param message Message
+     * @return Message sequence number
      */
     public static int checkFunOrder(Ft8Message message) {
         if (message.checkIsCQ()) return 6;
@@ -404,33 +404,33 @@ public class GeneralVariables {
     }
 
 
-    //是不是网格报告
+    //check if this is a grid report
     public static boolean checkFun1(String extraInfo) {
-        //网格报告必须是4位,或没有网格
+        //grid report must be 4 characters, or no grid
         return (extraInfo.trim().matches("[A-Z][A-Z][0-9][0-9]") && !extraInfo.equals("RR73"))
                 || (extraInfo.trim().length() == 0);
 
     }
 
-    //是不是信号报告,如-10
+    //check if this is a signal report, e.g. -10
     public static boolean checkFun2(String extraInfo) {
         if (extraInfo.trim().length() < 2) {
             return false;
-        }//信号报告必须至少2位
+        }//signal report must be at least 2 characters
         try {
-            return Integer.parseInt(extraInfo.trim()) != 73;//如果是73，说明是消息6，不是消息2
+            return Integer.parseInt(extraInfo.trim()) != 73;//if 73, it's message 6, not message 2
             //return true;
         } catch (Exception e) {
             return false;
         }
     }
 
-    //是不是带R的信号报告,如R-10
+    //check if this is an R-prefixed signal report, e.g. R-10
     public static boolean checkFun3(String extraInfo) {
         if (extraInfo.trim().length() < 3) {
             return false;
-        }//带R信号报告必须至少3位
-        //第一位如果不是R，或者第二位是R，说明不是消息3
+        }//R-prefixed signal report must be at least 3 characters
+        //if first char is not R, or second char is R, then not message 3
         if ((extraInfo.trim().charAt(0) != 'R') || (extraInfo.trim().charAt(1) == 'R')) {
             return false;
         }
@@ -443,22 +443,22 @@ public class GeneralVariables {
         }
     }
 
-    //是不是RRR或RR73值
+    //check if this is RRR or RR73
     public static boolean checkFun4(String extraInfo) {
         return extraInfo.trim().equals("RR73") || extraInfo.trim().equals("RRR");
     }
 
-    //是不是73值
+    //check if this is 73
     public static boolean checkFun5(String extraInfo) {
         return extraInfo.trim().equals("73");
     }
 
 
     /**
-     * 判断是不是信号报告，如果是，把值赋给 report
+     * Determine if this is a signal report; if so, assign the value to report.
      *
-     * @param extraInfo 消息扩展
-     * @return 信号报告值, 没找到是-100
+     * @param extraInfo Message extension
+     * @return Signal report value; -100 if not found
      */
     public static int checkFun2_3(String extraInfo) {
         if (extraInfo.equals("73")) return -100;
@@ -473,10 +473,10 @@ public class GeneralVariables {
     }
 
     /**
-     * 判断是不是网格报告，如果是，把值赋给 report
+     * Determine if this is a grid report; if so, assign the value to report.
      *
-     * @param extraInfo 消息扩展
-     * @return 信号报告
+     * @param extraInfo Message extension
+     * @return Signal report
      */
     public static boolean checkFun1_6(String extraInfo) {
         return extraInfo.trim().matches("[A-Z][A-Z][0-9][0-9]")
@@ -484,10 +484,10 @@ public class GeneralVariables {
     }
 
     /**
-     * 检查是否是通联结束：RRR、RR73、73
+     * Check if this is a QSO ending: RRR, RR73, or 73.
      *
-     * @param extraInfo 消息后缀
-     * @return 是否
+     * @param extraInfo Message suffix
+     * @return Whether
      */
     public static boolean checkFun4_5(String extraInfo) {
         return extraInfo.trim().equals("RR73")
@@ -496,10 +496,10 @@ public class GeneralVariables {
     }
 
     /**
-     * 从String.xml中提取字符串
+     * Extract a string from String.xml.
      *
      * @param id id
-     * @return 字符串
+     * @return String
      */
     public static String getStringFromResource(int id) {
         if (getMainContext() != null) {
@@ -511,70 +511,70 @@ public class GeneralVariables {
 
 
     /**
-     * 把已经通联的DXCC分区添加到集合中
+     * Add an already-contacted DXCC entity to the set.
      *
-     * @param dxccPrefix DXCC前缀
+     * @param dxccPrefix DXCC prefix
      */
     public static void addDxcc(String dxccPrefix) {
         dxccMap.put(dxccPrefix, dxccPrefix);
     }
 
     /**
-     * 查看是不是已经通联的DXCC分区
+     * Check if this is an already-contacted DXCC entity.
      *
-     * @param dxccPrefix DXCC前缀
-     * @return 是否
+     * @param dxccPrefix DXCC prefix
+     * @return Whether
      */
     public static boolean getDxccByPrefix(String dxccPrefix) {
         return dxccMap.containsKey(dxccPrefix);
     }
 
     /**
-     * 把CQ分区加到列表里
+     * Add a CQ zone to the list.
      *
-     * @param cqZone cq分区编号
+     * @param cqZone CQ zone number
      */
     public static void addCqZone(int cqZone) {
         cqMap.put(cqZone, cqZone);
     }
 
     /**
-     * 查是否存在已经通联的CQ分区
+     * Check if there is an already-contacted CQ zone.
      *
-     * @param cq cq分区编号
-     * @return 是否存在
+     * @param cq CQ zone number
+     * @return Whether it exists
      */
     public static boolean getCqZoneById(int cq) {
         return cqMap.containsKey(cq);
     }
 
     /**
-     * 把itu分区添加到已通联的ITU列表中
+     * Add an ITU zone to the already-contacted ITU list.
      *
-     * @param itu itu编号
+     * @param itu ITU number
      */
     public static void addItuZone(int itu) {
         ituMap.put(itu, itu);
     }
 
     /**
-     * 查Itu分区在不在已通联的列表中
+     * Check if the ITU zone is in the already-contacted list.
      *
-     * @param itu itu编号
-     * @return 是否存在
+     * @param itu ITU number
+     * @return Whether it exists
      */
     public static boolean getItuZoneById(int itu) {
         return ituMap.containsKey(itu);
     }
 
-    //用于触发新的网格
+    //used to trigger new grid
     public static MutableLiveData<String> mutableNewGrid = new MutableLiveData<>();
 
     /**
-     * 把呼号与网格的对应关系添加到呼号--网格对应表，
+     * Add the callsign-to-grid mapping to the callsign-grid lookup table.
      *
-     * @param callsign 呼号
-     * @param grid     网格
+     * @param callsign Callsign
+     * @param grid     Grid
      */
     public static void addCallsignAndGrid(String callsign, String grid) {
         if (grid.length() >= 4) {
@@ -584,26 +584,26 @@ public class GeneralVariables {
     }
 
     /**
-     * 呼号--网格对应表。以呼号查网格
-     * 如果内存中没有，应当到数据库中查一下。
+     * Callsign-grid lookup table. Look up grid by callsign.
+     * If not in memory, should look up in the database.
      *
-     * @param callsign 呼号
-     * @return 是否有对应的网格
+     * @param callsign Callsign
+     * @return Whether a corresponding grid exists
      */
     public static boolean getCallsignHasGrid(String callsign) {
         return callsignAndGrids.containsKey(callsign);
     }
 
     /**
-     * 呼号--网格对应表。以呼号查网格，条件是呼号和网格都对应的上。
-     * 此函数的目的是，为了更新对应表的数据库
+     * Callsign-grid lookup table. Look up grid by callsign, requiring both callsign and grid to match.
+     * This function is for updating the lookup table database.
      *
-     * @param callsign 呼号
-     * @param grid     网格
-     * @return 是否有对应的网格
+     * @param callsign Callsign
+     * @param grid     Grid
+     * @return Whether a corresponding grid exists
      */
     public static boolean getCallsignHasGrid(String callsign, String grid) {
-        if (!callsignAndGrids.containsKey(callsign)) return false;//说明根本没有这个呼号
+        if (!callsignAndGrids.containsKey(callsign)) return false;//this callsign doesn't exist at all
         String s = callsignAndGrids.get(callsign);
         if (s == null) return false;
         return s.equals(grid);
@@ -620,7 +620,7 @@ public class GeneralVariables {
     }
 
     /**
-     * 遍历呼号--网格对应表，生成HTML
+     * Traverse the callsign-grid lookup table and generate HTML.
      *
      * @return HTML
      */
@@ -643,10 +643,10 @@ public class GeneralVariables {
     }
 
     /**
-     * 判断是否为整数
+     * Determine if it is an integer.
      *
-     * @param str 传入的字符串
-     * @return 是整数返回true, 否则返回false
+     * @param str Input string
+     * @return Returns true if integer, false otherwise
      */
 
     public static boolean isInteger(String str) {
@@ -657,7 +657,7 @@ public class GeneralVariables {
     }
 
     /**
-     * 输出音频的数据类型，网络模式不可用
+     * Audio output data type; not available in network mode.
      */
     public enum AudioOutputBitMode {
         Float32,
@@ -665,80 +665,80 @@ public class GeneralVariables {
     }
 
     /**
-     * 创建一个临时文件。
+     * Create a temporary file.
      *
      * @param context Context
-     * @param prefix  前缀
-     * @param suffix  扩展名
-     * @return File结构的文件
+     * @param prefix  Prefix
+     * @param suffix  Extension
+     * @return File object
      */
     public static File getTempFile(Context context, String prefix, String suffix) {
         File tempDir = context.getExternalCacheDir();
         if (tempDir == null) {
-            // 处理错误情况，无法获取临时目录
-            Log.e(TAG, "创建临时文件出错！无法获取临时目录");
+            // Error: unable to get temp directory
+            Log.e(TAG, "Error creating temp file! Unable to get temp directory");
             return null;
         }
 
         try {
-            //tempFile.deleteOnExit(); // 文件会在虚拟机退出时删除
+            //tempFile.deleteOnExit(); // file will be deleted when JVM exits
             return File.createTempFile(prefix, suffix, tempDir);
         } catch (IOException e) {
-            Log.e(TAG, "创建临时文件出错！" + e.getMessage());
+            Log.e(TAG, "Error creating temp file! " + e.getMessage());
             return null;
         }
     }
 
     /**
-     * 把文本数据写入到文件
+     * Write text data to a file.
      *
      * @param file File
-     * @param data 文本数据
+     * @param data Text data
      */
     public static void writeToFile(File file, String data) {
         FileOutputStream fileOutputStream = null;
         try {
             fileOutputStream = new FileOutputStream(file, true);
             fileOutputStream.write(data.getBytes());
-            Log.e(TAG, "文件数据写入完成！");
+            Log.e(TAG, "File data write complete!");
         } catch (IOException e) {
-            Log.e(TAG, String.format("写文件出错：%s", e.getMessage()));
+            Log.e(TAG, String.format("Error writing file: %s", e.getMessage()));
         } finally {
             try {
                 if (fileOutputStream != null) {
                     fileOutputStream.close();
                 }
             } catch (IOException e) {
-                Log.e(TAG, String.format("关闭写文件出错：%s", e.getMessage()));
+                Log.e(TAG, String.format("Error closing file writer: %s", e.getMessage()));
             }
         }
     }
 
 
     /**
-     * 保存数据包缓存文件
+     * Save data packet cache file.
      *
-     * @param context 上下文
-     * @param prefix  前缀
-     * @param suffix  扩展名
-     * @param data    数据
-     * @return 文件对象
+     * @param context Context
+     * @param prefix  Prefix
+     * @param suffix  Extension
+     * @param data    Data
+     * @return File object
      */
     public static File writeToTempFile(Context context, String prefix, String suffix, String data) {
         File file = getTempFile(context, prefix, suffix);
         writeToFile(file, data);
         if (file != null) {
-            file.deleteOnExit(); // 文件会在虚拟机退出时删除
+            file.deleteOnExit(); // file will be deleted when JVM exits
         }
         return file;
     }
 
 //    /**
-//     * 分享文件
+//     * Share file
 //     *
 //     * @param context Context
-//     * @param file    文件对象
-//     * @param title   标题
+//     * @param file    File object
+//     * @param title   Title
 //     */
 //    public static void shareFile(Context context, File file, String title) {
 //        Intent sharingIntent = new Intent(Intent.ACTION_SEND);
@@ -753,10 +753,10 @@ public class GeneralVariables {
 //    }
 
     /**
-     * 删除文件夹
+     * Delete folder.
      *
-     * @param dir 文件夹
-     * @return 是否成功删除
+     * @param dir Folder
+     * @return Whether successfully deleted
      */
     public static boolean deleteDir(File dir) {
         if (dir == null) return false;

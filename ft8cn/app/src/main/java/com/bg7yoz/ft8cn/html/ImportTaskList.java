@@ -10,10 +10,10 @@ import java.util.HashMap;
 public class ImportTaskList extends HashMap<Integer, ImportTaskList.ImportTask> {
 
     /**
-     * 获取上传的任务，以session为key
+     * Get the upload task by session key
      *
      * @param session session
-     * @return 任务的HTML
+     * @return task HTML
      */
     public String getTaskHTML(int session) {
         ImportTask task = this.get(session);
@@ -30,10 +30,10 @@ public class ImportTaskList extends HashMap<Integer, ImportTaskList.ImportTask> 
     }
 
     /**
-     * 检查任务是不是在运行。
+     * Check if a task is running.
      *
-     * @param session 任务ID
-     * @return false 没有任务或任务结束
+     * @param session task ID
+     * @return false if no task exists or the task has ended
      */
     public boolean checkTaskIsRunning(int session) {
         ImportTask task = this.get(session);
@@ -45,10 +45,10 @@ public class ImportTaskList extends HashMap<Integer, ImportTaskList.ImportTask> 
     }
 
     /**
-     * 添加任务到列表，要确保线程安全
+     * Add a task to the list; must be thread-safe
      *
      * @param session session
-     * @param task    任务
+     * @param task    task
      */
     public synchronized ImportTask addTask(int session, ImportTask task) {
         this.put(session, task);
@@ -67,16 +67,16 @@ public class ImportTaskList extends HashMap<Integer, ImportTaskList.ImportTask> 
     public static class ImportTask {
 
 
-        int session;//session，用于记录上传会话，是一个hash
-        public int count = 0;//解析出总的数据量
-        public int importedCount = 0;//导入的数量
-        public int readErrorCount = 0;//读取数据错误数量
+        int session;//session, used to track the upload session, is a hash value
+        public int count = 0;//total number of parsed records
+        public int importedCount = 0;//number of imported records
+        public int readErrorCount = 0;//number of read errors
         public int processCount = 0;
-        public int updateCount = 0;//更新的数量
-        public int invalidCount = 0;//无效的QSL
-        public int newCount = 0;//新导入的数量
-        public ImportState status = ImportState.STARTING;//状态:0:开始，1：运行，2：结束，3：取消
-        String message = "";//任务消息描述
+        public int updateCount = 0;//number of updated records
+        public int invalidCount = 0;//invalid QSL records
+        public int newCount = 0;//number of newly imported records
+        public ImportState status = ImportState.STARTING;//status: 0=starting, 1=running, 2=finished, 3=canceled
+        String message = "";//task message description
         String errorMsg = "";
 
         @SuppressLint("DefaultLocale")

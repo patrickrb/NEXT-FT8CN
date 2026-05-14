@@ -19,8 +19,8 @@ import java.util.TimerTask;
 public class XieGu6100Rig extends BaseRig {
     private static final String TAG = "x6100Rig";
 
-    private final int ctrAddress = 0xE0;//接收地址，默认0xE0;电台回复命令有时也可以是0x00
-    private byte[] dataBuffer = new byte[0];//数据缓冲区
+    private final int ctrAddress = 0xE0;//receive address, default 0xE0; rig reply can also be 0x00
+    private byte[] dataBuffer = new byte[0];//data buffer
     private int swr = 0;
     private int alc = 0;
     private boolean alcMaxAlert = false;
@@ -65,7 +65,7 @@ public class XieGu6100Rig extends BaseRig {
             }
 
             switch (getControlMode()) {
-                case ControlMode.CAT://以CIV指令
+                case ControlMode.CAT://via CAT command
                     getConnector().setPttOn(IcomRigConstant.setPTTState(ctrAddress, getCivAddress()
                             , on ? IcomRigConstant.PTT_ON : IcomRigConstant.PTT_OFF));
                     break;
@@ -104,10 +104,10 @@ public class XieGu6100Rig extends BaseRig {
     }
 
     /**
-     * 查找指令的结尾的位置，如果没找到，值是-1。
+     * Find the position of the command end marker. Returns -1 if not found.
      *
-     * @param data 数据
-     * @return 位置
+     * @param data data
+     * @return position
      */
     private int getCommandEnd(byte[] data) {
         for (int i = 0; i < data.length; i++) {
@@ -119,10 +119,10 @@ public class XieGu6100Rig extends BaseRig {
     }
 
     /**
-     * 查找指令头，没找到返回-1，找到返回FE FE的第一个位置
+     * Find command header. Returns -1 if not found, otherwise returns position of first FE FE.
      *
-     * @param data 数据
-     * @return 位置
+     * @param data data
+     * @return position
      */
     private int getCommandHead(byte[] data) {
         if (data.length < 2) return -1;
@@ -136,7 +136,7 @@ public class XieGu6100Rig extends BaseRig {
 
     private void analysisCommand(byte[] data) {
         int headIndex = getCommandHead(data);
-        if (headIndex == -1) {//说明没有指令头
+        if (headIndex == -1) {//no command header found
             return;
         }
         XieGu6100Command xieGu6100Command;
@@ -151,22 +151,22 @@ public class XieGu6100Rig extends BaseRig {
             return;
         }
 
-        //目前只对频率和模式消息作反应
+        //currently only responding to frequency and mode messages
         switch (xieGu6100Command.getCommandID()) {
-            case IcomRigConstant.CMD_SEND_FREQUENCY_DATA://获取到的是频率数据
+            case IcomRigConstant.CMD_SEND_FREQUENCY_DATA://received frequency data
             case IcomRigConstant.CMD_READ_OPERATING_FREQUENCY:
-                //获取频率
+                //get frequency
                 long freqTemp = xieGu6100Command.getFrequency(false);
-                if (freqTemp >= 500000 && freqTemp <= 250000000) {//协谷的频率范围
+                if (freqTemp >= 500000 && freqTemp <= 250000000) {//XieGu frequency range
                     setFreq(freqTemp);
                 }
                 break;
-            case IcomRigConstant.CMD_SEND_MODE_DATA://获取到的是模式数据
+            case IcomRigConstant.CMD_SEND_MODE_DATA://received mode data
             case IcomRigConstant.CMD_READ_OPERATING_MODE:
                 break;
-            case IcomRigConstant.CMD_READ_METER://读meter//此处的指令，只在网络模式实现，以后可能会在串口方面实现
+            case IcomRigConstant.CMD_READ_METER://read meter//this command is only implemented in network mode; serial port support may be added later
                 if (xieGu6100Command.getSubCommand() == IcomRigConstant.CMD_READ_METER_SWR) {
-                    //协谷的小端模式
+                    //XieGu little-endian mode
                     int temp = IcomRigConstant.twoByteBcdToIntBigEnd(xieGu6100Command.getData(true));
                     if (temp != 255) {
                         swr = temp;//
@@ -174,13 +174,13 @@ public class XieGu6100Rig extends BaseRig {
                 }
 
                 if (xieGu6100Command.getSubCommand() == IcomRigConstant.CMD_READ_METER_ALC) {
-                    //协谷的小端模式
+                    //XieGu little-endian mode
                     int temp = IcomRigConstant.twoByteBcdToIntBigEnd(xieGu6100Command.getData(true));
                     if (temp != 255) {
                         alc = temp;//
                     }
                 }
-                showAlert();//检查meter值是否在告警范围
+                showAlert();//check if meter value is in alert range
 
                 break;
         }
@@ -198,10 +198,10 @@ public class XieGu6100Rig extends BaseRig {
             swrAlert = false;
         }
 
-        //协谷的alc值，是在指定范围之内
-        //alc太高
+        //XieGu ALC value should be within specified range
+        //ALC too high
         if ((alc > IcomRigConstant.xiegu_alc_alert_max)
-                && GeneralVariables.alc_switch_on) {//网络模式下不警告ALC
+                && GeneralVariables.alc_switch_on) {//ALC alert
             if (!alcMaxAlert) {
                 alcMaxAlert = true;
                 ToastMessage.show(GeneralVariables.getStringFromResource(R.string.alc_high_alert));
@@ -209,9 +209,9 @@ public class XieGu6100Rig extends BaseRig {
         } else {
             alcMaxAlert = false;
         }
-        //alc太低
+        //ALC too low
         if ((alc < IcomRigConstant.xiegu_alc_alert_min)
-                && GeneralVariables.alc_switch_on) {//网络模式下不警告ALC
+                && GeneralVariables.alc_switch_on) {//ALC alert
             if (!alcMinAlert) {
                 alcMinAlert = true;
                 ToastMessage.show(GeneralVariables.getStringFromResource(R.string.alc_low_alert));
@@ -226,7 +226,7 @@ public class XieGu6100Rig extends BaseRig {
     @Override
     public void onReceiveData(byte[] data) {
         int commandEnd = getCommandEnd(data);
-        if (commandEnd <= -1) {//这是没有指令结尾
+        if (commandEnd <= -1) {//no command end marker
             byte[] temp = new byte[dataBuffer.length + data.length];
             System.arraycopy(dataBuffer, 0, temp, 0, dataBuffer.length);
             System.arraycopy(data, 0, temp, dataBuffer.length, data.length);
@@ -240,7 +240,7 @@ public class XieGu6100Rig extends BaseRig {
         if (commandEnd != -1) {
             analysisCommand(dataBuffer);
         }
-        dataBuffer = new byte[0];//清空缓冲区
+        dataBuffer = new byte[0];//clear buffer
         if (commandEnd <= -1 || commandEnd < data.length) {
             byte[] temp = new byte[data.length - commandEnd + 1];
             for (int i = 0; i < data.length - commandEnd - 1; i++) {
@@ -253,16 +253,16 @@ public class XieGu6100Rig extends BaseRig {
     }
 
     @Override
-    public void sendWaveData(Ft8Message message) {//发送音频数据到电台，用于网络方式
-        if (getConnector() != null) {//把生成的具体音频数据传递到Connector，
-            //判断如果是ft8cns，就传输a19数据包
+    public void sendWaveData(Ft8Message message) {//send audio data to rig, for network mode
+        if (getConnector() != null) {//pass generated audio data to Connector
+            //if ft8cns mode, transmit a91 data packet
             if (GeneralVariables.instructionSet == InstructionSet.XIEGU_6100_FT8CNS) {
                 //Log.e(TAG,"generate A91");
                 getConnector().sendFt8A91(GenerateFT8.generateA91(message, true)
                         , GeneralVariables.getBaseFrequency());
-            } else {//否则正常传输音频数据
+            } else {//otherwise transmit audio data normally
                 float[] data = GenerateFT8.generateFt8(message, GeneralVariables.getBaseFrequency()
-                        , 12000);//此处icom电台发射音频的采样率是12000
+                        , 12000);//ICOM rig audio sample rate is 12000
                 if (data == null) {
                     setPTT(false);
                     return;
@@ -281,7 +281,7 @@ public class XieGu6100Rig extends BaseRig {
     }
 
     /**
-     * 读swr和alc数据
+     * Read SWR and ALC data
      */
     private void readSWRMeter() {
         if (getConnector() != null) {

@@ -18,21 +18,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 柱状频谱图。
+ * Columnar spectrum view.
  * @author BGY70Z
  * @date 2023-03-20
  */
 public class ColumnarView extends View {
     private static final String TAG = "ColumnarView";
-    //每一个能量柱的宽度
+    // Width of each bar
     private int width;
-    //每一个能量柱之间的间距
+    // Spacing between each bar
     private final int spacing = 1;
-    //能量块高度
+    // Block height
     private final int blockHeight = 5;
-    //能量块下将速度
+    // Block drop speed
     private int blockSpeed = 5;
-    //能量块与能量柱之间的距离
+    // Distance between block and bar
     private final int distance = 2;
 
     private boolean drawblock = false;
@@ -75,8 +75,8 @@ public class ColumnarView extends View {
         if (data.length <= 0) {
             return;
         }
-        width = getWidth() / (data.length / 2);// 960/2=480，480比较合理，906无法显示了。
-        if (drawblock) {//是否显示能量块
+        width = getWidth() / (data.length / 2);// 960/2=480, 480 is reasonable; 906 cannot be displayed.
+        if (drawblock) {// Whether to show the peak block
             if (newData.size() > 0) {
                 if (blockData.size() == 0 || newData.size() != blockData.size()) {
                     blockData.clear();
@@ -100,7 +100,7 @@ public class ColumnarView extends View {
             }
         }
         newData.clear();
-        float rateHeight =  0.95f * getHeight() / 256;//0.95是比率，柱形的最大高度不超过95%
+        float rateHeight =  0.95f * getHeight() / 256;// 0.95 is the ratio; max bar height does not exceed 95%
         for (int i = 0; i < data.length / 2; i++) {
             Rect colRect = new Rect();
             if (newData.size() == 0) {
@@ -148,7 +148,7 @@ public class ColumnarView extends View {
         }
         canvas.drawBitmap(lastBitMap,0,0,null);
         if (touch_x>0) {
-            //计算频率
+            // Calculate frequency
             freq_hz = Math.round(3000f * (float) touch_x / (float) getWidth());
             canvas.drawLine(touch_x, 0, touch_x, getHeight(), touchPaint);
         }

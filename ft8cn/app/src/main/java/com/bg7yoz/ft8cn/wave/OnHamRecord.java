@@ -1,7 +1,7 @@
 package com.bg7yoz.ft8cn.wave;
 
 /**
- * 接收到音频的回调。
+ * Callback when audio data is received.
  * @author BGY70Z
  * @date 2023-03-20
  */

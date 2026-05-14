@@ -3,7 +3,7 @@ package com.bg7yoz.ft8cn.icom;
 import android.util.Log;
 
 /**
- * ICom各数据包的解包和封包。
+ * ICom packet parsing and assembly.
  *
  * @author BGY70Z
  * @date 2023-03-20
@@ -14,51 +14,51 @@ public class IComPacketTypes {
     public static final int TX_BUFFER_SIZE = 0xf0;
     public static final int XIEGU_TX_BUFFER_SIZE = 0x96;
     /**
-     * 各类型包的长度
+     * Packet lengths by type
      */
     public static final int CONTROL_SIZE = 0x10;
     public static final int WATCHDOG_SIZE = 0x14;
     public static final int PING_SIZE = 0x15;
     public static final int OPENCLOSE_SIZE = 0x16;
-    public static final int RETRANSMIT_RANGE_SIZE = 0x18;//重新传输，范围
+    public static final int RETRANSMIT_RANGE_SIZE = 0x18;//Retransmit range
     public static final int TOKEN_SIZE = 0x40;
     public static final int STATUS_SIZE = 0x50;
     public static final int LOGIN_RESPONSE_SIZE = 0x60;
     public static final int LOGIN_SIZE = 0x80;
     public static final int CONNINFO_SIZE = 0x90;
-    public static final int CAPABILITIES_SIZE = 0x42;//功能包
+    public static final int CAPABILITIES_SIZE = 0x42;//Capabilities packet
     public static final int RADIO_CAP_SIZE = 0x66;
     public static final int CAP_CAPABILITIES_SIZE = 0xA8;//0x42+0x66
-    public static final int AUDIO_HEAD_SIZE = 0x18;//音频数据包的头是0x10+0x08，后面再跟音频数据
+    public static final int AUDIO_HEAD_SIZE = 0x18;//Audio packet header is 0x10+0x08, followed by audio data
 
 
-    public static final short CMD_NULL = 0x00;//空指令
-    public static final short CMD_RETRANSMIT = 0x01;//请求重新发送，seq是重新发送的序号
-    public static final short CMD_ARE_YOU_THERE = 0x03;//询问是否在？seq值必须为0
-    public static final short CMD_I_AM_HERE = 0x04;//回答是否在？
-    public static final short CMD_DISCONNECT = 0x05;//断开
-    public static final short CMD_ARE_YOU_READY = 0x06;//询问电台是否准备好了，seq=1
-    public static final short CMD_I_AM_READY = 0x06;//电台回复已经准备好
-    public static final short CMD_PING = 0x07;//ping ,seq有自己的序列
+    public static final short CMD_NULL = 0x00;//Null command
+    public static final short CMD_RETRANSMIT = 0x01;//Retransmit request; seq is the sequence number to retransmit
+    public static final short CMD_ARE_YOU_THERE = 0x03;//Are you there? seq must be 0
+    public static final short CMD_I_AM_HERE = 0x04;//I am here response
+    public static final short CMD_DISCONNECT = 0x05;//Disconnect
+    public static final short CMD_ARE_YOU_READY = 0x06;//Are you ready? seq=1
+    public static final short CMD_I_AM_READY = 0x06;//Radio replies it is ready
+    public static final short CMD_PING = 0x07;//Ping; seq has its own sequence
 
-    public static final byte TOKEN_TYPE_DELETE = 0x01;//令牌删除包
-    public static final byte TOKEN_TYPE_CONFIRM = 0x02;//令牌确认包
-    public static final byte TOKEN_TYPE_DISCONNECT = 0x04;//断开CI-V和音频流
-    public static final byte TOKEN_TYPE_RENEWAL = 0x05;//令牌续订
+    public static final byte TOKEN_TYPE_DELETE = 0x01;//Token delete packet
+    public static final byte TOKEN_TYPE_CONFIRM = 0x02;//Token confirm packet
+    public static final byte TOKEN_TYPE_DISCONNECT = 0x04;//Disconnect CI-V and audio streams
+    public static final byte TOKEN_TYPE_RENEWAL = 0x05;//Token renewal
 
 
-    public static final long PING_PERIOD_MS = 500;//ping时钟的周期
-    public static final long ARE_YOU_THERE_PERIOD_MS = 500;//查找电台的时钟周期
-    public static final long IDLE_PERIOD_MS = 100;//空包时钟的周期
-    public static final long TOKEN_RENEWAL_PERIOD_MS = 60000;//令牌旭东的时钟周期
-    public static final long PURGE_MILLISECONDS = 10000;//数据缓冲区的时间最长是10秒钟
-    public static final long OPEN_CLOSE_PERIOD_MS = 500;//civ指令定时发送open指令，确保端口打开
-    public static final long WATCH_DOG_PERIOD_MS = 500;//监视数据接收状况的看门狗
-    public static final long WATCH_DOG_ALERT_MS = 2000;//触发数据接收状况报警的阈值
-    public static final long METER_TIMER_PERIOD_MS = 500;//检查meter的时钟周期
+    public static final long PING_PERIOD_MS = 500;//Ping timer period
+    public static final long ARE_YOU_THERE_PERIOD_MS = 500;//Radio discovery timer period
+    public static final long IDLE_PERIOD_MS = 100;//Idle packet timer period
+    public static final long TOKEN_RENEWAL_PERIOD_MS = 60000;//Token renewal timer period
+    public static final long PURGE_MILLISECONDS = 10000;//Maximum data buffer retention time is 10 seconds
+    public static final long OPEN_CLOSE_PERIOD_MS = 500;//CI-V command periodically sends open command to keep port open
+    public static final long WATCH_DOG_PERIOD_MS = 500;//Watchdog monitoring data reception status
+    public static final long WATCH_DOG_ALERT_MS = 2000;//Threshold for triggering data reception alert
+    public static final long METER_TIMER_PERIOD_MS = 500;//Meter check timer period
 
-    public static final int AUDIO_SAMPLE_RATE = 12000;//音频的采样率，这是FT8CN发送给iCom使用的采样率
-    public static final int XIEGU_AUDIO_SAMPLE_RATE = 48000;//音频的采样率，这是FT8CN发送给XIEGU使用的采样率
+    public static final int AUDIO_SAMPLE_RATE = 12000;//Audio sample rate used by FT8CN for iCom
+    public static final int XIEGU_AUDIO_SAMPLE_RATE = 48000;//Audio sample rate used by FT8CN for Xiegu
 
     public static final short CODEC_ALL_SUPPORTED = 0x018b;
     public static final short CODEC_ONLY_24K = 0x0100;
@@ -74,7 +74,7 @@ public class IComPacketTypes {
     public static class IcomCodecType {
         public static final byte ULAW_1CH_8BIT = 0x01;
         public static final byte LPCM_1CH_8BIT = 0x02;
-        public static final byte LPCM_1CH_16BIT = 0x04;//FT8CN推荐值
+        public static final byte LPCM_1CH_16BIT = 0x04;//FT8CN recommended value
         public static final byte PCM_2CH_8BIT = 0x08;
         public static final byte LPCM_2CH_16BIT = 0x10;
         public static final byte ULAW_2CH_8BIT = 0x20;
@@ -84,13 +84,13 @@ public class IComPacketTypes {
 
 
     /**
-     * 控制指令数据包。用于简单通信和重传请求的不带内容的数据包,0x10
+     * Control command packet. Content-free packet for simple communication and retransmit requests, 0x10
      */
     public static class ControlPacket {
         /**
-         * 把控制数据包转换成数据流
+         * Convert control packet to byte stream
          *
-         * @return 数据流
+         * @return byte stream
          */
         public static byte[] toBytes(short type, short seq, int sentId, int rcvdId) {
             byte[] packet = new byte[CONTROL_SIZE];
@@ -144,8 +144,8 @@ public class IComPacketTypes {
          * quint32 rcvdid;     // 0x0c
          * <p>
          * <p>
-         * //接收的时候，ident=0x8116 ，8106，8006
-         * quint16 ident;      // 0x10 发射的时候： 当datalen=0xa0时,ident=0x9781,否则ident=0x0080;
+         * //When receiving, ident=0x8116, 8106, 8006
+         * quint16 ident;      // 0x10 When transmitting: if datalen=0xa0, ident=0x9781, otherwise ident=0x0080;
          * quint16 sendseq;    // 0x12
          * quint16 unused;     // 0x14
          * quint16 datalen;    // 0x16
@@ -167,16 +167,16 @@ public class IComPacketTypes {
 
         public static byte[] getTxAudioPacket(byte[] audio, short seq, int sentid, int rcvdid, short sendSeq) {
             byte[] packet = new byte[audio.length + AUDIO_HEAD_SIZE];
-            System.arraycopy(intToBigEndian(packet.length), 0, packet, 0, 4);//包长
-            System.arraycopy(shortToBigEndian(seq), 0, packet, 0x06, 2);//序号=0
-            System.arraycopy(intToBigEndian(sentid), 0, packet, 0x08, 4);//客户id
-            System.arraycopy(intToBigEndian(rcvdid), 0, packet, 0x0c, 4);//电台id
+            System.arraycopy(intToBigEndian(packet.length), 0, packet, 0, 4);//Packet length
+            System.arraycopy(shortToBigEndian(seq), 0, packet, 0x06, 2);//Sequence=0
+            System.arraycopy(intToBigEndian(sentid), 0, packet, 0x08, 4);//Client ID
+            System.arraycopy(intToBigEndian(rcvdid), 0, packet, 0x0c, 4);//Radio ID
             if (audio.length == 0xa0) {
                 System.arraycopy(shortToByte((short) 0x8197), 0, packet, 0x10, 2);
-            } else {//这个是常用的数值
-                System.arraycopy(shortToByte((short) 0x8000), 0, packet, 0x10, 2);//一般是这个值
+            } else {//This is the commonly used value
+                System.arraycopy(shortToByte((short) 0x8000), 0, packet, 0x10, 2);//Usually this value
             }
-            System.arraycopy(shortToByte(sendSeq), 0, packet, 0x12, 2);//包序号
+            System.arraycopy(shortToByte(sendSeq), 0, packet, 0x12, 2);//Packet sequence number
 
             System.arraycopy(shortToByte((short) audio.length), 0, packet, 0x16, 2);
             System.arraycopy(audio, 0, packet, 0x18, audio.length);
@@ -186,20 +186,20 @@ public class IComPacketTypes {
 
     public static class CivPacket {
         /**
-         * CIV指令包
+         * CI-V command packet
          * quint32 len;        // 0x00
          * quint16 type;       // 0x04
          * quint16 seq;        // 0x06
          * quint32 sentid;     // 0x08
          * quint32 rcvdid;     // 0x0c
-         * char reply;       // 0x10,civ是c1
-         * quint16 civ_len;        // 0x11 此字段是小端模式，0x0001,在数组中的顺序是0x0100
+         * char reply;       // 0x10, CI-V is 0xc1
+         * quint16 civ_len;        // 0x11 This field is little-endian; 0x0001 is stored as 0x0100 in the array
          * quint16 sendseq;    //0x13
          * byte[] civ_data;//0x15
          */
         public static boolean checkIsCiv(byte[] data) {
             if (data.length <= 0x15) return false;
-            //是civ指令的条件：长度不能小于0x15，dataLen字段与实际相符，reply=0xc1，type!=0x01
+            //CI-V command conditions: length must be >= 0x15, dataLen matches actual, reply=0xc1, type!=0x01
             return (data.length - 0x15 == readShortBigEndianData(data, 0x11))
                     && (data[0x10] == (byte) 0xc1)
                     && (ControlPacket.getType(data) != CMD_RETRANSMIT);
@@ -232,8 +232,8 @@ public class IComPacketTypes {
          * quint16 seq;        // 0x06
          * quint32 sentid;     // 0x08
          * quint32 rcvdid;     // 0x0c
-         * char reply;       // 0x10,openClose是c0,civ是c1
-         * quint16 civ_len;        // 0x11 此字段是小端模式，0x0001,在数组中的顺序是0x0100
+         * char reply;       // 0x10, openClose is 0xc0, CI-V is 0xc1
+         * quint16 civ_len;        // 0x11 This field is little-endian; 0x0001 is stored as 0x0100 in the array
          * quint16 sendseq;    //0x13
          * char magic;         // 0x15
          */
@@ -254,8 +254,8 @@ public class IComPacketTypes {
     }
 
     /**
-     * ping 数据包，0x15。
-     * 如果reply==0，说明是对方ping过来的包，必须要回复。如果reply=1,说明是对方回Ping的，本地的pingSeq++
+     * Ping packet, 0x15.
+     * If reply==0, the remote is pinging us and a reply is required. If reply==1, it is a ping reply and local pingSeq++
      */
     public static class PingPacket {
         /**
@@ -264,12 +264,12 @@ public class IComPacketTypes {
          * quint16 seq;        // 0x06
          * quint32 sentid;     // 0x08
          * quint32 rcvdid;     // 0x0c
-         * char  reply;        // 0x10 如果接收的数据中reply=0x00，我就要用sendReplayPingData()回复Ping。
-         * union { // 此部分发送与接收定义是不同的
-         *      struct { // Ping包
+         * char  reply;        // 0x10 If reply=0x00 in received data, reply with sendReplayPingData().
+         * union { // This part has different definitions for sending vs receiving
+         *      struct { // Ping packet
          *              quint32 time;      // 0x11
          *              };
-         *      struct { // 发送
+         *      struct { // Send
          *               quint16 datalen;    // 0x11
          *               quint16 sendseq;    //0x13
          *              };
@@ -285,22 +285,22 @@ public class IComPacketTypes {
 
 
         /**
-         * 根据接收的Ping包，生成回复的Ping包。
+         * Generate a ping reply packet based on the received ping packet.
          *
-         * @param data     接收到的Ping包
-         * @param localID  主机的ID
-         * @param remoteID 电台的ID
-         * @return 回复的PIng包
+         * @param data     received ping packet
+         * @param localID  host ID
+         * @param remoteID radio ID
+         * @return ping reply packet
          */
         public static byte[] sendReplayPingData(byte[] data, int localID, int remoteID) {
             byte[] packet = new byte[PING_SIZE];
             System.arraycopy(intToBigEndian(PING_SIZE), 0, packet, 0, 4);      //len  int32 0x00
             System.arraycopy(shortToBigEndian(CMD_PING), 0, packet, 4, 2);//type int16 0x04
             packet[0x6] = data[0x6];                                                    //seq  int16 0x06
-            packet[0x7] = data[0x7];//把原来的seq值取过来
+            packet[0x7] = data[0x7];//Copy the original seq value
             System.arraycopy(intToBigEndian(localID), 0, packet, 8, 4);  //localID  int32  0x08
             System.arraycopy(intToBigEndian(remoteID), 0, packet, 12, 4);//remoteID int32  0x0c
-            packet[0x10] = (byte) (0x01); //reply byte 0x10, reply=01是回Ping,reply=00是Ping
+            packet[0x10] = (byte) (0x01); //reply byte 0x10, reply=01 is ping reply, reply=00 is ping
             //Time
             packet[0x11] = data[0x11];
             packet[0x12] = data[0x12];
@@ -310,21 +310,22 @@ public class IComPacketTypes {
         }
 
         /**
-         * 生成用于Ping电台的数据包，seq应当是pingSeq,与指令数据包不在一个序列，序列号要等接收到回Ping的包再自增。
+         * Generate a ping packet for the radio. seq should be pingSeq, which is separate from
+         * command packet sequence. The sequence number increments only after receiving a ping reply.
          *
-         * @param localID  主机ID
-         * @param remoteID 电台ID
-         * @param seq      序列号
-         * @return 数据包
+         * @param localID  host ID
+         * @param remoteID radio ID
+         * @param seq      sequence number
+         * @return data packet
          */
         public static byte[] sendPingData(int localID, int remoteID, short seq) {
             byte[] packet = new byte[PING_SIZE];
-            System.arraycopy(intToBigEndian(PING_SIZE), 0, packet, 0, 4);//    len  int32 0x00发送时，len=0
+            System.arraycopy(intToBigEndian(PING_SIZE), 0, packet, 0, 4);//    len int32 0x00
             System.arraycopy(shortToBigEndian(CMD_PING), 0, packet, 4, 2);//type int16 0x04
             System.arraycopy(shortToBigEndian(seq), 0, packet, 6, 2);//seq  int16 0x06
             System.arraycopy(intToBigEndian(localID), 0, packet, 8, 4);  //localID  int32  0x08
             System.arraycopy(intToBigEndian(remoteID), 0, packet, 12, 4);//remoteID int32  0x0c
-            packet[0x10] = (byte) (0x00);//ping对方，=0x00，如果回复=0x01
+            packet[0x10] = (byte) (0x00);//Ping the remote = 0x00; reply = 0x01
             //Time
             System.arraycopy(intToBigEndian((int) System.currentTimeMillis())
                     , 0, packet, 11, 4);
@@ -334,7 +335,7 @@ public class IComPacketTypes {
     }
 
     /**
-     * Status（0x50）包，
+     * Status (0x50) packet.
      */
     public static class StatusPacket {
         /**
@@ -394,7 +395,7 @@ public class IComPacketTypes {
 
 
     /**
-     * 0x90包。电台回复，或APP回复连接参数包.
+     * 0x90 packet. Radio reply or APP reply with connection parameters.
      */
     public static class ConnInfoPacket {
         /**
@@ -409,13 +410,13 @@ public class IComPacketTypes {
         quint8 requesttype;       // 0x14
         quint16 innerseq;         // 0x16
         char unusedb[2];          // 0x18
-        quint16 tokrequest;       // 0x1a 主机的TOKEN
-        quint32 token;            // 0x1c 电台的TOKEN
+        quint16 tokrequest;       // 0x1a Host TOKEN
+        quint32 token;            // 0x1c Radio TOKEN
         union {
             struct {
                 quint16 authstartid;    // 0x20
                 char unusedg[5];        // 0x22
-                quint16 commoncap;      // 0x27 当commonCap==0x1080时，用mac地址标识电台，否则就是16字节的GUID
+                quint16 commoncap;      // 0x27 When commonCap==0x1080, use MAC address to identify radio; otherwise 16-byte GUID
                 char unusedh;           // 0x29
                 quint8 macaddress[6];     // 0x2a
             };
@@ -423,25 +424,25 @@ public class IComPacketTypes {
         };
         char unusedab[16];        // 0x30
         char name[32];                  // 0x40
-        union { // 此部分有两种类型：发送和接收
-            struct { // 接收到数据的结构
+        union { // This part has two types: send and receive
+            struct { // Received data structure
                 quint32 busy;            // 0x60
                 char computer[16];        // 0x64
                 char unusedi[16];         // 0x74
                 quint32 ipaddress;        // 0x84
                 char unusedj[8];          // 0x78
             };
-            struct { // 发送的数据结构，用于告知电台以下参数
-                char username[16];    // 0x60 用户名的密文
-                char rxenable;        // 0x70 可以接收=0x01
-                char txenable;        // 0x71 可以发射=0x01
-                char rxcodec;         // 0x72 接收的编码方式，IcomCodecType,0x04,LPcm 16Bit 1ch,
-                char txcodec;         // 0x73 发射的编码方式，IcomCodecType,0x04,LPcm 16Bit 1ch,
-                quint32 rxsample;     // 0x74 接收采样率
-                quint32 txsample;     // 0x78 发射采样率
-                quint32 civport;      // 0x7c 主机端CI-V端口
-                quint32 audioport;    // 0x80 主机端音频端口
-                quint32 txbuffer;     // 0x84 发送缓冲区，不清楚时什么单位wfView的值时0x96
+            struct { // Send data structure, used to inform radio of the following parameters
+                char username[16];    // 0x60 Encrypted username
+                char rxenable;        // 0x70 Receive enabled=0x01
+                char txenable;        // 0x71 Transmit enabled=0x01
+                char rxcodec;         // 0x72 Receive codec, IcomCodecType, 0x04=LPCM 16Bit 1ch
+                char txcodec;         // 0x73 Transmit codec, IcomCodecType, 0x04=LPCM 16Bit 1ch
+                quint32 rxsample;     // 0x74 Receive sample rate
+                quint32 txsample;     // 0x78 Transmit sample rate
+                quint32 civport;      // 0x7c Host CI-V port
+                quint32 audioport;    // 0x80 Host audio port
+                quint32 txbuffer;     // 0x84 TX buffer; unknown unit, wfView uses 0x96
                 quint8 convert;      // 0x88
                 char unusedl[7];      // 0x89
 
@@ -479,26 +480,26 @@ public class IComPacketTypes {
             System.arraycopy(shortToByte((short) (CONNINFO_SIZE - 0x10))
                     , 0, packet, 18, 2);//payloadsize
             packet[20] = requestReply;//0x01;//requestReply;
-            packet[21] = requestType;//requestType;应当是0x03,回复电台我需要的参数。
+            packet[21] = requestType;//requestType; should be 0x03, replying with our required parameters.
             System.arraycopy(shortToByte(authInnerSendSeq), 0, packet, 22, 2);//innerSeq
             //System.arraycopy(unusedB, 0, packet, 24, 2);//unusedb
-            System.arraycopy(shortToByte(tokRequest), 0, packet, 26, 2);//tokRequest主机的TOKEN
-            System.arraycopy(intToByte(token), 0, packet, 28, 4);//电台的TOKEN
+            System.arraycopy(shortToByte(tokRequest), 0, packet, 26, 2);//tokRequest host TOKEN
+            System.arraycopy(intToByte(token), 0, packet, 28, 4);//Radio TOKEN
             packet[0x26] = 0x10;
-            packet[0x27] = (byte) 0x80;//这两个字节是commCap字段，默认设成0x1080
+            packet[0x27] = (byte) 0x80;//These two bytes are the commCap field, default 0x1080
             System.arraycopy(macAddress, 0, packet, 0x28, 6);//macAddress
 
-            System.arraycopy(stringToByte(rigName, 32), 0, packet, 64, 32);//电台名称
-            System.arraycopy(passCode(userName), 0, packet, 96, 16);//用户名密文
-            packet[0x70] = 0x01;//rxEnable，支持接收
-            packet[0x71] = 0x01;//txEnable，支持发射
+            System.arraycopy(stringToByte(rigName, 32), 0, packet, 64, 32);//Radio name
+            System.arraycopy(passCode(userName), 0, packet, 96, 16);//Encrypted username
+            packet[0x70] = 0x01;//rxEnable, receive supported
+            packet[0x71] = 0x01;//txEnable, transmit supported
             packet[0x72] = IcomCodecType.LPCM_1CH_16BIT;//rxCodec,0x04:LPcm 16Bit 1ch,0x02:LPcm 8Bit 1ch
             packet[0x73] = IcomCodecType.LPCM_1CH_16BIT;//txCodec,0x04:LPcm 16Bit 1ch,0x02:LPcm 8Bit 1ch
-            System.arraycopy(intToByte(sampleRate), 0, packet, 0x74, 4);//rxSampleRate，采样率
-            System.arraycopy(intToByte(sampleRate), 0, packet, 0x78, 4);//txSampleRate，采样率
-            System.arraycopy(intToByte(civPort), 0, packet, 0x7c, 4);//civPort，本地CI-V端口
-            System.arraycopy(intToByte(audioPort), 0, packet, 0x80, 4);//audioPort，本地音频端口
-            System.arraycopy(intToByte(txBufferSize), 0, packet, 0x84, 4);//txBuffer，发送缓冲区
+            System.arraycopy(intToByte(sampleRate), 0, packet, 0x74, 4);//rxSampleRate, sample rate
+            System.arraycopy(intToByte(sampleRate), 0, packet, 0x78, 4);//txSampleRate, sample rate
+            System.arraycopy(intToByte(civPort), 0, packet, 0x7c, 4);//civPort, local CI-V port
+            System.arraycopy(intToByte(audioPort), 0, packet, 0x80, 4);//audioPort, local audio port
+            System.arraycopy(intToByte(txBufferSize), 0, packet, 0x84, 4);//txBuffer, TX buffer
             packet[0x88] = 0x01;//convert
 
             return packet;
@@ -520,29 +521,29 @@ public class IComPacketTypes {
             System.arraycopy(shortToByte((short) (CONNINFO_SIZE - 0x10))
                     , 0, packet, 18, 2);//payloadsize
             packet[20] = requestReply;//0x01;//requestReply;
-            packet[21] = requestType;//requestType;应当是0x03,回复电台我需要的参数。
+            packet[21] = requestType;//requestType; should be 0x03, replying with our required parameters.
             System.arraycopy(shortToByte(authInnerSendSeq), 0, packet, 22, 2);//innerSeq
             //System.arraycopy(unusedB, 0, packet, 24, 2);//unusedb
-            System.arraycopy(shortToByte(tokRequest), 0, packet, 26, 2);//tokRequest主机的TOKEN
-            System.arraycopy(intToByte(token), 0, packet, 28, 4);//电台的TOKEN
-            //把电台发送的数据复制回去：
+            System.arraycopy(shortToByte(tokRequest), 0, packet, 26, 2);//tokRequest host TOKEN
+            System.arraycopy(intToByte(token), 0, packet, 28, 4);//Radio TOKEN
+            //Copy the radio's data back:
             //00 00 00 00 00 00 00 10 80 00 00 90 c7 0f b6 ed
             //autID|unusedG       |comcp|uH|macAddress       |
             //00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-            //|unusedB 共16字节                               |
+            //|unusedB total 16 bytes                          |
             System.arraycopy(rigData, 32, packet, 32, 32);
 
-            System.arraycopy(stringToByte(rigName, 32), 0, packet, 64, 32);//电台名称
-            System.arraycopy(passCode(userName), 0, packet, 96, 16);//用户名密文
-            packet[0x70] = 0x01;//rxEnable，支持接收
-            packet[0x71] = 0x01;//txEnable，支持发射
+            System.arraycopy(stringToByte(rigName, 32), 0, packet, 64, 32);//Radio name
+            System.arraycopy(passCode(userName), 0, packet, 96, 16);//Encrypted username
+            packet[0x70] = 0x01;//rxEnable, receive supported
+            packet[0x71] = 0x01;//txEnable, transmit supported
             packet[0x72] = IcomCodecType.LPCM_1CH_16BIT;//rxCodec,0x04:LPcm 16Bit 1ch,0x02:LPcm 8Bit 1ch
             packet[0x73] = IcomCodecType.LPCM_1CH_16BIT;//txCodec,0x04:LPcm 16Bit 1ch,0x02:LPcm 8Bit 1ch
-            System.arraycopy(intToByte(rx_sampleRate), 0, packet, 0x74, 4);//rxSampleRate，采样率
-            System.arraycopy(intToByte(tx_sampleRate), 0, packet, 0x78, 4);//txSampleRate，采样率
-            System.arraycopy(intToByte(civPort), 0, packet, 0x7c, 4);//civPort，本地CI-V端口
-            System.arraycopy(intToByte(audioPort), 0, packet, 0x80, 4);//audioPort，本地音频端口
-            System.arraycopy(intToByte(txBufferSize), 0, packet, 0x84, 4);//txBuffer，发送缓冲区
+            System.arraycopy(intToByte(rx_sampleRate), 0, packet, 0x74, 4);//rxSampleRate, sample rate
+            System.arraycopy(intToByte(tx_sampleRate), 0, packet, 0x78, 4);//txSampleRate, sample rate
+            System.arraycopy(intToByte(civPort), 0, packet, 0x7c, 4);//civPort, local CI-V port
+            System.arraycopy(intToByte(audioPort), 0, packet, 0x80, 4);//audioPort, local audio port
+            System.arraycopy(intToByte(txBufferSize), 0, packet, 0x84, 4);//txBuffer, TX buffer
             packet[0x88] = 0x01;//convert
 
             return packet;
@@ -551,14 +552,14 @@ public class IComPacketTypes {
 
 
     /**
-     * 0xA8包，电台回复电台的参数信息，0x42+0x66，0x42是capabilites头，0x66是radioCap
+     * 0xA8 packet, radio replies with its parameter info; 0x42+0x66, 0x42 is capabilities header, 0x66 is radioCap
      */
     public static class CapCapabilitiesPacket {
         /**
-         * 查radioCap的数量
+         * Get the number of radioCap entries
          *
-         * @param data 数据包
-         * @return 数量
+         * @param data data packet
+         * @return count
          */
         public static int getRadioPacketCount(byte[] data) {
             int count;
@@ -571,15 +572,15 @@ public class IComPacketTypes {
         }
 
         /**
-         * 获取radioCap数据包，也许radioCap的数量不止一个，所以要用index来指定哪一个数据包
+         * Get radioCap packet. There may be more than one, so use index to specify which one.
          *
-         * @param data  数据包
-         * @param index 数据包的索引，以0为起点
-         * @return radioCap数据包
+         * @param data  data packet
+         * @param index packet index, starting from 0
+         * @return radioCap data packet
          */
         public static byte[] getRadioCapPacket(byte[] data, int index) {
             if (data.length < (CAPABILITIES_SIZE + RADIO_CAP_SIZE * (index + 1)))
-                return null;//如果小于最小长度，就返回空
+                return null;//If less than minimum length, return null
             byte[] packet = new byte[0x66];
             System.arraycopy(data, CAPABILITIES_SIZE + RADIO_CAP_SIZE * index, packet, 0, RADIO_CAP_SIZE);
             return packet;
@@ -587,7 +588,7 @@ public class IComPacketTypes {
     }
 
     /**
-     * 电台参数数据包（0x66长度），它是在Capabilities（0x42长度）包的后面，如果是一个，总数据包的长度是0xA8，
+     * Radio parameter packet (0x66 length), follows the Capabilities (0x42 length) packet; if one, total length is 0xA8.
      */
     public static class RadioCapPacket {
         /**
@@ -617,10 +618,10 @@ public class IComPacketTypes {
          */
 
         /**
-         * 获取电台名称
+         * Get radio name
          *
-         * @param data 0x66数据包
-         * @return 名称
+         * @param data 0x66 data packet
+         * @return name
          */
         public static String getRigName(byte[] data) {
             byte[] rigName = new byte[32];
@@ -653,21 +654,21 @@ public class IComPacketTypes {
     }
 
     /**
-     * TOKEN(0x40)数据包。
-     * 发送时，requestType=0x02是令牌确认，发送0x01是删除令牌。
-     * 接收时，requestType=0x05，且requestReply=0x02&&type=0x01说明是电台令牌续订操作，这时要判断response的值。
-     * response=0x00 00 00 00说明时续订成功，response=0xff ff ff ff说明时拒绝续订，此时应记录下RemoteId、
-     * Token,tokRequest的值，关闭各端口，重新开始登录操作
+     * TOKEN (0x40) packet.
+     * When sending: requestType=0x02 is token confirm, 0x01 is token delete.
+     * When receiving: requestType=0x05 with requestReply=0x02 and type=0x01 means token renewal from radio.
+     * response=0x00000000 means renewal success, 0xFFFFFFFF means renewal rejected; save RemoteId,
+     * Token, tokRequest values, close all ports, and restart login.
      */
     public static class TokenPacket {
         /**
         public int len = TOKEN_SIZE;    // 0x00 (int32)
         public short type;              // 0x04(int16)
         public short seq;               // 0x06(int16)
-        public int sentId;              // 0x08(int32) MyID,与本地IP地址、端口有关
+        public int sentId;              // 0x08(int32) MyID, related to local IP address and port
         public int rcvdId;              // 0x0c(int32)
-        public byte[] unusedA = new byte[2];       // 0x10 char[2]//可能是用于指令的序号
-        public short payloadSize = TOKEN_SIZE - 0x10;// 0x12(int16) 负载长度，是包长度-包头16字节
+        public byte[] unusedA = new byte[2];       // 0x10 char[2]//Possibly used for command sequence number
+        public short payloadSize = TOKEN_SIZE - 0x10;// 0x12(int16) Payload length = packet length - 16 byte header
         public byte requestReply;        // 0x14(int8)
         public byte requestType;         // 0x15(int8)
         public short innerSeq;           // 0x16(int16)
@@ -685,17 +686,17 @@ public class IComPacketTypes {
          */
 
         /**
-         * 生成Token数据包
+         * Generate Token packet
          *
-         * @param seq              序列号
-         * @param localSID         主机的ID
-         * @param remoteSID        电台的ID
-         * @param requestType      发送0x02是令牌确认，发送0x01是删除令牌。如果接收0x05，且requestReply=0x02&&type=0x01
-         *                         说明是电台令牌续订成功
-         * @param authInnerSendSeq 内部序列号
-         * @param tokRequest       主机的TOKEN
-         * @param token            电台的TOKEN
-         * @return 数组
+         * @param seq              sequence number
+         * @param localSID         host ID
+         * @param remoteSID        radio ID
+         * @param requestType      0x02=token confirm, 0x01=token delete. If received 0x05 with requestReply=0x02 and type=0x01
+         *                         means radio token renewal succeeded
+         * @param authInnerSendSeq inner sequence number
+         * @param tokRequest       host TOKEN
+         * @param token            radio TOKEN
+         * @return byte array
          */
         public static byte[] getTokenPacketData(
                 short seq, int localSID, int remoteSID, byte requestType
@@ -715,7 +716,7 @@ public class IComPacketTypes {
             //System.arraycopy(unusedB, 0, packet, 24, 2);                            //unusedB byte[2] 0x18
             System.arraycopy(shortToByte(tokRequest), 0, packet, 26, 2);//tokRequest int16 0x1a
             System.arraycopy(intToByte(token), 0, packet, 28, 4);      //token int32 0x1c
-            //后面其余的部分为用0填充
+            //Remaining bytes are zero-filled
             return packet;
         }
 
@@ -727,10 +728,10 @@ public class IComPacketTypes {
         }
 
         /**
-         * 检查是不是令牌续订成功，条件：requestType=0x05，且requestReply=0x02&&type=0x01&&response=0x00
+         * Check if token renewal succeeded. Conditions: requestType=0x05, requestReply=0x02, type=0x01, response=0x00
          *
-         * @param data 数据包
-         * @return 是否续订成功
+         * @param data data packet
+         * @return whether renewal succeeded
          */
         public static boolean TokenRenewalOK(byte[] data) {
             byte requestType = data[0x15];
@@ -763,17 +764,17 @@ public class IComPacketTypes {
 
 
     /**
-     * 登录回复包，0x60包，长度96；
+     * Login response packet, 0x60 packet, length 96.
      */
     public static class LoginResponsePacket {
         /**
         public int len;// 0x00 (int32)
         public short type;              // 0x04(int16)
         public short seq;               // 0x06(int16)
-        public int sentId;              // 0x08(int32) MyID,与本地IP地址、端口有关
+        public int sentId;              // 0x08(int32) MyID, related to local IP address and port
         public int rcvdId;              // 0x0c(int32)
-        public byte[] unusedA = new byte[2];       // 0x10 char[2]//可能是用于指令的序号
-        public short payloadSize;// 0x12(int16) 负载长度，是包长度-包头16字节
+        public byte[] unusedA = new byte[2];       // 0x10 char[2]//Possibly used for command sequence number
+        public short payloadSize;// 0x12(int16) Payload length = packet length - 16 byte header
         public byte requestReply;        // 0x14(int8)
         public byte requestType;         // 0x15(int8)
         public short innerSeq;           // 0x16(int16)
@@ -810,17 +811,17 @@ public class IComPacketTypes {
 
 
     /**
-     * 登录用数据包,0x80包，长度128
+     * Login packet, 0x80 packet, length 128
      */
     public static class LoginPacket {
         /**
         public int len = LOGIN_SIZE;    // 0x00 (int32)
         public short type;              // 0x04(int16)
         public short seq;               // 0x06(int16)
-        public int sentId;              // 0x08(int32) MyID,与本地IP地址、端口有关
+        public int sentId;              // 0x08(int32) MyID, related to local IP address and port
         public int rcvdId;              // 0x0c(int32)
-        public byte[] unusedA = new byte[2];       // 0x10 char[2]//可能是用于指令的序号
-        public short payloadSize = LOGIN_SIZE - 0x10;// 0x12(int16) 负载长度，是包长度-包头16字节
+        public byte[] unusedA = new byte[2];       // 0x10 char[2]//Possibly used for command sequence number
+        public short payloadSize = LOGIN_SIZE - 0x10;// 0x12(int16) Payload length = packet length - 16 byte header
         public byte requestReply;        // 0x14(int8)
         public byte requestType;         // 0x15(int8)
         public short innerSeq;           // 0x16(int16)
@@ -836,17 +837,17 @@ public class IComPacketTypes {
 
 
         /**
-         * 生成Login（0x80）数据包
+         * Generate Login (0x80) packet
          *
-         * @param seq              序号
-         * @param localSID         主机ID
-         * @param remoteSID        电台ID
-         * @param authInnerSendSeq 内部序号
-         * @param tokRequest       我的TOKEN
-         * @param userName         用户名（明文）
-         * @param password         密码（明文）
-         * @param name             终端的名称
-         * @return 数据包
+         * @param seq              sequence number
+         * @param localSID         host ID
+         * @param remoteSID        radio ID
+         * @param authInnerSendSeq inner sequence number
+         * @param tokRequest       my TOKEN
+         * @param userName         username (plaintext)
+         * @param password         password (plaintext)
+         * @param name             terminal name
+         * @return data packet
          */
         public static byte[] loginPacketData(short seq, int localSID, int remoteSID, short authInnerSendSeq
                 , short tokRequest, int token, String userName, String password, String name) {
@@ -858,17 +859,17 @@ public class IComPacketTypes {
             System.arraycopy(intToBigEndian(remoteSID), 0, packet, 12, 4); //remoteId int32  0x0c
             //System.arraycopy({0x00,0x00}, 0, packet, 16, 2);                      //unusedA byte[2] 0x10
             System.arraycopy(shortToByte((short) (LOGIN_SIZE - 0x10))
-                    , 0, packet, 18, 2);//payloadSize,int16,大端模式，是包长度-包头16字节  0x12
+                    , 0, packet, 18, 2);//payloadSize, int16, big-endian, packet length - 16 byte header  0x12
             packet[20] = 0x01;//requestReply byte 0x14
             packet[21] = 0x00;//requestType  byte 0x15
             System.arraycopy(shortToByte(authInnerSendSeq), 0, packet, 22, 2);//innerSeq int16 x016
             //System.arraycopy(unusedB, 0, packet, 24, 2);  //unusedB byte[2] 0x18
-            System.arraycopy(shortToByte(tokRequest), 0, packet, 26, 2);//tokRequest int16 0x1a,我的token
-            System.arraycopy(intToByte(token), 0, packet, 28, 4);//token int32 0x1c,电台的token
+            System.arraycopy(shortToByte(tokRequest), 0, packet, 26, 2);//tokRequest int16 0x1a, my token
+            System.arraycopy(intToByte(token), 0, packet, 28, 4);//token int32 0x1c, radio token
             //System.arraycopy(unusedC, 0, packet, 32, 32);               //unusedC byte[32] 0x0x20
-            System.arraycopy(passCode(userName), 0, packet, 64, 16);//userName byte[16] 0x40,用户名密文
-            System.arraycopy(passCode(password), 0, packet, 80, 16);//password byte[16] 0x50,密码密文
-            System.arraycopy(stringToByte(name, 16), 0, packet, 96, 16);//name byte[16] 0x60,主机的名称
+            System.arraycopy(passCode(userName), 0, packet, 64, 16);//userName byte[16] 0x40, encrypted username
+            System.arraycopy(passCode(password), 0, packet, 80, 16);//password byte[16] 0x50, encrypted password
+            System.arraycopy(stringToByte(name, 16), 0, packet, 96, 16);//name byte[16] 0x60, host name
             //System.arraycopy(unusedF, 0, packet, 112, 16);                         //unusedF byte[16] 0x70
             return packet;
         }
@@ -877,13 +878,13 @@ public class IComPacketTypes {
 
 
     /**
-     * 用户名、密码加密算法，最长只支持到16位。
+     * Username/password encryption algorithm, supports up to 16 characters.
      *
-     * @param pass 用户名或密码
-     * @return 密文，最长16位
+     * @param pass username or password
+     * @return encrypted text, max 16 bytes
      */
     public static byte[] passCode(String pass) {
-        byte[] sequence =//字典
+        byte[] sequence =//Dictionary
                 {
                         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
                         0x47, 0x5d, 0x4c, 0x42, 0x66, 0x20, 0x23, 0x46, 0x4e, 0x57, 0x45, 0x3d, 0x67, 0x76, 0x60, 0x41, 0x62, 0x39, 0x59, 0x2d, 0x68, 0x7e,
@@ -895,10 +896,10 @@ public class IComPacketTypes {
                 };
 
         byte[] passBytes = pass.getBytes();
-        byte[] enCodePass = new byte[16];//密文不能超过16字节
+        byte[] enCodePass = new byte[16];//Encrypted text cannot exceed 16 bytes
 
         for (int i = 0; i < passBytes.length && i < 16; i++) {
-            int p = (passBytes[i] + i) & 0xff;//防止出现负数
+            int p = (passBytes[i] + i) & 0xff;//Prevent negative values
             if (p > 126) {
                 p = 32 + p % 127;
             }
@@ -908,11 +909,11 @@ public class IComPacketTypes {
     }
 
     /**
-     * 把字符串转指定长度的byte数组
+     * Convert string to byte array of specified length
      *
-     * @param s   字符串
-     * @param len 长度
-     * @return 数组
+     * @param s   string
+     * @param len length
+     * @return byte array
      */
     public static byte[] stringToByte(String s, int len) {
         byte[] buf = new byte[len];
@@ -925,10 +926,10 @@ public class IComPacketTypes {
     }
 
     /**
-     * 把int转为小端模式,(高位在结尾)
+     * Convert int to little-endian (high byte at end)
      *
      * @param n int
-     * @return 数组
+     * @return byte array
      */
     public static byte[] intToBigEndian(int n) {
         byte[] b = new byte[4];
@@ -940,10 +941,10 @@ public class IComPacketTypes {
     }
 
     /**
-     * int32转换成4字节数组
+     * Convert int32 to 4-byte array
      *
      * @param n int32
-     * @return 数组
+     * @return byte array
      */
     public static byte[] intToByte(int n) {
         byte[] b = new byte[4];
@@ -955,10 +956,10 @@ public class IComPacketTypes {
     }
 
     /**
-     * 从流数据中读取小端模式的Int32
+     * Read little-endian Int32 from stream data
      *
-     * @param data  流数据
-     * @param start 起始点
+     * @param data  stream data
+     * @param start start position
      * @return Int32
      */
     public static int readIntBigEndianData(byte[] data, int start) {
@@ -978,10 +979,10 @@ public class IComPacketTypes {
     }
 
     /**
-     * 从流数据中读取小端模式的Short
+     * Read little-endian Short from stream data
      *
-     * @param data  流数据
-     * @param start 起始点
+     * @param data  stream data
+     * @param start start position
      * @return Int16
      */
     public static short readShortBigEndianData(byte[] data, int start) {
@@ -991,9 +992,9 @@ public class IComPacketTypes {
     }
 
     /**
-     * 把字节转换成short，不做小端转换！！
+     * Convert bytes to short without endian conversion!
      *
-     * @param data 字节数据
+     * @param data byte data
      * @return short
      */
     public static short readShortData(byte[] data, int start) {
@@ -1003,10 +1004,10 @@ public class IComPacketTypes {
     }
 
     /**
-     * 把short转为小端模式,(高位在结尾)
+     * Convert short to little-endian (high byte at end)
      *
      * @param n short
-     * @return 数组
+     * @return byte array
      */
     public static byte[] shortToBigEndian(short n) {
         byte[] b = new byte[2];
@@ -1016,10 +1017,10 @@ public class IComPacketTypes {
     }
 
     /**
-     * 把short转成byte数组
+     * Convert short to byte array
      *
      * @param n short
-     * @return 数组
+     * @return byte array
      */
     public static byte[] shortToByte(short n) {
         byte[] b = new byte[2];
@@ -1029,10 +1030,10 @@ public class IComPacketTypes {
     }
 
     /**
-     * 显示16进制内容
+     * Display hexadecimal content
      *
-     * @param data 数组
-     * @return 内容
+     * @param data byte array
+     * @return hex string
      */
     public static String byteToStr(byte[] data) {
         StringBuilder s = new StringBuilder();

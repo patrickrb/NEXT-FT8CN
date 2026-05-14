@@ -1,6 +1,6 @@
 package com.bg7yoz.ft8cn.grid_tracker;
 /**
- * 网格追踪的主窗口。
+ * Main activity for the grid tracker.
  *
  * @author BGY70Z
  * @date 2023-03-20
@@ -78,32 +78,32 @@ public class GridTrackerMainActivity extends AppCompatActivity {
     private CallingListAdapter callingListAdapter;
     private boolean messageListIsClose = false;
     private boolean configBarIsClose = false;
-    private QSLRecordStr qlsRecorder = null;//用于历史显示消息
+    private QSLRecordStr qlsRecorder = null;//Used for displaying historical messages
     private MutableLiveData<ArrayList<QSLRecordStr>> qslRecordList = new MutableLiveData<>();
     public static final int DRAW_LINE = 1;
 
 
     @SuppressLint("NotifyDataSetChanged")
     protected void doAfterCreate() {
-        //设置消息列表
+        //Set up the message list
         callingListAdapter.notifyDataSetChanged();
         callMessagesRecyclerView.scrollToPosition(callingListAdapter.getItemCount() - 1);
 
-        setTipsRadioGroupClickerListener();//显示模式Group radio动作
-        setShowTipsSwitchClickerListener();//显示提示开关动作
+        setTipsRadioGroupClickerListener();//Set up display mode radio group actions
+        setShowTipsSwitchClickerListener();//Set up tooltip toggle actions
         readConfig();
 
-        //读取调用本activity的参数，如果不为空，说明要画参数中的消息
-        //画在日志界面中被选择的消息
+        //Read the parameters passed to this activity; if not empty, draw the specified message
+        //Draw the message selected in the log view
         Intent intentGet = getIntent();
         qlsRecorder = (QSLRecordStr) intentGet.getSerializableExtra("qslList");
         if (qlsRecorder != null) {
-            GridOsmMapView.GridPolyLine line = drawMessage(qlsRecorder);//在地图上画每一个消息
+            GridOsmMapView.GridPolyLine line = drawMessage(qlsRecorder);//Draw each message on the map
             if (line != null) {
                 line.showInfoWindow();
             }
         }
-        //画日志界面查询出的全部消息
+        //Draw all messages queried from the log view
         String queryKey = intentGet.getStringExtra("qslAll");
         int queryFilter = intentGet.getIntExtra("queryFilter", 0);
         if (queryKey != null) {
@@ -124,14 +124,14 @@ public class GridTrackerMainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
 
-        //禁止休眠
+        //Prevent screen sleep
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
                 , WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
-        //设置深色模式
+        //Set dark mode
         getDelegate().setLocalNightMode(AppCompatDelegate.MODE_NIGHT_YES);
 
-        //全屏
+        //Full screen
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN
                 , WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
@@ -183,10 +183,10 @@ public class GridTrackerMainActivity extends AppCompatActivity {
                 }
             }
         });
-        //设置消息列表滑动，用于快速呼叫
+        //Set up message list swipe actions for quick calling
         initRecyclerViewAction();
 
-        //观察解码数量
+        //Observe decoded message count
         mainViewModel.mutable_Decoded_Counter.observe(this, new Observer<Integer>() {
             @SuppressLint({"DefaultLocale", "NotifyDataSetChanged"})
             @Override
@@ -223,10 +223,10 @@ public class GridTrackerMainActivity extends AppCompatActivity {
                                 , mainViewModel.ft8SignalListener.decodeTimeSec.getValue())));
 
 
-                //画电台之间的连线
-                //对CQ的电台打点
+                //Draw lines between stations
+                //Mark CQ stations with markers
                 for (Ft8Message msg : tempMsg) {
-                    drawMessage(msg);//在地图上画每一个消息
+                    drawMessage(msg);//Draw each message on the map
                 }
                 gridOsmMapView.showInfoWindows();
                 //}
@@ -234,7 +234,7 @@ public class GridTrackerMainActivity extends AppCompatActivity {
         });
 
 
-        //观察DEBUG信息
+        //Observe debug messages
         GeneralVariables.mutableDebugMessage.observe(this, new Observer<String>() {
             @Override
             public void onChanged(String s) {
@@ -246,10 +246,10 @@ public class GridTrackerMainActivity extends AppCompatActivity {
                 binding.debugMessageTextView.setText(s);
             }
         });
-        //设置发射消息框的动画
+        //Set up the transmitting message text animation
         binding.transmittingMessageTextView.setAnimation(AnimationUtils.loadAnimation(this
                 , R.anim.view_blink));
-        //观察发射的状态
+        //Observe transmitting state
         mainViewModel.ft8TransmitSignal.mutableIsTransmitting.observe(this,
                 new Observer<Boolean>() {
                     @Override
@@ -262,7 +262,7 @@ public class GridTrackerMainActivity extends AppCompatActivity {
                     }
                 });
 
-        //观察发射内容的变化
+        // observe transmit content changes
         mainViewModel.ft8TransmitSignal.mutableTransmittingMessage.observe(this,
                 new Observer<String>() {
                     @Override
@@ -272,7 +272,7 @@ public class GridTrackerMainActivity extends AppCompatActivity {
                 });
 
 
-        //观察时钟的变化，显示进度条
+        // observe clock changes, show progress bar
         mainViewModel.timerSec.observe(this, new Observer<Long>() {
             @Override
             public void onChanged(Long aLong) {
@@ -286,18 +286,18 @@ public class GridTrackerMainActivity extends AppCompatActivity {
             }
         });
 
-        //添加浮动按钮
+        // add floating buttons
         InitFloatView();
 
 
         //gridOsmMapView.initMap(GeneralVariables.getMyMaidenhead4Grid(), true);
 
-        //把呼号与网格对应关系中的网格提取出来
+        // extract grids from callsign-grid mapping
         for (Map.Entry<String, String> entry : GeneralVariables.callsignAndGrids.entrySet()) {
             gridOsmMapView.upgradeGridMode(entry.getValue(), GridOsmMapView.GridMode.QSX);
         }
 
-        //观察呼号与网格的对应关系表的变化，如果有新增的，就添加
+        // observe callsign-grid mapping changes; add new entries
         GeneralVariables.mutableNewGrid.observe(this, new Observer<String>() {
             @Override
             public void onChanged(String s) {
@@ -308,7 +308,7 @@ public class GridTrackerMainActivity extends AppCompatActivity {
             }
         });
 
-        //获取曾经通联过的网格
+        // get previously contacted grids
         mainViewModel.databaseOpr.getQsoGridQuery(new DatabaseOpr.OnGetQsoGrids() {
             @Override
             public void onAfterQuery(HashMap<String, Boolean> grids) {
@@ -319,14 +319,14 @@ public class GridTrackerMainActivity extends AppCompatActivity {
             }
         });
 
-        //关闭消息按钮
+        // close messages button
         binding.closeMessageImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 closeMessages();
             }
         });
-        //打开消息按钮
+        // open messages button
         binding.openMessagesImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -339,8 +339,8 @@ public class GridTrackerMainActivity extends AppCompatActivity {
             @Override
             public void onChanged(ArrayList<QSLRecordStr> qslRecordStrs) {
                 for (QSLRecordStr record : qslRecordStrs) {
-                    //todo 数据量过大可能会卡死，OOM
-                    drawMessage(record);//在地图上画每一个消息
+                    //todo large data volume may cause freezing/OOM
+                    drawMessage(record);//Draw each message on the map
                 }
                 gridOsmMapView.mapUpdate();
             }
@@ -360,9 +360,9 @@ public class GridTrackerMainActivity extends AppCompatActivity {
 
 
     /**
-     * 在地图上画消息，包括收发消息和CQ消息
+     * Draw messages on the map, including sent/received messages and CQ messages.
      *
-     * @param msg 消息
+     * @param msg message
      */
     @SuppressLint("DefaultLocale")
     private void drawMessage(Ft8Message msg) {
@@ -429,7 +429,7 @@ public class GridTrackerMainActivity extends AppCompatActivity {
     }
 
     /**
-     * 设置显示模式动作
+     * Set display mode action.
      */
     private void setTipsRadioGroupClickerListener() {
         View.OnClickListener listener = new View.OnClickListener() {
@@ -490,7 +490,7 @@ public class GridTrackerMainActivity extends AppCompatActivity {
     }
 
     /**
-     * 关闭消息栏
+     * Close message bar.
      */
     private void openMessage() {
         if (!messageListIsClose) return;
@@ -528,7 +528,7 @@ public class GridTrackerMainActivity extends AppCompatActivity {
     }
 
     /**
-     * 动画关闭消息栏
+     * Animate closing the message bar.
      */
     private void closeMessages() {
         if (messageListIsClose) return;
@@ -567,7 +567,7 @@ public class GridTrackerMainActivity extends AppCompatActivity {
 
 
     /**
-     * 添加浮动按钮
+     * Add floating buttons.
      */
 
     private void InitFloatView() {
@@ -584,17 +584,17 @@ public class GridTrackerMainActivity extends AppCompatActivity {
                 , new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        //如果
+                        // if
                         if (!mainViewModel.ft8TransmitSignal.isActivated()) {
                             mainViewModel.ft8TransmitSignal.restTransmitting();
                         }
                         mainViewModel.ft8TransmitSignal.setActivated(!mainViewModel.ft8TransmitSignal.isActivated());
-                        GeneralVariables.resetLaunchSupervision();//复位自动监管
+                        GeneralVariables.resetLaunchSupervision();// reset auto-supervision
                     }
                 });
 
 
-        //动态添加按钮，建议使用静态的ID，静态ID在VALUES/FLOAT_BUTTON_IDS.XML中设置
+        // dynamically add buttons; recommend using static IDs set in VALUES/FLOAT_BUTTON_IDS.XML
 
         floatView.addButton(R.id.float_freq, "float_freq", R.drawable.ic_baseline_freq_24
                 , new View.OnClickListener() {
@@ -625,7 +625,7 @@ public class GridTrackerMainActivity extends AppCompatActivity {
                 });
 
 
-        //显示当前目标呼号
+        // display current target callsign
         mainViewModel.ft8TransmitSignal.mutableToCallsign.observe(this, new Observer<TransmitCallsign>() {
             @Override
             public void onChanged(TransmitCallsign transmitCallsign) {
@@ -635,7 +635,7 @@ public class GridTrackerMainActivity extends AppCompatActivity {
             }
         });
 
-        //观察发射状态按钮的变化
+        // observe transmit status button changes
         Observer<Boolean> transmittingObserver = new Observer<Boolean>() {
             @Override
             public void onChanged(Boolean aBoolean) {
@@ -649,7 +649,7 @@ public class GridTrackerMainActivity extends AppCompatActivity {
                     transButton.setImageResource(R.drawable.ic_baseline_send_red_48);
                     transButton.setAnimation(AnimationUtils.loadAnimation(getBaseContext(), R.anim.view_blink));
                 } else {
-                    //录音对象也要处于启动状态才可以有发射的状态
+                    // recording object must also be in started state for transmit to be active
                     if (mainViewModel.ft8TransmitSignal.isActivated() && mainViewModel.hamRecorder.isRunning()) {
                         transButton.setImageResource(R.drawable.ic_baseline_send_white_48);
                     } else {
@@ -660,7 +660,7 @@ public class GridTrackerMainActivity extends AppCompatActivity {
 
             }
         };
-        //显示发射状态
+        // display transmit status
         mainViewModel.ft8TransmitSignal.mutableIsTransmitting.observe(this, transmittingObserver);
         mainViewModel.ft8TransmitSignal.mutableIsActivated.observe(this, transmittingObserver);
 
@@ -668,10 +668,10 @@ public class GridTrackerMainActivity extends AppCompatActivity {
     }
 
     /**
-     * 把配置信息写到数据库
+     * Write configuration info to the database.
      *
-     * @param KeyName 关键词
-     * @param Value   值
+     * @param KeyName key name
+     * @param Value   value
      */
     private void writeConfig(String KeyName, String Value) {
         mainViewModel.databaseOpr.writeConfig(KeyName, Value, null);
@@ -725,28 +725,28 @@ public class GridTrackerMainActivity extends AppCompatActivity {
     }
 
     /**
-     * 马上对发起者呼叫
+     * Immediately call the initiator.
      *
-     * @param message 消息
+     * @param message message
      */
     //@RequiresApi(api = Build.VERSION_CODES.N)
     private void doCallNow(Ft8Message message) {
         mainViewModel.addFollowCallsign(message.getCallsignFrom());
         if (!mainViewModel.ft8TransmitSignal.isActivated()) {
             mainViewModel.ft8TransmitSignal.setActivated(true);
-            GeneralVariables.transmitMessages.add(message);//把消息添加到关注列表中
+            GeneralVariables.transmitMessages.add(message);// add message to the watch list
         }
-        //呼叫发启者
+        // call the initiator
         mainViewModel.ft8TransmitSignal.setTransmit(message.getFromCallTransmitCallsign()
                 , 1, message.extraInfo);
         mainViewModel.ft8TransmitSignal.transmitNow();
 
-        GeneralVariables.resetLaunchSupervision();//复位自动监管
+        GeneralVariables.resetLaunchSupervision();// reset auto-supervision
     }
 
 
     /**
-     * 设置列表滑动动作
+     * Set up list swipe action.
      */
     private void initRecyclerViewAction() {
         new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(ItemTouchHelper.ANIMATION_TYPE_DRAG
@@ -764,7 +764,7 @@ public class GridTrackerMainActivity extends AppCompatActivity {
                 if (direction == ItemTouchHelper.START) {
                     Ft8Message message = callingListAdapter.getMessageByViewHolder(viewHolder);
                     if (message != null) {
-                        //呼叫的目标不能是自己
+                        // call target cannot be yourself
                         if (!message.getCallsignFrom().equals("<...>")
                                 //&& !message.getCallsignFrom().equals(GeneralVariables.myCallsign)
                                 && !GeneralVariables.checkIsMyCallsign(message.getCallsignFrom())
@@ -775,7 +775,7 @@ public class GridTrackerMainActivity extends AppCompatActivity {
                     callingListAdapter.notifyDataSetChanged();
                     //callingListAdapter.notifyItemChanged(viewHolder.getAdapterPosition());
                 }
-                if (direction == ItemTouchHelper.END) {//删除
+                if (direction == ItemTouchHelper.END) {// delete
                     callingListAdapter.deleteMessage(viewHolder.getAdapterPosition());
                     callingListAdapter.notifyItemRemoved(viewHolder.getAdapterPosition());
                 }
@@ -786,7 +786,7 @@ public class GridTrackerMainActivity extends AppCompatActivity {
             public void onChildDraw(@NonNull Canvas c, @NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
                 super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
                 Ft8Message message = callingListAdapter.getMessageByViewHolder(viewHolder);
-                //制作呼叫背景的图标显示
+                // create call background icon display
                 final Drawable callIcon = ContextCompat.getDrawable(getBaseContext(), R.drawable.ic_baseline_send_red_48);
                 final Drawable delIcon = ContextCompat.getDrawable(getBaseContext(), R.drawable.log_item_delete_icon);
                 final Drawable background = new ColorDrawable(Color.LTGRAY);
@@ -794,7 +794,7 @@ public class GridTrackerMainActivity extends AppCompatActivity {
                 if (message == null) {
                     return;
                 }
-                if (message.getCallsignFrom().equals("<...>")) {//如果属于不能呼叫的消息，就不显示图标
+                if (message.getCallsignFrom().equals("<...>")) {// if the message cannot be called, do not show the icon
                     return;
                 }
                 Drawable icon;
@@ -838,10 +838,10 @@ public class GridTrackerMainActivity extends AppCompatActivity {
 
 
     /**
-     * 菜单选项
+     * Menu options.
      *
-     * @param item 菜单
-     * @return 是否选择
+     * @param item menu item
+     * @return whether selected
      */
     //@RequiresApi(api = Build.VERSION_CODES.N)
     @Override
@@ -851,10 +851,10 @@ public class GridTrackerMainActivity extends AppCompatActivity {
         Ft8Message ft8Message = callingListAdapter.getMessageByPosition(position);
         if (ft8Message == null) return super.onContextItemSelected(item);
 
-        GeneralVariables.resetLaunchSupervision();//复位自动监管
+        GeneralVariables.resetLaunchSupervision();// reset auto-supervision
         switch (item.getItemId()) {
-            case 1://时序与发送者相反！！！
-                Log.d(TAG, "呼叫：" + ft8Message.getCallsignTo());
+            case 1:// sequence is opposite to the sender!!!
+                Log.d(TAG, "Calling: " + ft8Message.getCallsignTo());
                 if (!mainViewModel.ft8TransmitSignal.isActivated()) {
                     mainViewModel.ft8TransmitSignal.setActivated(true);
                 }
@@ -864,18 +864,18 @@ public class GridTrackerMainActivity extends AppCompatActivity {
                 break;
 
             case 3:
-                Log.d(TAG, "呼叫：" + ft8Message.getCallsignFrom());
+                Log.d(TAG, "Calling: " + ft8Message.getCallsignFrom());
                 doCallNow(ft8Message);
                 break;
 
-            case 4://回复
-                Log.d(TAG, "回复：" + ft8Message.getCallsignFrom());
+            case 4:// reply
+                Log.d(TAG, "Replying: " + ft8Message.getCallsignFrom());
                 mainViewModel.addFollowCallsign(ft8Message.getCallsignFrom());
                 if (!mainViewModel.ft8TransmitSignal.isActivated()) {
                     mainViewModel.ft8TransmitSignal.setActivated(true);
-                    GeneralVariables.transmitMessages.add(ft8Message);//把消息添加到关注列表中
+                    GeneralVariables.transmitMessages.add(ft8Message);// add message to the watch list
                 }
-                //呼叫发启者
+                // call the initiator
                 mainViewModel.ft8TransmitSignal.setTransmit(ft8Message.getFromCallTransmitCallsign()
                         , -1, ft8Message.extraInfo);
                 mainViewModel.ft8TransmitSignal.transmitNow();

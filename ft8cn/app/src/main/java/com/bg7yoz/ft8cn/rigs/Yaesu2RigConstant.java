@@ -11,19 +11,19 @@ public class Yaesu2RigConstant {
     public static final int FM = 0x05;
     public static final int DIG = 0x0A;
     public static final int PKT = 0x0C;
-    public static final int swr_817_alert_min=6;//相当于3.0,
-    public static final int alc_817_alert_max=7;//取值时0-9，合适值是7
-    //PTT状态
+    public static final int swr_817_alert_min=6;//equivalent to 3.0,
+    public static final int alc_817_alert_max=7;//range 0-9, optimal value is 7
+    //PTT state
 
-    //指令集
+    //command set
     private static final byte[] PTT_ON = {(byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x08};
     private static final byte[] PTT_OFF = {(byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x88};
     private static final byte[] GET_METER = {(byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0xBD};
     private static final byte[] GET_CONNECT = {(byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00};
     private static final byte[] GET_DISCONNECT = {(byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x80};
-    //USB模式
+    //USB mode
     private static final byte[] USB_MODE = {(byte) 0x01, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x07};
-    //DIG模式
+    //DIG mode
     private static final byte[] DIG_MODE = {(byte) 0x0A, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x07};
     private static final byte[] READ_FREQ = {(byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x03};
 

@@ -1,6 +1,7 @@
 package com.bg7yoz.ft8cn.connector;
 /**
- * 用于USB串口操作的类。USB串口驱动在serialport目录中，主要是CDC、CH34x、CP21xx、FTDI等。
+ * Class for USB serial port operations. USB serial drivers are in the serialport directory,
+ * mainly CDC, CH34x, CP21xx, FTDI, etc.
  *
  * @author BGY70Z
  * @date 2023-03-20
@@ -47,9 +48,9 @@ public class CableSerialPort {
     private BroadcastReceiver broadcastReceiver;
     private final Context context;
 
-    private int vendorId = 0x0c26;//设备号
-    private int portNum = 0;//端口号
-    private int baudRate = 19200;//波特率
+    private int vendorId = 0x0c26;//Device ID
+    private int portNum = 0;//Port number
+    private int baudRate = 19200;//Baud rate
 
     private UsbSerialPort usbSerialPort;
     private SerialInputOutputManager usbIoManager;
@@ -60,7 +61,7 @@ public class CableSerialPort {
     private UsbSerialDriver driver;
 
 
-    private boolean connected = false;//是否处于连接状态
+    private boolean connected = false;//Whether currently connected
 
     public CableSerialPort(Context mContext, SerialPort serialPort, int baud, OnConnectorStateChanged connectorStateChanged) {
         vendorId = serialPort.vendorId;
@@ -94,9 +95,9 @@ public class CableSerialPort {
         UsbDevice device = null;
         usbManager = (UsbManager) context.getSystemService(Context.USB_SERVICE);
 
-        //此处把connection设成Null,这样在后面来通过是否null判断是否有权限。
+        //Set connection to null here so we can check permissions by null status later.
         usbConnection = null;
-        //此处是不是做个权限判断？
+        //Should we do a permission check here?
         if (usbManager == null) {
             return false;
         }
@@ -108,16 +109,16 @@ public class CableSerialPort {
             }
         }
         if (device == null) {
-            Log.e(TAG, String.format("串口设备打开失败: 没有找到设备0x%04x", vendorId));
+            Log.e(TAG, String.format("Failed to open serial device: device 0x%04x not found", vendorId));
             return false;
         }
         driver = UsbSerialProber.getDefaultProber().probeDevice(device);
         if (driver == null) {
-            //试着把未知的设备加入到cdc驱动上
+            //Try adding the unknown device to the CDC driver
             driver = new CdcAcmSerialDriver(device);
         }
         if (driver.getPorts().size() < portNum) {
-            Log.e(TAG, "串口号不存在，无法打开。");
+            Log.e(TAG, "Serial port number does not exist, cannot open.");
             return false;
         }
         Log.d(TAG, "connect: port size:" + String.valueOf(driver.getPorts().size()));
@@ -146,7 +147,7 @@ public class CableSerialPort {
 
             PendingIntent usbPermissionIntent;
 
-            //在android12 开始，增加了PendingIntent.FLAG_MUTABLE保护机制，所以要做版本判断
+            //Starting from Android 12, PendingIntent.FLAG_MUTABLE protection was added, so version check is needed
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                 usbPermissionIntent = PendingIntent.getBroadcast(context, 0
                         , new Intent(INTENT_ACTION_GRANT_USB), PendingIntent.FLAG_MUTABLE);
@@ -173,7 +174,7 @@ public class CableSerialPort {
         }
         try {
             usbSerialPort.open(usbConnection);
-            //波特率、停止位
+            //Baud rate, stop bits
             //usbSerialPort.setParameters(baudRate, 8, 1, UsbSerialPort.PARITY_NONE);
             Log.d(TAG,String.format("serial:baud rate：%d,data bits:%d,stop bits:%d,parity bit:%d"
                     ,baudRate,GeneralVariables.serialDataBits
@@ -198,7 +199,7 @@ public class CableSerialPort {
                 }
             });
             usbIoManager.start();
-            Log.d(TAG, "串口打开成功！");
+            Log.d(TAG, "Serial port opened successfully!");
             connected = true;
 
             if (onStateChanged!=null){
@@ -207,7 +208,7 @@ public class CableSerialPort {
 
 
         } catch (Exception e) {
-            Log.e(TAG, "串口打开失败: " + e.getMessage());
+            Log.e(TAG, "Failed to open serial port: " + e.getMessage());
             if (onStateChanged!=null){
                 onStateChanged.onRunError(GeneralVariables.getStringFromResource(R.string.serial_connect_failed)
                         + e.getMessage());
@@ -224,12 +225,12 @@ public class CableSerialPort {
                 usbSerialPort.write(src, SEND_TIMEOUT);
             } catch (IOException e) {
                 e.printStackTrace();
-                Log.e(TAG, "发送数据出错：" + e.getMessage());
+                Log.e(TAG, "Error sending data: " + e.getMessage());
                 return false;
             }
             return true;
         } else {
-            Log.e(TAG, "无法发送数据，串口没有打开。");
+            Log.e(TAG, "Cannot send data, serial port is not open.");
             return false;
         }
 
@@ -266,9 +267,9 @@ public class CableSerialPort {
 
 
     /**
-     * 打开和关闭RTS
+     * Toggle RTS on and off
      *
-     * @param rts_on true：打开，false：关闭
+     * @param rts_on true: on, false: off
      */
     public void setRTS_On(boolean rts_on) {
         try {
@@ -326,10 +327,10 @@ public class CableSerialPort {
     }
 
     /**
-     * 获取本机可用的串口设备串列表
+     * Get the list of available serial port devices on this device
      *
      * @param context context
-     * @return 串口设备列表
+     * @return list of serial port devices
      */
     public static ArrayList<SerialPort> listSerialPorts(Context context) {
         ArrayList<SerialPort> serialPorts = new ArrayList<>();
@@ -339,7 +340,7 @@ public class CableSerialPort {
             UsbSerialDriver driver = UsbSerialProber.getDefaultProber().probeDevice(device);
             if (driver == null) {
                 continue;
-                //试着把未知的设备加入到cdc驱动上
+                //Try adding the unknown device to the CDC driver
                 //driver = new CdcAcmSerialDriver(device);
             }
             for (int i = 0; i < driver.getPorts().size(); i++) {
@@ -357,9 +358,9 @@ public class CableSerialPort {
 
     public static class SerialPort {
         public int deviceId = 0;
-        public int vendorId = 0x0c26;//厂商号
-        public int productId = 0;//设备号
-        public int portNum = 0;//端口号
+        public int vendorId = 0x0c26;//Vendor ID
+        public int productId = 0;//Product ID
+        public int portNum = 0;//Port number
 
         public SerialPort(int deviceId, int vendorId, int productId, int portNum) {
             this.deviceId = deviceId;

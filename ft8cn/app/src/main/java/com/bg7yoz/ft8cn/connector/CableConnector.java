@@ -8,7 +8,7 @@ import com.bg7yoz.ft8cn.rigs.BaseRig;
 import com.bg7yoz.ft8cn.serialport.util.SerialInputOutputManager;
 
 /**
- * 有线连接方式的Connector，这里是指USB方式的，继承于BaseRigConnector
+ * Connector for wired (USB) connections, inherits from BaseRigConnector
  *
  * @author BG7YOZ
  * @date 2023-03-20
@@ -16,7 +16,7 @@ import com.bg7yoz.ft8cn.serialport.util.SerialInputOutputManager;
 public class CableConnector extends BaseRigConnector {
     private static final String TAG = "CableConnector";
 
-    //2023-08-16 由DS1UFX提交修改（基于0.9版），用于(tr)uSDX audio over cat的支持。
+    //2023-08-16 Submitted by DS1UFX (based on v0.9) to support (tr)uSDX audio over CAT.
     public interface OnCableDataReceived {
         void OnWaveReceived(int bufferLen, float[] buffer);
     }
@@ -43,7 +43,7 @@ public class CableConnector extends BaseRigConnector {
             @Override
             public void onRunError(Exception e) {
                 Log.e(TAG, "CableConnector error: " + e.getMessage());
-                getOnConnectorStateChanged().onRunError("与串口失去连接：" + e.getMessage());
+                getOnConnectorStateChanged().onRunError("Lost connection to serial port: " + e.getMessage());
             }
         };
         //connect();
@@ -57,24 +57,24 @@ public class CableConnector extends BaseRigConnector {
 
     @Override
     public void setPttOn(boolean on) {
-        //只处理RTS和DTR
+        //Only handle RTS and DTR
         switch (getControlMode()) {
             case ControlMode.DTR:
-                cableSerialPort.setDTR_On(on);//打开和关闭DTR
+                cableSerialPort.setDTR_On(on);//Toggle DTR on/off
                 break;
             case ControlMode.RTS:
-                cableSerialPort.setRTS_On(on);//打开和关闭RTS
+                cableSerialPort.setRTS_On(on);//Toggle RTS on/off
                 break;
         }
     }
 
     @Override
     public void setPttOn(byte[] command) {
-        cableSerialPort.sendData(command);//以CAT指令发送PTT
+        cableSerialPort.sendData(command);//Send PTT via CAT command
     }
 
 
-    //以下是（tr）uSDX与wave有关的代码，是2023-08-16 由DS1UFX提交修改（基于0.9版），用于(tr)uSDX audio over cat的支持。
+    //The following is (tr)uSDX wave-related code, submitted 2023-08-16 by DS1UFX (based on v0.9) to support (tr)uSDX audio over CAT.
     @Override
     public void sendWaveData(byte[] data) {
         sendData(data);

@@ -1,5 +1,5 @@
-请输入您的呼号。
-呼号是您用本APP进行FT8呼叫的基本要求。您如果在中国境内，请使用符合《中华人民共和国无线电管理条例》的合法呼号，禁止一切非法发射！
+Please enter your callsign.
+Your callsign is a basic requirement for making FT8 calls with this app. Please comply with your local amateur radio regulations, and do not make any illegal transmissions.
 
-关于修饰符
-CQ后面可能跟有三个十进制数字或一到四个字母的修饰符，一般是000-999或A-Z或AA-ZZ或AAA-ZZZ或AAAA-ZZZZ。例如：CQ POTA callsign grid。
+About Modifiers
+CQ may be followed by a modifier of three decimal digits or one to four letters, typically 000-999 or A-Z or AA-ZZ or AAA-ZZZ or AAAA-ZZZZ. For example: CQ POTA callsign grid.

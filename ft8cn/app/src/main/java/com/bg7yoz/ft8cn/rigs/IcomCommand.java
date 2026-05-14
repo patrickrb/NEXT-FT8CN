@@ -8,11 +8,11 @@ public class IcomCommand {
     private byte[] rawData;
 
     /**
-     * 获取主命令
+     * Get the main command
      *
-     * @return 主命令值
+     * @return main command value
      */
-    public int getCommandID() {//获取主命令
+    public int getCommandID() {//get main command
         if (rawData.length < 5) {
             return -1;
         }
@@ -20,11 +20,11 @@ public class IcomCommand {
     }
 
     /**
-     * 获取子命令，有的指令没有子命令，要注意。
+     * Get the sub-command. Note that some commands have no sub-command.
      *
-     * @return 子命令
+     * @return sub-command
      */
-    public int getSubCommand() {//获取子命令
+    public int getSubCommand() {//get sub-command
         if (rawData.length < 7) {
             return -1;
         }
@@ -32,20 +32,20 @@ public class IcomCommand {
     }
 
     /**
-     * 获取带2字节的子命令，有的指令没有子命令，有的指令只有1个字节，要注意。
-     * @return 子指令
+     * Get the 2-byte sub-command. Note that some commands have no sub-command, and some have only 1 byte.
+     * @return sub-command
      */
-    public int getSubCommand2() {//获取子命令
+    public int getSubCommand2() {//get sub-command
         if (rawData.length < 8) {
             return -1;
         }
         return readShortData(rawData,6);
     }
     /**
-     * 获取带3字节的子命令，有的指令没有子命令，有的指令只有1个字节，要注意。
-     * @return 子指令
+     * Get the 3-byte sub-command. Note that some commands have no sub-command, and some have only 1 byte.
+     * @return sub-command
      */
-    public int getSubCommand3() {//获取子命令
+    public int getSubCommand3() {//get sub-command
         if (rawData.length < 9) {
             return -1;
         }
@@ -57,10 +57,10 @@ public class IcomCommand {
     }
 
     /**
-     * 获取数据区，有的指令有子命令，有的没有子命令，所以要区分出来。子命令占一个字节
+     * Get the data section. Some commands have sub-commands, some do not. Sub-command occupies one byte.
      *
-     * @param hasSubCommand 是否有子命令
-     * @return 返回数据区
+     * @param hasSubCommand whether command has a sub-command
+     * @return data section
      */
     public byte[] getData(boolean hasSubCommand) {
         int pos;
@@ -70,7 +70,7 @@ public class IcomCommand {
         } else {
             pos = 5;
         }
-        if (rawData.length < pos + 1) {//没有数据区了
+        if (rawData.length < pos + 1) {//no data section
             return null;
         }
 
@@ -83,7 +83,7 @@ public class IcomCommand {
     }
 
     public byte[] getData2Sub() {
-        if (rawData.length < 9) {//没有数据区了
+        if (rawData.length < 9) {//no data section
             return null;
         }
 
@@ -92,57 +92,57 @@ public class IcomCommand {
         System.arraycopy(rawData, 8, data, 0, rawData.length - 8);
         return data;
     }
-    //解析接收的指令
+    //parse received command
 
     /**
-     * 从串口中接到的数据解析出指令的数据:FE FE E0 A4 Cn Sc data FD
+     * Parse command data from serial port data: FE FE E0 A4 Cn Sc data FD
      *
-     * @param ctrAddr 控制者地址，默认E0或00
-     * @param rigAddr 电台地址，705默认是A4
-     * @param buffer  从串口接收到的数据
-     * @return 返回电台指令对象，如果不符合指令的格式，返回null。
+     * @param ctrAddr controller address, default E0 or 00
+     * @param rigAddr rig address, IC-705 default is A4
+     * @param buffer  data received from serial port
+     * @return rig command object, or null if data does not match command format.
      */
     public static IcomCommand getCommand(int ctrAddr, int rigAddr, byte[] buffer) {
         Log.d(TAG, "getCommand: "+BaseRig.byteToStr(buffer) );
-        if (buffer.length <= 5) {//指令的长度不可能小于等5
+        if (buffer.length <= 5) {//command length cannot be <= 5
             return null;
         }
-        int position = -1;//指令的位置
+        int position = -1;//command position
         for (int i = 0; i < buffer.length; i++) {
-            if (i + 6 > buffer.length) {//说明没找到指令
+            if (i + 6 > buffer.length) {//command not found
                 return null;
             }
             if (buffer[i] == (byte) 0xfe
-                    && buffer[i + 1] == (byte) 0xfe//命令头0xfe 0xfe
-                    && (buffer[i + 2] == (byte) ctrAddr || (buffer[i + 2] == (byte) 0x00))//控制者地址默认E0或00
-                    && buffer[i + 3] == (byte) rigAddr) {//电台地址，705的默认值是A4，协谷是70
+                    && buffer[i + 1] == (byte) 0xfe//command header 0xfe 0xfe
+                    && (buffer[i + 2] == (byte) ctrAddr || (buffer[i + 2] == (byte) 0x00))//controller address default E0 or 00
+                    && buffer[i + 3] == (byte) rigAddr) {//rig address, IC-705 default A4, XieGu is 70
                 position = i;
                 break;
             }
         }
-        //说明没找到
+        //not found
         if (position == -1) {
             return null;
         }
 
         int dataEnd = -1;
-        //从命令头之后查起。所以i=position
+        //search from after the command header, so i=position
         for (int i = position; i < buffer.length; i++) {
-            if (buffer[i] == (byte) 0xfd) {//是否到结尾了
+            if (buffer[i] == (byte) 0xfd) {//check if end reached
                 dataEnd = i;
                 break;
             }
         }
-        if (dataEnd == -1) {//说明没找到结尾
+        if (dataEnd == -1) {//end marker not found
             return null;
         }
 
         IcomCommand icomCommand = new IcomCommand();
         icomCommand.rawData = new byte[dataEnd - position];
         int pos = 0;
-        for (int i = position; i < dataEnd; i++) {//把指令数据搬到rawData中
+        for (int i = position; i < dataEnd; i++) {//copy command data to rawData
             //icomCommand.rawData[i] = buffer[i];
-            icomCommand.rawData[pos] = buffer[i];//定位错误
+            icomCommand.rawData[pos] = buffer[i];//fixed index bug
             pos++;
         }
         return icomCommand;
@@ -150,33 +150,33 @@ public class IcomCommand {
 
 
     /**
-     * 从数据区中计算频率BCD码
+     * Calculate frequency from BCD-encoded data section
      *
-     * @param hasSubCommand 是否含有子命令
-     * @return 返回频率值
+     * @param hasSubCommand whether command contains a sub-command
+     * @return frequency value
      */
     public long getFrequency(boolean hasSubCommand) {
         byte[] data = getData(hasSubCommand);
         if (data.length < 5) {
             return -1;
         }
-        return (int) (data[0] & 0x0f)//取个位 1hz
-                + ((int) (data[0] >> 4) & 0xf) * 10//取十位 10hz
-                + (int) (data[1] & 0x0f) * 100//百位 100hz
-                + ((int) (data[1] >> 4) & 0xf) * 1000//千位  1khz
-                + (int) (data[2] & 0x0f) * 10000//万位 10khz
-                + ((int) (data[2] >> 4) & 0xf) * 100000//十万位 100khz
-                + (int) (data[3] & 0x0f) * 1000000//百万位 1Mhz
-                + ((int) (data[3] >> 4) & 0xf) * 10000000//千万位 10Mhz
-                + (int) (data[4] & 0x0f) * 100000000//亿位 100Mhz
-                + ((int) (data[4] >> 4) & 0xf) * 100000000;//十亿位 1Ghz
+        return (int) (data[0] & 0x0f)//ones digit 1Hz
+                + ((int) (data[0] >> 4) & 0xf) * 10//tens digit 10Hz
+                + (int) (data[1] & 0x0f) * 100//hundreds 100Hz
+                + ((int) (data[1] >> 4) & 0xf) * 1000//thousands 1kHz
+                + (int) (data[2] & 0x0f) * 10000//ten-thousands 10kHz
+                + ((int) (data[2] >> 4) & 0xf) * 100000//hundred-thousands 100kHz
+                + (int) (data[3] & 0x0f) * 1000000//millions 1MHz
+                + ((int) (data[3] >> 4) & 0xf) * 10000000//ten-millions 10MHz
+                + (int) (data[4] & 0x0f) * 100000000//hundred-millions 100MHz
+                + ((int) (data[4] >> 4) & 0xf) * 100000000;//billions 1GHz
     }
 
 
     /**
-     * 把字节转换成short，不做小端转换！！
+     * Convert bytes to short, without little-endian conversion!!
      *
-     * @param data 字节数据
+     * @param data byte data
      * @return short
      */
     public static short readShortData(byte[] data, int start) {

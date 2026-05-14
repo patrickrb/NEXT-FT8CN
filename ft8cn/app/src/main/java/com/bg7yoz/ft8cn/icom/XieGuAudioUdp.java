@@ -1,6 +1,6 @@
 package com.bg7yoz.ft8cn.icom;
 /**
- * 处理协谷的音频流，继承至AudioUdp。
+ * Handle Xiegu audio stream, extends AudioUdp.
  *
  * @author BGY70Z
  * @date 2023-08-26
@@ -32,8 +32,8 @@ public class XieGuAudioUdp extends AudioUdp {
         if (audioData == null) return;
 
         short[] temp = new short[audioData.length];//12000
-        //传递过来的音频是LPCM,32 float，12000Hz
-        //要做一下浮点到16位int的转换
+        //Incoming audio is LPCM, 32-bit float, 12000Hz
+        //Need to convert from float to 16-bit int
         for (int i = 0; i < audioData.length; i++) {
             float x = audioData[i];
             if (x > 0.999999f)
@@ -67,9 +67,9 @@ public class XieGuAudioUdp extends AudioUdp {
 
 
     private static class AudioRunnable implements Runnable {
-        private final int partialLen = (int) (IComPacketTypes.AUDIO_SAMPLE_RATE * 0.02);//20ms的数据包的长度
+        private final int partialLen = (int) (IComPacketTypes.AUDIO_SAMPLE_RATE * 0.02);//20ms packet data length
         private final byte[] audioPacket = new byte[partialLen * 2];
-        private final byte[] ft8Audio = new byte[15 * IComPacketTypes.AUDIO_SAMPLE_RATE * 2];//15秒，采样率*2（16位，所以2倍）
+        private final byte[] ft8Audio = new byte[15 * IComPacketTypes.AUDIO_SAMPLE_RATE * 2];//15 seconds, sample rate * 2 (16-bit, so double)
         private int index = 0;
         XieGuAudioUdp audioUdp;
         private boolean isRunning = true;
@@ -84,7 +84,7 @@ public class XieGuAudioUdp extends AudioUdp {
             for (int i = 0; i < audioData.length; i++) {
                 System.arraycopy(IComPacketTypes.shortToBigEndian((short)
                                 (audioData[i]
-                                        * GeneralVariables.volumePercent))//乘以信号量的比率
+                                        * GeneralVariables.volumePercent))//Multiply by volume ratio
                         , 0, ft8Audio, i * 2, 2);
             }
             index = 0;
@@ -94,7 +94,7 @@ public class XieGuAudioUdp extends AudioUdp {
         @Override
         public void run() {
             while (isRunning) {
-                long now = System.currentTimeMillis() - 1;//获取当前时间
+                long now = System.currentTimeMillis() - 1;//Get current time
                 if (audioUdp.isPttOn) {
                     System.arraycopy(ft8Audio, index, audioPacket, 0, audioPacket.length);
                     index = index + partialLen * 2;
@@ -106,7 +106,7 @@ public class XieGuAudioUdp extends AudioUdp {
                         , (short) 0, audioUdp.localId, audioUdp.remoteId, audioUdp.innerSeq));
                 audioUdp.innerSeq++;
                 while (isRunning) {
-                    if (System.currentTimeMillis() - now >= 21) {//20毫秒一个周期
+                    if (System.currentTimeMillis() - now >= 21) {//20ms per cycle
                         break;
                     }
                 }
@@ -120,7 +120,7 @@ public class XieGuAudioUdp extends AudioUdp {
 //
 //    private static class DoTXAudioRunnable implements Runnable {
 //        XieGuAudioUdp audioUdp;
-//        short[] audioData;//传递过来的音频是LPCM 16bit Int,12000hz
+//        short[] audioData;//Incoming audio is LPCM 16-bit Int, 12000Hz
 //
 //        public DoTXAudioRunnable(XieGuAudioUdp audioUdp) {
 //            this.audioUdp = audioUdp;
@@ -130,47 +130,47 @@ public class XieGuAudioUdp extends AudioUdp {
 //        public void run() {
 //            if (audioData == null) return;
 //
-//            final int partialLen = (int) (IComPacketTypes.AUDIO_SAMPLE_RATE * 0.02);//20ms的数据包的长度
+//            final int partialLen = (int) (IComPacketTypes.AUDIO_SAMPLE_RATE * 0.02);//20ms packet data length
 //
-//            //要转换一下到BYTE,小端模式
-//            //先播放，是给出空的声音，for i 循环，做了一个判断，是给前面的空声音，for j循环，做得判断，是让后面发送空声音
+//            //Convert to BYTE, little-endian
+//            //Play silence first; for-i loop handles leading silence, for-j loop handles trailing silence
 //            byte[] audioPacket = new byte[partialLen * 2];
-//            for (int i = 0; i < (audioData.length / partialLen) + 8; i++) {//多出6个周期，前面3个，后面3个多
+//            for (int i = 0; i < (audioData.length / partialLen) + 8; i++) {//6 extra cycles: 3 before, 3 after
 //                if (!audioUdp.isPttOn) break;
-//                long now = System.currentTimeMillis() - 1;//获取当前时间
+//                long now = System.currentTimeMillis() - 1;//Get current time
 //
 //                audioUdp.sendTrackedPacket(IComPacketTypes.AudioPacket.getTxAudioPacket(audioPacket
 //                        , (short) 0, audioUdp.localId, audioUdp.remoteId, audioUdp.innerSeq));
 //                audioUdp.innerSeq++;
 //
 //                Arrays.fill(audioPacket, (byte) 0x00);
-//                if (i >= 3) {//让前两个空数据发送出去
+//                if (i >= 3) {//Let the first two empty packets be sent out
 //                    for (int j = 0; j < partialLen; j++) {
 //                        if ((i - 3) * partialLen + j < audioData.length) {
 //                            System.arraycopy(IComPacketTypes.shortToBigEndian((short)
 //                                            (audioData[(i - 3) * partialLen + j]
-//                                                    * GeneralVariables.volumePercent))//乘以信号量的比率
+//                                                    * GeneralVariables.volumePercent))//Multiply by volume ratio
 //                                    , 0, audioPacket, j * 2, 2);
 //                        }
 //                    }
 //                }
 //                while (audioUdp.isPttOn) {
-//                    if (System.currentTimeMillis() - now >= 21) {//20毫秒一个周期
+//                    if (System.currentTimeMillis() - now >= 21) {//20ms per cycle
 //                        break;
 //                    }
 //                }
 //            }
-//            Log.d(TAG, "run: 音频发送完毕！！");
+//            Log.d(TAG, "run: Audio transmission complete!!");
 //            Thread.currentThread().interrupt();
 //        }
 //
 //    }
 
     /**
-     * 接收到电台发过来的音频数据
+     * Audio data received from radio
      *
-     * @param packet 数据包
-     * @param data   数据
+     * @param packet data packet
+     * @param data   data
      */
     @Override
     public void onDataReceived(DatagramPacket packet, byte[] data) {

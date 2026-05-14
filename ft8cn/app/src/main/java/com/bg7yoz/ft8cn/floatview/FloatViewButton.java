@@ -1,6 +1,6 @@
 package com.bg7yoz.ft8cn.floatview;
 /**
- * 自定义FloatButton
+ * Custom FloatButton
  * @author BGY70Z
  * @date 2023-03-20
  */

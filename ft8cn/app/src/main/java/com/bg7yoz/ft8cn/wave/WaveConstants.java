@@ -1,8 +1,8 @@
 package com.bg7yoz.ft8cn.wave;
 
 /**
- * Wave文件操作所用的常量。
- * 已经弃用。FT8CN目前不采用文件方式处理音频。
+ * Constants used for WAV file operations.
+ * Deprecated. FT8CN no longer uses file-based audio processing.
  * @author BGY70Z
  * @date 2023-03-20
  */

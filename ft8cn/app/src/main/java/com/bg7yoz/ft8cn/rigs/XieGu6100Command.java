@@ -5,14 +5,14 @@ import android.util.Log;
 
 
 /**
- * X6100_V1.1.6版新增指令说明
+ * X6100 V1.1.6 new command description
  *
  *
- * 1. 新增CI-V指令:
+ * 1. New CI-V command:
  *    1A 01 (C1) (C2)
- *    C1: 波段号, See IC-705 CI-V Command Table
- *    C2: 寄存器代码(未用), See IC-705 CI-V Command Table
- *    X6100回发数据           说明
+ *    C1: band number, See IC-705 CI-V Command Table
+ *    C2: register code (unused), See IC-705 CI-V Command Table
+ *    X6100 response data          description
  *    FE FE                   # 2 byte, CI-V header
  *    E0 XX 1A 01 01 01       # 6 bytes, The command payload, XX is the rig's address
  *    00 00 80 01 00          # 5 bytes, Operating frequency setting
@@ -29,48 +29,48 @@ import android.util.Log;
  *    20 20 20 20 20 20 20 20 # 8 bytes, R1 (Access repeater) call sign setting
  *    20 20 20 20 20 20 20 20 # 8 bytes, R2 (Gateway/Link repeater) call sign setting
  *    FD                      # 1 byte, CI-V tail
- * 2. 新增CI-V指令:
+ * 2. New CI-V command:
  *    1A 06
  *    See IC-705 CI-V Command Table
- * 3. 新增CI-V指令:
+ * 3. New CI-V command:
  *    21 00
  *    21 01
  *    21 02
  *    See IC-705 CI-V Command Table
- * 4. 新增CI-V指令:
+ * 4. New CI-V command:
  *    26 (C1) (C2) (C3) (C4)
- *    C1: VFO序号 (VFO index)
+ *    C1: VFO index (VFO index)
  *        0:     Foreground VFO
  *        other: Background VFO
- *    C2: 工作模式 (Operating mode)
+ *    C2: Operating mode (Operating mode)
  *        See IC-705 CI-V Command Table
- *    C3: 数据模式 (Data mode)
+ *    C3: Data mode (Data mode)
  *        0:     OFF
  *        other: ON
- *    C4: 滤波器号 (Filter setting)
+ *    C4: Filter setting (Filter setting)
  *        1:     FILTER1
  *        2:     FILTER2
  *        3:     FILTER3
  *        other: Invalid
  *    *Note: [LSB/USB mode]         with Data mode ON -> L-DIG/U-DIG
  *           [Other operating mode] with Data mode ON -> No effect
- * 5. 新增蓝牙SPP,可以使用FLRIG,Omni-Rig等PC软件无线控制X6100
- *    蓝牙连接计算机后,组合键Win+R,输入bthprops.cpl按回车,在弹出的界面里点击"更多蓝牙设置",
- *    在弹出的"蓝牙设置"窗口中点击"COM端口"选项卡,名称为"X6100 Bluetooth 'Serial Port'"的端口即为蓝牙CI-V接口,
- *    例子:
- *    端口  方向  名称
- *    COM3  传出  X6100 Bluetooth 'Serial Port'
+ * 5. New Bluetooth SPP added, allowing wireless control of X6100 using PC software such as FLRIG, Omni-Rig, etc.
+ *    After connecting via Bluetooth to a computer, press Win+R, enter bthprops.cpl and press Enter, click "More Bluetooth settings" in the popup,
+ *    in the "Bluetooth Settings" window click the "COM Ports" tab. The port named "X6100 Bluetooth Serial Port" is the Bluetooth CI-V interface.
+ *    Example:
+ *    Port  Direction  Name
+ *    COM3  Outgoing  X6100 Bluetooth 'Serial Port'
  */
 public class XieGu6100Command {
     private static final String TAG = "6100RigCommand";
     private byte[] rawData;
 
     /**
-     * 获取主命令
+     * get main command
      *
-     * @return 主命令值
+     * @return main command value
      */
-    public int getCommandID() {//获取主命令
+    public int getCommandID() {//get main command
         if (rawData.length < 5) {
             return -1;
         }
@@ -78,11 +78,11 @@ public class XieGu6100Command {
     }
 
     /**
-     * 获取子命令，有的指令没有子命令，要注意。
+     * Get the sub-command. Note that some commands have no sub-command.
      *
-     * @return 子命令
+     * @return sub-command
      */
-    public int getSubCommand() {//获取子命令
+    public int getSubCommand() {//get sub-command
         if (rawData.length < 7) {
             return -1;
         }
@@ -90,20 +90,20 @@ public class XieGu6100Command {
     }
 
     /**
-     * 获取带2字节的子命令，有的指令没有子命令，有的指令只有1个字节，要注意。
-     * @return 子指令
+     * Get the 2-byte sub-command. Note that some commands have no sub-command, and some have only 1 byte.
+     * @return sub-command
      */
-    public int getSubCommand2() {//获取子命令
+    public int getSubCommand2() {//get sub-command
         if (rawData.length < 8) {
             return -1;
         }
         return readShortData(rawData,6);
     }
     /**
-     * 获取带3字节的子命令，有的指令没有子命令，有的指令只有1个字节，要注意。
-     * @return 子指令
+     * Get the 3-byte sub-command. Note that some commands have no sub-command, and some have only 1 byte.
+     * @return sub-command
      */
-    public int getSubCommand3() {//获取子命令
+    public int getSubCommand3() {//get sub-command
         if (rawData.length < 9) {
             return -1;
         }
@@ -115,10 +115,10 @@ public class XieGu6100Command {
     }
 
     /**
-     * 获取数据区，有的指令有子命令，有的没有子命令，所以要区分出来。子命令占一个字节
+     * Get the data section. Some commands have sub-commands, some do not. Sub-command occupies one byte.
      *
-     * @param hasSubCommand 是否有子命令
-     * @return 返回数据区
+     * @param hasSubCommand whether command has a sub-command
+     * @return data section
      */
     public byte[] getData(boolean hasSubCommand) {
         int pos;
@@ -128,7 +128,7 @@ public class XieGu6100Command {
         } else {
             pos = 5;
         }
-        if (rawData.length < pos + 1) {//没有数据区了
+        if (rawData.length < pos + 1) {//no data section
             return null;
         }
 
@@ -141,7 +141,7 @@ public class XieGu6100Command {
     }
 
     public byte[] getData2Sub() {
-        if (rawData.length < 9) {//没有数据区了
+        if (rawData.length < 9) {//no data section
             return null;
         }
 
@@ -150,58 +150,58 @@ public class XieGu6100Command {
         System.arraycopy(rawData, 8, data, 0, rawData.length - 8);
         return data;
     }
-    //解析接收的指令
+    //parse received command
 
     /**
-     * 从串口中接到的数据解析出指令的数据:FE FE E0 A4 Cn Sc data FD
+     * Parse command data from serial port data: FE FE E0 A4 Cn Sc data FD
      *
-     * @param ctrAddr 控制者地址，默认E0或00
-     * @param rigAddr 电台地址，705默认是A4
-     * @param buffer  从串口接收到的数据
-     * @return 返回电台指令对象，如果不符合指令的格式，返回null。
+     * @param ctrAddr controller address, default E0 or 00
+     * @param rigAddr rig address, IC-705 default is A4
+     * @param buffer  data received from serial port
+     * @return rig command object, or null if data does not match command format.
      */
     public static XieGu6100Command getCommand(int ctrAddr, int rigAddr, byte[] buffer) {
         Log.d(TAG, "getCommand: "+BaseRig.byteToStr(buffer) );
-        if (buffer.length <= 5) {//指令的长度不可能小于等5
+        if (buffer.length <= 5) {//command length cannot be <= 5
             return null;
         }
-        int position = -1;//指令的位置
+        int position = -1;//command position
         for (int i = 0; i < buffer.length; i++) {
-            if (i + 6 > buffer.length) {//说明没找到指令
+            if (i + 6 > buffer.length) {//command not found
                 return null;
             }
             if (buffer[i] == (byte) 0xfe
-                    && buffer[i + 1] == (byte) 0xfe//命令头0xfe 0xfe
-                    && (buffer[i + 2] == (byte) ctrAddr || buffer[i + 2] == (byte) 0x00)//控制者地址默认E0或00
+                    && buffer[i + 1] == (byte) 0xfe//command header 0xfe 0xfe
+                    && (buffer[i + 2] == (byte) ctrAddr || buffer[i + 2] == (byte) 0x00)//controller address default E0 or 00
                     //&& buffer[i + 3] == (byte) rigAddr
-            ) {//协谷CIV默认地址是0x70,但是在测试1.1.7固件的时候，发现回复频率地址始终是0xA4，这似乎是个BUG，暂时忽略CIV地址的判断
+            ) {//XieGu CIV default address is 0x70, but when testing firmware 1.1.7, the reply frequency address is always 0xA4. This appears to be a bug; temporarily ignoring CIV address validation.
                 position = i;
                 break;
             }
         }
-        //说明没找到
+        //not found
         if (position == -1) {
             return null;
         }
 
         int dataEnd = -1;
-        //从命令头之后查起。所以i=position
+        //search from after the command header, so i=position
         for (int i = position; i < buffer.length; i++) {
-            if (buffer[i] == (byte) 0xfd) {//是否到结尾了
+            if (buffer[i] == (byte) 0xfd) {//check if end reached
                 dataEnd = i;
                 break;
             }
         }
-        if (dataEnd == -1) {//说明没找到结尾
+        if (dataEnd == -1) {//end marker not found
             return null;
         }
 
         XieGu6100Command icomCommand = new XieGu6100Command();
         icomCommand.rawData = new byte[dataEnd - position];
         int pos = 0;
-        for (int i = position; i < dataEnd; i++) {//把指令数据搬到rawData中
+        for (int i = position; i < dataEnd; i++) {//copy command data to rawData
             //icomCommand.rawData[i] = buffer[i];
-            icomCommand.rawData[pos] = buffer[i];//定位错误
+            icomCommand.rawData[pos] = buffer[i];//fixed index bug
             pos++;
         }
         return icomCommand;
@@ -209,10 +209,10 @@ public class XieGu6100Command {
 
 
     /**
-     * 从数据区中计算频率BCD码
+     * Calculate frequency from BCD-encoded data section
      *
-     * @param hasSubCommand 是否含有子命令
-     * @return 返回频率值
+     * @param hasSubCommand whether command contains a sub-command
+     * @return frequency value
      */
     public long getFrequency(boolean hasSubCommand) {
         byte[] data = getData(hasSubCommand);
@@ -220,23 +220,23 @@ public class XieGu6100Command {
         if (data.length < 5) {
             return -1;
         }
-        return (int) (data[0] & 0x0f)//取个位 1hz
-                + ((int) (data[0] >> 4) & 0xf) * 10//取十位 10hz
-                + (int) (data[1] & 0x0f) * 100//百位 100hz
-                + ((int) (data[1] >> 4) & 0xf) * 1000//千位  1khz
-                + (int) (data[2] & 0x0f) * 10000//万位 10khz
-                + ((int) (data[2] >> 4) & 0xf) * 100000//十万位 100khz
-                + (int) (data[3] & 0x0f) * 1000000//百万位 1Mhz
-                + ((int) (data[3] >> 4) & 0xf) * 10000000//千万位 10Mhz
-                + (int) (data[4] & 0x0f) * 100000000//亿位 100Mhz
-                + ((int) (data[4] >> 4) & 0xf) * 100000000;//十亿位 1Ghz
+        return (int) (data[0] & 0x0f)//ones digit 1Hz
+                + ((int) (data[0] >> 4) & 0xf) * 10//tens digit 10Hz
+                + (int) (data[1] & 0x0f) * 100//hundreds 100Hz
+                + ((int) (data[1] >> 4) & 0xf) * 1000//thousands 1kHz
+                + (int) (data[2] & 0x0f) * 10000//ten-thousands 10kHz
+                + ((int) (data[2] >> 4) & 0xf) * 100000//hundred-thousands 100kHz
+                + (int) (data[3] & 0x0f) * 1000000//millions 1MHz
+                + ((int) (data[3] >> 4) & 0xf) * 10000000//ten-millions 10MHz
+                + (int) (data[4] & 0x0f) * 100000000//hundred-millions 100MHz
+                + ((int) (data[4] >> 4) & 0xf) * 100000000;//billions 1GHz
     }
 
 
     /**
-     * 把字节转换成short，不做小端转换！！
+     * Convert bytes to short, without little-endian conversion!!
      *
-     * @param data 字节数据
+     * @param data byte data
      * @return short
      */
     public static short readShortData(byte[] data, int start) {

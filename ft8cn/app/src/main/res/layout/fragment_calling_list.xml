@@ -76,7 +76,7 @@
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="@+id/guideline6"
                 app:layout_constraintTop_toTopOf="parent"
-                tools:text="我的位置" />
+                tools:text="My location" />
 
             <TextView
                 android:id="@+id/timeOffsetTextView"
@@ -89,7 +89,7 @@
                 app:layout_constraintStart_toEndOf="@+id/clearCallingListImageButton"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_bias="1.0"
-                tools:text="平均0.00秒，偏移1.40秒" />
+                tools:text="Avg 0.00s, Offset 1.40s" />
 
             <androidx.constraintlayout.widget.Guideline
                 android:id="@+id/guideline6"
@@ -108,7 +108,7 @@
                 app:layout_constraintEnd_toStartOf="@+id/guideline6"
                 app:layout_constraintStart_toEndOf="@+id/clearCallingListImageButton"
                 app:layout_constraintTop_toBottomOf="@+id/timeOffsetTextView"
-                tools:text="解码用时1.4秒" />
+                tools:text="Decode time 1.4s" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.recyclerview.widget.RecyclerView

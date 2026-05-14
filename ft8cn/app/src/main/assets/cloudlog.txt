@@ -1,9 +1,9 @@
-关于Cloudlog
+About Cloudlog
 
-该功能帮助您在完成通联后即时上传本次QSO到Cloudlog。
+This feature helps you upload your QSO to Cloudlog immediately after completing a contact.
 
-您需要在cloudlog的“API密钥”中获取API KEY，并填写至软件中。
+You need to obtain your API KEY from Cloudlog's "API Keys" section and enter it in the app.
 
-服务器地址需要以http或https开头，例: http://192.168.1.3:1234。
+The server address must start with http or https, for example: http://192.168.1.3:1234.
 
-台站ID可以在cloudlog中的“台站地址”中查看到。
+The Station ID can be found in Cloudlog's "Station Locations" section.

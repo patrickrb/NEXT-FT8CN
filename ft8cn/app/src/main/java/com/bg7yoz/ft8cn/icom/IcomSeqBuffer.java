@@ -1,6 +1,6 @@
 package com.bg7yoz.ft8cn.icom;
 /**
- * ICom指令数据的缓存。
+ * ICom command data buffer.
  * @author BGY70Z
  * @date 2023-03-20
  */
@@ -11,9 +11,9 @@ public class IcomSeqBuffer {
     private long last=System.currentTimeMillis();
 
     public static class SeqBufEntry {
-        public short seq;//序号
-        public byte[] data;//数据
-        public long addedAt;//添加的时间,最多保存10秒钟
+        public short seq;//Sequence number
+        public byte[] data;//Data
+        public long addedAt;//Time added; retained for max 10 seconds
 
         public SeqBufEntry(short seq, byte[] data) {
             this.seq = seq;
@@ -25,24 +25,24 @@ public class IcomSeqBuffer {
     public ArrayList<SeqBufEntry> entries = new ArrayList<>();
 
     /**
-     * 添加指令号缓存
+     * Add command to sequence buffer
      *
-     * @param seq  序号
-     * @param data 指令
+     * @param seq  sequence number
+     * @param data command data
      */
     public synchronized void add(short seq, byte[] data) {
         entries.add(new SeqBufEntry(seq, data));
         last=System.currentTimeMillis();
-        purgeOldEntries();//要删除多余的历史记录
+        purgeOldEntries();//Delete expired history entries
     }
 
     /**
-     * 弹出旧的指令，保证指令在缓存的限定范围内
+     * Purge old commands to keep buffer within limits
      */
     public void purgeOldEntries() {
         if (entries.size() == 0) return;
         long now=System.currentTimeMillis();
-        for (int i = entries.size()-1; i >=0 ; i--) {//删除超过10秒的历史记录
+        for (int i = entries.size()-1; i >=0 ; i--) {//Delete entries older than 10 seconds
             if (now-entries.get(i).addedAt>IComPacketTypes.PURGE_MILLISECONDS){
                 entries.remove(i);
             }
@@ -54,10 +54,10 @@ public class IcomSeqBuffer {
     }
 
     /**
-     * 按序号查找缓存中是否有历史指令
+     * Search buffer for historical command by sequence number
      *
-     * @param seqNum 序号
-     * @return 指令数据，如果没有为NULL。
+     * @param seqNum sequence number
+     * @return command data, or NULL if not found.
      */
     public synchronized byte[] get(int seqNum) {
         int founded = -1;
