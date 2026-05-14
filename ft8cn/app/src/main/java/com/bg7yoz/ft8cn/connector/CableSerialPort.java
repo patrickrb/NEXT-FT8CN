@@ -129,7 +129,7 @@ public class CableSerialPort {
 
     }
 
-    //@RequiresApi(api = Build.VERSION_CODES.S)
+    @SuppressLint("UnspecifiedImmutableFlag")
     public boolean connect() {
         connected = false;
         if (!prepare()) {
@@ -149,12 +149,15 @@ public class CableSerialPort {
 
             //Starting from Android 12, PendingIntent requires explicit mutability flag.
             //FLAG_MUTABLE is needed so the system can attach EXTRA_PERMISSION_GRANTED.
+            //Intent must be explicit (set package) to avoid MutableImplicitPendingIntent crash.
+            Intent permIntent = new Intent(INTENT_ACTION_GRANT_USB);
+            permIntent.setPackage(context.getPackageName());
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                 usbPermissionIntent = PendingIntent.getBroadcast(context, 0
-                        , new Intent(INTENT_ACTION_GRANT_USB), PendingIntent.FLAG_MUTABLE);
+                        , permIntent, PendingIntent.FLAG_MUTABLE);
             } else {
                 usbPermissionIntent = PendingIntent.getBroadcast(context, 0
-                        , new Intent(INTENT_ACTION_GRANT_USB), 0);
+                        , permIntent, 0);
             }
 
 
@@ -262,6 +265,7 @@ public class CableSerialPort {
         }
     }
 
+    @SuppressLint("UnspecifiedRegisterReceiverFlag")
     public void registerRigSerialPort(Context context) {
         Log.d(TAG, "registerRigSerialPort: registered!");
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
