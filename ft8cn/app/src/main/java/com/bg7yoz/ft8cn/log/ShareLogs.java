@@ -97,9 +97,11 @@ public class ShareLogs {
                        break;
                    };
                 }
+                String call = cursor.getString(cursor.getColumnIndex("call"));
+                if (call == null) call = "";
                 fileOutputStream.write(String.format("<call:%d>%s "
-                        , cursor.getString(cursor.getColumnIndex("call")).length()
-                        , cursor.getString(cursor.getColumnIndex("call"))).getBytes());
+                        , call.length()
+                        , call).getBytes());
                 if (!isSWL) {
                     if (cursor.getInt(cursor.getColumnIndex("isLotW_QSL")) == 1) {
                         fileOutputStream.write("<QSL_RCVD:1>Y ".getBytes());

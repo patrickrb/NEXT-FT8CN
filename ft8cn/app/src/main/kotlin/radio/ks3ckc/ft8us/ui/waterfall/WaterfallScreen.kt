@@ -96,7 +96,7 @@ fun WaterfallScreen(mainViewModel: MainViewModel) {
             onTouchUp = { freqHz ->
                 if (freqHz > 0 && !GeneralVariables.synFrequency) {
                     mainViewModel.databaseOpr.writeConfig(
-                        "baseFrequency",
+                        "freq",
                         freqHz.toString(),
                         null,
                     )
@@ -136,7 +136,7 @@ fun WaterfallScreen(mainViewModel: MainViewModel) {
             onTouchUp = { freqHz ->
                 if (freqHz > 0 && !GeneralVariables.synFrequency) {
                     mainViewModel.databaseOpr.writeConfig(
-                        "baseFrequency",
+                        "freq",
                         freqHz.toString(),
                         null,
                     )

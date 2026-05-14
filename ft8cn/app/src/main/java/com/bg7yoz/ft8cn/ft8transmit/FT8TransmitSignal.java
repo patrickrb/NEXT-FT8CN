@@ -51,11 +51,11 @@ public class FT8TransmitSignal {
 
     private int functionOrder = 6;
     public MutableLiveData<Integer> mutableFunctionOrder = new MutableLiveData<>();// command order change
-    private boolean activated = false;// whether in transmit-ready mode
+    private volatile boolean activated = false;// whether in transmit-ready mode
     public MutableLiveData<Boolean> mutableIsActivated = new MutableLiveData<>();
-    public int sequential;// transmit sequence
+    public volatile int sequential;// transmit sequence
     public MutableLiveData<Integer> mutableSequential = new MutableLiveData<>();
-    private boolean isTransmitting = false;
+    private volatile boolean isTransmitting = false;
     public MutableLiveData<Boolean> mutableIsTransmitting = new MutableLiveData<>();// whether currently transmitting
     public MutableLiveData<String> mutableTransmittingMessage = new MutableLiveData<>();// current message content
 

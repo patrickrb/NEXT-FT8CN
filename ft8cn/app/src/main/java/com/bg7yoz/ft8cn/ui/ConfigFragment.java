@@ -422,7 +422,7 @@ public class ConfigFragment extends Fragment {
         setSpinnerOnItemSelected();
 
         // Show scroll arrows
-        new Handler().postDelayed(new Runnable() {
+        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
             @Override
             public void run() {
                 setScrollImageVisible();
@@ -727,7 +727,7 @@ public class ConfigFragment extends Fragment {
      * Set OnItemSelected events for all spinners to prevent duplicate config writes when entering the main view.
      */
     private void setSpinnerOnItemSelected(){
-        new Handler().postDelayed(new Runnable() {
+        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
             @Override
             public void run() {
                 binding.pttDelayOffsetSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -1806,7 +1806,7 @@ public class ConfigFragment extends Fragment {
                                     binding.testCloudlogButton.setText(getResources().getString(R.string.fail));
                                 }
                                 // Clear text
-                                new Handler().postDelayed(new Runnable() {
+                                new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
                                     @Override
                                     public void run() {
                                         binding.testCloudlogButton.setEnabled(true);
@@ -1837,7 +1837,7 @@ public class ConfigFragment extends Fragment {
                                     binding.testQrzButton.setText(getResources().getString(R.string.fail));
                                 }
                                 // Clear text
-                                new Handler().postDelayed(new Runnable() {
+                                new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
                                     @Override
                                     public void run() {
                                         binding.testQrzButton.setEnabled(true);

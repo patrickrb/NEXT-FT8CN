@@ -4,6 +4,7 @@ import static com.bg7yoz.ft8cn.GeneralVariables.QUERY_FREQ_TIMEOUT;
 import static com.bg7yoz.ft8cn.GeneralVariables.START_QUERY_FREQ_DELAY;
 
 import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 
 import com.bg7yoz.ft8cn.GeneralVariables;
@@ -183,7 +184,7 @@ public class KenwoodTS570Rig extends BaseRig {
     }
 
     public KenwoodTS570Rig() {
-        new Handler().postDelayed(new Runnable() {
+        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
             @Override
             public void run() {
                 if (getConnector() != null) {

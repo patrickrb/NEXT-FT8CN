@@ -14,6 +14,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.WindowManager
 import androidx.activity.ComponentActivity
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.compose.setContent
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -59,6 +60,23 @@ class ComposeMainActivity : ComponentActivity() {
         GeneralVariables.getInstance().setMainContext(applicationContext)
         mainViewModel = MainViewModel.getInstance(this)
         ToastMessage.getInstance()
+
+        // Register back press handler for exit confirmation
+        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                android.app.AlertDialog.Builder(this@ComposeMainActivity)
+                    .setMessage(getString(com.bg7yoz.ft8cn.R.string.exit_confirmation))
+                    .setPositiveButton(getString(com.bg7yoz.ft8cn.R.string.exit)) { _, _ ->
+                        mainViewModel.ft8TransmitSignal.isActivated = false
+                        closeApp()
+                    }
+                    .setNegativeButton(getString(com.bg7yoz.ft8cn.R.string.cancel)) { dialog, _ ->
+                        dialog.dismiss()
+                    }
+                    .create()
+                    .show()
+            }
+        })
 
         // Register Bluetooth state broadcast receiver
         registerBluetoothReceiver()
@@ -244,23 +262,6 @@ class ComposeMainActivity : ComponentActivity() {
     override fun onDestroy() {
         unregisterBluetoothReceiver()
         super.onDestroy()
-    }
-
-    @Deprecated("Deprecated in Java")
-    @Suppress("DEPRECATION")
-    override fun onBackPressed() {
-        // Show exit confirmation
-        android.app.AlertDialog.Builder(this)
-            .setMessage("Are you sure you want to exit FT8US?")
-            .setPositiveButton("Exit") { _, _ ->
-                mainViewModel.ft8TransmitSignal.isActivated = false
-                closeApp()
-            }
-            .setNegativeButton("Cancel") { dialog, _ ->
-                dialog.dismiss()
-            }
-            .create()
-            .show()
     }
 
     private fun closeApp() {
