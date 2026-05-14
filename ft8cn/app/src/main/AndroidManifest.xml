@@ -27,24 +27,13 @@
         android:roundIcon="@drawable/ft8cn_icon"
         android:supportsRtl="true"
         android:theme="@style/Theme.Ft8CN">
+        <!-- New Compose-based main activity -->
         <activity
-            android:name=".grid_tracker.GridTrackerMainActivity"
-            android:screenOrientation="sensorLandscape"
-            android:exported="false">
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
-        </activity>
-        <activity
-            android:name=".FAQActivity"
-            android:exported="false" />
-        <activity
-            android:name=".MainActivity"
+            android:name="radio.ks3ckc.ft8us.ComposeMainActivity"
             android:exported="true"
             android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
             <intent-filter>
@@ -53,21 +42,17 @@
             <!-- Associated launch files -->
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
-
                 <category android:name="android.intent.category.DEFAULT" />
-
                 <data android:scheme="file" />
                 <data android:scheme="content" />
                 <data android:pathPattern=".*\\.txt" />
                 <data android:pathPattern=".*\\..*\\.txt" />
                 <data android:pathPattern=".*\\..*\\..*\\.txt" />
                 <data android:pathPattern=".*\\..*\\..*\\..*\\.txt" />
-
                 <data android:pathPattern=".*\\.adi" />
                 <data android:pathPattern=".*\\..*\\.adi" />
                 <data android:pathPattern=".*\\..*\\..*\\.adi" />
                 <data android:pathPattern=".*\\..*\\..*\\..*\\.adi" />
-
                 <data android:mimeType="text/plain" />
                 <data android:mimeType="application/octet-stream" />
                 <data android:mimeType="*/*" />

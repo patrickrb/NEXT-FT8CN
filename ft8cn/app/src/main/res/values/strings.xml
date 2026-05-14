@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">FT8CN</string>
+    <string name="app_name">FT8US</string>
     <string name="nav_menu_title_call_list">Content</string>
     <string name="nav_menu_title_decode_list">Decode</string>
     <string name="nav_menu_title_my_calling">Calling</string>
@@ -38,7 +38,7 @@
     <string name="timeOffset">Time offset</string>
     <string name="help">Help</string>
     <string name="scroll_down">▾</string>
-    <string name="about_me">About FT8CN</string>
+    <string name="about_me">About FT8US</string>
 
     <string name="connectMode">Control</string>
     <string name="VOX">VOX</string>
@@ -52,7 +52,7 @@
     <string name="close">Close</string>
     <string name="rig_name">Rig</string>
     <string name="debug">Debug</string>
-    <string name="logo_image">FT8CN</string>
+    <string name="logo_image">FT8US</string>
     <string name="RTS">RTS</string>
     <string name="FAQ">FAQ</string>
     <string name="launch_supervision">TX watchdog</string>
@@ -85,7 +85,7 @@
     <string name="bluetooth_headset_mode">Enter Bluetooth headset mode</string>>
     <string name="bluetooth_Headset_mode_cancelled">Exit Bluetooth headset mode</string>>
 
-    <string name="version_info">FT8CN Ver %s\nBG7YOZ\n%s</string>>
+    <string name="version_info">FT8US Ver %s\nKS3CKC\n%s</string>>
 
 
     <string name="exit">Exit</string>>
