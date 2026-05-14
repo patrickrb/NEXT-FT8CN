@@ -43,6 +43,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import com.bg7yoz.ft8cn.Ft8Message
+import com.bg7yoz.ft8cn.log.ThirdPartyService
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import androidx.compose.runtime.rememberCoroutineScope
+import kotlinx.coroutines.launch
+import androidx.compose.foundation.layout.width
+import androidx.compose.material3.CircularProgressIndicator
 import com.bg7yoz.ft8cn.GeneralVariables
 import com.bg7yoz.ft8cn.MainViewModel
 import com.bg7yoz.ft8cn.connector.ConnectMode
@@ -102,6 +109,7 @@ fun SettingsScreen(
     var showPttDelay by remember { mutableStateOf(false) }
     var showTxDelay by remember { mutableStateOf(false) }
     var showAbout by remember { mutableStateOf(false) }
+    var showCloudlog by remember { mutableStateOf(false) }
 
     // Operator identity edit state
     var callsignState by remember { mutableStateOf(GeneralVariables.myCallsign.orEmpty()) }
@@ -113,6 +121,7 @@ fun SettingsScreen(
     var pttDelay by remember { mutableIntStateOf(GeneralVariables.pttDelay) }
     var txDelay by remember { mutableIntStateOf(GeneralVariables.transmitDelay) }
     var connectMode by remember { mutableIntStateOf(GeneralVariables.connectMode) }
+    var cloudlogAddress by remember { mutableStateOf(GeneralVariables.cloudlogServerAddress.orEmpty()) }
 
     // Derived display strings
     val callsign = callsignState
@@ -354,6 +363,26 @@ fun SettingsScreen(
         )
     }
 
+    // -- Cloudlog Settings Dialog --
+    if (showCloudlog) {
+        CloudlogSettingsDialog(
+            initialAddress = GeneralVariables.cloudlogServerAddress.orEmpty(),
+            initialApiKey = GeneralVariables.cloudlogApiKey.orEmpty(),
+            initialStationId = GeneralVariables.cloudlogStationID.orEmpty(),
+            onDismiss = { showCloudlog = false },
+            onSave = { address, apiKey, stationId ->
+                GeneralVariables.cloudlogServerAddress = address
+                GeneralVariables.cloudlogApiKey = apiKey
+                GeneralVariables.cloudlogStationID = stationId
+                cloudlogAddress = address
+                mainViewModel.databaseOpr.writeConfig("cloudlogServerAddress", address, null)
+                mainViewModel.databaseOpr.writeConfig("cloudlogApiKey", apiKey, null)
+                mainViewModel.databaseOpr.writeConfig("cloudlogStationID", stationId, null)
+                showCloudlog = false
+            },
+        )
+    }
+
     // =====================================================================
     // SCREEN CONTENT
     // =====================================================================
@@ -537,6 +566,7 @@ fun SettingsScreen(
                         SettingsRow(
                             label = "Cloudlog",
                             description = "Auto-upload QSOs to a Cloudlog instance",
+                            value = cloudlogAddress.ifEmpty { "Not configured" },
                             toggle = enableCloudlog,
                             onToggleChange = { checked ->
                                 enableCloudlog = checked
@@ -545,6 +575,8 @@ fun SettingsScreen(
                                     "enableCloudlog", if (checked) "1" else "0", null,
                                 )
                             },
+                            showChevron = true,
+                            onClick = { showCloudlog = true },
                         )
                     }
                 }
@@ -721,6 +753,168 @@ private fun EditOperatorDialog(
                 }
                 TextButton(
                     onClick = { onSave(callsignInput.text, gridInput.text) },
+                ) {
+                    Text("Save", color = Accent, fontWeight = FontWeight.SemiBold)
+                }
+            }
+        }
+    }
+}
+
+/**
+ * Dialog for configuring Cloudlog server address, API key, and station ID.
+ * Includes a Test Connection button that calls [ThirdPartyService.CheckCloudlogConnection].
+ */
+@Composable
+private fun CloudlogSettingsDialog(
+    initialAddress: String,
+    initialApiKey: String,
+    initialStationId: String,
+    onDismiss: () -> Unit,
+    onSave: (address: String, apiKey: String, stationId: String) -> Unit,
+) {
+    var addressInput by remember { mutableStateOf(TextFieldValue(initialAddress)) }
+    var apiKeyInput by remember { mutableStateOf(TextFieldValue(initialApiKey)) }
+    var stationIdInput by remember { mutableStateOf(TextFieldValue(initialStationId)) }
+
+    // Test connection state: null = idle, true = pass, false = fail
+    var testResult by remember { mutableStateOf<Boolean?>(null) }
+    var isTesting by remember { mutableStateOf(false) }
+    val scope = rememberCoroutineScope()
+
+    val fieldColors = OutlinedTextFieldDefaults.colors(
+        focusedTextColor = TextPrimary,
+        unfocusedTextColor = TextPrimary,
+        cursorColor = Accent,
+        focusedBorderColor = Accent,
+        unfocusedBorderColor = BorderStrong,
+        focusedLabelColor = Accent,
+        unfocusedLabelColor = TextMuted,
+    )
+
+    Dialog(onDismissRequest = onDismiss) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clip(RoundedCornerShape(16.dp))
+                .background(BgSurface2)
+                .padding(24.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp),
+        ) {
+            Text(
+                text = "Cloudlog Settings",
+                color = TextPrimary,
+                fontWeight = FontWeight.SemiBold,
+                fontSize = 18.sp,
+            )
+
+            OutlinedTextField(
+                value = addressInput,
+                onValueChange = {
+                    addressInput = it
+                    testResult = null
+                },
+                label = { Text("Server Address") },
+                placeholder = { Text("https://log.example.com/", color = TextFaint) },
+                singleLine = true,
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Uri),
+                colors = fieldColors,
+                textStyle = TextStyle(fontSize = 14.sp),
+                modifier = Modifier.fillMaxWidth(),
+            )
+
+            OutlinedTextField(
+                value = apiKeyInput,
+                onValueChange = {
+                    apiKeyInput = it
+                    testResult = null
+                },
+                label = { Text("API Key") },
+                placeholder = { Text("Your Cloudlog API key", color = TextFaint) },
+                singleLine = true,
+                colors = fieldColors,
+                textStyle = TextStyle(fontSize = 14.sp),
+                modifier = Modifier.fillMaxWidth(),
+            )
+
+            OutlinedTextField(
+                value = stationIdInput,
+                onValueChange = {
+                    stationIdInput = it
+                    testResult = null
+                },
+                label = { Text("Station ID") },
+                placeholder = { Text("e.g. 1", color = TextFaint) },
+                singleLine = true,
+                colors = fieldColors,
+                textStyle = TextStyle(fontSize = 14.sp),
+                modifier = Modifier.fillMaxWidth(),
+            )
+
+            // Test Connection button
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(12.dp),
+            ) {
+                TextButton(
+                    onClick = {
+                        // Write current input values to GeneralVariables so the test uses them
+                        GeneralVariables.cloudlogServerAddress = addressInput.text
+                        GeneralVariables.cloudlogApiKey = apiKeyInput.text
+                        GeneralVariables.cloudlogStationID = stationIdInput.text
+                        isTesting = true
+                        testResult = null
+                        scope.launch {
+                            val result = withContext(Dispatchers.IO) {
+                                ThirdPartyService.CheckCloudlogConnection()
+                            }
+                            testResult = result
+                            isTesting = false
+                        }
+                    },
+                    enabled = !isTesting,
+                ) {
+                    Text(
+                        text = "Test Connection",
+                        color = if (isTesting) TextFaint else Accent,
+                        fontWeight = FontWeight.SemiBold,
+                    )
+                }
+                if (isTesting) {
+                    CircularProgressIndicator(
+                        modifier = Modifier
+                            .width(16.dp)
+                            .height(16.dp),
+                        strokeWidth = 2.dp,
+                        color = Accent,
+                    )
+                }
+                if (testResult != null) {
+                    Text(
+                        text = if (testResult == true) "Pass" else "Fail",
+                        color = if (testResult == true) StatusConfirmed else StatusBad,
+                        fontWeight = FontWeight.SemiBold,
+                        fontSize = 14.sp,
+                    )
+                }
+            }
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.End,
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                TextButton(onClick = onDismiss) {
+                    Text("Cancel", color = TextMuted)
+                }
+                TextButton(
+                    onClick = {
+                        onSave(
+                            addressInput.text.trim(),
+                            apiKeyInput.text.trim(),
+                            stationIdInput.text.trim(),
+                        )
+                    },
                 ) {
                     Text("Save", color = Accent, fontWeight = FontWeight.SemiBold)
                 }
