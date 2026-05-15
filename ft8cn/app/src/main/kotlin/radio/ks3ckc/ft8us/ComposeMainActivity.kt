@@ -107,15 +107,6 @@ class ComposeMainActivity : ComponentActivity() {
             },
         )
 
-        // List USB devices
-        mainViewModel.getUsbDevice()
-
-        // Delayed audio reinit: handles USB audio device already physically connected
-        // but not ready during ViewModel construction
-        Handler(Looper.getMainLooper()).postDelayed({
-            mainViewModel.reinitializeAudioInput()
-        }, 2000)
-
         // Handle shared file import if needed
         if (mainViewModel.mutableImportShareRunning.value == true) {
             // Import is already running; UI will show progress
@@ -179,6 +170,17 @@ class ComposeMainActivity : ComponentActivity() {
                     mainViewModel.databaseOpr.writeConfig("grid", grid, null)
                 }
                 mainViewModel.ft8TransmitSignal.setTimer_sec(GeneralVariables.transmitDelay)
+
+                // Scan for USB devices AFTER config is loaded so that controlMode,
+                // instructionSet, baudRate, civAddress, audioInputDeviceId etc.
+                // are all populated before auto-connect fires.
+                mainViewModel.getUsbDevice()
+
+                // Delayed audio reinit: handles USB audio device already physically
+                // connected but not ready during ViewModel construction
+                Handler(Looper.getMainLooper()).postDelayed({
+                    mainViewModel.reinitializeAudioInput()
+                }, 2000)
             }
         })
 
@@ -289,19 +291,17 @@ class ComposeMainActivity : ComponentActivity() {
 
     /**
      * Auto-connect to USB serial rig when ports are detected, rig isn't already connected,
-     * and connect mode is USB Cable. If exactly one port is found, connect automatically.
+     * and connect mode is USB Cable with a non-VOX control mode.
+     * Connects to the first detected port (most radios expose CAT as the first port).
      */
     private fun autoConnectUsbIfNeeded(ports: ArrayList<CableSerialPort.SerialPort>?) {
         if (ports.isNullOrEmpty()) return
         if (mainViewModel.isRigConnected()) return
         if (GeneralVariables.connectMode != ConnectMode.USB_CABLE) return
+        if (!mainViewModel.configIsLoaded) return
 
-        if (ports.size == 1) {
-            Log.d(TAG, "Auto-connecting to single USB serial port")
-            mainViewModel.connectCableRig(applicationContext, ports[0])
-        } else {
-            Log.d(TAG, "Multiple USB serial ports detected (${ports.size}), waiting for user selection")
-        }
+        Log.d(TAG, "Auto-connecting to USB serial port (${ports.size} port(s) detected)")
+        mainViewModel.connectCableRig(applicationContext, ports[0])
     }
 
     private fun closeApp() {
