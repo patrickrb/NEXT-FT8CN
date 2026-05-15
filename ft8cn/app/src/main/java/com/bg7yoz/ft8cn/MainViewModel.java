@@ -25,11 +25,18 @@ package com.bg7yoz.ft8cn;
 import static com.bg7yoz.ft8cn.GeneralVariables.getStringFromResource;
 
 import android.annotation.SuppressLint;
+import android.app.PendingIntent;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothProfile;
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.hardware.usb.UsbDevice;
+import android.hardware.usb.UsbManager;
 import android.media.AudioManager;
+import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
@@ -1101,6 +1108,58 @@ public class MainViewModel extends ViewModel {
                 baseRig.sendWaveData(message);//actual generated data is 12.64+0.04 seconds; 0.04 is zero-padded data
             }
         }
+    }
+
+    private static final String ACTION_USB_AUDIO_PERMISSION =
+            "com.bg7yoz.ft8cn.USB_AUDIO_PERMISSION";
+
+    /**
+     * Request USB audio device permission if not already granted.
+     * Mirrors ConfigFragment.requestUsbPermissionIfNeeded().
+     */
+    public void requestUsbPermissionIfNeeded(UsbDevice device) {
+        if (device == null) return;
+        Context context = GeneralVariables.getMainContext();
+        if (context == null) return;
+        UsbManager usbManager = (UsbManager) context.getSystemService(Context.USB_SERVICE);
+        if (usbManager == null) return;
+
+        if (usbManager.hasPermission(device)) {
+            Log.d(TAG, "USB audio device already has permission");
+            return;
+        }
+
+        Log.d(TAG, "Requesting USB permission for audio device: " + device.getProductName());
+        PendingIntent permissionIntent;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            permissionIntent = PendingIntent.getBroadcast(context, 0,
+                    new Intent(ACTION_USB_AUDIO_PERMISSION), PendingIntent.FLAG_MUTABLE);
+        } else {
+            permissionIntent = PendingIntent.getBroadcast(context, 0,
+                    new Intent(ACTION_USB_AUDIO_PERMISSION), PendingIntent.FLAG_IMMUTABLE);
+        }
+
+        BroadcastReceiver permReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context ctx, Intent intent) {
+                if (ACTION_USB_AUDIO_PERMISSION.equals(intent.getAction())) {
+                    boolean granted = intent.getBooleanExtra(
+                            UsbManager.EXTRA_PERMISSION_GRANTED, false);
+                    Log.d(TAG, "USB audio permission " + (granted ? "granted" : "denied"));
+                    try { ctx.unregisterReceiver(this); } catch (Exception ignored) {}
+                }
+            }
+        };
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            context.registerReceiver(permReceiver,
+                    new IntentFilter(ACTION_USB_AUDIO_PERMISSION),
+                    Context.RECEIVER_NOT_EXPORTED);
+        } else {
+            context.registerReceiver(permReceiver,
+                    new IntentFilter(ACTION_USB_AUDIO_PERMISSION));
+        }
+        usbManager.requestPermission(device, permissionIntent);
     }
 
 }
