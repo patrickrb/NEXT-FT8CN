@@ -124,6 +124,7 @@ fun SettingsScreen(
     var showAudioInputPicker by remember { mutableStateOf(false) }
     var showAudioOutputPicker by remember { mutableStateOf(false) }
     var showBaudRatePicker by remember { mutableStateOf(false) }
+    var showTxVolume by remember { mutableStateOf(false) }
 
     // Operator identity edit state
     var callsignState by remember { mutableStateOf(GeneralVariables.myCallsign.orEmpty()) }
@@ -140,6 +141,16 @@ fun SettingsScreen(
     var modelNo by remember { mutableIntStateOf(GeneralVariables.modelNo) }
     var baudRate by remember { mutableIntStateOf(GeneralVariables.baudRate) }
     var spectrumWidth by remember { mutableIntStateOf(GeneralVariables.getSpectrumWidth()) }
+
+    // TX Volume state – observe LiveData so hardware button changes update the UI
+    val volumeLive by GeneralVariables.mutableVolumePercent.observeAsState(
+        GeneralVariables.volumePercent,
+    )
+    var txVolume by remember { mutableIntStateOf((GeneralVariables.volumePercent * 100).toInt()) }
+    // Keep txVolume in sync when hardware buttons (or other sources) update the LiveData
+    LaunchedEffect(volumeLive) {
+        txVolume = ((volumeLive ?: GeneralVariables.volumePercent) * 100).toInt()
+    }
 
     // Derived display strings
     val callsign = callsignState
@@ -407,6 +418,27 @@ fun SettingsScreen(
                 mainViewModel.databaseOpr.writeConfig(
                     "noReplyLimit", index.toString(), null,
                 )
+            },
+        )
+    }
+
+    // -- TX Volume Editor --
+    if (showTxVolume) {
+        NumberInputDialog(
+            title = "TX Volume",
+            suffix = "%",
+            initialValue = txVolume,
+            min = 0,
+            max = 100,
+            onDismiss = { showTxVolume = false },
+            onSave = { value ->
+                showTxVolume = false
+                val clamped = value.coerceIn(0, 100)
+                txVolume = clamped
+                GeneralVariables.volumePercent = clamped / 100f
+                GeneralVariables.mutableVolumePercent.postValue(clamped / 100f)
+                mainViewModel.databaseOpr.writeConfig("volumeValue", clamped.toString(), null)
+                mainViewModel.baseRig?.connector?.setRFVolume(clamped)
             },
         )
     }
@@ -795,6 +827,14 @@ fun SettingsScreen(
                             else "$noReplyLimit tries",
                             showChevron = true,
                             onClick = { showStopAfter = true },
+                        )
+                        SectionDivider()
+                        SettingsRow(
+                            label = "TX Volume",
+                            description = "Transmit audio level (hardware buttons ±5%)",
+                            value = "$txVolume%",
+                            showChevron = true,
+                            onClick = { showTxVolume = true },
                         )
                     }
                 }
