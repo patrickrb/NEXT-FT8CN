@@ -51,6 +51,7 @@ import radio.ks3ckc.ft8us.ui.components.TopBar
 private class ViewHolder {
     @Volatile var columnar: ColumnarView? = null
     @Volatile var waterfall: WaterfallView? = null
+    var frequencyLineTimeout: Int = 0 // plain field, only accessed from main thread
 }
 
 /**
@@ -65,7 +66,7 @@ private class ViewHolder {
 @Composable
 fun WaterfallScreen(mainViewModel: MainViewModel) {
     var touchedFreqHz by remember { mutableIntStateOf(-1) }
-    var frequencyLineTimeout by remember { mutableIntStateOf(0) }
+    var updateCount by remember { mutableIntStateOf(0) }
 
     val isDecoding by mainViewModel.mutableIsDecoding.observeAsState(false)
     var deNoise by remember { mutableStateOf(mainViewModel.deNoise) }
@@ -80,14 +81,16 @@ fun WaterfallScreen(mainViewModel: MainViewModel) {
     //   spectrumListener.mutableDataBuffer.observe(...) { drawSpectrum(it) }
     DisposableEffect(Unit) {
         val observer = Observer<FloatArray> { data ->
-            // Runs on MAIN THREAD (LiveData dispatches postValue via Handler)
+            // Runs on MAIN THREAD (setValue dispatched via Handler.post)
+            updateCount++
             val fft = IntArray(data.size / 2)
             nativeFFT(data, fft, mainViewModel.deNoise)
 
             viewHolder.columnar?.let { cView ->
-                frequencyLineTimeout--
-                if (frequencyLineTimeout < 0) frequencyLineTimeout = 0
-                if (frequencyLineTimeout == 0) {
+                if (viewHolder.frequencyLineTimeout > 0) {
+                    viewHolder.frequencyLineTimeout--
+                }
+                if (viewHolder.frequencyLineTimeout == 0) {
                     cView.setTouch_x(-1)
                     viewHolder.waterfall?.setTouch_x(-1)
                     touchedFreqHz = -1
@@ -137,7 +140,7 @@ fun WaterfallScreen(mainViewModel: MainViewModel) {
             onViewCreated = { viewHolder.columnar = it },
             onTouch = { freqHz, _ ->
                 touchedFreqHz = freqHz
-                frequencyLineTimeout = 60
+                viewHolder.frequencyLineTimeout = 60
             },
             onTouchUp = { freqHz ->
                 if (freqHz > 0 && !GeneralVariables.synFrequency) {
@@ -164,7 +167,7 @@ fun WaterfallScreen(mainViewModel: MainViewModel) {
             onViewCreated = { viewHolder.waterfall = it },
             onTouch = { freqHz, _ ->
                 touchedFreqHz = freqHz
-                frequencyLineTimeout = 60
+                viewHolder.frequencyLineTimeout = 60
             },
             onTouchUp = { freqHz ->
                 if (freqHz > 0 && !GeneralVariables.synFrequency) {
@@ -215,6 +218,15 @@ fun WaterfallScreen(mainViewModel: MainViewModel) {
             )
 
             Spacer(modifier = Modifier.weight(1f))
+
+            Text(
+                text = "$updateCount",
+                color = TextDim,
+                fontFamily = GeistMonoFamily,
+                fontSize = 9.sp,
+            )
+
+            Spacer(modifier = Modifier.width(6.dp))
 
             Text(
                 text = "LIVE",
