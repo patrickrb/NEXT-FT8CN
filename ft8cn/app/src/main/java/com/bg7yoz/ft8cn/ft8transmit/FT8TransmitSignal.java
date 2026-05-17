@@ -1026,6 +1026,14 @@ public class FT8TransmitSignal {
         return false;
     }
 
+    /**
+     * Get the target callsign string for UI display.
+     * @return callsign string or null if no target
+     */
+    public String getToCallsignString() {
+        return toCallsign != null ? toCallsign.callsign : null;
+    }
+
     public boolean isSynFrequency() {
         return GeneralVariables.synFrequency;
     }
