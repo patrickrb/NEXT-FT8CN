@@ -126,8 +126,11 @@ public class Yaesu39Rig extends BaseRig {
             if (isDataUsb) {//use DATA-USB mode
                 getConnector().sendData(Yaesu3RigConstant.setOperationUSB_Data_Mode());
                 getConnector().sendData(Yaesu3RigConstant.setMaxDataWidth());
+                fileLog("setUsbModeToRig: mode=DATA-USB, sent NA00;SH0117 (3000Hz)");
             } else {
                 getConnector().sendData(Yaesu3RigConstant.setOperationUSBMode());
+                getConnector().sendData(Yaesu3RigConstant.setMaxSsbWidth());
+                fileLog("setUsbModeToRig: mode=USB, sent NA00;SH0120 (3000Hz)");
             }
         }
     }
