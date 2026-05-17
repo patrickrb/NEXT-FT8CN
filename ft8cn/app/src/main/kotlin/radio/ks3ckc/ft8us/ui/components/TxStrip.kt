@@ -158,7 +158,10 @@ private fun PulseDot(color: Color) {
         label = "pulseSize",
     )
 
-    Box(contentAlignment = Alignment.Center) {
+    Box(
+        modifier = Modifier.size(22.dp),
+        contentAlignment = Alignment.Center,
+    ) {
         // Pulse ring
         Box(
             modifier = Modifier
