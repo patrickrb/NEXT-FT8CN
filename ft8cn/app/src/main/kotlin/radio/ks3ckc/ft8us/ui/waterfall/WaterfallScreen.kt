@@ -25,8 +25,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalLifecycleOwner
-import androidx.lifecycle.Observer
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -49,6 +47,13 @@ import radio.ks3ckc.ft8us.ui.components.TopBar
  * Waterfall screen wrapping the existing Java WaterfallView and ColumnarView
  * via AndroidView. This preserves the optimized bitmap scrolling and JNI FFT
  * rendering while providing a Compose-native chrome around it.
+ *
+ * Audio data is fed to the views via a direct VoiceDataMonitor callback
+ * registered with HamRecorder, bypassing LiveData and Compose state. This
+ * mirrors how the old SpectrumFragment's LiveData observer directly called
+ * drawSpectrum(). Going through Compose state doesn't work reliably because
+ * VoiceDataMonitor reuses the same float[] buffer and Compose's equality
+ * checks can silently suppress updates.
  */
 @Composable
 fun WaterfallScreen(mainViewModel: MainViewModel) {
@@ -56,29 +61,48 @@ fun WaterfallScreen(mainViewModel: MainViewModel) {
     var touchedFreqHz by remember { mutableIntStateOf(-1) }
     var frequencyLineTimeout by remember { mutableIntStateOf(0) }
 
-    // Observe spectrum data from the recorder.
-    // VoiceDataMonitor reuses the same float[] buffer, so LiveData posts the same
-    // reference each cycle. Compose's observeAsState() uses reference equality for
-    // FloatArray and would skip recomposition. We manually observe and copyOf() to
-    // ensure a new reference triggers recomposition every time.
-    var spectrumData by remember { mutableStateOf<FloatArray?>(null) }
-    val lifecycleOwner = LocalLifecycleOwner.current
-    DisposableEffect(lifecycleOwner) {
-        val observer = Observer<FloatArray> { data ->
-            spectrumData = data.copyOf()
-        }
-        mainViewModel.spectrumListener.mutableDataBuffer.observe(lifecycleOwner, observer)
-        onDispose {
-            mainViewModel.spectrumListener.mutableDataBuffer.removeObserver(observer)
-        }
-    }
-
     // Observe decode state to control message overlay
     val isDecoding by mainViewModel.mutableIsDecoding.observeAsState(false)
 
     // Noise suppression and message display toggles
     var deNoise by remember { mutableStateOf(mainViewModel.deNoise) }
     var showMessages by remember { mutableStateOf(mainViewModel.markMessage) }
+
+    // View references — set by factory callbacks, read by the audio monitor
+    var columnarViewRef by remember { mutableStateOf<ColumnarView?>(null) }
+    var waterfallViewRef by remember { mutableStateOf<WaterfallView?>(null) }
+
+    // Register a direct VoiceDataMonitor with HamRecorder. The callback runs on
+    // the recording thread, computes FFT, then posts view updates to the main
+    // thread via view.post {}. This is the same pattern the old SpectrumFragment
+    // used (LiveData observer → drawSpectrum) but without LiveData in the middle.
+    DisposableEffect(Unit) {
+        mainViewModel.hamRecorder?.getVoiceData(160, false) { data ->
+            val audioCopy = data.copyOf()
+            val fft = IntArray(audioCopy.size / 2)
+            nativeFFT(audioCopy, fft, mainViewModel.deNoise)
+
+            columnarViewRef?.post {
+                val cView = columnarViewRef ?: return@post
+                cView.setWaveData(fft)
+                cView.invalidate()
+            }
+
+            waterfallViewRef?.post {
+                val wView = waterfallViewRef ?: return@post
+                val currentlyDecoding = mainViewModel.mutableIsDecoding.value ?: false
+                wView.setDrawMessage(mainViewModel.markMessage && !currentlyDecoding)
+                val messages = if (mainViewModel.markMessage) mainViewModel.currentMessages else null
+                wView.setWaveData(fft, UtcTimer.getNowSequential(), messages)
+                wView.invalidate()
+            }
+        }
+        onDispose {
+            // Null out view refs so the callback becomes a no-op
+            columnarViewRef = null
+            waterfallViewRef = null
+        }
+    }
 
     Column(
         modifier = Modifier
@@ -104,30 +128,17 @@ fun WaterfallScreen(mainViewModel: MainViewModel) {
 
         // Spectrum strip (columnar view) — live bar chart
         ColumnarStrip(
-            mainViewModel = mainViewModel,
-            spectrumData = spectrumData,
-            deNoise = deNoise,
-            touchedFreqHz = touchedFreqHz,
-            frequencyLineTimeout = frequencyLineTimeout,
-            onTouch = { freqHz, x ->
+            onViewCreated = { columnarViewRef = it },
+            onTouch = { freqHz, _ ->
                 touchedFreqHz = freqHz
                 frequencyLineTimeout = 60
             },
             onTouchUp = { freqHz ->
                 if (freqHz > 0 && !GeneralVariables.synFrequency) {
-                    mainViewModel.databaseOpr.writeConfig(
-                        "freq",
-                        freqHz.toString(),
-                        null,
-                    )
+                    mainViewModel.databaseOpr.writeConfig("freq", freqHz.toString(), null)
                     GeneralVariables.setBaseFrequency(freqHz.toFloat())
                 }
             },
-            onFrequencyTimeout = {
-                touchedFreqHz = -1
-                frequencyLineTimeout = 0
-            },
-            onTimeoutTick = { frequencyLineTimeout = it },
             modifier = Modifier
                 .fillMaxWidth()
                 .height(56.dp),
@@ -143,31 +154,19 @@ fun WaterfallScreen(mainViewModel: MainViewModel) {
 
         // Main waterfall display
         WaterfallCanvas(
-            mainViewModel = mainViewModel,
-            spectrumData = spectrumData,
-            isDecoding = isDecoding,
             showMessages = showMessages,
-            touchedFreqHz = touchedFreqHz,
-            frequencyLineTimeout = frequencyLineTimeout,
-            onTouch = { freqHz, x ->
+            isDecoding = isDecoding,
+            onViewCreated = { waterfallViewRef = it },
+            onTouch = { freqHz, _ ->
                 touchedFreqHz = freqHz
                 frequencyLineTimeout = 60
             },
             onTouchUp = { freqHz ->
                 if (freqHz > 0 && !GeneralVariables.synFrequency) {
-                    mainViewModel.databaseOpr.writeConfig(
-                        "freq",
-                        freqHz.toString(),
-                        null,
-                    )
+                    mainViewModel.databaseOpr.writeConfig("freq", freqHz.toString(), null)
                     GeneralVariables.setBaseFrequency(freqHz.toFloat())
                 }
             },
-            onFrequencyTimeout = {
-                touchedFreqHz = -1
-                frequencyLineTimeout = 0
-            },
-            onTimeoutTick = { frequencyLineTimeout = it },
             modifier = Modifier
                 .weight(1f)
                 .fillMaxWidth(),
@@ -234,19 +233,11 @@ fun WaterfallScreen(mainViewModel: MainViewModel) {
 @SuppressLint("ClickableViewAccessibility")
 @Composable
 private fun ColumnarStrip(
-    mainViewModel: MainViewModel,
-    spectrumData: FloatArray?,
-    deNoise: Boolean,
-    touchedFreqHz: Int,
-    frequencyLineTimeout: Int,
+    onViewCreated: (ColumnarView) -> Unit,
     onTouch: (freqHz: Int, x: Int) -> Unit,
     onTouchUp: (freqHz: Int) -> Unit,
-    onFrequencyTimeout: () -> Unit,
-    onTimeoutTick: (Int) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    var columnarViewRef by remember { mutableStateOf<ColumnarView?>(null) }
-
     AndroidView(
         factory = { context ->
             ColumnarView(context).apply {
@@ -272,43 +263,11 @@ private fun ColumnarStrip(
                     true
                 }
 
-                columnarViewRef = this
-            }
-        },
-        update = { view ->
-            spectrumData?.let { data ->
-                val fft = IntArray(data.size / 2)
-                nativeFFT(data, fft, deNoise)
-
-                var timeout = frequencyLineTimeout - 1
-                if (timeout < 0) timeout = 0
-                onTimeoutTick(timeout)
-                if (timeout == 0) {
-                    view.setTouch_x(-1)
-                    onFrequencyTimeout()
-                }
-
-                view.setWaveData(fft)
-                view.invalidate()
+                onViewCreated(this)
             }
         },
         modifier = modifier,
     )
-
-    DisposableEffect(Unit) {
-        onDispose {
-            columnarViewRef = null
-        }
-    }
-}
-
-private fun wfLog(msg: String) {
-    try {
-        val ctx = GeneralVariables.getMainContext() ?: return
-        val dir = ctx.getExternalFilesDir(null) ?: return
-        val ts = SimpleDateFormat("HH:mm:ss.SSS", Locale.US).format(Date())
-        File(dir, "debug.log").appendText("$ts $msg\n")
-    } catch (_: Exception) {}
 }
 
 // ---------------------------------------------------------------------------
@@ -318,20 +277,13 @@ private fun wfLog(msg: String) {
 @SuppressLint("ClickableViewAccessibility")
 @Composable
 private fun WaterfallCanvas(
-    mainViewModel: MainViewModel,
-    spectrumData: FloatArray?,
-    isDecoding: Boolean,
     showMessages: Boolean,
-    touchedFreqHz: Int,
-    frequencyLineTimeout: Int,
+    isDecoding: Boolean,
+    onViewCreated: (WaterfallView) -> Unit,
     onTouch: (freqHz: Int, x: Int) -> Unit,
     onTouchUp: (freqHz: Int) -> Unit,
-    onFrequencyTimeout: () -> Unit,
-    onTimeoutTick: (Int) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    var waterfallViewRef by remember { mutableStateOf<WaterfallView?>(null) }
-
     AndroidView(
         factory = { context ->
             WaterfallView(context).apply {
@@ -357,30 +309,14 @@ private fun WaterfallCanvas(
                     true
                 }
 
-                waterfallViewRef = this
+                onViewCreated(this)
             }
         },
         update = { view ->
             view.setDrawMessage(showMessages && !isDecoding)
-
-            val sd = spectrumData
-            if (sd != null) {
-                val fft = IntArray(sd.size / 2)
-                nativeFFT(sd, fft, mainViewModel.deNoise)
-
-                val messages = if (showMessages) mainViewModel.currentMessages else null
-                view.setWaveData(fft, UtcTimer.getNowSequential(), messages)
-                view.invalidate()
-            }
         },
         modifier = modifier,
     )
-
-    DisposableEffect(Unit) {
-        onDispose {
-            waterfallViewRef = null
-        }
-    }
 }
 
 // ---------------------------------------------------------------------------
@@ -437,6 +373,15 @@ private fun ToggleChip(
 // ---------------------------------------------------------------------------
 // Native FFT bridge — delegates to SpectrumFragment's JNI methods
 // ---------------------------------------------------------------------------
+
+private fun wfLog(msg: String) {
+    try {
+        val ctx = GeneralVariables.getMainContext() ?: return
+        val dir = ctx.getExternalFilesDir(null) ?: return
+        val ts = SimpleDateFormat("HH:mm:ss.SSS", Locale.US).format(Date())
+        File(dir, "debug.log").appendText("$ts $msg\n")
+    } catch (_: Exception) {}
+}
 
 /**
  * Singleton FFT bridge. The native methods are bound to SpectrumFragment's
