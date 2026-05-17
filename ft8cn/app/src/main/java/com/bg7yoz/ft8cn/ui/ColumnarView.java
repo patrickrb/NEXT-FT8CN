@@ -24,6 +24,8 @@ import java.util.List;
  */
 public class ColumnarView extends View {
     private static final String TAG = "ColumnarView";
+    private static final float FT8_SIGNAL_BANDWIDTH_HZ = 50f;
+
     // Width of each bar
     private int width;
     // Spacing between each bar
@@ -40,12 +42,19 @@ public class ColumnarView extends View {
     private final List<Rect> newData = new ArrayList<>();
     private final List<Rect> blockData = new ArrayList<>();
 
+    private int spectrumWidth = 3500;//Spectrum display width in Hz
+
     private Bitmap lastBitMap=null;
     private Canvas _canvas;
     private Paint linePaint;
     private int touch_x = -1;
     private Paint touchPaint;
     private int freq_hz=-1;
+
+    // TX frequency marker overlay
+    private float txFrequency = -1f;
+    private boolean txActive = false;
+    private final Paint txMarkerPaint = new Paint();
 
     public void setBlockSpeed(int blockSpeed) {
         this.blockSpeed = blockSpeed;
@@ -132,6 +141,9 @@ public class ColumnarView extends View {
         touchPaint = new Paint();
         touchPaint.setColor(0xff00ffff);
         touchPaint.setStrokeWidth(2);
+
+        txMarkerPaint.setStrokeWidth(1.5f * getResources().getDisplayMetrics().density);
+        txMarkerPaint.setStyle(Paint.Style.STROKE);
     }
 
     @Override
@@ -149,9 +161,21 @@ public class ColumnarView extends View {
         canvas.drawBitmap(lastBitMap,0,0,null);
         if (touch_x>0) {
             // Calculate frequency
-            freq_hz = Math.round(3000f * (float) touch_x / (float) getWidth());
+            freq_hz = Math.round((float) spectrumWidth * (float) touch_x / (float) getWidth());
             canvas.drawLine(touch_x, 0, touch_x, getHeight(), touchPaint);
         }
+
+        // Draw TX frequency marker lines
+        if (txFrequency > 0 && getWidth() > 0) {
+            txMarkerPaint.setColor(0xFFEF4444);
+            float freqWidth = (float) getWidth() / spectrumWidth;
+            float halfBw = FT8_SIGNAL_BANDWIDTH_HZ / 2f;
+            float x1 = (txFrequency - halfBw) * freqWidth;
+            float x2 = (txFrequency + halfBw) * freqWidth;
+            canvas.drawLine(x1, 0, x1, getHeight(), txMarkerPaint);
+            canvas.drawLine(x2, 0, x2, getHeight(), txMarkerPaint);
+        }
+
         // Do NOT call invalidate() here — the view is invalidated externally
         // when new data arrives. Self-invalidation causes layout thrashing
         // in Compose's AndroidView.
@@ -162,5 +186,17 @@ public class ColumnarView extends View {
 
     public int getFreq_hz() {
         return freq_hz;
+    }
+
+    public void setTxFrequency(float freq) {
+        this.txFrequency = freq;
+    }
+
+    public void setTxActive(boolean active) {
+        this.txActive = active;
+    }
+
+    public void setSpectrumWidth(int width) {
+        this.spectrumWidth = width;
     }
 }

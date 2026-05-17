@@ -180,6 +180,10 @@ public class GeneralVariables {
     public static boolean alc_switch_on = true;//ALC alarm switch
 
     public static MutableLiveData<Float> mutableBaseFrequency = new MutableLiveData<>();
+
+    private static int spectrumWidth = 3500;//Spectrum display width in Hz
+    public static MutableLiveData<Integer> mutableSpectrumWidth = new MutableLiveData<>();
+
     public static String cloudlogServerAddress = "";//Cloudlog server address
     public static String cloudlogApiKey = "";//Cloudlog API key
     public static String cloudlogStationID = "";//Cloudlog station ID
@@ -237,6 +241,15 @@ public class GeneralVariables {
     public static void setBaseFrequency(float baseFrequency) {
         mutableBaseFrequency.postValue(baseFrequency);
         GeneralVariables.baseFrequency = baseFrequency;
+    }
+
+    public static int getSpectrumWidth() {
+        return spectrumWidth;
+    }
+
+    public static void setSpectrumWidth(int width) {
+        mutableSpectrumWidth.postValue(width);
+        GeneralVariables.spectrumWidth = width;
     }
 
     public static String getCloudlogServerAddress() {

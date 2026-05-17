@@ -69,6 +69,9 @@ fun WaterfallScreen(mainViewModel: MainViewModel) {
     var updateCount by remember { mutableIntStateOf(0) }
 
     val isDecoding by mainViewModel.mutableIsDecoding.observeAsState(false)
+    val isTransmitting by mainViewModel.ft8TransmitSignal.mutableIsTransmitting.observeAsState(false)
+    val txFreq by GeneralVariables.mutableBaseFrequency.observeAsState(GeneralVariables.getBaseFrequency())
+    val spectrumWidth by GeneralVariables.mutableSpectrumWidth.observeAsState(GeneralVariables.getSpectrumWidth())
     var deNoise by remember { mutableStateOf(mainViewModel.deNoise) }
     var showMessages by remember { mutableStateOf(mainViewModel.markMessage) }
 
@@ -86,6 +89,9 @@ fun WaterfallScreen(mainViewModel: MainViewModel) {
             val fft = IntArray(data.size / 2)
             nativeFFT(data, fft, mainViewModel.deNoise)
 
+            val currentTxFreq = GeneralVariables.getBaseFrequency()
+            val currentTxActive = mainViewModel.ft8TransmitSignal.mutableIsTransmitting.value ?: false
+
             viewHolder.columnar?.let { cView ->
                 if (viewHolder.frequencyLineTimeout > 0) {
                     viewHolder.frequencyLineTimeout--
@@ -95,15 +101,21 @@ fun WaterfallScreen(mainViewModel: MainViewModel) {
                     viewHolder.waterfall?.setTouch_x(-1)
                     touchedFreqHz = -1
                 }
+                cView.setSpectrumWidth(GeneralVariables.getSpectrumWidth())
+                cView.setTxFrequency(currentTxFreq)
+                cView.setTxActive(currentTxActive)
                 cView.setWaveData(fft)
                 cView.invalidate()
             }
 
             viewHolder.waterfall?.let { wView ->
                 val currentlyDecoding = mainViewModel.mutableIsDecoding.value ?: false
+                wView.setSpectrumWidth(GeneralVariables.getSpectrumWidth())
                 wView.setDrawMessage(mainViewModel.markMessage && !currentlyDecoding)
+                wView.setTxFrequency(currentTxFreq)
+                wView.setTxActive(currentTxActive)
                 val messages = if (mainViewModel.markMessage) mainViewModel.currentMessages else null
-                wView.setWaveData(fft, UtcTimer.getNowSequential(), messages)
+                wView.setWaveData(fft, messages)
                 wView.invalidate()
             }
         }
@@ -137,6 +149,9 @@ fun WaterfallScreen(mainViewModel: MainViewModel) {
 
         // Spectrum strip (columnar view)
         ColumnarStrip(
+            spectrumWidth = spectrumWidth,
+            txFrequency = txFreq,
+            txActive = isTransmitting,
             onViewCreated = { viewHolder.columnar = it },
             onTouch = { freqHz, _ ->
                 touchedFreqHz = freqHz
@@ -154,6 +169,7 @@ fun WaterfallScreen(mainViewModel: MainViewModel) {
         )
 
         FrequencyRuler(
+            spectrumWidth = spectrumWidth,
             modifier = Modifier
                 .fillMaxWidth()
                 .height(20.dp)
@@ -162,8 +178,11 @@ fun WaterfallScreen(mainViewModel: MainViewModel) {
 
         // Main waterfall display
         WaterfallCanvas(
+            spectrumWidth = spectrumWidth,
             showMessages = showMessages,
             isDecoding = isDecoding,
+            txFrequency = txFreq,
+            txActive = isTransmitting,
             onViewCreated = { viewHolder.waterfall = it },
             onTouch = { freqHz, _ ->
                 touchedFreqHz = freqHz
@@ -246,6 +265,9 @@ fun WaterfallScreen(mainViewModel: MainViewModel) {
 @SuppressLint("ClickableViewAccessibility")
 @Composable
 private fun ColumnarStrip(
+    spectrumWidth: Int,
+    txFrequency: Float,
+    txActive: Boolean,
     onViewCreated: (ColumnarView) -> Unit,
     onTouch: (freqHz: Int, x: Int) -> Unit,
     onTouchUp: (freqHz: Int) -> Unit,
@@ -260,52 +282,9 @@ private fun ColumnarStrip(
                 )
                 setBackgroundColor(0xFF07090F.toInt())
                 setShowBlock(true)
-
-                setOnTouchListener { _, event ->
-                    when (event.action) {
-                        MotionEvent.ACTION_DOWN, MotionEvent.ACTION_MOVE -> {
-                            setTouch_x(event.x.toInt())
-                            val freq = getFreq_hz()
-                            if (freq > 0) onTouch(freq, event.x.toInt())
-                        }
-                        MotionEvent.ACTION_UP -> {
-                            val freq = getFreq_hz()
-                            if (freq > 0) onTouchUp(freq)
-                        }
-                    }
-                    true
-                }
-
-                onViewCreated(this)
-            }
-        },
-        modifier = modifier,
-    )
-}
-
-// ---------------------------------------------------------------------------
-// Waterfall canvas (AndroidView wrapper)
-// ---------------------------------------------------------------------------
-
-@SuppressLint("ClickableViewAccessibility")
-@Composable
-private fun WaterfallCanvas(
-    showMessages: Boolean,
-    isDecoding: Boolean,
-    onViewCreated: (WaterfallView) -> Unit,
-    onTouch: (freqHz: Int, x: Int) -> Unit,
-    onTouchUp: (freqHz: Int) -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    AndroidView(
-        factory = { context ->
-            WaterfallView(context).apply {
-                layoutParams = ViewGroup.LayoutParams(
-                    ViewGroup.LayoutParams.MATCH_PARENT,
-                    ViewGroup.LayoutParams.MATCH_PARENT,
-                )
-                setBackgroundColor(0xFF000000.toInt())
-                setDrawMessage(showMessages && !isDecoding)
+                setSpectrumWidth(spectrumWidth)
+                setTxFrequency(txFrequency)
+                setTxActive(txActive)
 
                 setOnTouchListener { _, event ->
                     when (event.action) {
@@ -326,7 +305,67 @@ private fun WaterfallCanvas(
             }
         },
         update = { view ->
+            view.setSpectrumWidth(spectrumWidth)
+            view.setTxFrequency(txFrequency)
+            view.setTxActive(txActive)
+        },
+        modifier = modifier,
+    )
+}
+
+// ---------------------------------------------------------------------------
+// Waterfall canvas (AndroidView wrapper)
+// ---------------------------------------------------------------------------
+
+@SuppressLint("ClickableViewAccessibility")
+@Composable
+private fun WaterfallCanvas(
+    spectrumWidth: Int,
+    showMessages: Boolean,
+    isDecoding: Boolean,
+    txFrequency: Float,
+    txActive: Boolean,
+    onViewCreated: (WaterfallView) -> Unit,
+    onTouch: (freqHz: Int, x: Int) -> Unit,
+    onTouchUp: (freqHz: Int) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    AndroidView(
+        factory = { context ->
+            WaterfallView(context).apply {
+                layoutParams = ViewGroup.LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                )
+                setBackgroundColor(0xFF000000.toInt())
+                setSpectrumWidth(spectrumWidth)
+                setDrawMessage(showMessages && !isDecoding)
+                setTxFrequency(txFrequency)
+                setTxActive(txActive)
+
+                setOnTouchListener { _, event ->
+                    when (event.action) {
+                        MotionEvent.ACTION_DOWN, MotionEvent.ACTION_MOVE -> {
+                            setTouch_x(event.x.toInt())
+                            val freq = getFreq_hz()
+                            if (freq > 0) onTouch(freq, event.x.toInt())
+                        }
+                        MotionEvent.ACTION_UP -> {
+                            val freq = getFreq_hz()
+                            if (freq > 0) onTouchUp(freq)
+                        }
+                    }
+                    true
+                }
+
+                onViewCreated(this)
+            }
+        },
+        update = { view ->
+            view.setSpectrumWidth(spectrumWidth)
             view.setDrawMessage(showMessages && !isDecoding)
+            view.setTxFrequency(txFrequency)
+            view.setTxActive(txActive)
         },
         modifier = modifier,
     )
@@ -337,12 +376,18 @@ private fun WaterfallCanvas(
 // ---------------------------------------------------------------------------
 
 @Composable
-private fun FrequencyRuler(modifier: Modifier = Modifier) {
+private fun FrequencyRuler(spectrumWidth: Int, modifier: Modifier = Modifier) {
     Row(
         modifier = modifier.background(BgSurface),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        val labels = listOf("0", "500", "1000", "1500", "2000", "2500", "3000")
+        val labels = buildList {
+            var freq = 0
+            while (freq <= spectrumWidth) {
+                add(freq.toString())
+                freq += 500
+            }
+        }
         labels.forEachIndexed { index, label ->
             if (index > 0) Spacer(modifier = Modifier.weight(1f))
             Text(

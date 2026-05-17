@@ -186,9 +186,9 @@ public class SpectrumFragment extends Fragment {
         }
         binding.columnarView.setWaveData(fft);
         if (mainViewModel.markMessage) {//Whether to mark messages
-            binding.waterfallView.setWaveData(fft, UtcTimer.getNowSequential(), mainViewModel.currentMessages);
+            binding.waterfallView.setWaveData(fft, mainViewModel.currentMessages);
         } else {
-            binding.waterfallView.setWaveData(fft, UtcTimer.getNowSequential(), null);
+            binding.waterfallView.setWaveData(fft, null);
         }
     }
 

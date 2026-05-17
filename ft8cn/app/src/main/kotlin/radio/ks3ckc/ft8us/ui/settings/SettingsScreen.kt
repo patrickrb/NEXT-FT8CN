@@ -112,6 +112,7 @@ fun SettingsScreen(
     var showConnectionMode by remember { mutableStateOf(false) }
     var showBandPicker by remember { mutableStateOf(false) }
     var showAudioFreq by remember { mutableStateOf(false) }
+    var showSpectrumWidth by remember { mutableStateOf(false) }
     var showWatchdog by remember { mutableStateOf(false) }
     var showStopAfter by remember { mutableStateOf(false) }
     var showPttDelay by remember { mutableStateOf(false) }
@@ -123,6 +124,7 @@ fun SettingsScreen(
     var showAudioInputPicker by remember { mutableStateOf(false) }
     var showAudioOutputPicker by remember { mutableStateOf(false) }
     var showBaudRatePicker by remember { mutableStateOf(false) }
+    var showTxVolume by remember { mutableStateOf(false) }
 
     // Operator identity edit state
     var callsignState by remember { mutableStateOf(GeneralVariables.myCallsign.orEmpty()) }
@@ -138,6 +140,17 @@ fun SettingsScreen(
     var controlMode by remember { mutableIntStateOf(GeneralVariables.controlMode) }
     var modelNo by remember { mutableIntStateOf(GeneralVariables.modelNo) }
     var baudRate by remember { mutableIntStateOf(GeneralVariables.baudRate) }
+    var spectrumWidth by remember { mutableIntStateOf(GeneralVariables.getSpectrumWidth()) }
+
+    // TX Volume state – observe LiveData so hardware button changes update the UI
+    val volumeLive by GeneralVariables.mutableVolumePercent.observeAsState(
+        GeneralVariables.volumePercent,
+    )
+    var txVolume by remember { mutableIntStateOf((GeneralVariables.volumePercent * 100).toInt()) }
+    // Keep txVolume in sync when hardware buttons (or other sources) update the LiveData
+    LaunchedEffect(volumeLive) {
+        txVolume = ((volumeLive ?: GeneralVariables.volumePercent) * 100).toInt()
+    }
 
     // Derived display strings
     val callsign = callsignState
@@ -321,18 +334,36 @@ fun SettingsScreen(
 
     // -- Audio Frequency Editor --
     if (showAudioFreq) {
+        val audioFreqMax = spectrumWidth - 100
         NumberInputDialog(
             title = "Audio Frequency",
             suffix = "Hz",
             initialValue = GeneralVariables.getBaseFrequency().toInt(),
             min = 100,
-            max = 2900,
+            max = audioFreqMax,
             onDismiss = { showAudioFreq = false },
             onSave = { value ->
                 showAudioFreq = false
-                val clamped = value.toFloat().coerceIn(100f, 2900f)
+                val clamped = value.toFloat().coerceIn(100f, audioFreqMax.toFloat())
                 GeneralVariables.setBaseFrequency(clamped)
                 mainViewModel.databaseOpr.writeConfig("freq", clamped.toInt().toString(), null)
+            },
+        )
+    }
+
+    if (showSpectrumWidth) {
+        NumberInputDialog(
+            title = "Spectrum Width",
+            suffix = "Hz",
+            initialValue = spectrumWidth,
+            min = 2500,
+            max = 5000,
+            onDismiss = { showSpectrumWidth = false },
+            onSave = { value ->
+                showSpectrumWidth = false
+                spectrumWidth = value
+                GeneralVariables.setSpectrumWidth(value)
+                mainViewModel.databaseOpr.writeConfig("spectrumWidth", value.toString(), null)
             },
         )
     }
@@ -387,6 +418,27 @@ fun SettingsScreen(
                 mainViewModel.databaseOpr.writeConfig(
                     "noReplyLimit", index.toString(), null,
                 )
+            },
+        )
+    }
+
+    // -- TX Volume Editor --
+    if (showTxVolume) {
+        NumberInputDialog(
+            title = "TX Volume",
+            suffix = "%",
+            initialValue = txVolume,
+            min = 0,
+            max = 100,
+            onDismiss = { showTxVolume = false },
+            onSave = { value ->
+                showTxVolume = false
+                val clamped = value.coerceIn(0, 100)
+                txVolume = clamped
+                GeneralVariables.volumePercent = clamped / 100f
+                GeneralVariables.mutableVolumePercent.postValue(clamped / 100f)
+                mainViewModel.databaseOpr.writeConfig("volumeValue", clamped.toString(), null)
+                mainViewModel.baseRig?.connector?.setRFVolume(clamped)
             },
         )
     }
@@ -701,6 +753,13 @@ fun SettingsScreen(
                             showChevron = !synFrequency,
                             onClick = if (!synFrequency) {{ showAudioFreq = true }} else null,
                         )
+                        SectionDivider()
+                        SettingsRow(
+                            label = "Spectrum Width",
+                            value = "$spectrumWidth Hz",
+                            showChevron = true,
+                            onClick = { showSpectrumWidth = true },
+                        )
                     }
                 }
             }
@@ -768,6 +827,14 @@ fun SettingsScreen(
                             else "$noReplyLimit tries",
                             showChevron = true,
                             onClick = { showStopAfter = true },
+                        )
+                        SectionDivider()
+                        SettingsRow(
+                            label = "TX Volume",
+                            description = "Transmit audio level (hardware buttons ±5%)",
+                            value = "$txVolume%",
+                            showChevron = true,
+                            onClick = { showTxVolume = true },
                         )
                     }
                 }

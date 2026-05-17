@@ -6,6 +6,7 @@ import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -13,6 +14,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -30,8 +32,11 @@ import radio.ks3ckc.ft8us.theme.*
 @Composable
 fun TxStrip(
     isTransmitting: Boolean,
+    isActivated: Boolean,
     bandLabel: String,
     frequencyMhz: String,
+    onCallCQ: () -> Unit,
+    onStop: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val bgColor = if (isTransmitting) {
@@ -86,11 +91,34 @@ fun TxStrip(
             )
         }
 
-        // Right: frequency
+        // Right: CQ/Stop button + frequency
         Row(
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(4.dp),
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
         ) {
+            // CQ / Stop pill button
+            val buttonBg = if (isActivated) StatusBad.copy(alpha = 0.18f) else AccentSoft
+            val buttonTextColor = if (isActivated) StatusBad else Accent
+            val buttonLabel = if (isActivated) "STOP" else "CQ"
+
+            Box(
+                modifier = Modifier
+                    .clip(RoundedCornerShape(8.dp))
+                    .background(buttonBg)
+                    .clickable { if (isActivated) onStop() else onCallCQ() }
+                    .padding(horizontal = 28.dp, vertical = 12.dp),
+                contentAlignment = Alignment.Center,
+            ) {
+                Text(
+                    text = buttonLabel,
+                    color = buttonTextColor,
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Bold,
+                    fontFamily = GeistMonoFamily,
+                    letterSpacing = 0.04.sp,
+                )
+            }
+
             Text(
                 text = frequencyMhz,
                 color = Accent,

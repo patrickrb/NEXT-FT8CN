@@ -12,6 +12,7 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import android.view.KeyEvent
 import android.view.WindowManager
 import androidx.activity.ComponentActivity
 import androidx.activity.OnBackPressedCallback
@@ -356,6 +357,30 @@ class ComposeMainActivity : ComponentActivity() {
             File(dir, "debug.log").appendText("$ts $msg\n")
         } catch (_: Exception) {}
         Log.d(TAG, msg)
+    }
+
+    override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
+        when (keyCode) {
+            KeyEvent.KEYCODE_VOLUME_UP -> {
+                val newVol = (GeneralVariables.volumePercent + 0.05f).coerceAtMost(1.0f)
+                GeneralVariables.volumePercent = newVol
+                GeneralVariables.mutableVolumePercent.postValue(newVol)
+                val intVal = (newVol * 100).toInt()
+                mainViewModel.databaseOpr.writeConfig("volumeValue", intVal.toString(), null)
+                mainViewModel.baseRig?.connector?.setRFVolume(intVal)
+                return true
+            }
+            KeyEvent.KEYCODE_VOLUME_DOWN -> {
+                val newVol = (GeneralVariables.volumePercent - 0.05f).coerceAtLeast(0.0f)
+                GeneralVariables.volumePercent = newVol
+                GeneralVariables.mutableVolumePercent.postValue(newVol)
+                val intVal = (newVol * 100).toInt()
+                mainViewModel.databaseOpr.writeConfig("volumeValue", intVal.toString(), null)
+                mainViewModel.baseRig?.connector?.setRFVolume(intVal)
+                return true
+            }
+            else -> return super.onKeyDown(keyCode, event)
+        }
     }
 
     private fun closeApp() {

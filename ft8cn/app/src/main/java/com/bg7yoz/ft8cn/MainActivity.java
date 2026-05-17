@@ -29,6 +29,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -553,6 +554,32 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
+            float newVol = Math.min(GeneralVariables.volumePercent + 0.05f, 1.0f);
+            GeneralVariables.volumePercent = newVol;
+            GeneralVariables.mutableVolumePercent.postValue(newVol);
+            int intVal = (int) (newVol * 100);
+            mainViewModel.databaseOpr.writeConfig("volumeValue", String.valueOf(intVal), null);
+            if (mainViewModel.baseRig != null && mainViewModel.baseRig.getConnector() != null) {
+                mainViewModel.baseRig.getConnector().setRFVolume(intVal);
+            }
+            return true;
+        } else if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {
+            float newVol = Math.max(GeneralVariables.volumePercent - 0.05f, 0.0f);
+            GeneralVariables.volumePercent = newVol;
+            GeneralVariables.mutableVolumePercent.postValue(newVol);
+            int intVal = (int) (newVol * 100);
+            mainViewModel.databaseOpr.writeConfig("volumeValue", String.valueOf(intVal), null);
+            if (mainViewModel.baseRig != null && mainViewModel.baseRig.getConnector() != null) {
+                mainViewModel.baseRig.getConnector().setRFVolume(intVal);
+            }
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
 
     /**
      * Display serial port device list.
