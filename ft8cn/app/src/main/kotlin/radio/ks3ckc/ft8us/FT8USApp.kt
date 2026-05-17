@@ -32,6 +32,7 @@ fun FT8USApp(mainViewModel: MainViewModel) {
 
     // Observe transmit state
     val isTransmitting by mainViewModel.ft8TransmitSignal.mutableIsTransmitting.observeAsState(false)
+    val isActivated by mainViewModel.ft8TransmitSignal.mutableIsActivated.observeAsState(false)
 
     // Derive band/frequency from GeneralVariables
     val bandIndex by GeneralVariables.mutableBandChange.observeAsState(GeneralVariables.bandListIndex)
@@ -71,8 +72,16 @@ fun FT8USApp(mainViewModel: MainViewModel) {
         // TX status strip — always visible above tab bar
         TxStrip(
             isTransmitting = isTransmitting,
+            isActivated = isActivated,
             bandLabel = bandLabel,
             frequencyMhz = frequencyMhz,
+            onCallCQ = {
+                mainViewModel.ft8TransmitSignal.resetToCQ()
+                mainViewModel.ft8TransmitSignal.setActivated(true)
+            },
+            onStop = {
+                mainViewModel.ft8TransmitSignal.setActivated(false)
+            },
         )
 
         // Bottom tab bar
