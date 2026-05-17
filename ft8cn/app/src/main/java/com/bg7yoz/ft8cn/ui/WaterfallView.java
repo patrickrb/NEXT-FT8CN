@@ -27,6 +27,7 @@ import androidx.annotation.Nullable;
 
 import com.bg7yoz.ft8cn.Ft8Message;
 import com.bg7yoz.ft8cn.GeneralVariables;
+import com.bg7yoz.ft8cn.timer.UtcTimer;
 
 
 import java.util.ArrayList;
@@ -69,6 +70,10 @@ public class WaterfallView extends View {
     private float txFrequency = -1f;
     private boolean txActive = false;
     private final Paint txMarkerPaint = new Paint();
+
+    // FT8 period timestamp tracking
+    private long lastTimestampPeriod = -1;
+    private final Paint timestampLinePaint = new Paint();
 
     public WaterfallView(Context context) {
         super(context);
@@ -179,6 +184,10 @@ public class WaterfallView extends View {
         txMarkerPaint.setStrokeWidth(1.5f * getResources().getDisplayMetrics().density);
         txMarkerPaint.setStyle(Paint.Style.STROKE);
 
+        timestampLinePaint.setColor(0x6000ffff);
+        timestampLinePaint.setStrokeWidth(1);
+        timestampLinePaint.setStyle(Paint.Style.STROKE);
+
         super.onSizeChanged(w, h, oldw, oldh);
 
     }
@@ -278,6 +287,27 @@ public class WaterfallView extends View {
         _canvas.drawBitmap(bitmap, 0, blockHeight, null);
         bitmap.recycle();
         _canvas.drawRect(0, 0, drawWidth, blockHeight, linearPaint);
+
+        // Draw FT8 period timestamp at 15-second boundaries
+        long utcMs = UtcTimer.getSystemTime();
+        long period = (utcMs / 1000) / 15;
+        if (period != lastTimestampPeriod) {
+            lastTimestampPeriod = period;
+            // Draw horizontal line at the boundary between new row and scrolled content
+            _canvas.drawLine(0, blockHeight, drawWidth, blockHeight, timestampLinePaint);
+            // Format UTC time label
+            long utcSec = utcMs / 1000;
+            long h = (utcSec / 3600) % 24;
+            long m = (utcSec % 3600) / 60;
+            long s = utcSec % 60;
+            @SuppressLint("DefaultLocale")
+            String timeLabel = String.format("%02d:%02d:%02d", h, m, s);
+            float textX = dpToPixel(2);
+            float textY = blockHeight + utcPaint.getTextSize() + dpToPixel(1);
+            // Draw outline then fill for readability over any spectrum color
+            _canvas.drawText(timeLabel, textX, textY, utcPainBack);
+            _canvas.drawText(timeLabel, textX, textY, utcPaint);
+        }
 
         //Messages have 3 types: normal, CQ, and involving me
         if (drawMessage && messages != null) {
