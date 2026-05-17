@@ -25,6 +25,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalLifecycleOwner
+import androidx.lifecycle.Observer
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -32,6 +34,10 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import com.bg7yoz.ft8cn.GeneralVariables
 import com.bg7yoz.ft8cn.MainViewModel
+import java.io.File
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 import com.bg7yoz.ft8cn.timer.UtcTimer
 import com.bg7yoz.ft8cn.ui.ColumnarView
 import com.bg7yoz.ft8cn.ui.SpectrumFragment
@@ -50,8 +56,22 @@ fun WaterfallScreen(mainViewModel: MainViewModel) {
     var touchedFreqHz by remember { mutableIntStateOf(-1) }
     var frequencyLineTimeout by remember { mutableIntStateOf(0) }
 
-    // Observe spectrum data from the recorder
-    val spectrumData by mainViewModel.spectrumListener.mutableDataBuffer.observeAsState()
+    // Observe spectrum data from the recorder.
+    // VoiceDataMonitor reuses the same float[] buffer, so LiveData posts the same
+    // reference each cycle. Compose's observeAsState() uses reference equality for
+    // FloatArray and would skip recomposition. We manually observe and copyOf() to
+    // ensure a new reference triggers recomposition every time.
+    var spectrumData by remember { mutableStateOf<FloatArray?>(null) }
+    val lifecycleOwner = LocalLifecycleOwner.current
+    DisposableEffect(lifecycleOwner) {
+        val observer = Observer<FloatArray> { data ->
+            spectrumData = data.copyOf()
+        }
+        mainViewModel.spectrumListener.mutableDataBuffer.observe(lifecycleOwner, observer)
+        onDispose {
+            mainViewModel.spectrumListener.mutableDataBuffer.removeObserver(observer)
+        }
+    }
 
     // Observe decode state to control message overlay
     val isDecoding by mainViewModel.mutableIsDecoding.observeAsState(false)
@@ -257,7 +277,7 @@ private fun ColumnarStrip(
         },
         update = { view ->
             spectrumData?.let { data ->
-                val fft = IntArray(data.size)
+                val fft = IntArray(data.size / 2)
                 nativeFFT(data, fft, deNoise)
 
                 var timeout = frequencyLineTimeout - 1
@@ -280,6 +300,15 @@ private fun ColumnarStrip(
             columnarViewRef = null
         }
     }
+}
+
+private fun wfLog(msg: String) {
+    try {
+        val ctx = GeneralVariables.getMainContext() ?: return
+        val dir = ctx.getExternalFilesDir(null) ?: return
+        val ts = SimpleDateFormat("HH:mm:ss.SSS", Locale.US).format(Date())
+        File(dir, "debug.log").appendText("$ts $msg\n")
+    } catch (_: Exception) {}
 }
 
 // ---------------------------------------------------------------------------
@@ -334,9 +363,10 @@ private fun WaterfallCanvas(
         update = { view ->
             view.setDrawMessage(showMessages && !isDecoding)
 
-            spectrumData?.let { data ->
-                val fft = IntArray(data.size)
-                nativeFFT(data, fft, mainViewModel.deNoise)
+            val sd = spectrumData
+            if (sd != null) {
+                val fft = IntArray(sd.size / 2)
+                nativeFFT(sd, fft, mainViewModel.deNoise)
 
                 val messages = if (showMessages) mainViewModel.currentMessages else null
                 view.setWaveData(fft, UtcTimer.getNowSequential(), messages)
@@ -425,8 +455,8 @@ private object FFTBridge {
             } else {
                 fragment.getFFTDataRawFloat(audioData, fftOut)
             }
-        } catch (_: UnsatisfiedLinkError) {
-            // Native library not loaded; leave fftOut zeroed
+        } catch (e: UnsatisfiedLinkError) {
+            wfLog("waterfall.FFT ERROR: native library not loaded! ${e.message}")
         }
     }
 }

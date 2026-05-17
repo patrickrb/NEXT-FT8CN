@@ -200,14 +200,6 @@ public class MicRecorder {
         if (useUsbAudio && usbAudioDevice != null) {
             usbAudioDevice.stopCapture();
         }
-        if (audioRecord != null) {
-            try {
-                audioRecord.release();
-            } catch (Exception e) {
-                Log.d(TAG, "Error releasing AudioRecord: " + e.getMessage());
-            }
-            audioRecord = null;
-        }
     }
 
     public OnDataListener getOnDataListener() {
@@ -232,10 +224,28 @@ public class MicRecorder {
         // Stop current capture
         stopRecord();
 
+        // Release old AudioRecord (stopRecord only sets isRunning=false)
+        if (audioRecord != null) {
+            try {
+                audioRecord.release();
+            } catch (Exception e) {
+                Log.d(TAG, "reinitialize: error releasing AudioRecord: " + e.getMessage());
+            }
+            audioRecord = null;
+        }
+
+        // Close old USB audio device
+        if (usbAudioDevice != null) {
+            try {
+                usbAudioDevice.close();
+            } catch (Exception e) {
+                Log.d(TAG, "reinitialize: error closing USB audio device: " + e.getMessage());
+            }
+        }
+
         // Reset state
         useUsbAudio = false;
         usbAudioDevice = null;
-        audioRecord = null;
 
         // Re-check for USB audio input
         if (GeneralVariables.audioInputDeviceId == -1

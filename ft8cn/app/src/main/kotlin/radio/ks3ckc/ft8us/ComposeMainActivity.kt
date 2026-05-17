@@ -35,7 +35,11 @@ import com.bg7yoz.ft8cn.log.OnShareLogEvents
 import com.bg7yoz.ft8cn.maidenhead.MaidenheadGrid
 import com.bg7yoz.ft8cn.ui.ToastMessage
 import radio.ks3ckc.ft8us.theme.FT8USTheme
+import java.io.File
 import java.io.IOException
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 class ComposeMainActivity : ComponentActivity() {
 
@@ -97,6 +101,7 @@ class ComposeMainActivity : ComponentActivity() {
         }
 
         // Initialize data
+        fileLog("=== APP START ===")
         initData()
 
         // Observe serial port changes for auto-connect (mirrors old MainActivity behavior)
@@ -164,6 +169,10 @@ class ComposeMainActivity : ComponentActivity() {
 
             override fun doOnAfterQueryConfig(keyName: String?, value: String?) {
                 mainViewModel.configIsLoaded = true
+                fileLog("configLoaded: instructionSet=${GeneralVariables.instructionSet}, " +
+                    "baudRate=${GeneralVariables.baudRate}, " +
+                    "controlMode=${GeneralVariables.controlMode}, " +
+                    "connectMode=${GeneralVariables.connectMode}")
                 val grid = MaidenheadGrid.getMyMaidenheadGrid(applicationContext)
                 if (grid.isNotEmpty()) {
                     GeneralVariables.setMyMaidenheadGrid(grid)
@@ -171,16 +180,24 @@ class ComposeMainActivity : ComponentActivity() {
                 }
                 mainViewModel.ft8TransmitSignal.setTimer_sec(GeneralVariables.transmitDelay)
 
-                // Scan for USB devices AFTER config is loaded so that controlMode,
-                // instructionSet, baudRate, civAddress, audioInputDeviceId etc.
-                // are all populated before auto-connect fires.
+                // Scan for USB devices AFTER config is loaded
+                fileLog("initData: scanning USB devices")
                 mainViewModel.getUsbDevice()
+                val ports = mainViewModel.mutableSerialPorts.value
+                fileLog("initData: found ${ports?.size ?: 0} serial port(s)")
+                mainViewModel.reinitializeAudioInput()
 
-                // Delayed audio reinit: handles USB audio device already physically
-                // connected but not ready during ViewModel construction
+                // Delayed re-scan for slow USB enumeration
                 Handler(Looper.getMainLooper()).postDelayed({
+                    val connected = mainViewModel.isRigConnected()
+                    fileLog("initData delayed: rigConnected=$connected")
+                    if (!connected) {
+                        mainViewModel.getUsbDevice()
+                        val delayedPorts = mainViewModel.mutableSerialPorts.value
+                        fileLog("initData delayed: found ${delayedPorts?.size ?: 0} serial port(s)")
+                    }
                     mainViewModel.reinitializeAudioInput()
-                }, 2000)
+                }, 3000)
             }
         })
 
@@ -247,11 +264,23 @@ class ComposeMainActivity : ComponentActivity() {
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
         if ("android.hardware.usb.action.USB_DEVICE_ATTACHED" == intent.action) {
+            fileLog("onNewIntent: USB_DEVICE_ATTACHED")
+            // Immediate scan
             mainViewModel.getUsbDevice()
-            // Reinitialize audio input to pick up newly attached USB audio device
+            val ports = mainViewModel.mutableSerialPorts.value
+            fileLog("onNewIntent: immediate scan found ${ports?.size ?: 0} port(s)")
+
+            // Delayed re-scan and audio reinit (USB needs time to enumerate)
             Handler(Looper.getMainLooper()).postDelayed({
+                val connected = mainViewModel.isRigConnected()
+                fileLog("onNewIntent delayed: rigConnected=$connected")
+                if (!connected) {
+                    mainViewModel.getUsbDevice()
+                    val delayedPorts = mainViewModel.mutableSerialPorts.value
+                    fileLog("onNewIntent delayed: re-scan found ${delayedPorts?.size ?: 0} port(s)")
+                }
                 mainViewModel.reinitializeAudioInput()
-            }, 1000)
+            }, 2000)
         } else {
             setIntent(intent)
             doReceiveShareFile(intent)
@@ -295,13 +324,38 @@ class ComposeMainActivity : ComponentActivity() {
      * Connects to the first detected port (most radios expose CAT as the first port).
      */
     private fun autoConnectUsbIfNeeded(ports: ArrayList<CableSerialPort.SerialPort>?) {
-        if (ports.isNullOrEmpty()) return
-        if (mainViewModel.isRigConnected()) return
-        if (GeneralVariables.connectMode != ConnectMode.USB_CABLE) return
-        if (!mainViewModel.configIsLoaded) return
+        if (ports.isNullOrEmpty()) {
+            fileLog("autoConnect: no serial ports detected")
+            return
+        }
+        if (mainViewModel.isRigConnected()) {
+            fileLog("autoConnect: rig already connected, skipping")
+            return
+        }
+        if (GeneralVariables.connectMode != ConnectMode.USB_CABLE) {
+            fileLog("autoConnect: connectMode=${GeneralVariables.connectMode}, not USB_CABLE")
+            return
+        }
+        if (!mainViewModel.configIsLoaded) {
+            fileLog("autoConnect: config not loaded yet, skipping")
+            return
+        }
 
-        Log.d(TAG, "Auto-connecting to USB serial port (${ports.size} port(s) detected)")
+        fileLog("autoConnect: connecting to port 0 of ${ports.size} " +
+            "(instructionSet=${GeneralVariables.instructionSet}, " +
+            "baudRate=${GeneralVariables.baudRate}, " +
+            "controlMode=${GeneralVariables.controlMode})")
         mainViewModel.connectCableRig(applicationContext, ports[0])
+    }
+
+    /** Write a line to /sdcard/Android/data/com.bg7yoz.ft8cn/files/debug.log */
+    private fun fileLog(msg: String) {
+        try {
+            val ts = SimpleDateFormat("HH:mm:ss.SSS", Locale.US).format(Date())
+            val dir = getExternalFilesDir(null) ?: return
+            File(dir, "debug.log").appendText("$ts $msg\n")
+        } catch (_: Exception) {}
+        Log.d(TAG, msg)
     }
 
     private fun closeApp() {

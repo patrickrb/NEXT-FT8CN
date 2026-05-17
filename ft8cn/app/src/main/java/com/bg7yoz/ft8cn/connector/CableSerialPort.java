@@ -223,18 +223,42 @@ public class CableSerialPort {
         return true;
     }
 
+    private void fileLog(String msg) {
+        try {
+            android.content.Context ctx = GeneralVariables.getMainContext();
+            if (ctx == null) return;
+            java.io.File dir = ctx.getExternalFilesDir(null);
+            if (dir == null) return;
+            String ts = new java.text.SimpleDateFormat("HH:mm:ss.SSS", java.util.Locale.US)
+                    .format(new java.util.Date());
+            new java.io.FileWriter(new java.io.File(dir, "debug.log"), true)
+                    .append(ts + " " + msg + "\n").close();
+        } catch (Exception ignored) {}
+        Log.d(TAG, msg);
+    }
+
     public boolean sendData(final byte[] src) {
         if (usbSerialPort != null) {
             try {
+                String preview = new String(src).replace("\r", "\\r").replace("\n", "\\n");
+                // Only log non-periodic commands (skip FA; reads to avoid log spam)
+                if (!preview.equals("FA;") && !preview.startsWith("RM")) {
+                    StringBuilder hex = new StringBuilder();
+                    for (byte b : src) hex.append(String.format("%02X ", b));
+                    fileLog("serial.send[" + src.length + "]: " + preview + " | hex: " + hex.toString().trim());
+                }
                 usbSerialPort.write(src, SEND_TIMEOUT);
+                if (!preview.equals("FA;") && !preview.startsWith("RM")) {
+                    fileLog("serial.send: write completed OK");
+                }
             } catch (IOException e) {
                 e.printStackTrace();
-                Log.e(TAG, "Error sending data: " + e.getMessage());
+                fileLog("serial.send ERROR: " + e.getMessage());
                 return false;
             }
             return true;
         } else {
-            Log.e(TAG, "Cannot send data, serial port is not open.");
+            fileLog("serial.send: port not open!");
             return false;
         }
 

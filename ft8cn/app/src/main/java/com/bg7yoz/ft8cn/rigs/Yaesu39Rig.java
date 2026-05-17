@@ -10,6 +10,11 @@ import com.bg7yoz.ft8cn.R;
 import com.bg7yoz.ft8cn.database.ControlMode;
 import com.bg7yoz.ft8cn.ui.ToastMessage;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -120,6 +125,7 @@ public class Yaesu39Rig extends BaseRig {
         if (getConnector() != null) {
             if (isDataUsb) {//use DATA-USB mode
                 getConnector().sendData(Yaesu3RigConstant.setOperationUSB_Data_Mode());
+                getConnector().sendData(Yaesu3RigConstant.setMaxDataWidth());
             } else {
                 getConnector().sendData(Yaesu3RigConstant.setOperationUSBMode());
             }
@@ -133,9 +139,27 @@ public class Yaesu39Rig extends BaseRig {
         }
     }
 
+    private void fileLog(String msg) {
+        try {
+            android.content.Context ctx = GeneralVariables.getMainContext();
+            if (ctx == null) return;
+            File dir = ctx.getExternalFilesDir(null);
+            if (dir == null) return;
+            String ts = new SimpleDateFormat("HH:mm:ss.SSS", Locale.US).format(new Date());
+            new FileWriter(new File(dir, "debug.log"), true)
+                    .append(ts + " " + msg + "\n").close();
+        } catch (Exception ignored) {}
+        Log.d(TAG, msg);
+    }
+
     @Override
     public void onReceiveData(byte[] data) {
         String s = new String(data);
+        // Log all non-FA/RM responses (skip periodic polling to avoid spam)
+        String preview = s.replace("\r", "\\r").replace("\n", "\\n");
+        if (!preview.startsWith("FA") && !preview.startsWith("RM")) {
+            fileLog("rig.recv[" + data.length + "]: " + preview);
+        }
 
         if (!s.contains(";")) {
             buffer.append(s);
@@ -147,12 +171,16 @@ public class Yaesu39Rig extends BaseRig {
             }
 
             //begin parsing data
-            Yaesu3Command yaesu3Command = Yaesu3Command.getCommand(buffer.toString());
+            String bufStr = buffer.toString();
+            Yaesu3Command yaesu3Command = Yaesu3Command.getCommand(bufStr);
             clearBufferData();//clear buffer
             //put remaining data into buffer
             buffer.append(s.substring(s.indexOf(";") + 1));
 
             if (yaesu3Command == null) {
+                if (bufStr.length() > 0) {
+                    fileLog("rig.parse: unknown command: " + bufStr);
+                }
                 return;
             }
             if (yaesu3Command.getCommandID().equalsIgnoreCase("FA")
@@ -169,6 +197,9 @@ public class Yaesu39Rig extends BaseRig {
                     alc = Yaesu3Command.getSWROrALC39(yaesu3Command);
                 }
                 showAlert();
+            } else {
+                fileLog("rig.parsed: cmd=" + yaesu3Command.getCommandID()
+                        + " data=" + yaesu3Command.getData());
             }
 
         }

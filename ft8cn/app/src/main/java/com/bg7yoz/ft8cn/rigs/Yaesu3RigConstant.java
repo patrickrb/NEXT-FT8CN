@@ -30,6 +30,7 @@ public class Yaesu3RigConstant {
     private static final String USB_MODE = "MD02;";
     private static final String USB_MODE_DATA = "MD09;";
     private static final String DATA_U_MODE = "MD0C;";
+    private static final String WIDTH_MAX_DATA = "SH0120;"; // Width ON, 3000 Hz (max for DATA mode)
     private static final String READ_FREQ = "FA;";
     private static final String READ_39METER_ALC = "RM4;";//commands for 38 and 39 are the same
     private static final String READ_39METER_SWR = "RM6;";//commands for 38 and 39 are the same
@@ -102,6 +103,9 @@ public class Yaesu3RigConstant {
 
     public static byte[] setOperationDATA_U_Mode() {
         return DATA_U_MODE.getBytes();
+    }
+    public static byte[] setMaxDataWidth() {
+        return WIDTH_MAX_DATA.getBytes();
     }
 
     @SuppressLint("DefaultLocale")

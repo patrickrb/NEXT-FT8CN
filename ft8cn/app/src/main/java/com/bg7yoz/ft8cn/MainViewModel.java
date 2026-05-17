@@ -117,6 +117,21 @@ public class MainViewModel extends ViewModel {
     String TAG = "ft8cn MainViewModel";
     public boolean configIsLoaded = false;
 
+    /** Write debug line to the app's external files debug.log */
+    private void fileLog(String msg) {
+        try {
+            android.content.Context ctx = GeneralVariables.getMainContext();
+            if (ctx == null) return;
+            java.io.File dir = ctx.getExternalFilesDir(null);
+            if (dir == null) return;
+            String ts = new java.text.SimpleDateFormat("HH:mm:ss.SSS", java.util.Locale.US)
+                    .format(new java.util.Date());
+            new java.io.FileWriter(new java.io.File(dir, "debug.log"), true)
+                    .append(ts + " " + msg + "\n").close();
+        } catch (Exception ignored) {}
+        Log.d(TAG, msg);
+    }
+
     private static MainViewModel viewModel = null;//current existing instance.
     //public static Application application;
 
@@ -638,9 +653,12 @@ public class MainViewModel extends ViewModel {
      */
     public void setOperationBand() {
         if (!isRigConnected()) {
+            fileLog("setOperationBand: rig not connected, skipping");
             return;
         }
 
+        fileLog("setOperationBand: sending USB mode, then freq=" + GeneralVariables.band
+                + " in 800ms (controlMode=" + GeneralVariables.controlMode + ")");
         //set USB mode first, then set frequency
         baseRig.setUsbModeToRig();//set USB mode
 
@@ -648,6 +666,8 @@ public class MainViewModel extends ViewModel {
         new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
             @Override
             public void run() {
+                fileLog("setOperationBand: setting freq=" + GeneralVariables.band
+                        + " (rig.getFreq=" + baseRig.getFreq() + ")");
                 baseRig.setFreq(GeneralVariables.band);//set frequency
                 baseRig.setFreqToRig();
             }
@@ -676,6 +696,7 @@ public class MainViewModel extends ViewModel {
     public void connectCableRig(Context context, CableSerialPort.SerialPort port) {
         if (GeneralVariables.controlMode == ControlMode.VOX) {//if currently VOX, switch to CAT mode
             GeneralVariables.controlMode = ControlMode.CAT;
+            databaseOpr.writeConfig("ctrMode", String.valueOf(ControlMode.CAT), null);
         }
         connectRig();
 

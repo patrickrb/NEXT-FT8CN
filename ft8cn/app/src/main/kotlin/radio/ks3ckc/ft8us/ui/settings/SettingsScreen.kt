@@ -122,6 +122,7 @@ fun SettingsScreen(
     var showControlModePicker by remember { mutableStateOf(false) }
     var showAudioInputPicker by remember { mutableStateOf(false) }
     var showAudioOutputPicker by remember { mutableStateOf(false) }
+    var showBaudRatePicker by remember { mutableStateOf(false) }
 
     // Operator identity edit state
     var callsignState by remember { mutableStateOf(GeneralVariables.myCallsign.orEmpty()) }
@@ -136,6 +137,7 @@ fun SettingsScreen(
     var cloudlogAddress by remember { mutableStateOf(GeneralVariables.cloudlogServerAddress.orEmpty()) }
     var controlMode by remember { mutableIntStateOf(GeneralVariables.controlMode) }
     var modelNo by remember { mutableIntStateOf(GeneralVariables.modelNo) }
+    var baudRate by remember { mutableIntStateOf(GeneralVariables.baudRate) }
 
     // Derived display strings
     val callsign = callsignState
@@ -153,6 +155,7 @@ fun SettingsScreen(
     } else {
         "Not connected"
     }
+    val baudRateStr = "$baudRate"
     val isCatMode = controlMode == ControlMode.CAT
         || controlMode == ControlMode.RTS
         || controlMode == ControlMode.DTR
@@ -294,10 +297,22 @@ fun SettingsScreen(
                     "bandFreq", GeneralVariables.band.toString(), null,
                 )
                 mainViewModel.databaseOpr.getAllQSLCallsigns()
-                if (GeneralVariables.controlMode == ControlMode.CAT
-                    || GeneralVariables.controlMode == ControlMode.RTS
-                    || GeneralVariables.controlMode == ControlMode.DTR
-                ) {
+                val cm = GeneralVariables.controlMode
+                val connected = mainViewModel.isRigConnected()
+                android.util.Log.d("SettingsScreen",
+                    "bandSelect: index=$index, band=${GeneralVariables.band}, " +
+                    "controlMode=$cm, rigConnected=$connected")
+                try {
+                    val dir = context.getExternalFilesDir(null)
+                    if (dir != null) {
+                        val ts = java.text.SimpleDateFormat("HH:mm:ss.SSS", java.util.Locale.US)
+                            .format(java.util.Date())
+                        java.io.File(dir, "debug.log").appendText(
+                            "$ts bandSelect: index=$index, band=${GeneralVariables.band}, " +
+                            "controlMode=$cm, rigConnected=$connected\n")
+                    }
+                } catch (_: Exception) {}
+                if (cm == ControlMode.CAT || cm == ControlMode.RTS || cm == ControlMode.DTR) {
                     mainViewModel.setOperationBand()
                 }
             },
@@ -470,6 +485,7 @@ fun SettingsScreen(
                 GeneralVariables.instructionSet = selectedRig.instructionSet
                 GeneralVariables.civAddress = selectedRig.address
                 GeneralVariables.baudRate = selectedRig.bauRate
+                baudRate = selectedRig.bauRate
                 mainViewModel.setCivAddress()
                 mainViewModel.databaseOpr.writeConfig("model", actualIndex.toString(), null)
                 mainViewModel.databaseOpr.writeConfig(
@@ -513,6 +529,26 @@ fun SettingsScreen(
                         mainViewModel.setOperationBand()
                     }
                 }
+            },
+        )
+    }
+
+    // -- Baud Rate Picker --
+    if (showBaudRatePicker) {
+        val baudRateOptions = listOf(4800, 9600, 14400, 19200, 38400, 43000, 56000, 57600, 115200)
+        val baudRateLabels = baudRateOptions.map { it.toString() }
+        val currentBaudIndex = baudRateOptions.indexOf(baudRate).coerceAtLeast(0)
+        ListPickerDialog(
+            title = "Baud Rate",
+            items = baudRateLabels,
+            selectedIndex = currentBaudIndex,
+            onDismiss = { showBaudRatePicker = false },
+            onSelect = { index ->
+                showBaudRatePicker = false
+                val newBaudRate = baudRateOptions[index]
+                GeneralVariables.baudRate = newBaudRate
+                baudRate = newBaudRate
+                mainViewModel.databaseOpr.writeConfig("baudRate", newBaudRate.toString(), null)
             },
         )
     }
@@ -643,6 +679,13 @@ fun SettingsScreen(
                             value = connectModeStr,
                             showChevron = isCatMode,
                             onClick = if (isCatMode) {{ showConnectionMode = true }} else null,
+                        )
+                        SectionDivider()
+                        SettingsRow(
+                            label = "Baud Rate",
+                            value = baudRateStr,
+                            showChevron = isCatMode,
+                            onClick = if (isCatMode) {{ showBaudRatePicker = true }} else null,
                         )
                         SectionDivider()
                         SettingsRow(
