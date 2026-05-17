@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import android.widget.Toast
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
@@ -13,6 +14,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import com.bg7yoz.ft8cn.GeneralVariables
 import com.bg7yoz.ft8cn.MainViewModel
 import com.bg7yoz.ft8cn.database.OperationBand
@@ -28,6 +30,7 @@ import radio.ks3ckc.ft8us.ui.waterfall.WaterfallScreen
 
 @Composable
 fun FT8USApp(mainViewModel: MainViewModel) {
+    val context = LocalContext.current
     var activeTab by rememberSaveable { mutableStateOf(FT8USTab.DECODE) }
 
     // Observe transmit state
@@ -76,8 +79,12 @@ fun FT8USApp(mainViewModel: MainViewModel) {
             bandLabel = bandLabel,
             frequencyMhz = frequencyMhz,
             onCallCQ = {
-                mainViewModel.ft8TransmitSignal.resetToCQ()
-                mainViewModel.ft8TransmitSignal.setActivated(true)
+                if (GeneralVariables.myCallsign.isNullOrEmpty()) {
+                    Toast.makeText(context, "Set your callsign in Settings before calling CQ", Toast.LENGTH_SHORT).show()
+                } else {
+                    mainViewModel.ft8TransmitSignal.resetToCQ()
+                    mainViewModel.ft8TransmitSignal.setActivated(true)
+                }
             },
             onStop = {
                 mainViewModel.ft8TransmitSignal.setActivated(false)
