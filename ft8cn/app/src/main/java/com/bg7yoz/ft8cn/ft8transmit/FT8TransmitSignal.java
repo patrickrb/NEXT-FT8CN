@@ -1100,7 +1100,7 @@ public class FT8TransmitSignal {
         if (toCallsign == null) {
             //must determine my callsign type to set i3n3 !!!
             int i3 = GenerateFT8.checkI3ByCallsign(GeneralVariables.myCallsign);
-            setTransmit(new TransmitCallsign(i3, 0, "CQ", (UtcTimer.getNowSequential() + 1) % 2)
+            setTransmit(new TransmitCallsign(i3, 0, "CQ", sequential)
                     , 6, "");
         } else {
             functionOrder = 6;

@@ -35,8 +35,10 @@ fun TxStrip(
     isActivated: Boolean,
     bandLabel: String,
     frequencyMhz: String,
+    txSlot: Int,
     onCallCQ: () -> Unit,
     onStop: () -> Unit,
+    onToggleSlot: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val bgColor = if (isTransmitting) {
@@ -116,6 +118,25 @@ fun TxStrip(
                     fontWeight = FontWeight.Bold,
                     fontFamily = GeistMonoFamily,
                     letterSpacing = 0.04.sp,
+                )
+            }
+
+            // TX slot toggle pill
+            Box(
+                modifier = Modifier
+                    .clip(RoundedCornerShape(6.dp))
+                    .background(BgSurface3)
+                    .clickable { onToggleSlot() }
+                    .padding(horizontal = 8.dp, vertical = 4.dp),
+                contentAlignment = Alignment.Center,
+            ) {
+                Text(
+                    text = if (txSlot == 0) "TX1" else "TX2",
+                    color = TextMuted,
+                    fontSize = 11.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    fontFamily = GeistMonoFamily,
+                    letterSpacing = 0.02.sp,
                 )
             }
 

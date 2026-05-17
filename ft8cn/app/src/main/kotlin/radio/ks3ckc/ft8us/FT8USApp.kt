@@ -36,6 +36,7 @@ fun FT8USApp(mainViewModel: MainViewModel) {
     // Observe transmit state
     val isTransmitting by mainViewModel.ft8TransmitSignal.mutableIsTransmitting.observeAsState(false)
     val isActivated by mainViewModel.ft8TransmitSignal.mutableIsActivated.observeAsState(false)
+    val txSlot by mainViewModel.ft8TransmitSignal.mutableSequential.observeAsState(mainViewModel.ft8TransmitSignal.sequential)
 
     // Derive band/frequency from GeneralVariables
     val bandIndex by GeneralVariables.mutableBandChange.observeAsState(GeneralVariables.bandListIndex)
@@ -79,6 +80,7 @@ fun FT8USApp(mainViewModel: MainViewModel) {
             isActivated = isActivated,
             bandLabel = bandLabel,
             frequencyMhz = frequencyMhz,
+            txSlot = txSlot,
             onCallCQ = {
                 if (GeneralVariables.myCallsign.isNullOrEmpty()) {
                     Toast.makeText(context, "Set your callsign in Settings before calling CQ", Toast.LENGTH_SHORT).show()
@@ -89,6 +91,12 @@ fun FT8USApp(mainViewModel: MainViewModel) {
             },
             onStop = {
                 mainViewModel.ft8TransmitSignal.setActivated(false)
+            },
+            onToggleSlot = {
+                val current = mainViewModel.ft8TransmitSignal.sequential
+                val newSlot = if (current == 0) 1 else 0
+                mainViewModel.ft8TransmitSignal.sequential = newSlot
+                mainViewModel.ft8TransmitSignal.mutableSequential.postValue(newSlot)
             },
         )
 
