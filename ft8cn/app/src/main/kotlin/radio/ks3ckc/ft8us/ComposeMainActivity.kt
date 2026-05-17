@@ -18,9 +18,14 @@ import androidx.activity.OnBackPressedCallback
 import androidx.activity.compose.setContent
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import android.os.Handler
+import android.os.Looper
+import androidx.lifecycle.Observer
 import com.bg7yoz.ft8cn.GeneralVariables
 import com.bg7yoz.ft8cn.MainViewModel
 import com.bg7yoz.ft8cn.bluetooth.BluetoothStateBroadcastReceive
+import com.bg7yoz.ft8cn.connector.CableSerialPort
+import com.bg7yoz.ft8cn.connector.ConnectMode
 import com.bg7yoz.ft8cn.callsign.CallsignDatabase
 import com.bg7yoz.ft8cn.database.DatabaseOpr
 import com.bg7yoz.ft8cn.database.OnAfterQueryConfig
@@ -30,7 +35,11 @@ import com.bg7yoz.ft8cn.log.OnShareLogEvents
 import com.bg7yoz.ft8cn.maidenhead.MaidenheadGrid
 import com.bg7yoz.ft8cn.ui.ToastMessage
 import radio.ks3ckc.ft8us.theme.FT8USTheme
+import java.io.File
 import java.io.IOException
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 class ComposeMainActivity : ComponentActivity() {
 
@@ -92,10 +101,16 @@ class ComposeMainActivity : ComponentActivity() {
         }
 
         // Initialize data
+        fileLog("=== APP START ===")
         initData()
 
-        // List USB devices
-        mainViewModel.getUsbDevice()
+        // Observe serial port changes for auto-connect (mirrors old MainActivity behavior)
+        mainViewModel.mutableSerialPorts.observe(
+            this,
+            Observer { ports ->
+                autoConnectUsbIfNeeded(ports)
+            },
+        )
 
         // Handle shared file import if needed
         if (mainViewModel.mutableImportShareRunning.value == true) {
@@ -154,12 +169,35 @@ class ComposeMainActivity : ComponentActivity() {
 
             override fun doOnAfterQueryConfig(keyName: String?, value: String?) {
                 mainViewModel.configIsLoaded = true
+                fileLog("configLoaded: instructionSet=${GeneralVariables.instructionSet}, " +
+                    "baudRate=${GeneralVariables.baudRate}, " +
+                    "controlMode=${GeneralVariables.controlMode}, " +
+                    "connectMode=${GeneralVariables.connectMode}")
                 val grid = MaidenheadGrid.getMyMaidenheadGrid(applicationContext)
                 if (grid.isNotEmpty()) {
                     GeneralVariables.setMyMaidenheadGrid(grid)
                     mainViewModel.databaseOpr.writeConfig("grid", grid, null)
                 }
                 mainViewModel.ft8TransmitSignal.setTimer_sec(GeneralVariables.transmitDelay)
+
+                // Scan for USB devices AFTER config is loaded
+                fileLog("initData: scanning USB devices")
+                mainViewModel.getUsbDevice()
+                val ports = mainViewModel.mutableSerialPorts.value
+                fileLog("initData: found ${ports?.size ?: 0} serial port(s)")
+                mainViewModel.reinitializeAudioInput()
+
+                // Delayed re-scan for slow USB enumeration
+                Handler(Looper.getMainLooper()).postDelayed({
+                    val connected = mainViewModel.isRigConnected()
+                    fileLog("initData delayed: rigConnected=$connected")
+                    if (!connected) {
+                        mainViewModel.getUsbDevice()
+                        val delayedPorts = mainViewModel.mutableSerialPorts.value
+                        fileLog("initData delayed: found ${delayedPorts?.size ?: 0} serial port(s)")
+                    }
+                    mainViewModel.reinitializeAudioInput()
+                }, 3000)
             }
         })
 
@@ -226,7 +264,23 @@ class ComposeMainActivity : ComponentActivity() {
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
         if ("android.hardware.usb.action.USB_DEVICE_ATTACHED" == intent.action) {
+            fileLog("onNewIntent: USB_DEVICE_ATTACHED")
+            // Immediate scan
             mainViewModel.getUsbDevice()
+            val ports = mainViewModel.mutableSerialPorts.value
+            fileLog("onNewIntent: immediate scan found ${ports?.size ?: 0} port(s)")
+
+            // Delayed re-scan and audio reinit (USB needs time to enumerate)
+            Handler(Looper.getMainLooper()).postDelayed({
+                val connected = mainViewModel.isRigConnected()
+                fileLog("onNewIntent delayed: rigConnected=$connected")
+                if (!connected) {
+                    mainViewModel.getUsbDevice()
+                    val delayedPorts = mainViewModel.mutableSerialPorts.value
+                    fileLog("onNewIntent delayed: re-scan found ${delayedPorts?.size ?: 0} port(s)")
+                }
+                mainViewModel.reinitializeAudioInput()
+            }, 2000)
         } else {
             setIntent(intent)
             doReceiveShareFile(intent)
@@ -262,6 +316,46 @@ class ComposeMainActivity : ComponentActivity() {
     override fun onDestroy() {
         unregisterBluetoothReceiver()
         super.onDestroy()
+    }
+
+    /**
+     * Auto-connect to USB serial rig when ports are detected, rig isn't already connected,
+     * and connect mode is USB Cable with a non-VOX control mode.
+     * Connects to the first detected port (most radios expose CAT as the first port).
+     */
+    private fun autoConnectUsbIfNeeded(ports: ArrayList<CableSerialPort.SerialPort>?) {
+        if (ports.isNullOrEmpty()) {
+            fileLog("autoConnect: no serial ports detected")
+            return
+        }
+        if (mainViewModel.isRigConnected()) {
+            fileLog("autoConnect: rig already connected, skipping")
+            return
+        }
+        if (GeneralVariables.connectMode != ConnectMode.USB_CABLE) {
+            fileLog("autoConnect: connectMode=${GeneralVariables.connectMode}, not USB_CABLE")
+            return
+        }
+        if (!mainViewModel.configIsLoaded) {
+            fileLog("autoConnect: config not loaded yet, skipping")
+            return
+        }
+
+        fileLog("autoConnect: connecting to port 0 of ${ports.size} " +
+            "(instructionSet=${GeneralVariables.instructionSet}, " +
+            "baudRate=${GeneralVariables.baudRate}, " +
+            "controlMode=${GeneralVariables.controlMode})")
+        mainViewModel.connectCableRig(applicationContext, ports[0])
+    }
+
+    /** Write a line to /sdcard/Android/data/com.bg7yoz.ft8cn/files/debug.log */
+    private fun fileLog(msg: String) {
+        try {
+            val ts = SimpleDateFormat("HH:mm:ss.SSS", Locale.US).format(Date())
+            val dir = getExternalFilesDir(null) ?: return
+            File(dir, "debug.log").appendText("$ts $msg\n")
+        } catch (_: Exception) {}
+        Log.d(TAG, msg)
     }
 
     private fun closeApp() {

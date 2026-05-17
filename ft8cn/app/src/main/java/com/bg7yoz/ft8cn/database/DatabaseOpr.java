@@ -22,6 +22,7 @@ import com.bg7yoz.ft8cn.FT8Common;
 import com.bg7yoz.ft8cn.Ft8Message;
 import com.bg7yoz.ft8cn.GeneralVariables;
 import com.bg7yoz.ft8cn.R;
+import com.bg7yoz.ft8cn.connector.ConnectMode;
 import com.bg7yoz.ft8cn.ft8signal.FT8Package;
 import com.bg7yoz.ft8cn.log.OnQueryQSLCallsign;
 import com.bg7yoz.ft8cn.log.OnQueryQSLRecordCallsign;
@@ -2123,6 +2124,9 @@ public class DatabaseOpr extends SQLiteOpenHelper {
 
                 if (name.equalsIgnoreCase("ctrMode")) {
                     GeneralVariables.controlMode = result.equals("") ? ControlMode.VOX : Integer.parseInt(result);
+                }
+                if (name.equalsIgnoreCase("connectMode")) {
+                    GeneralVariables.connectMode = result.equals("") ? ConnectMode.USB_CABLE : Integer.parseInt(result);
                 }
                 if (name.equalsIgnoreCase("model")) {//Radio model
                     GeneralVariables.modelNo = result.equals("") ? 0 : Integer.parseInt(result);

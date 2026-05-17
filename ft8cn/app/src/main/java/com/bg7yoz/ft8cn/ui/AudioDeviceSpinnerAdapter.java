@@ -202,7 +202,7 @@ public class AudioDeviceSpinnerAdapter extends BaseAdapter {
         return view;
     }
 
-    private String getDeviceDisplayName(int position) {
+    public String getDeviceDisplayName(int position) {
         if (position == 0) {
             return mContext.getString(R.string.audio_device_default);
         }

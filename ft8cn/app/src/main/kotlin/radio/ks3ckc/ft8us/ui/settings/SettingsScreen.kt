@@ -50,14 +50,18 @@ import androidx.compose.runtime.rememberCoroutineScope
 import kotlinx.coroutines.launch
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.CircularProgressIndicator
+import android.media.AudioManager
 import com.bg7yoz.ft8cn.GeneralVariables
 import com.bg7yoz.ft8cn.MainViewModel
+import com.bg7yoz.ft8cn.connector.CableSerialPort
 import com.bg7yoz.ft8cn.connector.ConnectMode
 import com.bg7yoz.ft8cn.database.ControlMode
 import com.bg7yoz.ft8cn.database.OperationBand
+import com.bg7yoz.ft8cn.database.RigNameList
 import com.bg7yoz.ft8cn.ft8signal.FT8Package
 import com.bg7yoz.ft8cn.rigs.BaseRigOperation
 import com.bg7yoz.ft8cn.rigs.InstructionSet
+import com.bg7yoz.ft8cn.ui.AudioDeviceSpinnerAdapter
 import com.bg7yoz.ft8cn.ui.LoginIcomRadioDialog
 import com.bg7yoz.ft8cn.ui.SelectBluetoothDialog
 import com.bg7yoz.ft8cn.ui.SelectFlexRadioDialog
@@ -99,6 +103,10 @@ fun SettingsScreen(
     var saveSWLMessage by remember { mutableStateOf(GeneralVariables.saveSWLMessage) }
     var saveSWL_QSO by remember { mutableStateOf(GeneralVariables.saveSWL_QSO) }
 
+    // Observe serial ports for USB Cable picker
+    val serialPorts by mainViewModel.mutableSerialPorts.observeAsState()
+    var showSerialPortPicker by remember { mutableStateOf(false) }
+
     // Dialog visibility state
     var showEditOperator by remember { mutableStateOf(false) }
     var showConnectionMode by remember { mutableStateOf(false) }
@@ -110,6 +118,11 @@ fun SettingsScreen(
     var showTxDelay by remember { mutableStateOf(false) }
     var showAbout by remember { mutableStateOf(false) }
     var showCloudlog by remember { mutableStateOf(false) }
+    var showRigModelPicker by remember { mutableStateOf(false) }
+    var showControlModePicker by remember { mutableStateOf(false) }
+    var showAudioInputPicker by remember { mutableStateOf(false) }
+    var showAudioOutputPicker by remember { mutableStateOf(false) }
+    var showBaudRatePicker by remember { mutableStateOf(false) }
 
     // Operator identity edit state
     var callsignState by remember { mutableStateOf(GeneralVariables.myCallsign.orEmpty()) }
@@ -122,6 +135,9 @@ fun SettingsScreen(
     var txDelay by remember { mutableIntStateOf(GeneralVariables.transmitDelay) }
     var connectMode by remember { mutableIntStateOf(GeneralVariables.connectMode) }
     var cloudlogAddress by remember { mutableStateOf(GeneralVariables.cloudlogServerAddress.orEmpty()) }
+    var controlMode by remember { mutableIntStateOf(GeneralVariables.controlMode) }
+    var modelNo by remember { mutableIntStateOf(GeneralVariables.modelNo) }
+    var baudRate by remember { mutableIntStateOf(GeneralVariables.baudRate) }
 
     // Derived display strings
     val callsign = callsignState
@@ -139,7 +155,36 @@ fun SettingsScreen(
     } else {
         "Not connected"
     }
-    val isCatMode = GeneralVariables.controlMode == ControlMode.CAT
+    val baudRateStr = "$baudRate"
+    val isCatMode = controlMode == ControlMode.CAT
+        || controlMode == ControlMode.RTS
+        || controlMode == ControlMode.DTR
+
+    // Rig model list
+    val rigNameList = remember { RigNameList.getInstance(context) }
+    val rigModelStr = remember(modelNo) {
+        rigNameList.getRigNameByIndex(modelNo).name
+    }
+
+    // Control mode display
+    val controlModeStr = when (controlMode) {
+        ControlMode.CAT -> "CAT"
+        ControlMode.RTS -> "RTS"
+        ControlMode.DTR -> "DTR"
+        else -> "VOX"
+    }
+
+    // Audio device display names
+    val audioInputAdapter = remember { AudioDeviceSpinnerAdapter(context, AudioManager.GET_DEVICES_INPUTS) }
+    val audioOutputAdapter = remember { AudioDeviceSpinnerAdapter(context, AudioManager.GET_DEVICES_OUTPUTS) }
+    val audioInputPos = remember(GeneralVariables.audioInputDeviceId) {
+        audioInputAdapter.getPositionByDeviceId(GeneralVariables.audioInputDeviceId)
+    }
+    val audioOutputPos = remember(GeneralVariables.audioOutputDeviceId) {
+        audioOutputAdapter.getPositionByDeviceId(GeneralVariables.audioOutputDeviceId)
+    }
+    var audioInputName by remember { mutableStateOf(audioInputAdapter.getDeviceDisplayName(audioInputPos)) }
+    var audioOutputName by remember { mutableStateOf(audioOutputAdapter.getDeviceDisplayName(audioOutputPos)) }
 
     // =====================================================================
     // DIALOGS
@@ -203,10 +248,34 @@ fun SettingsScreen(
                                 LoginIcomRadioDialog(context, mainViewModel).show()
                         }
                     }
-                    // USB Cable: mode is set, no further dialog needed
+                    ConnectMode.USB_CABLE -> {
+                        mainViewModel.getUsbDevice()
+                        showSerialPortPicker = true
+                    }
                 }
             },
         )
+    }
+
+    // -- Serial Port Picker (USB Cable) --
+    if (showSerialPortPicker) {
+        val ports = serialPorts
+        if (ports.isNullOrEmpty()) {
+            InfoDialog(
+                title = "USB Cable",
+                body = "No USB serial devices detected. Please connect a USB cable to your radio and try again.",
+                onDismiss = { showSerialPortPicker = false },
+            )
+        } else {
+            SerialPortPickerDialog(
+                ports = ports,
+                onDismiss = { showSerialPortPicker = false },
+                onSelect = { port ->
+                    showSerialPortPicker = false
+                    mainViewModel.connectCableRig(context, port)
+                },
+            )
+        }
     }
 
     // -- Band & Frequency Picker --
@@ -228,10 +297,22 @@ fun SettingsScreen(
                     "bandFreq", GeneralVariables.band.toString(), null,
                 )
                 mainViewModel.databaseOpr.getAllQSLCallsigns()
-                if (GeneralVariables.controlMode == ControlMode.CAT
-                    || GeneralVariables.controlMode == ControlMode.RTS
-                    || GeneralVariables.controlMode == ControlMode.DTR
-                ) {
+                val cm = GeneralVariables.controlMode
+                val connected = mainViewModel.isRigConnected()
+                android.util.Log.d("SettingsScreen",
+                    "bandSelect: index=$index, band=${GeneralVariables.band}, " +
+                    "controlMode=$cm, rigConnected=$connected")
+                try {
+                    val dir = context.getExternalFilesDir(null)
+                    if (dir != null) {
+                        val ts = java.text.SimpleDateFormat("HH:mm:ss.SSS", java.util.Locale.US)
+                            .format(java.util.Date())
+                        java.io.File(dir, "debug.log").appendText(
+                            "$ts bandSelect: index=$index, band=${GeneralVariables.band}, " +
+                            "controlMode=$cm, rigConnected=$connected\n")
+                    }
+                } catch (_: Exception) {}
+                if (cm == ControlMode.CAT || cm == ControlMode.RTS || cm == ControlMode.DTR) {
                     mainViewModel.setOperationBand()
                 }
             },
@@ -383,6 +464,165 @@ fun SettingsScreen(
         )
     }
 
+    // -- Rig Model Picker --
+    if (showRigModelPicker) {
+        val rigItems = rigNameList.rigList
+            .mapIndexed { index, rig -> index to rig }
+            .filter { (_, rig) -> !rig.modelName.startsWith("#") }
+        val rigDisplayNames = rigItems.map { (_, rig) -> rig.name }
+        val currentRigIndex = rigItems.indexOfFirst { (index, _) -> index == modelNo }
+            .coerceAtLeast(0)
+        ListPickerDialog(
+            title = "Rig Model",
+            items = rigDisplayNames,
+            selectedIndex = currentRigIndex,
+            onDismiss = { showRigModelPicker = false },
+            onSelect = { selectedDisplayIndex ->
+                showRigModelPicker = false
+                val (actualIndex, selectedRig) = rigItems[selectedDisplayIndex]
+                GeneralVariables.modelNo = actualIndex
+                modelNo = actualIndex
+                GeneralVariables.instructionSet = selectedRig.instructionSet
+                GeneralVariables.civAddress = selectedRig.address
+                GeneralVariables.baudRate = selectedRig.bauRate
+                baudRate = selectedRig.bauRate
+                mainViewModel.setCivAddress()
+                mainViewModel.databaseOpr.writeConfig("model", actualIndex.toString(), null)
+                mainViewModel.databaseOpr.writeConfig(
+                    "instruction", GeneralVariables.instructionSet.toString(), null,
+                )
+                mainViewModel.databaseOpr.writeConfig(
+                    "baudRate", GeneralVariables.baudRate.toString(), null,
+                )
+                mainViewModel.databaseOpr.writeConfig(
+                    "civ", GeneralVariables.civAddress.toString(), null,
+                )
+            },
+        )
+    }
+
+    // -- Control Mode Picker --
+    if (showControlModePicker) {
+        val controlModeOptions = listOf("VOX", "CAT", "RTS", "DTR")
+        val controlModeValues = listOf(ControlMode.VOX, ControlMode.CAT, ControlMode.RTS, ControlMode.DTR)
+        val currentControlIndex = controlModeValues.indexOf(controlMode).coerceAtLeast(0)
+        ListPickerDialog(
+            title = "Control Mode",
+            items = controlModeOptions,
+            selectedIndex = currentControlIndex,
+            onDismiss = { showControlModePicker = false },
+            onSelect = { index ->
+                showControlModePicker = false
+                val newMode = controlModeValues[index]
+                GeneralVariables.controlMode = newMode
+                controlMode = newMode
+                mainViewModel.setControlMode()
+                mainViewModel.databaseOpr.writeConfig("ctrMode", newMode.toString(), null)
+                if (newMode == ControlMode.CAT
+                    || newMode == ControlMode.RTS
+                    || newMode == ControlMode.DTR
+                ) {
+                    if (!mainViewModel.isRigConnected()) {
+                        mainViewModel.getUsbDevice()
+                        showSerialPortPicker = true
+                    } else {
+                        mainViewModel.setOperationBand()
+                    }
+                }
+            },
+        )
+    }
+
+    // -- Baud Rate Picker --
+    if (showBaudRatePicker) {
+        val baudRateOptions = listOf(4800, 9600, 14400, 19200, 38400, 43000, 56000, 57600, 115200)
+        val baudRateLabels = baudRateOptions.map { it.toString() }
+        val currentBaudIndex = baudRateOptions.indexOf(baudRate).coerceAtLeast(0)
+        ListPickerDialog(
+            title = "Baud Rate",
+            items = baudRateLabels,
+            selectedIndex = currentBaudIndex,
+            onDismiss = { showBaudRatePicker = false },
+            onSelect = { index ->
+                showBaudRatePicker = false
+                val newBaudRate = baudRateOptions[index]
+                GeneralVariables.baudRate = newBaudRate
+                baudRate = newBaudRate
+                mainViewModel.databaseOpr.writeConfig("baudRate", newBaudRate.toString(), null)
+            },
+        )
+    }
+
+    // -- Audio Input Device Picker --
+    if (showAudioInputPicker) {
+        AudioDevicePickerDialog(
+            title = "Audio Input",
+            adapter = audioInputAdapter,
+            currentDeviceId = GeneralVariables.audioInputDeviceId,
+            onDismiss = { showAudioInputPicker = false },
+            onSelect = { position ->
+                showAudioInputPicker = false
+                val deviceId = audioInputAdapter.getDeviceId(position)
+                GeneralVariables.audioInputDeviceId = deviceId
+                mainViewModel.databaseOpr.writeConfig("audioInputDevice", deviceId.toString(), null)
+
+                val usbInfo = audioInputAdapter.getUsbAudioDeviceInfo(position)
+                if (usbInfo != null) {
+                    GeneralVariables.usbAudioInputVendorId = usbInfo.device.vendorId
+                    GeneralVariables.usbAudioInputProductId = usbInfo.device.productId
+                    mainViewModel.databaseOpr.writeConfig(
+                        "usbAudioInputVid", GeneralVariables.usbAudioInputVendorId.toString(), null,
+                    )
+                    mainViewModel.databaseOpr.writeConfig(
+                        "usbAudioInputPid", GeneralVariables.usbAudioInputProductId.toString(), null,
+                    )
+                    mainViewModel.requestUsbPermissionIfNeeded(usbInfo.device)
+                } else if (deviceId != -1) {
+                    GeneralVariables.usbAudioInputVendorId = 0
+                    GeneralVariables.usbAudioInputProductId = 0
+                    mainViewModel.databaseOpr.writeConfig("usbAudioInputVid", "0", null)
+                    mainViewModel.databaseOpr.writeConfig("usbAudioInputPid", "0", null)
+                }
+                audioInputName = audioInputAdapter.getDeviceDisplayName(position)
+            },
+        )
+    }
+
+    // -- Audio Output Device Picker --
+    if (showAudioOutputPicker) {
+        AudioDevicePickerDialog(
+            title = "Audio Output",
+            adapter = audioOutputAdapter,
+            currentDeviceId = GeneralVariables.audioOutputDeviceId,
+            onDismiss = { showAudioOutputPicker = false },
+            onSelect = { position ->
+                showAudioOutputPicker = false
+                val deviceId = audioOutputAdapter.getDeviceId(position)
+                GeneralVariables.audioOutputDeviceId = deviceId
+                mainViewModel.databaseOpr.writeConfig("audioOutputDevice", deviceId.toString(), null)
+
+                val usbInfo = audioOutputAdapter.getUsbAudioDeviceInfo(position)
+                if (usbInfo != null) {
+                    GeneralVariables.usbAudioOutputVendorId = usbInfo.device.vendorId
+                    GeneralVariables.usbAudioOutputProductId = usbInfo.device.productId
+                    mainViewModel.databaseOpr.writeConfig(
+                        "usbAudioOutputVid", GeneralVariables.usbAudioOutputVendorId.toString(), null,
+                    )
+                    mainViewModel.databaseOpr.writeConfig(
+                        "usbAudioOutputPid", GeneralVariables.usbAudioOutputProductId.toString(), null,
+                    )
+                    mainViewModel.requestUsbPermissionIfNeeded(usbInfo.device)
+                } else if (deviceId != -1) {
+                    GeneralVariables.usbAudioOutputVendorId = 0
+                    GeneralVariables.usbAudioOutputProductId = 0
+                    mainViewModel.databaseOpr.writeConfig("usbAudioOutputVid", "0", null)
+                    mainViewModel.databaseOpr.writeConfig("usbAudioOutputPid", "0", null)
+                }
+                audioOutputName = audioOutputAdapter.getDeviceDisplayName(position)
+            },
+        )
+    }
+
     // =====================================================================
     // SCREEN CONTENT
     // =====================================================================
@@ -421,10 +661,31 @@ fun SettingsScreen(
                 GlassCard(modifier = Modifier.fillMaxWidth()) {
                     Column {
                         SettingsRow(
+                            label = "Rig Model",
+                            value = rigModelStr,
+                            showChevron = true,
+                            onClick = { showRigModelPicker = true },
+                        )
+                        SectionDivider()
+                        SettingsRow(
+                            label = "Control Mode",
+                            value = controlModeStr,
+                            showChevron = true,
+                            onClick = { showControlModePicker = true },
+                        )
+                        SectionDivider()
+                        SettingsRow(
                             label = "Connection Mode",
                             value = connectModeStr,
                             showChevron = isCatMode,
                             onClick = if (isCatMode) {{ showConnectionMode = true }} else null,
+                        )
+                        SectionDivider()
+                        SettingsRow(
+                            label = "Baud Rate",
+                            value = baudRateStr,
+                            showChevron = isCatMode,
+                            onClick = if (isCatMode) {{ showBaudRatePicker = true }} else null,
                         )
                         SectionDivider()
                         SettingsRow(
@@ -439,6 +700,35 @@ fun SettingsScreen(
                             value = audioFreqStr,
                             showChevron = !synFrequency,
                             onClick = if (!synFrequency) {{ showAudioFreq = true }} else null,
+                        )
+                    }
+                }
+            }
+
+            // =====================================================================
+            // 2b. AUDIO
+            // =====================================================================
+            SettingsSection(title = "AUDIO") {
+                GlassCard(modifier = Modifier.fillMaxWidth()) {
+                    Column {
+                        SettingsRow(
+                            label = "Audio Input",
+                            value = audioInputName,
+                            showChevron = true,
+                            onClick = {
+                                audioInputAdapter.refreshDevices()
+                                showAudioInputPicker = true
+                            },
+                        )
+                        SectionDivider()
+                        SettingsRow(
+                            label = "Audio Output",
+                            value = audioOutputName,
+                            showChevron = true,
+                            onClick = {
+                                audioOutputAdapter.refreshDevices()
+                                showAudioOutputPicker = true
+                            },
                         )
                     }
                 }
@@ -1085,6 +1375,67 @@ private fun NumberInputDialog(
 }
 
 /**
+ * Dialog for selecting a USB serial port to connect to a rig.
+ */
+@Composable
+private fun SerialPortPickerDialog(
+    ports: List<CableSerialPort.SerialPort>,
+    onDismiss: () -> Unit,
+    onSelect: (CableSerialPort.SerialPort) -> Unit,
+) {
+    Dialog(onDismissRequest = onDismiss) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clip(RoundedCornerShape(16.dp))
+                .background(BgSurface2)
+                .padding(vertical = 24.dp),
+        ) {
+            Text(
+                text = "Select Serial Port",
+                color = TextPrimary,
+                fontWeight = FontWeight.SemiBold,
+                fontSize = 18.sp,
+                modifier = Modifier.padding(horizontal = 24.dp),
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .heightIn(max = 360.dp),
+            ) {
+                itemsIndexed(ports) { _, port ->
+                    Text(
+                        text = port.information(),
+                        color = TextPrimary,
+                        fontSize = 14.sp,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable { onSelect(port) }
+                            .padding(horizontal = 24.dp, vertical = 12.dp),
+                    )
+                }
+            }
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 24.dp),
+                horizontalArrangement = Arrangement.End,
+            ) {
+                TextButton(onClick = onDismiss) {
+                    Text("Cancel", color = TextMuted)
+                }
+            }
+        }
+    }
+}
+
+/**
  * Simple informational dialog with a dismiss button.
  */
 @Composable
@@ -1126,4 +1477,28 @@ private fun InfoDialog(
             }
         }
     }
+}
+
+/**
+ * Dialog for selecting an audio input or output device from [AudioDeviceSpinnerAdapter].
+ */
+@Composable
+private fun AudioDevicePickerDialog(
+    title: String,
+    adapter: AudioDeviceSpinnerAdapter,
+    currentDeviceId: Int,
+    onDismiss: () -> Unit,
+    onSelect: (position: Int) -> Unit,
+) {
+    val count = adapter.count
+    val items = (0 until count).map { adapter.getDeviceDisplayName(it) }
+    val selectedIndex = adapter.getPositionByDeviceId(currentDeviceId).coerceIn(0, count - 1)
+
+    ListPickerDialog(
+        title = title,
+        items = items,
+        selectedIndex = selectedIndex,
+        onDismiss = onDismiss,
+        onSelect = onSelect,
+    )
 }

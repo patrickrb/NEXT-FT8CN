@@ -200,14 +200,6 @@ public class MicRecorder {
         if (useUsbAudio && usbAudioDevice != null) {
             usbAudioDevice.stopCapture();
         }
-        if (audioRecord != null) {
-            try {
-                audioRecord.release();
-            } catch (Exception e) {
-                Log.d(TAG, "Error releasing AudioRecord: " + e.getMessage());
-            }
-            audioRecord = null;
-        }
     }
 
     public OnDataListener getOnDataListener() {
@@ -216,5 +208,75 @@ public class MicRecorder {
 
     public void setOnDataListener(OnDataListener onDataListener) {
         this.onDataListener = onDataListener;
+    }
+
+    /**
+     * Reinitialize the audio input device. Stops current audio capture,
+     * re-checks for USB audio device availability, and restarts if it was running.
+     * This handles the case where a USB audio device is connected after MicRecorder
+     * was originally constructed.
+     */
+    @SuppressLint("MissingPermission")
+    public void reinitialize() {
+        boolean wasRunning = isRunning;
+        OnDataListener savedListener = onDataListener;
+
+        // Stop current capture
+        stopRecord();
+
+        // Release old AudioRecord (stopRecord only sets isRunning=false)
+        if (audioRecord != null) {
+            try {
+                audioRecord.release();
+            } catch (Exception e) {
+                Log.d(TAG, "reinitialize: error releasing AudioRecord: " + e.getMessage());
+            }
+            audioRecord = null;
+        }
+
+        // Close old USB audio device
+        if (usbAudioDevice != null) {
+            try {
+                usbAudioDevice.close();
+            } catch (Exception e) {
+                Log.d(TAG, "reinitialize: error closing USB audio device: " + e.getMessage());
+            }
+        }
+
+        // Reset state
+        useUsbAudio = false;
+        usbAudioDevice = null;
+
+        // Re-check for USB audio input
+        if (GeneralVariables.audioInputDeviceId == -1
+                && GeneralVariables.usbAudioInputVendorId != 0) {
+            usbAudioDevice = openUsbAudioInput();
+            if (usbAudioDevice != null) {
+                useUsbAudio = true;
+                UsbAudioDevice.setActiveInputDevice(usbAudioDevice);
+                Log.d(TAG, "reinitialize: Using USB audio input device");
+            } else {
+                Log.w(TAG, "reinitialize: USB audio device not available, falling back to default");
+            }
+        }
+
+        // Set up standard AudioRecord if not using USB audio
+        if (!useUsbAudio) {
+            bufferSize = AudioRecord.getMinBufferSize(sampleRateInHz, channelConfig, audioFormat);
+            audioRecord = new AudioRecord(MediaRecorder.AudioSource.DEFAULT, sampleRateInHz,
+                    channelConfig, audioFormat, bufferSize);
+
+            if (GeneralVariables.audioInputDeviceId > 0) {
+                AudioDeviceInfo deviceInfo = findAudioDeviceById(
+                        GeneralVariables.audioInputDeviceId, AudioManager.GET_DEVICES_INPUTS);
+                audioRecord.setPreferredDevice(deviceInfo);
+            }
+        }
+
+        // Restore listener and restart if it was running
+        onDataListener = savedListener;
+        if (wasRunning) {
+            start();
+        }
     }
 }

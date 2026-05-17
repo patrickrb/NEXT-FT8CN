@@ -59,6 +59,10 @@ public class WaterfallView extends View {
     private int freq_hz = -1;
     private boolean drawMessage = false;//Whether to draw message content
 
+    // Track the bitmap dimensions to avoid recreating on minor layout changes
+    private int bitmapWidth = 0;
+    private int bitmapHeight = 0;
+
     public WaterfallView(Context context) {
         super(context);
     }
@@ -86,9 +90,21 @@ public class WaterfallView extends View {
 
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+        if (w <= 0 || h <= 0) return;
+
+        // Skip bitmap recreation if the size hasn't meaningfully changed.
+        // Compose layout can cause small oscillations in the view size;
+        // recreating the bitmap each time wipes all accumulated waterfall data.
+        if (lastBitMap != null && w == bitmapWidth && Math.abs(h - bitmapHeight) < 20) {
+            return;
+        }
+
         setClickable(true);
-        blockHeight = getHeight() / (symbols * cycle);
-        freq_width = (float) getWidth() / 3000f;
+        bitmapWidth = w;
+        bitmapHeight = h;
+        blockHeight = h / (symbols * cycle);
+        if (blockHeight < 1) blockHeight = 1;
+        freq_width = (float) w / 3000f;
         lastBitMap = Bitmap.createBitmap(w, h, ARGB_8888);
         _canvas = new Canvas(lastBitMap);
         Paint blackPaint = new Paint();
@@ -127,16 +143,6 @@ public class WaterfallView extends View {
         messagePaint.setTextAlign(Paint.Align.CENTER);
         messagePaint.setShadowLayer(10,5,5,Color.BLACK);
 
-        //messagePaintBack = new Paint();
-//        messagePaintBack.setTextSize(dpToPixel(11));
-//        messagePaintBack.setColor(0xff000000);//Opaque background
-//        messagePaintBack.setAntiAlias(true);
-//        messagePaintBack.setDither(true);
-//        messagePaintBack.setStrokeWidth(dpToPixel(3));
-//        messagePaintBack.setFakeBoldText(true);
-//        messagePaintBack.setStyle(Paint.Style.FILL_AND_STROKE);
-//        messagePaintBack.setTextAlign(Paint.Align.CENTER);
-
         //utcPaint = new Paint();
         utcPaint.setTextSize(dpToPixel(10));
         utcPaint.setColor(0xff00ffff);//
@@ -171,6 +177,7 @@ public class WaterfallView extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
+        if (lastBitMap == null) return;
         canvas.drawBitmap(lastBitMap, 0, 0, null);
 
         //Calculate frequency
@@ -195,7 +202,11 @@ public class WaterfallView extends View {
             canvas.drawLine(touch_x, 0, touch_x, getHeight(), touchPaint);
 
         }
-        invalidate();
+        // Do NOT call invalidate() here. The view is invalidated externally
+        // when new data arrives via setWaveData(). Calling invalidate() from
+        // onDraw() creates a continuous redraw loop that triggers layout
+        // thrashing in Compose's AndroidView, causing onSizeChanged to fire
+        // repeatedly and wipe all accumulated waterfall data.
     }
 
     public void setWaveData(int[] data, int sequential, List<Ft8Message> msgs) {
@@ -215,14 +226,19 @@ public class WaterfallView extends View {
             return;
         }
 
+        // Use bitmap dimensions for drawing, not getWidth()/getHeight() which
+        // may differ from the bitmap size during Compose layout transitions.
+        int drawWidth = bitmapWidth;
+        int drawHeight = bitmapHeight;
+
         int[] colors = new int[data.length];
 
         //Draw divider line
         if (sequential != lastSequential) {
-            Bitmap bitmap = Bitmap.createBitmap(lastBitMap, 0, 0, getWidth(), getHeight() - blockHeight);
-            _canvas.drawBitmap(bitmap, 0, blockHeight, linePaint);
+            Bitmap bitmap = Bitmap.createBitmap(lastBitMap, 0, 0, drawWidth, drawHeight - blockHeight);
+            _canvas.drawBitmap(bitmap, 0, blockHeight, null);
             bitmap.recycle();
-            _canvas.drawRect(0, 0, getWidth(), getResources().getDisplayMetrics().density
+            _canvas.drawRect(0, 0, drawWidth, getResources().getDisplayMetrics().density
                     , linePaint);
             _canvas.drawText(UtcTimer.getTimeStr(UtcTimer.getSystemTime()), 50
                     , 15 * getResources().getDisplayMetrics().density, utcPainBack);
@@ -244,20 +260,17 @@ public class WaterfallView extends View {
                 colors[i] = 0xff00ffff | (((data[i] - 127)) << 18);//Amplify 4x
             }
         }
-        LinearGradient linearGradient = new LinearGradient(0, 0, getWidth() * 2, 0, colors
+        LinearGradient linearGradient = new LinearGradient(0, 0, drawWidth * 2, 0, colors
                 , null, Shader.TileMode.CLAMP);
-        //Paint linearPaint = new Paint();
         linearPaint.setShader(linearGradient);
-        Bitmap bitmap = Bitmap.createBitmap(lastBitMap, 0, 0, getWidth(), getHeight() - blockHeight);
-        _canvas.drawBitmap(bitmap, 0, blockHeight, linearPaint);
+        Bitmap bitmap = Bitmap.createBitmap(lastBitMap, 0, 0, drawWidth, drawHeight - blockHeight);
+        _canvas.drawBitmap(bitmap, 0, blockHeight, null);
         bitmap.recycle();
-        _canvas.drawRect(0, 0, getWidth(), blockHeight, linearPaint);
+        _canvas.drawRect(0, 0, drawWidth, blockHeight, linearPaint);
 
         //Messages have 3 types: normal, CQ, and involving me
         if (drawMessage && messages != null) {
             drawMessage = false;//Only draw once
-            //fontPaint.setTextAlign(Paint.Align.LEFT);
-            //fontPaint.setStrikeThruText(true);
             for (Ft8Message msg : messages) {
 
                 if (msg.inMyCall()) {//Related to me
