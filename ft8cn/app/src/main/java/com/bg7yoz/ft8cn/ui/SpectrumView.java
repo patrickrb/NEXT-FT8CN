@@ -190,9 +190,9 @@ public class SpectrumView extends ConstraintLayout {
         }
         columnarView.setWaveData(fft);
         if (mainViewModel.markMessage) {//Whether to mark messages
-            waterfallView.setWaveData(fft, UtcTimer.getNowSequential(), mainViewModel.currentMessages);
+            waterfallView.setWaveData(fft, mainViewModel.currentMessages);
         } else {
-            waterfallView.setWaveData(fft, UtcTimer.getNowSequential(), null);
+            waterfallView.setWaveData(fft, null);
         }
     }
 

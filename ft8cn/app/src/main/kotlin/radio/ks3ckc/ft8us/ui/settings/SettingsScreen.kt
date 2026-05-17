@@ -112,6 +112,7 @@ fun SettingsScreen(
     var showConnectionMode by remember { mutableStateOf(false) }
     var showBandPicker by remember { mutableStateOf(false) }
     var showAudioFreq by remember { mutableStateOf(false) }
+    var showSpectrumWidth by remember { mutableStateOf(false) }
     var showWatchdog by remember { mutableStateOf(false) }
     var showStopAfter by remember { mutableStateOf(false) }
     var showPttDelay by remember { mutableStateOf(false) }
@@ -138,6 +139,7 @@ fun SettingsScreen(
     var controlMode by remember { mutableIntStateOf(GeneralVariables.controlMode) }
     var modelNo by remember { mutableIntStateOf(GeneralVariables.modelNo) }
     var baudRate by remember { mutableIntStateOf(GeneralVariables.baudRate) }
+    var spectrumWidth by remember { mutableIntStateOf(GeneralVariables.getSpectrumWidth()) }
 
     // Derived display strings
     val callsign = callsignState
@@ -321,18 +323,36 @@ fun SettingsScreen(
 
     // -- Audio Frequency Editor --
     if (showAudioFreq) {
+        val audioFreqMax = spectrumWidth - 100
         NumberInputDialog(
             title = "Audio Frequency",
             suffix = "Hz",
             initialValue = GeneralVariables.getBaseFrequency().toInt(),
             min = 100,
-            max = 2900,
+            max = audioFreqMax,
             onDismiss = { showAudioFreq = false },
             onSave = { value ->
                 showAudioFreq = false
-                val clamped = value.toFloat().coerceIn(100f, 2900f)
+                val clamped = value.toFloat().coerceIn(100f, audioFreqMax.toFloat())
                 GeneralVariables.setBaseFrequency(clamped)
                 mainViewModel.databaseOpr.writeConfig("freq", clamped.toInt().toString(), null)
+            },
+        )
+    }
+
+    if (showSpectrumWidth) {
+        NumberInputDialog(
+            title = "Spectrum Width",
+            suffix = "Hz",
+            initialValue = spectrumWidth,
+            min = 2500,
+            max = 5000,
+            onDismiss = { showSpectrumWidth = false },
+            onSave = { value ->
+                showSpectrumWidth = false
+                spectrumWidth = value
+                GeneralVariables.setSpectrumWidth(value)
+                mainViewModel.databaseOpr.writeConfig("spectrumWidth", value.toString(), null)
             },
         )
     }
@@ -700,6 +720,13 @@ fun SettingsScreen(
                             value = audioFreqStr,
                             showChevron = !synFrequency,
                             onClick = if (!synFrequency) {{ showAudioFreq = true }} else null,
+                        )
+                        SectionDivider()
+                        SettingsRow(
+                            label = "Spectrum Width",
+                            value = "$spectrumWidth Hz",
+                            showChevron = true,
+                            onClick = { showSpectrumWidth = true },
                         )
                     }
                 }

@@ -27,7 +27,7 @@ import androidx.annotation.Nullable;
 
 import com.bg7yoz.ft8cn.Ft8Message;
 import com.bg7yoz.ft8cn.GeneralVariables;
-import com.bg7yoz.ft8cn.timer.UtcTimer;
+
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -36,11 +36,13 @@ import java.util.List;
 import java.util.ListIterator;
 
 public class WaterfallView extends View {
+    private static final float FT8_SIGNAL_BANDWIDTH_HZ = 50f;
+
     private int blockHeight = 2;//Color block height
     private float freq_width = 1;//Frequency width
     private final int cycle = 2;
     private final int symbols = 93;
-    private int lastSequential = 0;
+    private int spectrumWidth = 3500;//Spectrum display width in Hz
     private Bitmap lastBitMap = null;
     private Canvas _canvas;
     private final Paint linePaint = new Paint();
@@ -62,6 +64,11 @@ public class WaterfallView extends View {
     // Track the bitmap dimensions to avoid recreating on minor layout changes
     private int bitmapWidth = 0;
     private int bitmapHeight = 0;
+
+    // TX frequency marker overlay
+    private float txFrequency = -1f;
+    private boolean txActive = false;
+    private final Paint txMarkerPaint = new Paint();
 
     public WaterfallView(Context context) {
         super(context);
@@ -104,7 +111,7 @@ public class WaterfallView extends View {
         bitmapHeight = h;
         blockHeight = h / (symbols * cycle);
         if (blockHeight < 1) blockHeight = 1;
-        freq_width = (float) w / 3000f;
+        freq_width = (float) w / spectrumWidth;
         lastBitMap = Bitmap.createBitmap(w, h, ARGB_8888);
         _canvas = new Canvas(lastBitMap);
         Paint blackPaint = new Paint();
@@ -169,6 +176,9 @@ public class WaterfallView extends View {
             pathEnd = 130 * getResources().getDisplayMetrics().density;
         }
 
+        txMarkerPaint.setStrokeWidth(1.5f * getResources().getDisplayMetrics().density);
+        txMarkerPaint.setStyle(Paint.Style.STROKE);
+
         super.onSizeChanged(w, h, oldw, oldh);
 
     }
@@ -180,11 +190,21 @@ public class WaterfallView extends View {
         if (lastBitMap == null) return;
         canvas.drawBitmap(lastBitMap, 0, 0, null);
 
+        // Draw TX frequency marker lines
+        if (txFrequency > 0 && freq_width > 0) {
+            txMarkerPaint.setColor(0xFFEF4444);
+            float halfBw = FT8_SIGNAL_BANDWIDTH_HZ / 2f;
+            float x1 = (txFrequency - halfBw) * freq_width;
+            float x2 = (txFrequency + halfBw) * freq_width;
+            canvas.drawLine(x1, 0, x1, getHeight(), txMarkerPaint);
+            canvas.drawLine(x2, 0, x2, getHeight(), txMarkerPaint);
+        }
+
         //Calculate frequency
         if (touch_x > 0) {//Draw touch line
-            freq_hz = Math.round(3000f * (float) touch_x / (float) getWidth());
-            if (freq_hz > 2900) {
-                freq_hz = 2900;
+            freq_hz = Math.round((float) spectrumWidth * (float) touch_x / (float) getWidth());
+            if (freq_hz > spectrumWidth - 100) {
+                freq_hz = spectrumWidth - 100;
             }
             if (freq_hz < 100) {
                 freq_hz = 100;
@@ -209,7 +229,7 @@ public class WaterfallView extends View {
         // repeatedly and wipe all accumulated waterfall data.
     }
 
-    public void setWaveData(int[] data, int sequential, List<Ft8Message> msgs) {
+    public void setWaveData(int[] data, List<Ft8Message> msgs) {
         if (drawMessage&& msgs!=null){//Copy messages to draw to prevent multi-thread access conflicts
             messages=new ArrayList<>(msgs);
         }else {
@@ -232,20 +252,6 @@ public class WaterfallView extends View {
         int drawHeight = bitmapHeight;
 
         int[] colors = new int[data.length];
-
-        //Draw divider line
-        if (sequential != lastSequential) {
-            Bitmap bitmap = Bitmap.createBitmap(lastBitMap, 0, 0, drawWidth, drawHeight - blockHeight);
-            _canvas.drawBitmap(bitmap, 0, blockHeight, null);
-            bitmap.recycle();
-            _canvas.drawRect(0, 0, drawWidth, getResources().getDisplayMetrics().density
-                    , linePaint);
-            _canvas.drawText(UtcTimer.getTimeStr(UtcTimer.getSystemTime()), 50
-                    , 15 * getResources().getDisplayMetrics().density, utcPainBack);
-            _canvas.drawText(UtcTimer.getTimeStr(UtcTimer.getSystemTime()), 50
-                    , 15 * getResources().getDisplayMetrics().density, utcPaint);
-        }
-        lastSequential = sequential;
 
         //Color block distribution
         for (int i = 0; i < data.length; i++) {
@@ -318,5 +324,20 @@ public class WaterfallView extends View {
 
     public int getFreq_hz() {
         return freq_hz;
+    }
+
+    public void setTxFrequency(float freq) {
+        this.txFrequency = freq;
+    }
+
+    public void setTxActive(boolean active) {
+        this.txActive = active;
+    }
+
+    public void setSpectrumWidth(int width) {
+        this.spectrumWidth = width;
+        if (bitmapWidth > 0) {
+            freq_width = (float) bitmapWidth / spectrumWidth;
+        }
     }
 }
