@@ -30,6 +30,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.lifecycle.Observer
 import com.bg7yoz.ft8cn.GeneralVariables
 import com.bg7yoz.ft8cn.MainViewModel
 import java.io.File
@@ -44,52 +45,58 @@ import radio.ks3ckc.ft8us.theme.*
 import radio.ks3ckc.ft8us.ui.components.TopBar
 
 /**
+ * Holder for view references using plain @Volatile fields.
+ * Avoids Compose snapshot system overhead when accessed from callbacks.
+ */
+private class ViewHolder {
+    @Volatile var columnar: ColumnarView? = null
+    @Volatile var waterfall: WaterfallView? = null
+}
+
+/**
  * Waterfall screen wrapping the existing Java WaterfallView and ColumnarView
- * via AndroidView. This preserves the optimized bitmap scrolling and JNI FFT
- * rendering while providing a Compose-native chrome around it.
+ * via AndroidView.
  *
- * Audio data is fed to the views via a direct VoiceDataMonitor callback
- * registered with HamRecorder, bypassing LiveData and Compose state. This
- * mirrors how the old SpectrumFragment's LiveData observer directly called
- * drawSpectrum(). Going through Compose state doesn't work reliably because
- * VoiceDataMonitor reuses the same float[] buffer and Compose's equality
- * checks can silently suppress updates.
+ * Audio data is fed to the views via observeForever on the existing
+ * SpectrumListener LiveData. The observer runs on the main thread (LiveData
+ * dispatches via Handler) and directly calls setWaveData + invalidate on the
+ * views — exactly matching the old SpectrumFragment's drawSpectrum() pattern.
  */
 @Composable
 fun WaterfallScreen(mainViewModel: MainViewModel) {
-    // Track frequency touch state
     var touchedFreqHz by remember { mutableIntStateOf(-1) }
     var frequencyLineTimeout by remember { mutableIntStateOf(0) }
 
-    // Observe decode state to control message overlay
     val isDecoding by mainViewModel.mutableIsDecoding.observeAsState(false)
-
-    // Noise suppression and message display toggles
     var deNoise by remember { mutableStateOf(mainViewModel.deNoise) }
     var showMessages by remember { mutableStateOf(mainViewModel.markMessage) }
 
-    // View references — set by factory callbacks, read by the audio monitor
-    var columnarViewRef by remember { mutableStateOf<ColumnarView?>(null) }
-    var waterfallViewRef by remember { mutableStateOf<WaterfallView?>(null) }
+    // Plain volatile refs — no Compose snapshot overhead
+    val viewHolder = remember { ViewHolder() }
 
-    // Register a direct VoiceDataMonitor with HamRecorder. The callback runs on
-    // the recording thread, computes FFT, then posts view updates to the main
-    // thread via view.post {}. This is the same pattern the old SpectrumFragment
-    // used (LiveData observer → drawSpectrum) but without LiveData in the middle.
+    // Observe SpectrumListener's LiveData with observeForever.
+    // The observer fires on the main thread every ~160ms, directly updating
+    // both views. This is the exact same pattern as the old SpectrumFragment:
+    //   spectrumListener.mutableDataBuffer.observe(...) { drawSpectrum(it) }
     DisposableEffect(Unit) {
-        mainViewModel.hamRecorder?.getVoiceData(160, false) { data ->
-            val audioCopy = data.copyOf()
-            val fft = IntArray(audioCopy.size / 2)
-            nativeFFT(audioCopy, fft, mainViewModel.deNoise)
+        val observer = Observer<FloatArray> { data ->
+            // Runs on MAIN THREAD (LiveData dispatches postValue via Handler)
+            val fft = IntArray(data.size / 2)
+            nativeFFT(data, fft, mainViewModel.deNoise)
 
-            columnarViewRef?.post {
-                val cView = columnarViewRef ?: return@post
+            viewHolder.columnar?.let { cView ->
+                frequencyLineTimeout--
+                if (frequencyLineTimeout < 0) frequencyLineTimeout = 0
+                if (frequencyLineTimeout == 0) {
+                    cView.setTouch_x(-1)
+                    viewHolder.waterfall?.setTouch_x(-1)
+                    touchedFreqHz = -1
+                }
                 cView.setWaveData(fft)
                 cView.invalidate()
             }
 
-            waterfallViewRef?.post {
-                val wView = waterfallViewRef ?: return@post
+            viewHolder.waterfall?.let { wView ->
                 val currentlyDecoding = mainViewModel.mutableIsDecoding.value ?: false
                 wView.setDrawMessage(mainViewModel.markMessage && !currentlyDecoding)
                 val messages = if (mainViewModel.markMessage) mainViewModel.currentMessages else null
@@ -97,10 +104,11 @@ fun WaterfallScreen(mainViewModel: MainViewModel) {
                 wView.invalidate()
             }
         }
+        mainViewModel.spectrumListener.mutableDataBuffer.observeForever(observer)
         onDispose {
-            // Null out view refs so the callback becomes a no-op
-            columnarViewRef = null
-            waterfallViewRef = null
+            mainViewModel.spectrumListener.mutableDataBuffer.removeObserver(observer)
+            viewHolder.columnar = null
+            viewHolder.waterfall = null
         }
     }
 
@@ -109,9 +117,7 @@ fun WaterfallScreen(mainViewModel: MainViewModel) {
             .fillMaxSize()
             .background(BgApp),
     ) {
-        // Header
         TopBar(title = "Waterfall") {
-            // Frequency display
             val freqText = if (touchedFreqHz > 0) {
                 "$touchedFreqHz Hz"
             } else {
@@ -126,9 +132,9 @@ fun WaterfallScreen(mainViewModel: MainViewModel) {
             )
         }
 
-        // Spectrum strip (columnar view) — live bar chart
+        // Spectrum strip (columnar view)
         ColumnarStrip(
-            onViewCreated = { columnarViewRef = it },
+            onViewCreated = { viewHolder.columnar = it },
             onTouch = { freqHz, _ ->
                 touchedFreqHz = freqHz
                 frequencyLineTimeout = 60
@@ -144,7 +150,6 @@ fun WaterfallScreen(mainViewModel: MainViewModel) {
                 .height(56.dp),
         )
 
-        // Frequency ruler labels
         FrequencyRuler(
             modifier = Modifier
                 .fillMaxWidth()
@@ -156,7 +161,7 @@ fun WaterfallScreen(mainViewModel: MainViewModel) {
         WaterfallCanvas(
             showMessages = showMessages,
             isDecoding = isDecoding,
-            onViewCreated = { waterfallViewRef = it },
+            onViewCreated = { viewHolder.waterfall = it },
             onTouch = { freqHz, _ ->
                 touchedFreqHz = freqHz
                 frequencyLineTimeout = 60
@@ -180,7 +185,6 @@ fun WaterfallScreen(mainViewModel: MainViewModel) {
                 .padding(horizontal = 12.dp, vertical = 6.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            // UTC time
             Text(
                 text = UtcTimer.getTimeStr(UtcTimer.getSystemTime()),
                 color = TextMuted,
@@ -190,7 +194,6 @@ fun WaterfallScreen(mainViewModel: MainViewModel) {
 
             Spacer(modifier = Modifier.width(12.dp))
 
-            // Noise filter toggle chip
             ToggleChip(
                 label = "NR",
                 active = deNoise,
@@ -202,7 +205,6 @@ fun WaterfallScreen(mainViewModel: MainViewModel) {
 
             Spacer(modifier = Modifier.width(8.dp))
 
-            // Message overlay toggle chip
             ToggleChip(
                 label = "MSG",
                 active = showMessages,
@@ -214,7 +216,6 @@ fun WaterfallScreen(mainViewModel: MainViewModel) {
 
             Spacer(modifier = Modifier.weight(1f))
 
-            // Live indicator
             Text(
                 text = "LIVE",
                 color = StatusConfirmed,
