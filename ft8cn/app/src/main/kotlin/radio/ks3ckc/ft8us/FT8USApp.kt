@@ -48,7 +48,8 @@ fun FT8USApp(mainViewModel: MainViewModel) {
     } else {
         GeneralVariables.getBandString()
     }
-    val frequencyMhz = GeneralVariables.getBaseFrequencyStr()
+    val baseFreq by GeneralVariables.mutableBaseFrequency.observeAsState(GeneralVariables.getBaseFrequency())
+    val frequencyMhz = String.format("%.0f", baseFreq ?: GeneralVariables.getBaseFrequency())
 
     Column(
         modifier = Modifier
