@@ -359,24 +359,30 @@ class ComposeMainActivity : ComponentActivity() {
         Log.d(TAG, msg)
     }
 
+    private var volumeToast: android.widget.Toast? = null
+
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
         when (keyCode) {
-            KeyEvent.KEYCODE_VOLUME_UP -> {
-                val newVol = (GeneralVariables.volumePercent + 0.05f).coerceAtMost(1.0f)
+            KeyEvent.KEYCODE_VOLUME_UP, KeyEvent.KEYCODE_VOLUME_DOWN -> {
+                val delta = if (keyCode == KeyEvent.KEYCODE_VOLUME_UP) 0.05f else -0.05f
+                val newVol = (GeneralVariables.volumePercent + delta).coerceIn(0.0f, 1.0f)
                 GeneralVariables.volumePercent = newVol
                 GeneralVariables.mutableVolumePercent.postValue(newVol)
                 val intVal = (newVol * 100).toInt()
                 mainViewModel.databaseOpr.writeConfig("volumeValue", intVal.toString(), null)
                 mainViewModel.baseRig?.connector?.setRFVolume(intVal)
-                return true
-            }
-            KeyEvent.KEYCODE_VOLUME_DOWN -> {
-                val newVol = (GeneralVariables.volumePercent - 0.05f).coerceAtLeast(0.0f)
-                GeneralVariables.volumePercent = newVol
-                GeneralVariables.mutableVolumePercent.postValue(newVol)
-                val intVal = (newVol * 100).toInt()
-                mainViewModel.databaseOpr.writeConfig("volumeValue", intVal.toString(), null)
-                mainViewModel.baseRig?.connector?.setRFVolume(intVal)
+
+                // Also adjust system music stream so audio is actually audible
+                val audioManager = getSystemService(Context.AUDIO_SERVICE) as AudioManager
+                val maxVol = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC)
+                val systemVol = (newVol * maxVol).toInt().coerceIn(0, maxVol)
+                audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, systemVol, 0)
+
+                // Show volume toast
+                volumeToast?.cancel()
+                volumeToast = android.widget.Toast.makeText(this, "TX Volume: $intVal%", android.widget.Toast.LENGTH_SHORT)
+                volumeToast?.show()
+
                 return true
             }
             else -> return super.onKeyDown(keyCode, event)
