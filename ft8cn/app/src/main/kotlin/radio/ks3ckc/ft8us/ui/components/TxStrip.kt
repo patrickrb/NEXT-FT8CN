@@ -22,6 +22,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
@@ -36,9 +37,11 @@ fun TxStrip(
     bandLabel: String,
     frequencyMhz: String,
     txSlot: Int,
+    expanded: Boolean = false,
     onCallCQ: () -> Unit,
     onStop: () -> Unit,
     onToggleSlot: () -> Unit,
+    onToggleExpand: () -> Unit = {},
     modifier: Modifier = Modifier,
 ) {
     val bgColor = if (isTransmitting) {
@@ -69,11 +72,28 @@ fun TxStrip(
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        // Left: status + band/mode
+        // Left: chevron + status + band/mode
         Row(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(6.dp),
         ) {
+            // Expand/collapse chevron — only shown when QSO is active
+            if (isActivated) {
+                Box(
+                    modifier = Modifier
+                        .size(20.dp)
+                        .clip(RoundedCornerShape(4.dp))
+                        .clickable { onToggleExpand() }
+                        .rotate(if (expanded) 0f else 180f),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    FT8USIcons.ChevronDown(
+                        size = 14.dp,
+                        color = TextMuted,
+                        strokeWidth = 2f,
+                    )
+                }
+            }
             PulseDot(color = if (isTransmitting) Accent else Signal)
             Text(
                 text = if (isTransmitting) "TRANSMITTING" else "LISTENING",

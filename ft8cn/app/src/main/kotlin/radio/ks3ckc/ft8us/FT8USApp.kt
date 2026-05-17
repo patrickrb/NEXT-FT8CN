@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import android.widget.Toast
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
@@ -19,6 +20,7 @@ import com.bg7yoz.ft8cn.GeneralVariables
 import com.bg7yoz.ft8cn.MainViewModel
 import com.bg7yoz.ft8cn.database.OperationBand
 import radio.ks3ckc.ft8us.theme.BgApp
+import radio.ks3ckc.ft8us.ui.components.ActiveQsoPanel
 import radio.ks3ckc.ft8us.ui.components.FT8USTab
 import radio.ks3ckc.ft8us.ui.components.TabBar
 import radio.ks3ckc.ft8us.ui.components.TxStrip
@@ -37,6 +39,18 @@ fun FT8USApp(mainViewModel: MainViewModel) {
     val isTransmitting by mainViewModel.ft8TransmitSignal.mutableIsTransmitting.observeAsState(false)
     val isActivated by mainViewModel.ft8TransmitSignal.mutableIsActivated.observeAsState(false)
     val txSlot by mainViewModel.ft8TransmitSignal.mutableSequential.observeAsState(mainViewModel.ft8TransmitSignal.sequential)
+
+    // QSO panel expand/collapse state
+    var qsoPanelExpanded by rememberSaveable { mutableStateOf(false) }
+
+    // Auto-expand when activated, auto-collapse when deactivated
+    LaunchedEffect(isActivated) {
+        if (isActivated) {
+            qsoPanelExpanded = true
+        } else {
+            qsoPanelExpanded = false
+        }
+    }
 
     // Derive band/frequency from GeneralVariables
     val bandIndex by GeneralVariables.mutableBandChange.observeAsState(GeneralVariables.bandListIndex)
@@ -74,6 +88,13 @@ fun FT8USApp(mainViewModel: MainViewModel) {
             }
         }
 
+        // Active QSO panel — slides up above TxStrip when a QSO is in progress
+        ActiveQsoPanel(
+            mainViewModel = mainViewModel,
+            expanded = qsoPanelExpanded,
+            onCollapse = { qsoPanelExpanded = false },
+        )
+
         // TX status strip — always visible above tab bar
         TxStrip(
             isTransmitting = isTransmitting,
@@ -81,6 +102,7 @@ fun FT8USApp(mainViewModel: MainViewModel) {
             bandLabel = bandLabel,
             frequencyMhz = frequencyMhz,
             txSlot = txSlot,
+            expanded = qsoPanelExpanded,
             onCallCQ = {
                 if (GeneralVariables.myCallsign.isNullOrEmpty()) {
                     Toast.makeText(context, "Set your callsign in Settings before calling CQ", Toast.LENGTH_SHORT).show()
@@ -98,6 +120,7 @@ fun FT8USApp(mainViewModel: MainViewModel) {
                 mainViewModel.ft8TransmitSignal.sequential = newSlot
                 mainViewModel.ft8TransmitSignal.mutableSequential.postValue(newSlot)
             },
+            onToggleExpand = { qsoPanelExpanded = !qsoPanelExpanded },
         )
 
         // Bottom tab bar
