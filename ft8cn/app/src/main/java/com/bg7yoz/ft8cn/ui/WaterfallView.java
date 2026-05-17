@@ -19,6 +19,7 @@ import android.graphics.Path;
 import android.graphics.Rect;
 import android.graphics.Shader;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 
@@ -37,6 +38,7 @@ import java.util.List;
 import java.util.ListIterator;
 
 public class WaterfallView extends View {
+    private static final String TAG = "WaterfallView";
     private static final float FT8_SIGNAL_BANDWIDTH_HZ = 50f;
 
     private int blockHeight = 2;//Color block height
@@ -111,12 +113,15 @@ public class WaterfallView extends View {
             return;
         }
 
+        Log.d(TAG, String.format("onSizeChanged: w=%d h=%d oldw=%d oldh=%d", w, h, oldw, oldh));
         setClickable(true);
         bitmapWidth = w;
         bitmapHeight = h;
         blockHeight = h / (symbols * cycle);
         if (blockHeight < 1) blockHeight = 1;
         freq_width = (float) w / spectrumWidth;
+        Log.d(TAG, String.format("Bitmap created: %dx%d, blockHeight=%d, freq_width=%.2f, spectrumWidth=%d",
+                w, h, blockHeight, freq_width, spectrumWidth));
         lastBitMap = Bitmap.createBitmap(w, h, ARGB_8888);
         _canvas = new Canvas(lastBitMap);
         Paint blackPaint = new Paint();
@@ -246,12 +251,15 @@ public class WaterfallView extends View {
         }
 
         if (data == null) {
+            Log.w(TAG, "setWaveData: data is null, skipping");
             return;
         }
         if (data.length <= 0) {
+            Log.w(TAG, "setWaveData: data is empty, skipping");
             return;
         }
         if (lastBitMap == null) {
+            Log.w(TAG, "setWaveData: bitmap not initialized, skipping");
             return;
         }
 
@@ -307,10 +315,13 @@ public class WaterfallView extends View {
             // Draw outline then fill for readability over any spectrum color
             _canvas.drawText(timeLabel, textX, textY, utcPainBack);
             _canvas.drawText(timeLabel, textX, textY, utcPaint);
+            Log.d(TAG, String.format("Timestamp drawn: %s (period=%d, utcMs=%d, blockHeight=%d, textY=%.1f, drawWidth=%d)",
+                    timeLabel, period, utcMs, blockHeight, textY, drawWidth));
         }
 
         //Messages have 3 types: normal, CQ, and involving me
         if (drawMessage && messages != null) {
+            Log.d(TAG, String.format("Drawing %d messages on waterfall", messages.size()));
             drawMessage = false;//Only draw once
             for (Ft8Message msg : messages) {
 
@@ -362,14 +373,17 @@ public class WaterfallView extends View {
     }
 
     public void setTxFrequency(float freq) {
+        Log.d(TAG, String.format("setTxFrequency: %.1f Hz", freq));
         this.txFrequency = freq;
     }
 
     public void setTxActive(boolean active) {
+        Log.d(TAG, String.format("setTxActive: %b", active));
         this.txActive = active;
     }
 
     public void setSpectrumWidth(int width) {
+        Log.d(TAG, String.format("setSpectrumWidth: %d Hz (was %d)", width, spectrumWidth));
         this.spectrumWidth = width;
         if (bitmapWidth > 0) {
             freq_width = (float) bitmapWidth / spectrumWidth;
