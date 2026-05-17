@@ -38,6 +38,9 @@ public class GenerateFT8 {
 
 
     public static int checkI3ByCallsign(String callsign) {
+        if (callsign == null || callsign.length() < 2) {
+            return 0;
+        }
         String substring = callsign.substring(callsign.length() - 2);
         if (substring.equals("/P")) {
             if (callsign.length() <= 8) {
