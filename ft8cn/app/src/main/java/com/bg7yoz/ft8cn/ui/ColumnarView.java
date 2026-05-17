@@ -14,6 +14,8 @@ import android.graphics.Shader;
 import android.util.AttributeSet;
 import android.view.View;
 
+import com.bg7yoz.ft8cn.GeneralVariables;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -84,12 +86,18 @@ public class ColumnarView extends View {
         if (data.length <= 0) {
             return;
         }
-        width = getWidth() / (data.length / 2);// 960/2=480, 480 is reasonable; 906 cannot be displayed.
+        // Calculate how many FFT bins correspond to spectrumWidth Hz.
+        // The full data array covers 0 to Nyquist (sampleRate/2).
+        float nyquist = GeneralVariables.audioSampleRate / 2f;
+        int binsToShow = Math.min(data.length, Math.round((float) spectrumWidth / nyquist * data.length));
+        if (binsToShow <= 0) binsToShow = data.length / 2;
+
+        width = getWidth() / binsToShow;
         if (drawblock) {// Whether to show the peak block
             if (newData.size() > 0) {
                 if (blockData.size() == 0 || newData.size() != blockData.size()) {
                     blockData.clear();
-                    for (int i = 0; i < data.length / 2; i++) {
+                    for (int i = 0; i < binsToShow; i++) {
                         Rect blockRect = new Rect();
                         blockRect.top =getHeight()- blockHeight;
                         blockRect.bottom = getHeight();
@@ -110,14 +118,15 @@ public class ColumnarView extends View {
         }
         newData.clear();
         float rateHeight =  0.95f * getHeight() / 256;// 0.95 is the ratio; max bar height does not exceed 95%
-        for (int i = 0; i < data.length / 2; i++) {
+        for (int i = 0; i < binsToShow; i++) {
             Rect colRect = new Rect();
             if (newData.size() == 0) {
                 colRect.left = 0;
             } else {
-                colRect.left = i * getWidth() / (data.length / 2);
+                colRect.left = i * getWidth() / binsToShow;
             }
-            colRect.top = getHeight() - Math.round(Math.max(data[i], data[i + 1]) * rateHeight);
+            int val = (i + 1 < data.length) ? Math.max(data[i], data[i + 1]) : data[i];
+            colRect.top = getHeight() - Math.round(val * rateHeight);
             colRect.right = colRect.left + width - spacing;
             colRect.bottom = getHeight();
             newData.add(colRect);
